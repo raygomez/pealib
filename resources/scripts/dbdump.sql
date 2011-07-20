@@ -1,4 +1,5 @@
-﻿CREATE DATABASE IF NOT EXISTS pealib;
+DROP DATABASE IF EXISTS pealib;
+CREATE DATABASE pealib;
 
 USE pealib;
 
@@ -11,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Users
 	(FirstName VARCHAR(30) NOT NULL,
 	LastName VARCHAR(30) NOT NULL,
 	UserName VARCHAR(30) UNIQUE NOT NULL,
-	Password CHAR(32) NOT NULL,
+	Password CHAR(64) NOT NULL,
 	Type ENUM('User', 'Librarian', 'Pending'),
 	Address VARCHAR(100),
 	ContactNo VARCHAR(20),
@@ -50,3 +51,5 @@ CREATE TABLE IF NOT EXISTS Reserves
   	FOREIGN KEY (UserID) REFERENCES Users(ID) ON DELETE CASCADE,
 	FOREIGN KEY (BookID) REFERENCES Books (ID) ON DELETE CASCADE
 	);
+
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Jomel','Villar','jvillar',SHA2("123456",0),'User','USA','1234567890','jomel.villar@gmail.com');
