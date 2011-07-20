@@ -67,4 +67,52 @@ public class BookInfoPanel extends JPanel {
 		add(lblCopiesValue, "cell 1 8,aligny top");
 	}
 
+	public JTextField getTxtFldTitle() {
+		return txtFldTitle;
+	}
+
+	public void setTxtFldTitle(JTextField txtFldTitle) {
+		this.txtFldTitle = txtFldTitle;
+	}
+
+	public JTextField getTxtFldAuthor() {
+		return txtFldAuthor;
+	}
+
+	public void setTxtFldAuthor(JTextField txtFldAuthor) {
+		this.txtFldAuthor = txtFldAuthor;
+	}
+
+	public JTextField getTxtFldYrPublished() {
+		return txtFldYrPublished;
+	}
+
+	public void setTxtFldYrPublished(JTextField txtFldYrPublished) {
+		this.txtFldYrPublished = txtFldYrPublished;
+	}
+
+	public JTextField getTxtFldPublisher() {
+		return txtFldPublisher;
+	}
+
+	public void setTxtFldPublisher(JTextField txtFldPublisher) {
+		this.txtFldPublisher = txtFldPublisher;
+	}
+
+	public JTextField getTxtFldISBN() {
+		return txtFldISBN;
+	}
+
+	public void setTxtFldISBN(JTextField txtFldISBN) {
+		this.txtFldISBN = txtFldISBN;
+	}
+
+	public JTextField getTxtFldDescription() {
+		return txtFldDescription;
+	}
+
+	public void setTxtFldDescription(JTextField txtFldDescription) {
+		this.txtFldDescription = txtFldDescription;
+	}
+	
 }
