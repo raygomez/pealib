@@ -1,37 +1,47 @@
-package views;
-
 import static org.junit.Assert.*;
 
-import java.awt.Window;
+import javax.swing.*;
+import org.junit.*;
+import org.junit.runner.RunWith;
+import org.uispec4j.Button;
+import org.uispec4j.Panel;
+import org.unitils.UnitilsJUnit4TestClassRunner;
 
-import org.junit.Test;
+import views.UserSidebarPanel;
 
+@RunWith(UnitilsJUnit4TestClassRunner.class)
 public class UserSidebarPanelTest {
 	
+	private Panel panel;
+	
+	@Before
+	public void setUp() throws Exception {
+		panel = new Panel(new UserSidebarPanel());
+	}
+	
 	@Test
-	public void testUserSidebarPanel() {
-		
-		fail("Not yet implemented");
+	public void initialState(){
+		Button searchButton = panel.getButton();
 	}
 
 	@Test
 	public void testAddSearchBookListener() {
-		fail("Not yet implemented");
+		
 	}
 
 	@Test
 	public void testAddEditProfileListener() {
-		fail("Not yet implemented");
+		
 	}
 
 	@Test
 	public void testAddShowTransactionHistoryListener() {
-		fail("Not yet implemented");
+		
 	}
 
 	@Test
 	public void testAddLogoutListener() {
-		fail("Not yet implemented");
+		
 	}
 
 }
