@@ -21,7 +21,6 @@ public class UserSidebarPanelTest {
 	
 	@Test
 	public void initialState(){
-		Button searchButton = panel.getButton();
 	}
 
 	@Test
