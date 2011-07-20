@@ -10,6 +10,10 @@ public class Book {
 	private String description;
 	private int copies;
 	
+	public Book(){
+		
+	}
+	
 	public Book(int bookId, String isbn, String title, String author,
 			String publisher, int yearPublish, String description, int copies) {
 		super();

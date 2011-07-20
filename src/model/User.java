@@ -12,6 +12,10 @@ public class User {
 	private int status; 
 	private int type;
 	
+	public User(){
+		
+	}
+	
 	public User(int userId, String userName, String password, String firstName,
 			String lastName, String email, String address, String contactNo,
 			int status, int type) {
