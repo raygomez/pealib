@@ -1,16 +1,12 @@
-import static org.junit.Assert.*;
-
-import javax.swing.*;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.uispec4j.Button;
-import org.uispec4j.Panel;
-import org.unitils.UnitilsJUnit4TestClassRunner;
+import org.uispec4j.*;
+import org.unitils.*;
 
 import views.UserSidebarPanel;
 
 @RunWith(UnitilsJUnit4TestClassRunner.class)
-public class UserSidebarPanelTest {
+public class UserSidebarPanelTest extends UISpecTestCase{
 	
 	private Panel panel;
 	
@@ -20,12 +16,30 @@ public class UserSidebarPanelTest {
 	}
 	
 	@Test
-	public void initialState(){
-		Button searchButton = panel.getButton();
+	public void initialStateTest(){
+		Button searchButton = panel.getButton("Search Books");
+		assertNotNull(searchButton);
+		assertThat(searchButton.isEnabled());
+		assertThat(searchButton.isVisible());
+		
+		Button editProfileButton = panel.getButton("Edit Profile");
+		assertNotNull(editProfileButton);
+		assertThat(editProfileButton.isEnabled());
+		assertThat(editProfileButton.isVisible());
+		
+		Button transactionHistoryButton = panel.getButton("View E-Library Card");
+		assertNotNull(transactionHistoryButton);
+		assertThat(transactionHistoryButton.isEnabled());
+		assertThat(transactionHistoryButton.isVisible());
+		
+		Button logoutButton = panel.getButton("Logout");
+		assertNotNull(logoutButton);
+		assertThat(logoutButton.isEnabled());
+		assertThat(logoutButton.isVisible());
 	}
 
 	@Test
-	public void testAddSearchBookListener() {
+	public void testAddViewBooksListener() {
 		
 	}
 
