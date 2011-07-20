@@ -1,4 +1,4 @@
-package pealib;
+package model;
 
 public class User {
 
