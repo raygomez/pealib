@@ -1,4 +1,4 @@
-package model;
+package models;
 
 public class User {
 	private int userId;
@@ -10,7 +10,7 @@ public class User {
 	private String address;
 	private String contactNo;
 	private int status; 
-	private int type;
+	private String type;
 	
 	public User(){
 		
@@ -18,7 +18,7 @@ public class User {
 	
 	public User(int userId, String userName, String password, String firstName,
 			String lastName, String email, String address, String contactNo,
-			int status, int type) {
+			int status, String type) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -104,11 +104,11 @@ public class User {
 		this.status = status;
 	}
 
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 	
