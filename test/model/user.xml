@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<users FirstName="Jomel" LastName="Villar" UserName="jvillar"
+		Password="8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
+		Type="User" Address="USA" ContactNo="1234567890" Email="jomel.villar@gmail.com"
+		ID="1" />
+</dataset>
