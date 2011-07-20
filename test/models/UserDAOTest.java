@@ -1,10 +1,12 @@
 package models;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import utilities.PropertyLoader;
 
@@ -45,4 +47,17 @@ public class UserDAOTest {
 		User user = userDAO.getUser("jvillar", "12");
 		assertNull(user);
 	}
+	
+	@Test
+	public void testSearchUsersWithResults() throws SQLException {
+		ArrayList<User> users = userDAO.searchUsers("jvillar");
+		assertEquals(1, users.size());
+	}
+	
+	@Test
+	public void testSearchUsersWithNoResults() throws SQLException {
+		ArrayList<User> users = userDAO.searchUsers("jvillar0");
+		assertEquals(0, users.size());
+	}
+	
 }

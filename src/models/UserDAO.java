@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import utilities.PropertyLoader;
@@ -27,7 +28,8 @@ public class UserDAO {
 	}
 
 	/**
-	 * @param connection the connection to set
+	 * @param connection
+	 *            the connection to set
 	 */
 	public void setConnection(Connection connection) {
 		this.connection = connection;
@@ -55,7 +57,32 @@ public class UserDAO {
 			user.setContactNo(rs.getString("ContactNo"));
 			user.setEmail(rs.getString("Email"));
 		}
-		
+
 		return user;
+	}
+
+	public ArrayList<User> searchUsers(String keyword) throws SQLException {
+		ArrayList<User> users = new ArrayList<User>();
+
+		String sql = "SELECT * from Users where CONCAT(LastName,FirstName,UserName) like ?";
+
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setString(1, "%" + keyword + "%");
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			User user = new User();
+			user.setUserId(rs.getInt("ID"));
+			user.setFirstName(rs.getString("FirstName"));
+			user.setLastName(rs.getString("LastName"));
+			user.setType(rs.getString("Type"));
+			user.setUserName(rs.getString("UserName"));
+			user.setAddress(rs.getString("Address"));
+			user.setContactNo(rs.getString("ContactNo"));
+			user.setEmail(rs.getString("Email"));
+			users.add(user);
+		}
+
+		return users;
 	}
 }
