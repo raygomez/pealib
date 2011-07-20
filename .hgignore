@@ -6,3 +6,19 @@ syntax: regexp
 ^\.project$
 syntax: regexp
 ^\.project$
+syntax: regexp
+^coverage$
+syntax: regexp
+^dist$
+syntax: regexp
+^docs$
+syntax: regexp
+^instrumented$
+syntax: regexp
+^junit$
+syntax: regexp
+^reports$
+syntax: regexp
+^cobertura\.ser$
+syntax: regexp
+^pealib\.zip$
