@@ -4,24 +4,64 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import javax.swing.JDialog;
+
+import models.User;
+import models.UserDAO;
+
+import utilities.Constants;
 import views.LogInDialog;
 
 public class AuthenticationController {
-	private LogInDialog login = new LogInDialog(); 
-	
-	public AuthenticationController(LogInDialog login){
-		this.login = login;
-		
-		login.setActionListeners(new SignUpListener(), new SubmitListener(), new SubmitKeyListener());
+	private static LogInDialog login; 
+	private User user;
+	private UserDAO userDao;
+
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			new AuthenticationController();								
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+	public AuthenticationController(){
+		login = new LogInDialog();		
+		login.setActionListeners(new SignUpListener(), new SubmitListener(), new SubmitKeyListener());
+		login.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);					
+		login.setVisible(true);	
+		
+		try{
+			userDao = new UserDAO();
+					
+		} catch(Exception e){System.out.println("UserDAO "+e);}
+		
+		if(userDao == null){
+			System.out.println("123");
+		}
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	/*
+	 *  LOG IN   LISTENERS
+	 */
 	
 	//SignUp Listener
 	class SignUpListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        	submit();
+        	//open signup pane
         }
 	}
 	
@@ -32,29 +72,50 @@ public class AuthenticationController {
         }
 	}
 	
-	//Submit when pressing Enter
+	//Submit Listener for Keyboard
 	class SubmitKeyListener implements KeyListener {
 		@Override
-		public void keyPressed(KeyEvent arg0) {
-			 int keyCode = arg0.getKeyCode();
+		public void keyPressed(KeyEvent e) {			 
+		}
+		@Override
+		public void keyReleased(KeyEvent e) {
+			int keyCode = e.getKeyCode();
 			 
 			 if(keyCode==10){
 				 submit();
+			 } 
+			 else {
+				 String user = login.getFieldUsername().getText();
+				 String pass = login.getFieldPassword().getText();
+				 
+				 if(user.length()>0) validateUsername(user);
+				 if(pass.length()>0) validatePassword(pass); 				 
 			 }
 		}
-		@Override
-		public void keyReleased(KeyEvent e) {}
 		@Override
 		public void keyTyped(KeyEvent e) {}
 	}
 	
+	private boolean validateUsername(String username){
+		boolean result = (username.matches(Constants.USERNAME_FORMAT));
+		
+		if(result) login.setUsernameColor(false);   
+		else  login.setUsernameColor(true);
+		
+		return result;
+	}
+	
+	private boolean validatePassword(String password){
+		boolean result = (password.matches(Constants.PASSWORD_FORMAT));
+		if(result) login.setPasswordColor(false);   
+		else  login.setPasswordColor(true);
+		
+		return result;
+	}
+	
 	private void submit(){
 		String username = login.getFieldUsername().getText();
-    	String password = login.getFieldPassword().getText();
-  
-    	String regex = "[a-zA-Z_0-9.]{4,20}";
-    	boolean validUsername = (username.matches(regex));
-    	boolean validPassword = (password.matches(regex));
+    	String password = login.getFieldPassword().getText();  	    	
     	    	    	
     	if(username.equals("") || password.equals("")){
     		login.setLabelError("Incomplete fields");
@@ -65,25 +126,35 @@ public class AuthenticationController {
     		if(password.equals("")) login.setPasswordColor(true);
     		else login.setPasswordColor(false);
     	}  
-    	else if(!validUsername || !validPassword){
-    		login.setLabelError("Invalid input");  
-    		if(!validUsername) login.setUsernameColor(true);   else  login.setUsernameColor(false); 
-    		if(!validPassword) login.setPasswordColor(true);   else  login.setPasswordColor(false);
+    	else if(!validateUsername(username) || !validatePassword(password)){
+    		login.setLabelError("Invalid input");      		     		
     	}
     	
-    	else if(validUsername && validPassword){
-    		//Add again for DB validation
-    		System.out.println("LOGIN");
-    		login.setUsernameColor(false);
-    		login.setPasswordColor(false);
-    		login.getFieldPassword().setText("");
-    		login.getFieldUsername().setText("");
-    		login.setLabelError("");
+    	else if(validateUsername(username) && validatePassword(password)){
+    		try{
+    			setUser(userDao.getUser(username, password));    
+    			System.out.println("username : "+user.getFirstName());
+    		} catch(Exception e){ System.out.println("AuthenticationController getUser: "+e);}    		    		
+    		
+    		
+    		if(user != null){
+	    		//login --> call main frame
+    			
+	    		System.out.println("LOGIN");
+	    		login.setUsernameColor(false);
+	    		login.setPasswordColor(false);
+	    		login.getFieldPassword().setText("");
+	    		login.getFieldUsername().setText("");
+	    		login.setLabelError("");
+	    		}
+    		else{
+    			login.setLabelError("Username/Password Mismatch");  
+        		login.getFieldPassword().setText("");
+    		}    		
     	}
     	
-    	else{
-    		login.setLabelError("Username/Password Mismatch");  
-    		login.getFieldPassword().setText("");
-    	}
 	}	
+	
+	
+	
 }
