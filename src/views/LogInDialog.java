@@ -22,8 +22,10 @@ public class LogInDialog extends JDialog {
 	private JPasswordField fieldPassword = new JPasswordField(20);
 	private JLabel labelError = new JLabel("");
 	
-	private JButton buttonSignUp = new JButton("Sign Up");
-	private JButton buttonLogIn = new JButton("Log In");
+	private JButton buttonSignUp = new JButton("Sign Up",new ImageIcon(
+	"resources/images/signin.png"));
+	private JButton buttonLogIn = new JButton("Log In",new ImageIcon(
+	"resources/images/login32x32.png"));
 
 	/**
 	 * Create the dialog.
