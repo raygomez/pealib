@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
+import org.unitils.dbunit.annotation.ExpectedDataSet;
 
 import utilities.MyConnection;
 import models.User;
@@ -96,6 +97,20 @@ public class UserDAOTest {
 	public void testIsUsernameNotExisting() throws Exception {
 		boolean notExisting = userDAO.isUsernameExisting("jvillar0");
 		assertEquals(false, notExisting);
+	}
+	
+	
+	@Test
+	@ExpectedDataSet({"expected/saveUser.xml"})
+	public void testSaveUser() throws Exception {
+		User user = userDAO.getUser("jvillar", "1");
+		user.setFirstName("Janine June");
+		user.setLastName("Lim");
+		user.setUserName("jlim");
+		user.setEmail("jlim@gmail.com");
+		user.setPassword("1");
+		
+		userDAO.saveUser(user);
 	}
 
 }
