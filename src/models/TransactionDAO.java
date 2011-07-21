@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Properties;
 
+import org.joda.time.DateMidnight;
+import org.joda.time.Days;
+
 import utilities.MyConnection;
 import utilities.PropertyLoader;
 
@@ -159,7 +162,7 @@ public class TransactionDAO {
 		ps = getConnection().prepareStatement(sql);
 		ps.setLong(1, book.getBookId());
 		ResultSet rs = ps.executeQuery();
-		
+
 		if (rs.first()) {
 			count = rs.getInt(1);
 		}
@@ -169,4 +172,28 @@ public class TransactionDAO {
 		return available;
 	}
 
+	public int getDaysOverdue(Book book, User user) throws SQLException {
+		int days = 0;
+		Date borrowedDate = null;
+		Calendar today = Calendar.getInstance();
+
+		String sql = "SELECT DateBorrowed FROM Borrows "
+				+ "WHERE BookID = ? AND UserID = ? AND DateReturned is NULL";
+
+		PreparedStatement ps = null;
+		ps = getConnection().prepareStatement(sql);
+		ps.setLong(1, book.getBookId());
+		ps.setLong(2, user.getUserId());
+		ResultSet rs = ps.executeQuery();
+
+		if (rs.first()) {
+			borrowedDate = rs.getDate(1);
+		}
+
+		Days d = Days.daysBetween(new DateMidnight(borrowedDate.getTime()),
+				new DateMidnight(today.getTime().getTime()));
+		days = d.getDays();
+		return days;
+
+	}
 }
