@@ -43,4 +43,43 @@ public class TransactionDAO {
 
 	}
 
+	public int reserveBook(Book book, User user) throws SQLException{
+		int intStat = 0;
+		PreparedStatement makeReservation = null;
+		
+		makeReservation = connection.prepareStatement("INSERT INTO Reserves (UserID, BookID) VALUES (?,?)");
+		makeReservation.setLong(1, user.getUserId());
+		makeReservation.setLong(2, book.getBookId());
+		
+		intStat = makeReservation.executeUpdate();
+		
+		return intStat;
+	}
+	
+	public int borrowBook(Book book, User user) throws SQLException{
+		int intStat = 0;
+		PreparedStatement borrowRequest = null;
+		
+		borrowRequest = connection.prepareStatement("INSERT INTO Borrows (UserID, BookID) VALUES (?,?)");
+		borrowRequest.setLong(1, user.getUserId());
+		borrowRequest.setLong(2, book.getBookId());
+		
+		intStat = borrowRequest.executeUpdate();
+		
+		return intStat;
+	}
+	
+	public int acceptBookRequest(Borrow borrowedBook) throws SQLException{
+		Calendar today = Calendar.getInstance();
+		int intStat = 0;
+		PreparedStatement acceptRequest = null;
+		
+		acceptRequest = connection.prepareStatement("UPDATE Borrows SET DateBorrowed = ? where BorrowID = ?");
+		acceptRequest.setDate(1, new Date(today.getTime().getTime()));
+		acceptRequest.setLong(2, borrowedBook.getId());
+		
+		intStat = acceptRequest.executeUpdate();
+		
+		return intStat;
+	}
 }
