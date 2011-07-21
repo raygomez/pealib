@@ -24,3 +24,5 @@ syntax: regexp
 ^pealib\.zip$
 syntax: regexp
 ^\.classpath$
+syntax: regexp
+^src/unitils-local\.properties$
