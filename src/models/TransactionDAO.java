@@ -125,11 +125,31 @@ public class TransactionDAO extends AbstractDAO {
 		return count != 0;
 	}
 
+	public Borrow getBorrowClass(Book book, User user) throws SQLException {
+
+		String sql = "SELECT * FROM Reserves WHERE UserID = ? AND BookID = ?";
+		Borrow borrow = null;
+
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ps.setLong(2, book.getBookId());
+		ResultSet rs = ps.executeQuery();
+		if (rs.first()) {
+			borrow = new Borrow(rs.getInt("ID"), rs.getInt("UserID"),
+					rs.getInt("BookId"), rs.getDate("DateRequested"),
+					rs.getDate("DateBorrowed"), rs.getDate("DateReturned"));
+
+		}
+
+		return borrow;
+
+	}
+
 	public boolean isBorrowedByUser(Book book, User user) throws SQLException {
 		int count = 0;
 
 		String sql = "SELECT COUNT(*) FROM Borrows "
-				+ "WHERE UserID = ? AND BOokID = ? AND DateReturned = NULL";
+				+ "WHERE UserID = ? AND BOokID = ? AND DateReturned is NULL";
 
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setLong(1, user.getUserId());
