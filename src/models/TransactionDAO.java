@@ -58,13 +58,15 @@ public class TransactionDAO {
 	}
 
 	public int borrowBook(Book book, User user) throws SQLException {
+		Calendar today = Calendar.getInstance();
 		int intStat = 0;
 		PreparedStatement borrowRequest = null;
 
 		borrowRequest = connection
-				.prepareStatement("INSERT INTO Borrows (UserID, BookID) VALUES (?,?)");
+				.prepareStatement("INSERT INTO Borrows (UserID, BookID, DateRequested) VALUES (?,?,?)");
 		borrowRequest.setLong(1, user.getUserId());
 		borrowRequest.setLong(2, book.getBookId());
+		borrowRequest.setDate(3, new Date(today.getTime().getTime()));
 
 		intStat = borrowRequest.executeUpdate();
 
@@ -77,11 +79,26 @@ public class TransactionDAO {
 		PreparedStatement acceptRequest = null;
 
 		acceptRequest = connection
-				.prepareStatement("UPDATE Borrows SET DateBorrowed = ? where BorrowID = ?");
+				.prepareStatement("UPDATE Borrows SET DateBorrowed = ? WHERE BorrowID = ?");
 		acceptRequest.setDate(1, new Date(today.getTime().getTime()));
 		acceptRequest.setLong(2, borrowedBook.getId());
-
+		
 		intStat = acceptRequest.executeUpdate();
+
+		return intStat;
+	}
+
+	public int cancelReservation(Borrow reservedBook, User user)
+			throws SQLException {
+		int intStat = 0;
+		PreparedStatement cancel = null;
+
+		cancel = connection
+				.prepareStatement("DELETE FROM Reserves WHERE UserID = ? AND BOokID = ?");
+		cancel.setLong(1, user.getUserId());
+		cancel.setLong(2, reservedBook.getBookId());
+
+		intStat = cancel.executeUpdate();
 
 		return intStat;
 	}
@@ -95,5 +112,4 @@ public class TransactionDAO {
 		ps.executeUpdate();
 
 	}
-
 }
