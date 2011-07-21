@@ -3,6 +3,7 @@ package models;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Properties;
@@ -96,5 +97,37 @@ public class TransactionDAO {
 		intStat = cancel.executeUpdate();
 		
 		return intStat;
+	}
+	
+	public boolean isReservedByUser(Book book, User user) throws SQLException{
+		int count = 0;
+		PreparedStatement checkReservation = null;
+		checkReservation = connection.prepareStatement("SELECT COUNT(*) FROM Reserves WHERE UserID = ? AND BOokID = ?");
+		checkReservation.setLong(1, user.getUserId());
+		checkReservation.setLong(2, book.getBookId());
+		ResultSet rs = checkReservation.executeQuery();
+		if (rs.first()){
+			count = rs.getInt(1);
+		}
+		if (count > 0){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isBorrowedByUser(Book book, User user) throws SQLException{
+		int count = 0;
+		PreparedStatement checkOnLoan = null;
+		checkOnLoan = connection.prepareStatement("SELECT COUNT(*) FROM Borrows WHERE UserID = ? AND BOokID = ? AND DateReturned = NULL");
+		checkOnLoan.setLong(1, user.getUserId());
+		checkOnLoan.setLong(2, book.getBookId());
+		ResultSet rs = checkOnLoan.executeQuery();
+		if (rs.first()){
+			count = rs.getInt(1);
+		}
+		if (count > 0){
+			return true;
+		}
+		return false;
 	}
 }
