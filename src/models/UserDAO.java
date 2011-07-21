@@ -98,4 +98,23 @@ public class UserDAO {
 
 		return users;
 	}
+
+	public void saveUser(User user) throws SQLException {
+		String sql = "INSERT INTO Users "
+				+ "(FirstName,LastName,UserName,Password,Type,"
+				+ "Address, ContactNo, Email)" + " values (?,?,?,SHA2(?,0),?,?,?,?);";
+
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setString(1, user.getFirstName());
+		ps.setString(2, user.getLastName());
+		ps.setString(3, user.getUserName());
+		ps.setString(4, user.getPassword());
+		ps.setString(5, user.getType());
+		ps.setString(6, user.getAddress());
+		ps.setString(7, user.getContactNo());
+		ps.setString(8, user.getEmail());
+
+		ps.executeUpdate();
+	}
+
 }
