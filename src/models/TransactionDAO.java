@@ -6,23 +6,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.Properties;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.Days;
 
-import utilities.MyConnection;
-import utilities.PropertyLoader;
-
-public class TransactionDAO {
-
-	private Connection connection;
+public class TransactionDAO extends AbstractDAO {
 
 	public TransactionDAO() throws SQLException, ClassNotFoundException {
-		Properties properties = new PropertyLoader("app.config")
-				.getProperties();
-		setConnection(new MyConnection(properties).getConnection());
+		super();
 	}
+
+	private Connection connection;
 
 	public Connection getConnection() {
 		return connection;
