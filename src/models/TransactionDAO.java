@@ -148,4 +148,25 @@ public class TransactionDAO {
 		return false;
 	}
 
+	public int getAvailableCopies(Book book) throws SQLException {
+		int count = 0;
+		int available = 0;
+
+		String sql = "SELECT COUNT(*) FROM Borrows "
+				+ "WHERE BookID = ? AND DateReturned is NULL";
+
+		PreparedStatement ps = null;
+		ps = getConnection().prepareStatement(sql);
+		ps.setLong(1, book.getBookId());
+		ResultSet rs = ps.executeQuery();
+		
+		if (rs.first()) {
+			count = rs.getInt(1);
+		}
+
+		available = book.getCopies() - count;
+
+		return available;
+	}
+
 }
