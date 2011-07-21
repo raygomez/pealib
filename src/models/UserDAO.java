@@ -5,19 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Properties;
 
-import utilities.PropertyLoader;
-import utilities.MyConnection;
-
-public class UserDAO {
+public class UserDAO extends AbstractDAO {
 
 	private Connection connection;
 
 	public UserDAO() throws SQLException, ClassNotFoundException {
-		Properties properties = new PropertyLoader("app.config")
-				.getProperties();
-		setConnection(new MyConnection(properties).getConnection());
+		super();
 	}
 
 	/**
@@ -102,7 +96,8 @@ public class UserDAO {
 	public void saveUser(User user) throws SQLException {
 		String sql = "INSERT INTO Users "
 				+ "(FirstName,LastName,UserName,Password,Type,"
-				+ "Address, ContactNo, Email)" + " values (?,?,?,SHA2(?,0),?,?,?,?);";
+				+ "Address, ContactNo, Email)"
+				+ " values (?,?,?,SHA2(?,0),?,?,?,?);";
 
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ps.setString(1, user.getFirstName());
