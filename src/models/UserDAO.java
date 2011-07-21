@@ -64,7 +64,9 @@ public class UserDAO {
 	public ArrayList<User> searchUsers(String keyword) throws SQLException {
 		ArrayList<User> users = new ArrayList<User>();
 
-		String sql = "SELECT * from Users where CONCAT(LastName,FirstName,UserName) like ?";
+		String sql = "SELECT * from Users "
+				+ "where CONCAT(LastName,FirstName,UserName) like ? "
+				+ "and Type != 'Librarian'";
 
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ps.setString(1, "%" + keyword + "%");
