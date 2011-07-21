@@ -116,14 +116,6 @@ public class BookDAOTest {
 		ArrayList<Book> bookList = testBookDao.searchBook("Ewan ko1");
 		assertEquals(3,bookList.get(0).getBookId());
 	}
-	
-	@Test
-	public void testSearchEdition() throws SQLException{
-		ArrayList<Book> bookList = testBookDao.searchBook("1st");
-		assertEquals(1,bookList.get(0).getBookId());
-		assertEquals(2,bookList.get(1).getBookId());
-		assertEquals(3,bookList.get(2).getBookId());
-	}
 
 	@Test
 	public void testSearchPublisher() throws SQLException{
