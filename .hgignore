@@ -22,3 +22,5 @@ syntax: regexp
 ^cobertura\.ser$
 syntax: regexp
 ^pealib\.zip$
+syntax: regexp
+^\.classpath$
