@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS Borrows
 	(BorrowID INT UNIQUE NOT NULL AUTO_INCREMENT,
 	UserID INT,
 	BOokID INT,
+	DateRequested DATE,
 	DateBorrowed DATE,
 	DateReturned DATE,
 	PRIMARY KEY (BorrowID)
@@ -44,6 +45,6 @@ CREATE TABLE IF NOT EXISTS Borrows
 CREATE TABLE IF NOT EXISTS Reserves
 	(UserID INT,
 	BookID INT,
-	DateReturned DATE,
+	DateReserved DATE,
 	PRIMARY KEY (UserID,BookID)
 	);
