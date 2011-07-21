@@ -2,22 +2,23 @@ package utilities;
 
 import java.awt.Color;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPasswordField;
 
-public class MyTextField extends JTextField {
+public class MyPasswordField extends JPasswordField {
 
+	
 	/**
-	 *  MyTextField
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
-	public MyTextField(){
+	public MyPasswordField(){
 		super(20);
 		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
 	}
 	
-	public MyTextField(int length){
+	public MyPasswordField(int length){
 		super(length);
 		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
 	}

@@ -11,12 +11,16 @@ import models.User;
 import models.UserDAO;
 
 import utilities.Constants;
+
 import views.LogInDialog;
 
 public class AuthenticationController {
 	private static LogInDialog login;
 	private User user;
 	private UserDAO userDao;
+	
+	String login_user;
+	String login_pass;
 
 	public static void main(String[] args) {
 		try {
@@ -82,13 +86,12 @@ public class AuthenticationController {
 			if (keyCode == 10) {
 				submit();
 			} else {
-				String user = login.getFieldUsername().getText();
-				String pass = login.getFieldPassword().getText();
+				setUsernamePassword();
 
-				if (user.length() > 0)
-					validateUsername(user);
-				if (pass.length() > 0)
-					validatePassword(pass);
+				if (login_user.length() > 0)
+					validateUsername(login_user);
+				if (login_pass.length() > 0)
+					validatePassword(login_pass);
 			}
 		}
 
@@ -100,47 +103,39 @@ public class AuthenticationController {
 	private boolean validateUsername(String username) {
 		boolean result = (username.matches(Constants.USERNAME_FORMAT));
 
-		if (result)
-			login.setUsernameColor(false);
-		else
-			login.setUsernameColor(true);
+		login.getFieldUsername().hasError(!result);
 
 		return result;
 	}
 
 	private boolean validatePassword(String password) {
 		boolean result = (password.matches(Constants.PASSWORD_FORMAT));
-		if (result)
-			login.setPasswordColor(false);
-		else
-			login.setPasswordColor(true);
+		
+		login.getFieldPassword().hasError(!result);		
 
 		return result;
 	}
+	
+	private void setUsernamePassword(){
+		login_user = login.getFieldUsername().getText();
+		login_pass = new String(login.getFieldPassword().getPassword());
+	}
 
 	private void submit() {
-		String username = login.getFieldUsername().getText();
-		String password = login.getFieldPassword().getText();
-
-		if (username.equals("") || password.equals("")) {
+		setUsernamePassword();
+		if (login_user.equals("") || login_pass.equals("")) {
+			
 			login.setLabelError("Incomplete fields");
-
-			if (username.equals(""))
-				login.setUsernameColor(true);
-			else
-				login.setUsernameColor(false);
-
-			if (password.equals(""))
-				login.setPasswordColor(true);
-			else
-				login.setPasswordColor(false);
-		} else if (!validateUsername(username) || !validatePassword(password)) {
+			login.getFieldUsername().hasError(login_user.equals("") || !validateUsername(login_user));
+			login.getFieldPassword().hasError(login_pass.equals("") || !validatePassword(login_pass));
+			
+		} else if (!validateUsername(login_user) || !validatePassword(login_pass)) {
 			login.setLabelError("Invalid input");
 		}
 
-		else if (validateUsername(username) && validatePassword(password)) {
+		else if (validateUsername(login_user) && validatePassword(login_pass)) {
 			try {
-				setUser(userDao.getUser(username, password));
+				setUser(userDao.getUser(login_user, login_pass));
 			} catch (Exception e) {
 				System.out.println("AuthenticationController getUser: " + e);
 			}
