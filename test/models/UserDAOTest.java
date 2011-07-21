@@ -85,5 +85,17 @@ public class UserDAOTest {
 		assertEquals(0, users.size());
 
 	}
+	
+	@Test
+	public void testIsUsernameExisting() throws SQLException {
+		boolean isExisting = userDAO.isUsernameExisting("jvillar");
+		assertEquals(true, isExisting);
+	}
+	
+	@Test
+	public void testIsUsernameNotExisting() throws Exception {
+		boolean notExisting = userDAO.isUsernameExisting("jvillar0");
+		assertEquals(false, notExisting);
+	}
 
 }

@@ -35,6 +35,17 @@ public class UserDAO {
 		this.connection = connection;
 	}
 
+	public boolean isUsernameExisting(String username) throws SQLException {
+		String query = "SELECT count(*) from Users where Username=?";
+		PreparedStatement statement = getConnection().prepareStatement(query);
+		statement.setString(1, username);
+		ResultSet rs = statement.executeQuery();
+
+		rs.next();
+		return (rs.getInt(1) != 0);
+
+	}
+
 	public User getUser(String username, String password) throws SQLException {
 
 		User user = null;
