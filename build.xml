@@ -4,7 +4,7 @@
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
-<project basedir="." default="all" name="pealib">
+<project basedir="." default="build" name="pealib">
     <property environment="env"/>
     <property name="ECLIPSE_HOME" value="../../Documents/eclipse-complete"/>
     <property name="junit.output.dir" value="junit"/>
@@ -34,6 +34,7 @@
         <pathelement location="lib/commons/commons-io-2.0.1.jar"/>
         <pathelement location="lib/commons/commons-lang-2.3.jar"/>
         <pathelement location="lib/commons/commons-logging-1.1.jar"/>
+        <pathelement location="lib/joda-time-1.6.2.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -90,10 +91,14 @@
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <test name="LibrarianSidebarPanelTest" todir="${junit.output.dir}"/>
-            <test name="UserSidebarPanelTest" todir="${junit.output.dir}"/>
+            <test name="models.BookDAOTest" todir="${junit.output.dir}"/>
+            <test name="models.TransactionDAOTest" todir="${junit.output.dir}"/>
             <test name="models.UserDAOTest" todir="${junit.output.dir}"/>
             <test name="utilities.MyConnectionTest" todir="${junit.output.dir}"/>
+            <test name="views.ChangePasswordDialogTest" todir="${junit.output.dir}"/>
+            <test name="views.LibrarianSidebarPanelTest" todir="${junit.output.dir}"/>
+            <test name="views.LogInDialogTest" todir="${junit.output.dir}"/>
+            <test name="views.UserSidebarPanelTest" todir="${junit.output.dir}"/>
             <classpath refid="pealib.classpath"/>
         </junit>
     </target>
@@ -118,6 +123,35 @@
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <test name="models.UserDAOTest" todir="${junit.output.dir}"/>
+            <classpath refid="pealib.classpath"/>
+        </junit>
+    </target>
+    <target name="LibrarianSidebarPanelTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="LibrarianSidebarPanelTest" todir="${junit.output.dir}"/>
+            <classpath refid="pealib.classpath"/>
+        </junit>
+    </target>
+    <target name="AuthenticationController">
+        <java classname="controllers.AuthenticationController" failonerror="true" fork="yes">
+            <classpath refid="pealib.classpath"/>
+        </java>
+    </target>
+    <target name="UserDAOTest.testGetUserInDatabase">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="models.UserDAOTest" todir="${junit.output.dir}"/>
+            <classpath refid="pealib.classpath"/>
+        </junit>
+    </target>
+    <target name="ChangePasswordDialogTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="views.ChangePasswordDialogTest" todir="${junit.output.dir}"/>
             <classpath refid="pealib.classpath"/>
         </junit>
     </target>
