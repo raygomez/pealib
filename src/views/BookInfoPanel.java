@@ -1,7 +1,6 @@
 package views;
 
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -25,7 +24,6 @@ public class BookInfoPanel extends JPanel {
 	private JButton btnSave;
 	private JButton btnDelete;
 	private JLabel lblCopiesValue;
-	private Connection conn;
 	private User currUser;
 	private Book currBook;
 	
@@ -33,9 +31,8 @@ public class BookInfoPanel extends JPanel {
 	 * Create the panel.
 	 */
 
-	public BookInfoPanel(ArrayList<Book> book, Connection con, User user,
+	public BookInfoPanel(ArrayList<Book> book, User user,
 			JFrame frame) {
-		this.conn = con;
 		this.currUser = user;
 		this.currBook = book.get(0);
 		displayBookInfo();
