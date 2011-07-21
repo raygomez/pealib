@@ -17,4 +17,9 @@
 		Password="6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
 		Type="User" Address="USA" ContactNo="1234567890" Email="ndizon@gmail.com"
 		ID="4" />
+
+	<users FirstName="Janine June" LastName="Lim" UserName="jlim"
+		Password="6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+		Type="User" Address="USA" ContactNo="1234567890" Email="jlim@gmail.com"
+		ID="0" />
 </dataset>
