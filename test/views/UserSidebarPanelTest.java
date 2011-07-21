@@ -1,5 +1,4 @@
 package views;
-
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.uispec4j.*;
@@ -18,7 +17,7 @@ public class UserSidebarPanelTest extends UISpecTestCase{
 	}
 	
 	@Test
-	public void initialStateTest(){
+	public void testInitialState(){
 		Button searchButton = panel.getButton("Search Books");
 		assertNotNull(searchButton);
 		assertThat(searchButton.isEnabled());
