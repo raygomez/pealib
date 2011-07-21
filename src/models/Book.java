@@ -4,6 +4,7 @@ public class Book {
 	private int bookId;
 	private String isbn;
 	private String title;
+	private String edition;
 	private String author;
 	private String publisher;
 	private int yearPublish;
@@ -14,12 +15,13 @@ public class Book {
 		
 	}
 	
-	public Book(int bookId, String isbn, String title, String author,
+	public Book(int bookId, String isbn, String title, String edition, String author,
 			String publisher, int yearPublish, String description, int copies) {
 		super();
 		this.bookId = bookId;
 		this.isbn = isbn;
 		this.title = title;
+		this.edition = edition;
 		this.author = author;
 		this.publisher = publisher;
 		this.yearPublish = yearPublish;
@@ -49,6 +51,14 @@ public class Book {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	public String getEdition() {
+		return edition;
+	}
+
+	public void setEdition(String edition) {
+		this.edition = edition;
 	}
 
 	public String getAuthor() {
