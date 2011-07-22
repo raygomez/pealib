@@ -111,6 +111,56 @@ public class BookDAO extends AbstractDAO {
 		return book;
 	}
 
+	public ArrayList<Book> searchOutgoingBook() throws SQLException {
+		ArrayList<Book> bookCollection = new ArrayList<Book>();
+		String sql = "SELECT * FROM Books where DateBorrowed is NULL AND DateReturned is NULL";
+
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			int bookID = Integer.parseInt(rs.getString("ID"));
+			String isbn = rs.getString("ISBN");
+			String title = rs.getString("Title");
+			String edition = rs.getString("Edition");
+			String author = rs.getString("Author");
+			String publisher = rs.getString("Publisher");
+			String description = rs.getString("Description");
+			int yearPublish = Integer.parseInt(rs.getString("YearPublish"));
+			int copies = Integer.parseInt(rs.getString("Copies"));
+			Book addBook = new Book(bookID, isbn, title, edition, author,
+					publisher, yearPublish, description, copies);
+			bookCollection.add(addBook);
+		}
+
+		return bookCollection;
+	}
+
+	public ArrayList<Book> searchIncomingBook() throws SQLException {
+		ArrayList<Book> bookCollection = new ArrayList<Book>();
+		String sql = "SELECT * FROM Books where DateBorrowed not NULL AND DateReturned is NULL";
+
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			int bookID = Integer.parseInt(rs.getString("ID"));
+			String isbn = rs.getString("ISBN");
+			String title = rs.getString("Title");
+			String edition = rs.getString("Edition");
+			String author = rs.getString("Author");
+			String publisher = rs.getString("Publisher");
+			String description = rs.getString("Description");
+			int yearPublish = Integer.parseInt(rs.getString("YearPublish"));
+			int copies = Integer.parseInt(rs.getString("Copies"));
+			Book addBook = new Book(bookID, isbn, title, edition, author,
+					publisher, yearPublish, description, copies);
+			bookCollection.add(addBook);
+		}
+
+		return bookCollection;
+	}
+
 	public ArrayList<Book> searchBook(String search) throws SQLException {
 		ArrayList<Book> bookCollection = new ArrayList<Book>();
 		PreparedStatement bookQuery = null;
@@ -119,20 +169,24 @@ public class BookDAO extends AbstractDAO {
 			bookQuery = connection.prepareStatement("SELECT * FROM Books");
 		} else {
 			bookQuery = connection
-					.prepareStatement("SELECT * FROM Books WHERE CONCAT(ISBN, Title, Author, Publisher) LIKE ?");
+					.prepareStatement("SELECT * FROM Books WHERE ISBN LIKE ? OR Title LIKE ? OR Author LIKE ? OR Edition LIKE ? OR Publisher LIKE ?");
 			bookQuery.setString(1, "%" + search + "%");
+			bookQuery.setString(2, "%" + search + "%");
+			bookQuery.setString(3, "%" + search + "%");
+			bookQuery.setString(4, "%" + search + "%");
+			bookQuery.setString(5, "%" + search + "%");
 		}
 
 		ResultSet rs = bookQuery.executeQuery();
 		while (rs.next()) {
-			int bookID = rs.getInt("ID");
+			int bookID = Integer.parseInt(rs.getString("ID"));
 			String isbn = rs.getString("ISBN");
 			String title = rs.getString("Title");
 			String edition = rs.getString("Edition");
 			String author = rs.getString("Author");
 			String publisher = rs.getString("Publisher");
 			String description = rs.getString("Description");
-			int yearPublish = rs.getInt("YearPublish");
+			int yearPublish = Integer.parseInt(rs.getString("YearPublish"));
 			int copies = Integer.parseInt(rs.getString("Copies"));
 			Book addBook = new Book(bookID, isbn, title, edition, author,
 					publisher, yearPublish, description, copies);
