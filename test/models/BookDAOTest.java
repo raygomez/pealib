@@ -2,7 +2,6 @@ package models;
 
 import static org.junit.Assert.assertEquals;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -18,37 +17,35 @@ import utilities.Connector;
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class BookDAOTest {
 
-	private BookDAO testBookDao;
 	private Book testBook;
 
 	@Before
 	public void setUp() throws Exception {
 		new Connector("test.config");
 		testBook = new Book();
-		testBookDao = new BookDAO();
 	}
 
 	@Test
-	public void testGetBookById() throws SQLException, ClassNotFoundException{
-		Book book = testBookDao.getBookById(1);
+	public void testGetBookById() throws Exception{
+		Book book = BookDAO.getBookById(1);
 		assertEquals("Harry Poter 1",book.getTitle());
 	}
 	
 	@Test
-	public void testIsIsbnExisting() throws SQLException {
+	public void testIsIsbnExisting() throws Exception {
 		testBook.setIsbn("1234567890120");
-		assertEquals(true, testBookDao.isIsbnExisting(testBook.getIsbn()));
+		assertEquals(true, BookDAO.isIsbnExisting(testBook.getIsbn()));
 	}
 
 	@Test
-	public void testIsIsbnNotExisting() throws SQLException {
+	public void testIsIsbnNotExisting() throws Exception {
 		testBook.setIsbn("1234567890124");
-		assertEquals(false, testBookDao.isIsbnExisting(testBook.getIsbn()));
+		assertEquals(false, BookDAO.isIsbnExisting(testBook.getIsbn()));
 	}
 
 	@Test
 	@ExpectedDataSet({ "expected/saveBook.xml" })
-	public void testAddBook() throws SQLException {
+	public void testAddBook() throws Exception {
 		testBook.setIsbn("1234567890123");
 		testBook.setTitle("Harry Poter 4");
 		testBook.setAuthor("Ewan ko");
@@ -57,12 +54,12 @@ public class BookDAOTest {
 		testBook.setYearPublish(1901);
 		testBook.setDescription("wizard book");
 		testBook.setCopies(1);
-		testBookDao.addBook(testBook);
+		BookDAO.addBook(testBook);
 	}
 
 	@Test
 	@ExpectedDataSet({ "expected/editedBook.xml" })
-	public void testEditBook() throws SQLException {
+	public void testEditBook() throws Exception {
 		testBook.setBookId(3);
 		testBook.setIsbn("1234567890122");
 		testBook.setTitle("Harry Poter 31");
@@ -72,47 +69,47 @@ public class BookDAOTest {
 		testBook.setYearPublish(1902);
 		testBook.setDescription("wizard book1");
 		testBook.setCopies(2);
-		assertEquals(1, testBookDao.editBook(testBook));
+		assertEquals(1, BookDAO.editBook(testBook));
 	}
 
 	@Test
 	@ExpectedDataSet({ "expected/deletedBook.xml" })
-	public void testDeleteBook() throws SQLException {
+	public void testDeleteBook() throws Exception {
 		testBook.setBookId(3);
-		assertEquals(1, testBookDao.deleteBook(testBook));
+		assertEquals(1, BookDAO.deleteBook(testBook));
 	}
 
 	@Test
-	public void testSearchBookAll() throws SQLException {
-		ArrayList<Book> bookList = testBookDao.searchBook("*");
+	public void testSearchBookAll() throws Exception {
+		ArrayList<Book> bookList = BookDAO.searchBook("*");
 		assertEquals(1,bookList.get(0).getBookId());
 		assertEquals(2,bookList.get(1).getBookId());
 		assertEquals(3,bookList.get(2).getBookId());
 	}
 	
 	@Test
-	public void testSearchBookISBN() throws SQLException{
-		ArrayList<Book> bookList = testBookDao.searchBook("1234567890120");
+	public void testSearchBookISBN() throws Exception{
+		ArrayList<Book> bookList = BookDAO.searchBook("1234567890120");
 		assertEquals(1,bookList.get(0).getBookId());
 	}
 	
 	@Test
-	public void testSearchBookTitle() throws SQLException{
-		ArrayList<Book> bookList = testBookDao.searchBook("Harry");
+	public void testSearchBookTitle() throws Exception{
+		ArrayList<Book> bookList = BookDAO.searchBook("Harry");
 		assertEquals(1,bookList.get(0).getBookId());
 		assertEquals(2,bookList.get(1).getBookId());
 		assertEquals(3,bookList.get(2).getBookId());
 	}
 	
 	@Test
-	public void testSearchAuthor() throws SQLException{
-		ArrayList<Book> bookList = testBookDao.searchBook("Ewan ko1");
+	public void testSearchAuthor() throws Exception{
+		ArrayList<Book> bookList = BookDAO.searchBook("Ewan ko1");
 		assertEquals(3,bookList.get(0).getBookId());
 	}
 
 	@Test
-	public void testSearchPublisher() throws SQLException{
-		ArrayList<Book> bookList = testBookDao.searchBook("HarryPublisher1");
+	public void testSearchPublisher() throws Exception{
+		ArrayList<Book> bookList = BookDAO.searchBook("HarryPublisher1");
 		assertEquals(2,bookList.get(0).getBookId());
 	}
 }
