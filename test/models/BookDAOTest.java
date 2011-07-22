@@ -60,7 +60,7 @@ public class BookDAOTest {
 		testBook.setPublisher("HarryPublisher");
 		testBook.setYearPublish(1901);
 		testBook.setDescription("wizard book");
-		testBook.setCopies(1);
+		testBook.setCopies(3);
 		BookDAO.addBook(testBook);
 	}
 
