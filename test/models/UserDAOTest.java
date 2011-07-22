@@ -100,4 +100,10 @@ public class UserDAOTest {
 		UserDAO.saveUser(user);
 	}
 
+	@Test
+	@DataSet({ "user_with_no_pending.xml" })
+	public void testGetAllPendingWithNoPending() throws Exception {
+		ArrayList<User> users = UserDAO.getAllPending();
+		assertEquals(0, users.size());
+	}
 }
