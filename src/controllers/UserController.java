@@ -206,8 +206,8 @@ public class UserController {
 					lastName, email, address, contactNo);
 				
 				try {
-					userDao.updateUser(user);
-				} catch (SQLException e) {
+					UserDAO.updateUser(user);
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
