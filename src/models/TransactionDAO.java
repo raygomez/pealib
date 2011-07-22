@@ -118,6 +118,26 @@ public class TransactionDAO {
 		return count != 0;
 	}
 
+	public static ArrayList<ReserveTransaction> getReservedBooks(User user)
+			throws Exception {
+		ArrayList<ReserveTransaction> reserves = new ArrayList<ReserveTransaction>();
+
+		String sql = "SELECT * FROM Reserves WHERE UserID = ?";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			Book book = BookDAO.getBookById(rs.getInt("BookID"));
+			ReserveTransaction reserveTransaction = new ReserveTransaction(
+					user, book, rs.getDate("DateReserved"));
+			reserves.add(reserveTransaction);
+		}
+		Connector.close();
+		return reserves;
+	}
+
 	public static ArrayList<BorrowTransaction> getHistory(User user)
 			throws Exception {
 
@@ -141,7 +161,7 @@ public class TransactionDAO {
 		return borrows;
 
 	}
-	
+
 	public static ArrayList<BorrowTransaction> getOnLoanBooks(User user)
 			throws Exception {
 
