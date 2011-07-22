@@ -34,4 +34,13 @@ public class TransactionDAOTest {
 		Book book = BookDAO.getBookById(2);
 		TransactionDAO.reserveBook(book, user);
 	}
+	
+	@Test
+	@ExpectedDataSet({"expected/borrowBorrows.xml"})
+	public void testBorrowBook() throws Exception{
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(6);
+		TransactionDAO.borrowBook(book, user);
+	}
+	
 }
