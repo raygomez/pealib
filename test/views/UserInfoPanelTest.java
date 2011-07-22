@@ -241,4 +241,32 @@ public class UserInfoPanelTest extends UISpecTestCase {
 		}
 	}
 
+	@Test
+	public void testSetFirstNameEnabled(){
+		userInfoPanel.setFirstNameEnabled(true);
+		TextBox tb = panel.getInputTextBox("firstName");
+		assertThat(tb.isEnabled());
+	}
+	
+	@Test
+	public void testSetFirstNameEnabled2(){
+		userInfoPanel.setFirstNameEnabled(false);
+		TextBox tb = panel.getInputTextBox("firstName");
+		assertFalse(tb.isEnabled());
+	}
+	
+	@Test
+	public void testSetLastNameEnabled(){
+		userInfoPanel.setLastNameEnabled(true);
+		TextBox tb = panel.getInputTextBox("lastName");
+		assertThat(tb.isEnabled());
+	}
+	
+	@Test
+	public void testSetLastNameEnabled2(){
+		userInfoPanel.setLastNameEnabled(false);
+		TextBox tb = panel.getInputTextBox("lastName");
+		assertFalse(tb.isEnabled());
+	}
+
 }
