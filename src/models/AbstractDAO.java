@@ -4,18 +4,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import utilities.MyConnection;
+import utilities.Connector;
 import utilities.PropertyLoader;
 
 public abstract class AbstractDAO {
 
 	private Connection connection;
 
-	public AbstractDAO() throws SQLException, ClassNotFoundException {
+	public AbstractDAO() throws Exception {
 		super();
 		Properties properties = new PropertyLoader("app.config")
 				.getProperties();
-		setConnection(new MyConnection(properties).getConnection());
+		setConnection(Connector.getConnection());
 	}
 
 	/**
