@@ -48,7 +48,7 @@ public class Connector {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public static void setPassword(String password) {
 		Connector.password = password;
 	}
 
