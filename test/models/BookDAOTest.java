@@ -1,6 +1,7 @@
 package models;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,12 @@ public class BookDAOTest {
 	public void testGetBookById() throws Exception{
 		Book book = BookDAO.getBookById(1);
 		assertEquals("Harry Poter 1",book.getTitle());
+	}
+	
+	@Test
+	public void testGetBookByIdNotExisting() throws Exception{
+		Book book = BookDAO.getBookById(100);
+		assertNull(book);
 	}
 	
 	@Test
