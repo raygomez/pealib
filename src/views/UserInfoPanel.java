@@ -59,7 +59,7 @@ public class UserInfoPanel extends JPanel {
 		add(username, "wrap");
 		
 		changePasswordButton = new JButton("Change Password");
-		add(changePasswordButton);
+		add(changePasswordButton, "wrap");
 		
 		tempLabel = new JLabel("First Name");
 		firstName = new JTextField(20);
@@ -104,7 +104,7 @@ public class UserInfoPanel extends JPanel {
 		add(contactNumberError, "wrap");
 		
 		tempLabel = new JLabel("Email");
-		email = new JTextField();
+		email = new JTextField(20);
 		email.setName("email");
 		
 		emailError = new JLabel();
