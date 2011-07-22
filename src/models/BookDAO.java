@@ -84,7 +84,7 @@ public class BookDAO extends AbstractDAO {
 		return intStat;
 	}
 
-	public Book searchBookById(int id) throws SQLException {
+	public Book getBookById(int id) throws SQLException {
 		Book book = null;
 
 		String sql = "SELECT * FROM Books where ID = ?";
