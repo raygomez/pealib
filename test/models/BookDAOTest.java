@@ -47,14 +47,14 @@ public class BookDAOTest {
 
 	@Test
 	public void testIsIsbnNotExisting() throws Exception {
-		testBook.setIsbn("1234567890124");
+		testBook.setIsbn("0123456789012");
 		assertEquals(false, BookDAO.isIsbnExisting(testBook.getIsbn()));
 	}
 
 	@Test
 	@ExpectedDataSet({ "expected/saveBook.xml" })
 	public void testAddBook() throws Exception {
-		testBook.setIsbn("1234567890123");
+		testBook.setIsbn("1234567890126");
 		testBook.setTitle("Harry Poter 4");
 		testBook.setAuthor("Ewan ko");
 		testBook.setEdition("1st");
