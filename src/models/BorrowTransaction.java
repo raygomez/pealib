@@ -2,20 +2,20 @@ package models;
 
 import java.sql.Date;
 
-public class Borrow {
+public class BorrowTransaction {
 
 	int id;
-	int userId;
-	int bookId;
+	User user;
+	Book book;
 	private Date dateRequested;
 	Date dateBorrowed;
 	Date dateReturned;
 
-	public Borrow(int id, int userId, int bookId, Date dateRequested,
+	public BorrowTransaction(int id, User user, Book book, Date dateRequested,
 			Date dateBorrowed, Date dateReturned) {
 		this.id = id;
-		this.userId = userId;
-		this.bookId = bookId;
+		this.user = user;
+		this.book = book;
 		this.dateRequested = dateRequested;
 		this.dateBorrowed = dateBorrowed;
 		this.dateReturned = dateReturned;
@@ -29,20 +29,20 @@ public class Borrow {
 		this.id = id;
 	}
 
-	public int getUserId() {
-		return userId;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public int getBookId() {
-		return bookId;
+	public Book getBook() {
+		return book;
 	}
 
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
+	public void setBook(Book book) {
+		this.book = book;
 	}
 
 	public Date getDateBorrowed() {
