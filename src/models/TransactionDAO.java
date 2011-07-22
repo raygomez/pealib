@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.joda.time.DateMidnight;
@@ -26,7 +27,7 @@ public class TransactionDAO extends AbstractDAO {
 		this.connection = connection;
 	}
 
-	public void receiveBook(Borrow borrow) throws SQLException {
+	public void receiveBook(BorrowTransaction borrow) throws SQLException {
 
 		String sql = "UPDATE Borrows SET ReturnDate = ? where ID = ?";
 		Calendar today = Calendar.getInstance();
@@ -69,7 +70,7 @@ public class TransactionDAO extends AbstractDAO {
 		return intStat;
 	}
 
-	public int acceptBookRequest(Borrow borrowedBook) throws SQLException {
+	public int acceptBookRequest(BorrowTransaction borrowedBook) throws SQLException {
 		Calendar today = Calendar.getInstance();
 		int intStat = 0;
 
@@ -84,7 +85,7 @@ public class TransactionDAO extends AbstractDAO {
 		return intStat;
 	}
 
-	public int cancelReservation(Borrow reservedBook, User user)
+	public int cancelReservation(BorrowTransaction reservedBook, User user)
 			throws SQLException {
 		int intStat = 0;
 
@@ -92,14 +93,14 @@ public class TransactionDAO extends AbstractDAO {
 
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setLong(1, user.getUserId());
-		ps.setLong(2, reservedBook.getBookId());
+		ps.setLong(2, reservedBook.getBook().getBookId());
 
 		intStat = ps.executeUpdate();
 
 		return intStat;
 	}
 
-	public void denyBookRequest(Borrow borrow) throws SQLException {
+	public void denyBookRequest(BorrowTransaction borrow) throws SQLException {
 
 		String sql = "Delete from Borrows where ID = ?";
 
@@ -125,19 +126,20 @@ public class TransactionDAO extends AbstractDAO {
 		return count != 0;
 	}
 
-	public Borrow getBorrowClass(Book book, User user) throws SQLException {
+	public BorrowTransaction getBorrowClass(Book book, User user) throws SQLException {
 
 		String sql = "SELECT * FROM Reserves WHERE UserID = ? AND BookID = ?";
-		Borrow borrow = null;
+		BorrowTransaction borrow = null;
 
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setLong(1, user.getUserId());
 		ps.setLong(2, book.getBookId());
 		ResultSet rs = ps.executeQuery();
+
 		if (rs.first()) {
-			borrow = new Borrow(rs.getInt("ID"), rs.getInt("UserID"),
-					rs.getInt("BookId"), rs.getDate("DateRequested"),
-					rs.getDate("DateBorrowed"), rs.getDate("DateReturned"));
+			borrow = new BorrowTransaction(rs.getInt("ID"), user, book,
+					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
+					rs.getDate("DateReturned"));
 
 		}
 
@@ -204,5 +206,114 @@ public class TransactionDAO extends AbstractDAO {
 		days = d.getDays();
 		return days;
 
+	}
+
+	public ArrayList<BorrowTransaction> searchOutgoingBook(String search)
+			throws SQLException {
+		ArrayList<BorrowTransaction> bookCollection = new ArrayList<BorrowTransaction>();
+		String sql;
+		PreparedStatement ps;
+
+		if (search.equals("*")) {
+			sql = "SELECT * FROM Books "
+					+ "INNER JOIN Borrows ON Books.ID=Borrows.BookID "
+					+ "JOIN Users ON Borrows.UserID=Users.ID WHERE "
+					+ "DateBorrowed is NULL AND DateReturned is NULL ORDER "
+					+ "BY Borrows.DateRequested";
+			ps = getConnection().prepareStatement(sql);
+
+		} else {
+			sql = "SELECT * FROM Books "
+					+ "INNER JOIN Borrows ON Books.ID=Borrows.BookID "
+					+ "JOIN Users ON Borrows.UserID=Users.ID WHERE "
+					+ "(DateBorrowed is NULL AND DateReturned is NULL) AND "
+					+ "(CONCAT(Books.ISBN, Books.Title, Users.ID, "
+					+ "Users.FirstName, Users.LastName) LIKE ?) ORDER BY "
+					+ "Borrows.DateRequested";
+			ps = getConnection().prepareStatement(sql);
+			ps.setString(1, "%" + search + "%");
+		}
+
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			User user = new User();
+			user.setUserId(rs.getInt("Users.ID"));
+			user.setFirstName(rs.getString("Users.FirstName"));
+			user.setLastName(rs.getString("Users.LastName"));
+			user.setType(rs.getString("Users.Type"));
+			user.setUserName(rs.getString("Users.UserName"));
+			user.setAddress(rs.getString("Users.Address"));
+			user.setContactNo(rs.getString("Users.ContactNo"));
+			user.setEmail(rs.getString("Users.Email"));
+
+			BorrowTransaction borrowed = new BorrowTransaction(rs.getInt("Borrows.BorrowID"), user,
+					new Book(rs.getInt("Books.ID"), rs.getString("Books.ISBN"),
+							rs.getString("Books.Title"), rs
+									.getString("Books.Edition"), rs
+									.getString("Books.Author"), rs
+									.getString("Books.Publisher"), rs
+									.getInt("Books.YearPublish"), rs
+									.getString("Books.Description"), rs
+									.getInt("Books.Copies")),
+					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
+					rs.getDate("DateReturned"));
+			bookCollection.add(borrowed);
+		}
+
+		return bookCollection;
+	}
+
+	public ArrayList<BorrowTransaction> searchIncomingBook(String search)
+			throws SQLException {
+		ArrayList<BorrowTransaction> bookCollection = new ArrayList<BorrowTransaction>();
+		String sql;
+		PreparedStatement ps;
+
+		if (search.equals("*")) {
+			sql = "SELECT * FROM Books INNER JOIN Borrows ON "
+					+ "Books.ID=Borrows.BookID JOIN Users ON "
+					+ "Borrows.UserID=Users.ID WHERE DateBorrowed is not "
+					+ "NULL AND DateReturned is NULL ORDER BY "
+					+ "Borrows.DateRequested";
+			ps = getConnection().prepareStatement(sql);
+
+		} else {
+			sql = "SELECT * FROM Books INNER JOIN Borrows ON "
+					+ "Books.ID=Borrows.BookID JOIN Users ON "
+					+ "Borrows.UserID=Users.ID WHERE (DateBorrowed is not "
+					+ "NULL AND DateReturned is NULL) AND (CONCAT(Books.ISBN, "
+					+ "Books.Title, Users.ID, Users.FirstName, Users.LastName) "
+					+ "LIKE ?) ORDER BY Borrows.DateRequested";
+			ps = getConnection().prepareStatement(sql);
+			ps.setString(1, "%" + search + "%");
+		}
+
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			User user = new User();
+			user.setUserId(rs.getInt("Users.ID"));
+			user.setFirstName(rs.getString("Users.FirstName"));
+			user.setLastName(rs.getString("Users.LastName"));
+			user.setType(rs.getString("Users.Type"));
+			user.setUserName(rs.getString("Users.UserName"));
+			user.setAddress(rs.getString("Users.Address"));
+			user.setContactNo(rs.getString("Users.ContactNo"));
+			user.setEmail(rs.getString("Users.Email"));
+
+			BorrowTransaction borrowed = new BorrowTransaction(rs.getInt("Borrows.BorrowID"), user,
+					new Book(rs.getInt("Books.ID"), rs.getString("Books.ISBN"),
+							rs.getString("Books.Title"), rs
+									.getString("Books.Edition"), rs
+									.getString("Books.Author"), rs
+									.getString("Books.Publisher"), rs
+									.getInt("Books.YearPublish"), rs
+									.getString("Books.Description"), rs
+									.getInt("Books.Copies")),
+					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
+					rs.getDate("DateReturned"));
+			bookCollection.add(borrowed);
+		}
+
+		return bookCollection;
 	}
 }
