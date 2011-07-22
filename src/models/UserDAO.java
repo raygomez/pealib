@@ -141,6 +141,43 @@ public class UserDAO {
 		ps.setString(6, user.getEmail());
 		ps.setString(7, user.getUserId()+"");
 		
+		ps.executeUpdate();
+		Connector.close();
+	}
+
+	public static boolean checkPassword(int userID, String oldPassword) throws Exception {
+		// TODO Auto-generated method stub
+		boolean equals;
+		
+		String sql = "SELECT * FROM Users WHERE ID = ? AND Password = SHA2(?,0)";
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setInt(1, userID);
+		ps.setString(2, oldPassword);
+		
+		ResultSet rs = ps.executeQuery();
+		
+		if(rs.next()){
+			equals = true;
+		}
+		else
+			equals = false;
+		
+		Connector.close();
+		
+		return equals;
+	}
+
+	public static void changePassword(int userID, String newPassword) throws Exception {
+		// TODO Auto-generated method stub
+		String sql = "UPDATE Users SET Password = SHA2(?,0) WHERE ID = ?";
+		
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+	
+		ps.setString(1, newPassword);
+		ps.setInt(2, userID);
+		
+		System.out.println(ps.executeUpdate());
+				
 		Connector.close();
 	}
 }

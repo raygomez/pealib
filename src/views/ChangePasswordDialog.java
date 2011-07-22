@@ -15,6 +15,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
+import utilities.Constants;
 import utilities.ErrorLabel;
 
 	@SuppressWarnings("serial")
@@ -139,7 +140,7 @@ import utilities.ErrorLabel;
 			this.errorLabel = errorLabel;
 		}
 
-		public void addchangePasswordListener(ActionListener actionListener) {
+		public void addChangePasswordListener(ActionListener actionListener) {
 			getChangePasswordButton().addActionListener(actionListener);
 		}
 
@@ -165,7 +166,25 @@ import utilities.ErrorLabel;
 		}
 
 		public void removeOldPassword(){
-			remove(getOldPasswordField());
-			remove(getOldPasswordLabel());
+			getOldPasswordField().setVisible(false);
+			getOldPasswordLabel().setVisible(false);
+			
+			getOldPasswordField().setEnabled(false);
+
+		}
+
+		public void displayError(int error) {
+			// TODO Auto-generated method stub
+			switch (error){
+				case Constants.DEFAULT_ERROR:
+					errorLabel.setText("An error has occured");
+					break;
+				case Constants.INCORRECT_PASSWORD_ERROR:
+					errorLabel.setText("Incorrect password");
+					break;
+				case Constants.PASSWORD_NOT_MATCH_ERROR:
+					errorLabel.setText("New passwords do not match");
+					break;
+			}
 		}
 	}
