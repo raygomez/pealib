@@ -15,7 +15,9 @@ public class TransactionDAO {
 
 	public static void receiveBook(BorrowTransaction borrow) throws Exception {
 
-		String sql = "UPDATE Borrows SET ReturnDate = ? where ID = ?";
+		String sql = "UPDATE Borrows SET DateReturned = ? "
+				+ "where ID = ? and DateBorrowed is not NULL and "
+				+ "DateRequested is not NULL";
 		Calendar today = Calendar.getInstance();
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
@@ -57,7 +59,8 @@ public class TransactionDAO {
 		return intStat;
 	}
 
-	public static int acceptBookRequest(BorrowTransaction borrowedBook) throws Exception {
+	public static int acceptBookRequest(BorrowTransaction borrowedBook)
+			throws Exception {
 		Calendar today = Calendar.getInstance();
 		int intStat = 0;
 
@@ -72,8 +75,8 @@ public class TransactionDAO {
 		return intStat;
 	}
 
-	public static int cancelReservation(BorrowTransaction reservedBook, User user)
-			throws Exception {
+	public static int cancelReservation(BorrowTransaction reservedBook,
+			User user) throws Exception {
 		int intStat = 0;
 
 		String sql = "DELETE FROM Reserves WHERE UserID = ? AND BOokID = ?";
@@ -87,7 +90,8 @@ public class TransactionDAO {
 		return intStat;
 	}
 
-	public static void denyBookRequest(BorrowTransaction borrow) throws Exception {
+	public static void denyBookRequest(BorrowTransaction borrow)
+			throws Exception {
 
 		String sql = "Delete from Borrows where ID = ?";
 
@@ -97,7 +101,8 @@ public class TransactionDAO {
 		Connector.close();
 	}
 
-	public static boolean isReservedByUser(Book book, User user) throws Exception {
+	public static boolean isReservedByUser(Book book, User user)
+			throws Exception {
 		int count = 0;
 
 		String sql = "SELECT COUNT(*) FROM Reserves WHERE UserID = ? AND BookID = ?";
@@ -113,28 +118,56 @@ public class TransactionDAO {
 		return count != 0;
 	}
 
-	public static BorrowTransaction getBorrowTransaction(Book book, User user) throws Exception {
+	public static ArrayList<BorrowTransaction> getHistory(User user)
+			throws Exception {
 
-		String sql = "SELECT * FROM Borrows WHERE UserID = ? AND BookID = ?";
-		BorrowTransaction borrow = null;
+		String sql = "SELECT * FROM Borrows WHERE UserID = ? and DateReturned is Not NULL";
+		ArrayList<BorrowTransaction> borrows = new ArrayList<BorrowTransaction>();
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, user.getUserId());
-		ps.setLong(2, book.getBookId());
 		ResultSet rs = ps.executeQuery();
 
-		if (rs.first()) {
-			borrow = new BorrowTransaction(rs.getInt("BorrowID"), user, book,
+		while (rs.next()) {
+			Book book = BookDAO.getBookById(rs.getInt("BookID"));
+			BorrowTransaction borrow = new BorrowTransaction(
+					rs.getInt("BorrowID"), user, book,
 					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
 					rs.getDate("DateReturned"));
 
+			borrows.add(borrow);
 		}
 		Connector.close();
-		return borrow;
+		return borrows;
+
+	}
+	
+	public static ArrayList<BorrowTransaction> getOnLoanBooks(User user)
+			throws Exception {
+
+		String sql = "SELECT * FROM Borrows WHERE UserID = ? and DateReturned is NULL";
+		ArrayList<BorrowTransaction> borrows = new ArrayList<BorrowTransaction>();
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			Book book = BookDAO.getBookById(rs.getInt("BookID"));
+			BorrowTransaction borrow = new BorrowTransaction(
+					rs.getInt("BorrowID"), user, book,
+					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
+					rs.getDate("DateReturned"));
+
+			borrows.add(borrow);
+		}
+		Connector.close();
+		return borrows;
 
 	}
 
-	public static boolean isBorrowedByUser(Book book, User user) throws Exception {
+	public static boolean isBorrowedByUser(Book book, User user)
+			throws Exception {
 		int count = 0;
 
 		String sql = "SELECT COUNT(*) FROM Borrows "
@@ -234,15 +267,16 @@ public class TransactionDAO {
 			user.setContactNo(rs.getString("Users.ContactNo"));
 			user.setEmail(rs.getString("Users.Email"));
 
-			BorrowTransaction borrowed = new BorrowTransaction(rs.getInt("Borrows.BorrowID"), user,
-					new Book(rs.getInt("Books.ID"), rs.getString("Books.ISBN"),
-							rs.getString("Books.Title"), rs
-									.getString("Books.Edition"), rs
-									.getString("Books.Author"), rs
-									.getString("Books.Publisher"), rs
-									.getInt("Books.YearPublish"), rs
-									.getString("Books.Description"), rs
-									.getInt("Books.Copies")),
+			BorrowTransaction borrowed = new BorrowTransaction(
+					rs.getInt("Borrows.BorrowID"), user, new Book(
+							rs.getInt("Books.ID"), rs.getString("Books.ISBN"),
+							rs.getString("Books.Title"),
+							rs.getString("Books.Edition"),
+							rs.getString("Books.Author"),
+							rs.getString("Books.Publisher"),
+							rs.getInt("Books.YearPublish"),
+							rs.getString("Books.Description"),
+							rs.getInt("Books.Copies")),
 					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
 					rs.getDate("DateReturned"));
 			bookCollection.add(borrowed);
@@ -288,15 +322,16 @@ public class TransactionDAO {
 			user.setContactNo(rs.getString("Users.ContactNo"));
 			user.setEmail(rs.getString("Users.Email"));
 
-			BorrowTransaction borrowed = new BorrowTransaction(rs.getInt("Borrows.BorrowID"), user,
-					new Book(rs.getInt("Books.ID"), rs.getString("Books.ISBN"),
-							rs.getString("Books.Title"), rs
-									.getString("Books.Edition"), rs
-									.getString("Books.Author"), rs
-									.getString("Books.Publisher"), rs
-									.getInt("Books.YearPublish"), rs
-									.getString("Books.Description"), rs
-									.getInt("Books.Copies")),
+			BorrowTransaction borrowed = new BorrowTransaction(
+					rs.getInt("Borrows.BorrowID"), user, new Book(
+							rs.getInt("Books.ID"), rs.getString("Books.ISBN"),
+							rs.getString("Books.Title"),
+							rs.getString("Books.Edition"),
+							rs.getString("Books.Author"),
+							rs.getString("Books.Publisher"),
+							rs.getInt("Books.YearPublish"),
+							rs.getString("Books.Description"),
+							rs.getInt("Books.Copies")),
 					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
 					rs.getDate("DateReturned"));
 			bookCollection.add(borrowed);
