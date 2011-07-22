@@ -6,26 +6,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.Properties;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.Days;
 
-import utilities.MyConnection;
-import utilities.PropertyLoader;
-
-public class TransactionDAO {
-
-	public final static int BOOK_UNAVAILABLE = 0;
-	public final static int SUCCESSFUL = 1;
-	public final static int ALREADY_IN = 2;
-	private Connection connection;
+public class TransactionDAO extends AbstractDAO {
 
 	public TransactionDAO() throws SQLException, ClassNotFoundException {
-		Properties properties = new PropertyLoader("app.config")
-				.getProperties();
-		connection = new MyConnection(properties).getConnection();
+		super();
 	}
+
+	private Connection connection;
 
 	public Connection getConnection() {
 		return connection;
@@ -49,14 +40,14 @@ public class TransactionDAO {
 
 	public int reserveBook(Book book, User user) throws SQLException {
 		int intStat = 0;
-		PreparedStatement makeReservation = null;
 
-		makeReservation = connection
-				.prepareStatement("INSERT INTO Reserves (UserID, BookID) VALUES (?,?)");
-		makeReservation.setLong(1, user.getUserId());
-		makeReservation.setLong(2, book.getBookId());
+		String sql = "INSERT INTO Reserves (UserID, BookID) VALUES (?,?)";
 
-		intStat = makeReservation.executeUpdate();
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ps.setLong(2, book.getBookId());
+
+		intStat = ps.executeUpdate();
 
 		return intStat;
 	}
@@ -64,15 +55,16 @@ public class TransactionDAO {
 	public int borrowBook(Book book, User user) throws SQLException {
 		Calendar today = Calendar.getInstance();
 		int intStat = 0;
-		PreparedStatement borrowRequest = null;
 
-		borrowRequest = connection
-				.prepareStatement("INSERT INTO Borrows (UserID, BookID, DateRequested) VALUES (?,?,?)");
-		borrowRequest.setLong(1, user.getUserId());
-		borrowRequest.setLong(2, book.getBookId());
-		borrowRequest.setDate(3, new Date(today.getTime().getTime()));
+		String sql = "INSERT INTO Borrows (UserID, BookID, DateRequested) "
+				+ "VALUES (?,?,?)";
 
-		intStat = borrowRequest.executeUpdate();
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ps.setLong(2, book.getBookId());
+		ps.setDate(3, new Date(today.getTime().getTime()));
+
+		intStat = ps.executeUpdate();
 
 		return intStat;
 	}
@@ -80,14 +72,14 @@ public class TransactionDAO {
 	public int acceptBookRequest(Borrow borrowedBook) throws SQLException {
 		Calendar today = Calendar.getInstance();
 		int intStat = 0;
-		PreparedStatement acceptRequest = null;
 
-		acceptRequest = connection
-				.prepareStatement("UPDATE Borrows SET DateBorrowed = ? WHERE BorrowID = ?");
-		acceptRequest.setDate(1, new Date(today.getTime().getTime()));
-		acceptRequest.setLong(2, borrowedBook.getId());
+		String sql = "UPDATE Borrows SET DateBorrowed = ? WHERE BorrowID = ?";
 
-		intStat = acceptRequest.executeUpdate();
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setDate(1, new Date(today.getTime().getTime()));
+		ps.setLong(2, borrowedBook.getId());
+
+		intStat = ps.executeUpdate();
 
 		return intStat;
 	}
@@ -95,14 +87,14 @@ public class TransactionDAO {
 	public int cancelReservation(Borrow reservedBook, User user)
 			throws SQLException {
 		int intStat = 0;
-		PreparedStatement cancel = null;
 
-		cancel = connection
-				.prepareStatement("DELETE FROM Reserves WHERE UserID = ? AND BOokID = ?");
-		cancel.setLong(1, user.getUserId());
-		cancel.setLong(2, reservedBook.getBookId());
+		String sql = "DELETE FROM Reserves WHERE UserID = ? AND BOokID = ?";
 
-		intStat = cancel.executeUpdate();
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ps.setLong(2, reservedBook.getBookId());
+
+		intStat = ps.executeUpdate();
 
 		return intStat;
 	}
@@ -119,36 +111,55 @@ public class TransactionDAO {
 
 	public boolean isReservedByUser(Book book, User user) throws SQLException {
 		int count = 0;
-		PreparedStatement checkReservation = null;
-		checkReservation = connection
-				.prepareStatement("SELECT COUNT(*) FROM Reserves WHERE UserID = ? AND BOokID = ?");
-		checkReservation.setLong(1, user.getUserId());
-		checkReservation.setLong(2, book.getBookId());
-		ResultSet rs = checkReservation.executeQuery();
+
+		String sql = "SELECT COUNT(*) FROM Reserves WHERE UserID = ? AND BookID = ?";
+
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ps.setLong(2, book.getBookId());
+		ResultSet rs = ps.executeQuery();
 		if (rs.first()) {
 			count = rs.getInt(1);
 		}
-		if (count > 0) {
-			return true;
+
+		return count != 0;
+	}
+
+	public Borrow getBorrowClass(Book book, User user) throws SQLException {
+
+		String sql = "SELECT * FROM Reserves WHERE UserID = ? AND BookID = ?";
+		Borrow borrow = null;
+
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ps.setLong(2, book.getBookId());
+		ResultSet rs = ps.executeQuery();
+		if (rs.first()) {
+			borrow = new Borrow(rs.getInt("ID"), rs.getInt("UserID"),
+					rs.getInt("BookId"), rs.getDate("DateRequested"),
+					rs.getDate("DateBorrowed"), rs.getDate("DateReturned"));
+
 		}
-		return false;
+
+		return borrow;
+
 	}
 
 	public boolean isBorrowedByUser(Book book, User user) throws SQLException {
 		int count = 0;
-		PreparedStatement checkOnLoan = null;
-		checkOnLoan = connection
-				.prepareStatement("SELECT COUNT(*) FROM Borrows WHERE UserID = ? AND BOokID = ? AND DateReturned = NULL");
-		checkOnLoan.setLong(1, user.getUserId());
-		checkOnLoan.setLong(2, book.getBookId());
-		ResultSet rs = checkOnLoan.executeQuery();
+
+		String sql = "SELECT COUNT(*) FROM Borrows "
+				+ "WHERE UserID = ? AND BOokID = ? AND DateReturned is NULL";
+
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ps.setLong(2, book.getBookId());
+		ResultSet rs = ps.executeQuery();
 		if (rs.first()) {
 			count = rs.getInt(1);
 		}
-		if (count > 0) {
-			return true;
-		}
-		return false;
+
+		return count != 0;
 	}
 
 	public int getAvailableCopies(Book book) throws SQLException {
@@ -158,8 +169,7 @@ public class TransactionDAO {
 		String sql = "SELECT COUNT(*) FROM Borrows "
 				+ "WHERE BookID = ? AND DateReturned is NULL";
 
-		PreparedStatement ps = null;
-		ps = getConnection().prepareStatement(sql);
+		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ps.setLong(1, book.getBookId());
 		ResultSet rs = ps.executeQuery();
 
@@ -180,8 +190,7 @@ public class TransactionDAO {
 		String sql = "SELECT DateBorrowed FROM Borrows "
 				+ "WHERE BookID = ? AND UserID = ? AND DateReturned is NULL";
 
-		PreparedStatement ps = null;
-		ps = getConnection().prepareStatement(sql);
+		PreparedStatement ps = getConnection().prepareStatement(sql);
 		ps.setLong(1, book.getBookId());
 		ps.setLong(2, user.getUserId());
 		ResultSet rs = ps.executeQuery();

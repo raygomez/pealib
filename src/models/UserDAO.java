@@ -29,6 +29,32 @@ public class UserDAO extends AbstractDAO {
 		this.connection = connection;
 	}
 
+	public User getUserById(int id) throws SQLException {
+
+		User user = null;
+
+		String sql = "SELECT * from Users where ID = ?";
+
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+
+		if (rs.next()) {
+			user = new User();
+			user.setUserId(rs.getInt("ID"));
+			user.setFirstName(rs.getString("FirstName"));
+			user.setLastName(rs.getString("LastName"));
+			user.setType(rs.getString("Type"));
+			user.setUserName(rs.getString("UserName"));
+			user.setAddress(rs.getString("Address"));
+			user.setContactNo(rs.getString("ContactNo"));
+			user.setEmail(rs.getString("Email"));
+		}
+
+		return user;
+
+	}
+
 	public boolean isUsernameExisting(String username) throws SQLException {
 		String query = "SELECT count(*) from Users where Username=?";
 		PreparedStatement statement = getConnection().prepareStatement(query);
