@@ -14,6 +14,7 @@ import org.unitils.dbunit.annotation.DataSet;
 import org.unitils.dbunit.annotation.ExpectedDataSet;
 
 import utilities.Connector;
+import utilities.Constants;
 
 @DataSet({ "user.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
@@ -21,7 +22,7 @@ public class UserDAOTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector("test.config");
+		new Connector(Constants.TEST_CONFIG);
 	}
 
 	@Test
