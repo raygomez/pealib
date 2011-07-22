@@ -1,0 +1,127 @@
+package models;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.ArrayList;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.unitils.UnitilsJUnit4TestClassRunner;
+import org.unitils.dbunit.annotation.DataSet;
+import org.unitils.dbunit.annotation.ExpectedDataSet;
+
+import utilities.Connector;
+
+@DataSet({ "user.xml" })
+@RunWith(UnitilsJUnit4TestClassRunner.class)
+public class UserDAOTest {
+
+	@Before
+	public void setUp() throws Exception {
+		new Connector("test.config");
+	}
+
+	@Test
+	public void testGetUserInDatabase() throws Exception {
+		User user = UserDAO.getUser("jvillar", "1");
+		assertNotNull(user);
+	}
+
+	@Test
+	public void testGetUserNotInDatabase() throws Exception {
+		User user = UserDAO.getUser("jvillar", "12");
+		assertNull(user);
+	}
+
+	@Test
+	public void testSearchUsersWithOneResult() throws Exception {
+		ArrayList<User> users = UserDAO.searchUsers("jvillar");
+		assertEquals(1, users.size());
+	}
+
+	@Test
+	public void testSearchUsersWithManyResults() throws Exception {
+		ArrayList<User> users = UserDAO.searchUsers("Niel");
+		assertEquals(2, users.size());
+	}
+
+	@Test
+	public void testSearchUsersWithLibrarian() throws Exception {
+		ArrayList<User> users = UserDAO.searchUsers("Pantaleon");
+		assertEquals(1, users.size());
+	}
+
+	@Test
+	public void testSearchUsersWithNoResults() throws Exception {
+		ArrayList<User> users = UserDAO.searchUsers("jvillar0");
+		assertEquals(0, users.size());
+	}
+
+	@Test
+	public void testSearchUsersWithDatafromOtherFields() throws Exception {
+		ArrayList<User> users = UserDAO.searchUsers("User");
+		assertEquals(0, users.size());
+		users = UserDAO.searchUsers("nlazada@gmail.com");
+		assertEquals(0, users.size());
+		users = UserDAO.searchUsers("1234567890");
+		assertEquals(0, users.size());
+		users = UserDAO.searchUsers("USA");
+		assertEquals(0, users.size());
+		users = UserDAO.searchUsers("6b86b273ff");
+		assertEquals(0, users.size());
+
+	}
+
+	@Test
+	public void testIsUsernameExisting() throws Exception {
+		boolean isExisting = UserDAO.isUsernameExisting("jvillar");
+		assertEquals(true, isExisting);
+	}
+
+	@Test
+	public void testIsUsernameNotExisting() throws Exception {
+		boolean notExisting = UserDAO.isUsernameExisting("jvillar0");
+		assertEquals(false, notExisting);
+	}
+
+	@Test
+	@ExpectedDataSet({ "expected/saveUser.xml" })
+	public void testSaveUser() throws Exception {
+		User user = UserDAO.getUser("jvillar", "1");
+		user.setFirstName("Janine June");
+		user.setLastName("Lim");
+		user.setUserName("jlim");
+		user.setEmail("jlim@gmail.com");
+		user.setPassword("1");
+
+		UserDAO.saveUser(user);
+	}
+
+	@Test
+	@DataSet({ "user_with_no_pending.xml" })
+	public void testSearchAllPendingWithNoPending() throws Exception {
+		ArrayList<User> users = UserDAO.searchAllPending("");
+		assertEquals(0, users.size());
+	}
+	
+	@Test
+	public void testSearchAllPending() throws Exception {
+		ArrayList<User> users = UserDAO.searchAllPending("");
+		assertEquals(2, users.size());
+	}
+	
+	@Test
+	public void testSearchAllPendingWithKeyword() throws Exception {
+		ArrayList<User> users = UserDAO.searchAllPending("Karlo");
+		assertEquals(1, users.size());
+	}
+	
+	@Test
+	public void testSearchAllPendingWithKeywordwithNoResults() throws Exception {
+		ArrayList<User> users = UserDAO.searchAllPending("Karlo0");
+		assertEquals(0, users.size());
+	}
+}
