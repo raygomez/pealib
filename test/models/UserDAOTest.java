@@ -19,88 +19,85 @@ import utilities.Connector;
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class UserDAOTest {
 
-	UserDAO userDAO;
-
 	@Before
 	public void setUp() throws Exception {
 		new Connector("test.config");
-		userDAO = new UserDAO();
 	}
 
 	@Test
 	public void testGetUserInDatabase() throws Exception {
-		User user = userDAO.getUser("jvillar", "1");
+		User user = UserDAO.getUser("jvillar", "1");
 		assertNotNull(user);
 	}
 
 	@Test
 	public void testGetUserNotInDatabase() throws Exception {
-		User user = userDAO.getUser("jvillar", "12");
+		User user = UserDAO.getUser("jvillar", "12");
 		assertNull(user);
 	}
 
 	@Test
 	public void testSearchUsersWithOneResult() throws Exception {
-		ArrayList<User> users = userDAO.searchUsers("jvillar");
+		ArrayList<User> users = UserDAO.searchUsers("jvillar");
 		assertEquals(1, users.size());
 	}
 
 	@Test
 	public void testSearchUsersWithManyResults() throws Exception {
-		ArrayList<User> users = userDAO.searchUsers("Niel");
+		ArrayList<User> users = UserDAO.searchUsers("Niel");
 		assertEquals(2, users.size());
 	}
 
 	@Test
 	public void testSearchUsersWithLibrarian() throws Exception {
-		ArrayList<User> users = userDAO.searchUsers("Pantaleon");
+		ArrayList<User> users = UserDAO.searchUsers("Pantaleon");
 		assertEquals(1, users.size());
 	}
 
 	@Test
 	public void testSearchUsersWithNoResults() throws Exception {
-		ArrayList<User> users = userDAO.searchUsers("jvillar0");
+		ArrayList<User> users = UserDAO.searchUsers("jvillar0");
 		assertEquals(0, users.size());
 	}
 
 	@Test
 	public void testSearchUsersWithDatafromOtherFields() throws Exception {
-		ArrayList<User> users = userDAO.searchUsers("User");
+		ArrayList<User> users = UserDAO.searchUsers("User");
 		assertEquals(0, users.size());
-		users = userDAO.searchUsers("nlazada@gmail.com");
+		users = UserDAO.searchUsers("nlazada@gmail.com");
 		assertEquals(0, users.size());
-		users = userDAO.searchUsers("1234567890");
+		users = UserDAO.searchUsers("1234567890");
 		assertEquals(0, users.size());
-		users = userDAO.searchUsers("USA");
+		users = UserDAO.searchUsers("USA");
 		assertEquals(0, users.size());
-		users = userDAO.searchUsers("6b86b273ff");
+		users = UserDAO.searchUsers("6b86b273ff");
 		assertEquals(0, users.size());
 
 	}
 
 	@Test
 	public void testIsUsernameExisting() throws Exception {
-		boolean isExisting = userDAO.isUsernameExisting("jvillar");
+		boolean isExisting = UserDAO.isUsernameExisting("jvillar");
 		assertEquals(true, isExisting);
 	}
 
 	@Test
 	public void testIsUsernameNotExisting() throws Exception {
-		boolean notExisting = userDAO.isUsernameExisting("jvillar0");
+		boolean notExisting = UserDAO.isUsernameExisting("jvillar0");
 		assertEquals(false, notExisting);
 	}
 
 	@Test
 	@ExpectedDataSet({ "expected/saveUser.xml" })
 	public void testSaveUser() throws Exception {
-		User user = userDAO.getUser("jvillar", "1");
+		User user = UserDAO.getUser("jvillar", "1");
 		user.setFirstName("Janine June");
 		user.setLastName("Lim");
 		user.setUserName("jlim");
 		user.setEmail("jlim@gmail.com");
 		user.setPassword("1");
 
-		userDAO.saveUser(user);
+		UserDAO.saveUser(user);
 	}
 
 }
