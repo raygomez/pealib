@@ -30,4 +30,34 @@
 		   Description="wizard book"
 		   YearPublish="1901"
 		   Copies="0" />
+	<books 
+		   ID="4" 
+		   ISBN="1234567890123"
+		   Title="title1"
+		   Author="author1"
+		   Edition="edition1"
+		   Publisher="publisher1"
+		   Description="wizard book"
+		   YearPublish="1901"
+		   Copies="3" />
+	<books 
+		   ID="5" 
+		   ISBN="1234567890124"
+		   Title="title2"
+		   Author="author1"
+		   Edition="edition2"
+		   Publisher="publisher2"
+		   Description="wizard book"
+		   YearPublish="1902"
+		   Copies="4" />
+	<books 
+		   ID="6" 
+		   ISBN="1234567890125"
+		   Title="title3"
+		   Author="author2"
+		   Edition="edition3"
+		   Publisher="publisher1"
+		   Description="wizard book"
+		   YearPublish="1905"
+		   Copies="1" />		   		  		   
 </dataset>
