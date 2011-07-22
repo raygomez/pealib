@@ -13,7 +13,7 @@ import utilities.Connector;
 
 public class TransactionDAO {
 
-	public static void receiveBook(BorrowTransaction borrow) throws Exception {
+	public static void returnBook(BorrowTransaction borrow) throws Exception {
 
 		String sql = "UPDATE Borrows SET DateReturned = ? "
 				+ "where BorrowID = ? and DateBorrowed is not NULL and "
@@ -42,7 +42,7 @@ public class TransactionDAO {
 		return intStat;
 	}
 
-	public static int borrowBook(Book book, User user) throws Exception {
+	public static int requestBook(Book book, User user) throws Exception {
 		int intStat = 0;
 
 		String sql = "INSERT INTO Borrows (UserID, BookID, DateRequested) "
@@ -57,16 +57,14 @@ public class TransactionDAO {
 		return intStat;
 	}
 
-	public static int acceptBookRequest(BorrowTransaction borrowedBook)
+	public static int borrowBook(BorrowTransaction borrowedBook)
 			throws Exception {
-		Calendar today = Calendar.getInstance();
 		int intStat = 0;
 
-		String sql = "UPDATE Borrows SET DateBorrowed = ? WHERE BorrowID = ?";
+		String sql = "UPDATE Borrows SET DateBorrowed = CURRENT_DATE() WHERE BorrowID = ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
-		ps.setDate(1, new Date(today.getTime().getTime()));
-		ps.setLong(2, borrowedBook.getId());
+		ps.setLong(1, borrowedBook.getId());
 
 		intStat = ps.executeUpdate();
 		Connector.close();

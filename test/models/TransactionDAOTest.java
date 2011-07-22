@@ -21,10 +21,10 @@ public class TransactionDAOTest {
 	
 	@Test
 	@ExpectedDataSet({"expected/receiveBorrows.xml"})
-	public void testReceiveBook() throws Exception{
+	public void testReturnBook() throws Exception{
 		User user = UserDAO.getUserById(1);
 		BorrowTransaction bt = TransactionDAO.getOnLoanBooks(user).get(0);
-		TransactionDAO.receiveBook(bt);
+		TransactionDAO.returnBook(bt);
 	}
 
 	@Test
@@ -37,10 +37,17 @@ public class TransactionDAOTest {
 	
 	@Test
 	@ExpectedDataSet({"expected/borrowBorrows.xml"})
+	public void testRequestBook() throws Exception{
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(6);
+		TransactionDAO.requestBook(book, user);
+	}
+	
+	@Test
+	@ExpectedDataSet({"expected/borrowBorrows.xml"})
 	public void testBorrowBook() throws Exception{
 		User user = UserDAO.getUserById(1);
 		Book book = BookDAO.getBookById(6);
-		TransactionDAO.borrowBook(book, user);
+		TransactionDAO.requestBook(book, user);
 	}
-	
 }
