@@ -1,43 +1,30 @@
 package models;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class BookDAO extends AbstractDAO {
+import utilities.Connector;
 
-	private Connection connection;
+public class BookDAO{
 
-	public BookDAO() throws Exception {
-		super();
-	}
-
-	public Connection getConnection() {
-		return connection;
-	}
-
-	public void setConnection(Connection connection) {
-		this.connection = connection;
-	}
-
-	public boolean isIsbnExisting(String Isbn) throws SQLException {
+	public static boolean isIsbnExisting(String Isbn) throws Exception {
+		boolean validate = false;
 		PreparedStatement searchIsbn = null;
-		searchIsbn = connection
-				.prepareStatement("SELECT ISBN From Books WHERE Isbn LIKE ?");
+		searchIsbn = Connector.getConnection().prepareStatement("SELECT ISBN From Books WHERE Isbn LIKE ?");
 		searchIsbn.setString(1, Isbn);
 		ResultSet rs = searchIsbn.executeQuery();
 		if (rs.next()) {
-			return true;
+			validate = true;
 		}
-		return false;
+		Connector.close();
+		return validate;
 	}
 
-	public int addBook(Book book) throws SQLException {
+	public static int addBook(Book book) throws Exception {
 		int intStat = 0;
 		PreparedStatement insertBook = null;
-		insertBook = connection
+		insertBook = Connector.getConnection()
 				.prepareStatement("INSERT INTO Books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES (?,?,?,?,?,?,?,?)");
 		insertBook.setString(1, book.getIsbn());
 		insertBook.setString(2, book.getTitle());
@@ -49,14 +36,16 @@ public class BookDAO extends AbstractDAO {
 		insertBook.setInt(8, book.getCopies());
 
 		intStat = insertBook.executeUpdate();
-
+		
+		Connector.close();
+		
 		return intStat;
 	}
 
-	public int editBook(Book book) throws SQLException {
+	public static int editBook(Book book) throws Exception {
 		int intStat = 0;
 		PreparedStatement updateBook = null;
-		updateBook = connection
+		updateBook = Connector.getConnection()
 				.prepareStatement("UPDATE Books SET ISBN = ?, Title = ?, Author = ?, Edition = ?, Publisher = ?, Description = ?, YearPublish = ?, Copies = ? WHERE ID = ?");
 
 		updateBook.setString(1, book.getIsbn());
@@ -70,26 +59,31 @@ public class BookDAO extends AbstractDAO {
 		updateBook.setInt(9, book.getBookId());
 
 		intStat = updateBook.executeUpdate();
-
+		
+		Connector.close();
+		
 		return intStat;
 	}
 
-	public int deleteBook(Book book) throws SQLException {
+	public static int deleteBook(Book book) throws Exception {
 		int intStat = 0;
 		PreparedStatement deleteBook = null;
-		deleteBook = connection
+		deleteBook = Connector.getConnection()
 				.prepareStatement("UPDATE Books SET Copies = 0 WHERE ID = ?");
 		deleteBook.setInt(1, book.getBookId());
 		intStat = deleteBook.executeUpdate();
+		
+		Connector.close();
+		
 		return intStat;
 	}
 
-	public Book getBookById(int id) throws SQLException {
+	public static Book getBookById(int id) throws Exception {
 		Book book = null;
 
 		String sql = "SELECT * FROM Books where ID = ?";
 
-		PreparedStatement ps = getConnection().prepareStatement(sql);
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setInt(1, id);
 
 		ResultSet rs = ps.executeQuery();
@@ -107,18 +101,19 @@ public class BookDAO extends AbstractDAO {
 					yearPublish, description, copies);
 
 		}
+		Connector.close();
 
 		return book;
 	}
 
-	public ArrayList<Book> searchBook(String search) throws SQLException {
+	public static ArrayList<Book> searchBook(String search) throws Exception {
 		ArrayList<Book> bookCollection = new ArrayList<Book>();
 		PreparedStatement bookQuery = null;
 
 		if (search.equals("*")) {
-			bookQuery = connection.prepareStatement("SELECT * FROM Books");
+			bookQuery = Connector.getConnection().prepareStatement("SELECT * FROM Books");
 		} else {
-			bookQuery = connection
+			bookQuery = Connector.getConnection()
 					.prepareStatement("SELECT * FROM Books WHERE CONCAT(ISBN, Title, Author, Publisher) LIKE ?");
 			bookQuery.setString(1, "%" + search + "%");
 		}
@@ -138,7 +133,9 @@ public class BookDAO extends AbstractDAO {
 					publisher, yearPublish, description, copies);
 			bookCollection.add(addBook);
 		}
-
+		
+		Connector.close();
+		
 		return bookCollection;
 	}
 
