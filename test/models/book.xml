@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<books 
+		   ID="1" 
+		   ISBN="1234567890120"
+		   Title="Harry Poter 1"
+		   Author="Ewan ko"
+		   Edition="1st"
+		   Publisher="HarryPublisher"
+		   Description="wizard book"
+		   YearPublish="1900"
+		   Copies="1" />
+	<books 
+		   ID="2" 
+		   ISBN="1234567890121"
+		   Title="Harry Poter 2"
+		   Author="Ewan ko"
+		   Edition="1st"
+		   Publisher="HarryPublisher1"
+		   Description="wizard book"
+		   YearPublish="1901"
+		   Copies="3" />
+	<books 
+		   ID="3" 
+		   ISBN="1234567890122"
+		   Title="Harry Poter 3"
+		   Author="Ewan ko1"
+		   Edition="1st"
+		   Publisher="HarryPublisher"
+		   Description="wizard book"
+		   YearPublish="1901"
+		   Copies="1" />
+</dataset>
