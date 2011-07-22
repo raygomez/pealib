@@ -102,8 +102,26 @@ public class UserDAOTest {
 
 	@Test
 	@DataSet({ "user_with_no_pending.xml" })
-	public void testGetAllPendingWithNoPending() throws Exception {
-		ArrayList<User> users = UserDAO.getAllPending();
+	public void testSearchAllPendingWithNoPending() throws Exception {
+		ArrayList<User> users = UserDAO.searchAllPending("");
+		assertEquals(0, users.size());
+	}
+	
+	@Test
+	public void testSearchAllPending() throws Exception {
+		ArrayList<User> users = UserDAO.searchAllPending("");
+		assertEquals(2, users.size());
+	}
+	
+	@Test
+	public void testSearchAllPendingWithKeyword() throws Exception {
+		ArrayList<User> users = UserDAO.searchAllPending("Karlo");
+		assertEquals(1, users.size());
+	}
+	
+	@Test
+	public void testSearchAllPendingWithKeywordwithNoResults() throws Exception {
+		ArrayList<User> users = UserDAO.searchAllPending("Karlo0");
 		assertEquals(0, users.size());
 	}
 }
