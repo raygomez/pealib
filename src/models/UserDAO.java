@@ -8,7 +8,7 @@ import utilities.Connector;
 
 public class UserDAO {
 
-	public User getUserById(int id) throws Exception {
+	public static User getUserById(int id) throws Exception {
 
 		User user = null;
 
@@ -36,7 +36,7 @@ public class UserDAO {
 
 	}
 
-	public boolean isUsernameExisting(String username) throws Exception {
+	public static boolean isUsernameExisting(String username) throws Exception {
 		String query = "SELECT count(*) from Users where Username=?";
 		PreparedStatement ps = Connector.getConnection()
 				.prepareStatement(query);
@@ -50,7 +50,7 @@ public class UserDAO {
 
 	}
 
-	public User getUser(String username, String password) throws Exception {
+	public static User getUser(String username, String password) throws Exception {
 
 		User user = null;
 
@@ -77,7 +77,7 @@ public class UserDAO {
 		return user;
 	}
 
-	public ArrayList<User> searchUsers(String keyword) throws Exception {
+	public static ArrayList<User> searchUsers(String keyword) throws Exception {
 		ArrayList<User> users = new ArrayList<User>();
 
 		String sql = "SELECT * from Users "
@@ -105,7 +105,7 @@ public class UserDAO {
 		return users;
 	}
 
-	public void saveUser(User user) throws Exception {
+	public static void saveUser(User user) throws Exception {
 		String sql = "INSERT INTO Users "
 				+ "(FirstName,LastName,UserName,Password,Type,"
 				+ "Address, ContactNo, Email)"
