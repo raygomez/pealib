@@ -129,7 +129,7 @@ public class UserDAO {
 	public static ArrayList<User> getAllPending() throws Exception {
 		ArrayList<User> users = new ArrayList<User>();
 
-		String sql = "SELECT * from Users where Type != 'Pending'";
+		String sql = "SELECT * from Users where Type = 'Pending'";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();

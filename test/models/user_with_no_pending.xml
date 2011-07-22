@@ -20,12 +20,12 @@
 
 	<users FirstName="Ray" LastName="Gomez" UserName="rdgomez"
 		Password="6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
-		Type="Pending" Address="USA" ContactNo="1234567890" Email="rdgomez@gmail.com"
+		Type="User" Address="USA" ContactNo="1234567890" Email="rdgomez@gmail.com"
 		ID="5" />
 
 	<users FirstName="Karlo" LastName="Serrano" UserName="kserrano"
 		Password="6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
-		Type="Pending" Address="USA" ContactNo="1234567890" Email="karlo@gmail.com"
+		Type="User" Address="USA" ContactNo="1234567890" Email="karlo@gmail.com"
 		ID="6" />
 
 </dataset>
