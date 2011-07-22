@@ -26,3 +26,7 @@ syntax: regexp
 ^\.classpath$
 syntax: regexp
 ^src/unitils-local\.properties$
+syntax: regexp
+^app\.config$
+syntax: regexp
+^\.hgignore$
