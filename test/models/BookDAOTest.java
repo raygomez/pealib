@@ -1,8 +1,7 @@
 package models;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -13,34 +12,28 @@ import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
 import org.unitils.dbunit.annotation.ExpectedDataSet;
 
-import utilities.MyConnection;
-import utilities.PropertyLoader;
-import models.Book;
-import models.BookDAO;
+import utilities.Connector;
 
 @DataSet({ "book.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class BookDAOTest {
 
 	private BookDAO testBookDao;
-	private Connection con;
 	private Book testBook;
 
 	@Before
 	public void setUp() throws Exception {
-		con = new MyConnection(
-				new PropertyLoader("test.config").getProperties())
-				.getConnection();
+		new Connector("test.config");
 		testBook = new Book();
 		testBookDao = new BookDAO();
-		testBookDao.setConnection(con);
 	}
 
 	@Test
-	public void testGetConnection() {
-		assertEquals(con, testBookDao.getConnection());
+	public void testGetBookById() throws SQLException, ClassNotFoundException{
+		Book book = testBookDao.getBookById(1);
+		assertEquals("Harry Poter 1",book.getTitle());
 	}
-
+	
 	@Test
 	public void testIsIsbnExisting() throws SQLException {
 		testBook.setIsbn("1234567890120");

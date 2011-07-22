@@ -2,52 +2,60 @@ package utilities;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 
-public class MyConnection {
+public class Connector {
 
-	private String userId;
-	private String password;
-	private String hostname;
-	private Connection con;
-	private String db;
+	static private String userId;
+	static String password;
+	static private String hostname;
+	static private Connection con;
+	static private String db;
 
-	public MyConnection(String hostname, String db, String userId,
-			String password) {
+	public Connector(String hostname, String db, String userId, String password) {
 		setHostname(hostname);
 		setDb(db);
 		setUserId(userId);
 		setPassword(password);
 	}
 
-	public MyConnection(Properties properties) {
+	public Connector(String filename) {
+		Properties properties = new PropertyLoader(filename).getProperties();
 		setHostname(properties.getProperty("app.hostname"));
 		setDb(properties.getProperty("app.db"));
 		setUserId(properties.getProperty("app.username"));
 		setPassword(properties.getProperty("app.password"));
 	}
 
-	public String getUserId() {
+	public Connector() {
+		Properties properties = new PropertyLoader("app.config")
+				.getProperties();
+		setHostname(properties.getProperty("app.hostname"));
+		setDb(properties.getProperty("app.db"));
+		setUserId(properties.getProperty("app.username"));
+		setPassword(properties.getProperty("app.password"));
+	}
+
+	public static String getUserId() {
 		return userId;
 	}
 
 	public void setUserId(String userId) {
-		this.userId = userId;
+		Connector.userId = userId;
 	}
 
-	public String getPassword() {
+	public static String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		Connector.password = password;
 	}
 
 	/**
 	 * @return the hostname
 	 */
-	public String getHostname() {
+	public static String getHostname() {
 		return hostname;
 	}
 
@@ -56,13 +64,13 @@ public class MyConnection {
 	 *            the hostname to set
 	 */
 	public void setHostname(String hostname) {
-		this.hostname = hostname;
+		Connector.hostname = hostname;
 	}
 
 	/**
 	 * @return the db
 	 */
-	public String getDb() {
+	public static String getDb() {
 		return db;
 	}
 
@@ -71,15 +79,18 @@ public class MyConnection {
 	 *            the db to set
 	 */
 	public void setDb(String db) {
-		this.db = db;
+		Connector.db = db;
 	}
 
-	public Connection getConnection() throws SQLException,
-			ClassNotFoundException {
+	public static Connection getConnection() throws Exception {
 		Class.forName("com.mysql.jdbc.Driver");
 
 		String url = "jdbc:mysql://" + getHostname() + "/" + getDb();
 		con = DriverManager.getConnection(url, getUserId(), getPassword());
 		return con;
+	}
+
+	public static void close() throws Exception {
+		getConnection().close();
 	}
 }
