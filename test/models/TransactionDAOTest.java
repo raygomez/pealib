@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
+import org.unitils.dbunit.annotation.ExpectedDataSet;
 
 import utilities.Connector;
 import utilities.Constants;
@@ -19,8 +20,18 @@ public class TransactionDAOTest {
 	}
 	
 	@Test
-	public void test(){
-		
+	@ExpectedDataSet({"expected/receiveBorrows.xml"})
+	public void testReceiveBook() throws Exception{
+		User user = UserDAO.getUserById(1);
+		BorrowTransaction bt = TransactionDAO.getOnLoanBooks(user).get(0);
+		TransactionDAO.receiveBook(bt);
 	}
 
+	@Test
+	@ExpectedDataSet({"expected/addReserves.xml"})
+	public void testReserveBook() throws Exception{
+		User user = UserDAO.getUserById(4);
+		Book book = BookDAO.getBookById(2);
+		TransactionDAO.reserveBook(book, user);
+	}
 }
