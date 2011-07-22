@@ -28,7 +28,7 @@ public class Connector {
 	}
 
 	public Connector() {
-		Properties properties = new PropertyLoader("app.config")
+		Properties properties = new PropertyLoader(Constants.APP_CONFIG)
 				.getProperties();
 		setHostname(properties.getProperty("app.hostname"));
 		setDb(properties.getProperty("app.db"));
