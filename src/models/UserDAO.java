@@ -126,12 +126,15 @@ public class UserDAO {
 		Connector.close();
 	}
 
-	public static ArrayList<User> getAllPending() throws Exception {
+	public static ArrayList<User> searchAllPending(String keyword)
+			throws Exception {
 		ArrayList<User> users = new ArrayList<User>();
 
-		String sql = "SELECT * from Users where Type = 'Pending'";
+		String sql = "SELECT * from Users where Type = 'Pending'"
+				+ "and CONCAT(LastName,FirstName,UserName) like ? ";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setString(1, "%" + keyword + "%");
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
@@ -152,7 +155,7 @@ public class UserDAO {
 	}
 
 	public static void updateUser(User user) throws Exception {
-		// TODO Auto-generated method stub
+
 		String sql = "UPDATE Users "
 				+ " set FirstName = ?, LastName = ?, UserName = ?, "
 				+ "Address = ?, ContactNo = ?, Email = ? " + "WHERE ID = ?";
