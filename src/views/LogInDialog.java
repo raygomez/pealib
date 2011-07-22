@@ -42,8 +42,8 @@ public class LogInDialog extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPanel.setLayout(new MigLayout("", "20px[100px]10px[200px][]", "20px[20px]15px[]10px[]15px[]"));
 			
-		contentPanel.add(labelError,"cell 0 0 2 0, alignx center");
 		labelError.setName("labelError");
+		contentPanel.add(labelError,"cell 0 0 2 0, alignx center");
 		
 		fieldUsername.setName("username");
 		labelUsername.setName("lblUsername");
