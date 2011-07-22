@@ -37,6 +37,24 @@ public class UserDAOTest {
 	}
 
 	@Test
+	public void testGetUserById() throws Exception {
+		User user = UserDAO.getUserById(1);
+		assertEquals("Jomel", user.getFirstName());
+		assertEquals("Pantaleon", user.getLastName());
+		assertEquals("jvillar", user.getUserName());
+		assertEquals("User", user.getType());
+		assertEquals("USA", user.getAddress());
+		assertEquals("1234567890", user.getContactNo());
+		assertEquals("jomel.villar@gmail.com", user.getEmail());
+	}
+	
+	@Test
+	public void testGetUserByIdNotExisting() throws Exception {
+		User user = UserDAO.getUserById(100);
+		assertNull(user);
+	}
+
+	@Test
 	public void testSearchUsersWithOneResult() throws Exception {
 		ArrayList<User> users = UserDAO.searchUsers("jvillar");
 		assertEquals(1, users.size());
@@ -106,19 +124,19 @@ public class UserDAOTest {
 		ArrayList<User> users = UserDAO.searchAllPending("");
 		assertEquals(0, users.size());
 	}
-	
+
 	@Test
 	public void testSearchAllPending() throws Exception {
 		ArrayList<User> users = UserDAO.searchAllPending("");
 		assertEquals(2, users.size());
 	}
-	
+
 	@Test
 	public void testSearchAllPendingWithKeyword() throws Exception {
 		ArrayList<User> users = UserDAO.searchAllPending("Karlo");
 		assertEquals(1, users.size());
 	}
-	
+
 	@Test
 	public void testSearchAllPendingWithKeywordwithNoResults() throws Exception {
 		ArrayList<User> users = UserDAO.searchAllPending("Karlo0");
