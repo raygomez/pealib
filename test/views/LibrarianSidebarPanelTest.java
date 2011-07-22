@@ -1,6 +1,5 @@
 package views;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +21,7 @@ public class LibrarianSidebarPanelTest extends UISpecTestCase{
 	}
 
 	@Test
-	public void initialStateTest(){
+	public void testInitialState(){
 		Button searchButton = panel.getButton("Search Books");
 		assertNotNull(searchButton);
 		assertThat(searchButton.isEnabled());
