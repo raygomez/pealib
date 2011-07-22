@@ -1,14 +1,10 @@
 package views;
 
-import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import models.User;
 import net.miginfocom.swing.MigLayout;
 
 public class UserSearch extends JPanel {
@@ -29,7 +25,7 @@ public class UserSearch extends JPanel {
 		this.model = model;
 		
 		setBorder(new EmptyBorder(5, 5, 5, 5)); 
-		setLayout(new MigLayout("", "20px[60px][300px]10px[][grow]", "30px[]20px[][grow]"));
+		setLayout(new MigLayout("", "[60px][300px]10px[][grow]", "[]20px[][grow]"));
 
 		add(fieldSearch, "cell 1 0");
 		add(btnSearch, "cell 2 0");
