@@ -54,3 +54,7 @@ CREATE TABLE IF NOT EXISTS Reserves
 	);
 
 INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Jomel','Villar','jvillar',SHA2("123456",0),'User','USA','1234567890','jomel.villar@gmail.com');
+
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('1234567890120','Harry Poter 1','Ewan ko','1st','HarryPublisher','wizard book','1990','0');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('1234567890121','Harry Poter 2','Ewan ko','1st','HarryPublisher','wizard book','1991','1');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('1234567890122','Harry Poter 3','Ewan ko','1st','HarryPublisher','wizard book','1992','2');
