@@ -50,7 +50,8 @@ public class UserDAO {
 
 	}
 
-	public static User getUser(String username, String password) throws Exception {
+	public static User getUser(String username, String password)
+			throws Exception {
 
 		User user = null;
 
@@ -125,12 +126,36 @@ public class UserDAO {
 		Connector.close();
 	}
 
+	public static ArrayList<User> getAllPending() throws Exception {
+		ArrayList<User> users = new ArrayList<User>();
+
+		String sql = "SELECT * from Users where Type != 'Pending'";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			User user = new User();
+			user.setUserId(rs.getInt("ID"));
+			user.setFirstName(rs.getString("FirstName"));
+			user.setLastName(rs.getString("LastName"));
+			user.setType(rs.getString("Type"));
+			user.setUserName(rs.getString("UserName"));
+			user.setAddress(rs.getString("Address"));
+			user.setContactNo(rs.getString("ContactNo"));
+			user.setEmail(rs.getString("Email"));
+			users.add(user);
+		}
+		Connector.close();
+
+		return users;
+	}
+
 	public static void updateUser(User user) throws Exception {
 		// TODO Auto-generated method stub
 		String sql = "UPDATE Users "
-			+ " set FirstName = ?, LastName = ?, UserName = ?, "
-			+ "Address = ?, ContactNo = ?, Email = ? " +
-					"WHERE ID = ?";
+				+ " set FirstName = ?, LastName = ?, UserName = ?, "
+				+ "Address = ?, ContactNo = ?, Email = ? " + "WHERE ID = ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, user.getFirstName());
@@ -139,8 +164,8 @@ public class UserDAO {
 		ps.setString(4, user.getAddress());
 		ps.setString(5, user.getContactNo());
 		ps.setString(6, user.getEmail());
-		ps.setString(7, user.getUserId()+"");
-		
+		ps.setString(7, user.getUserId() + "");
+
 		Connector.close();
 	}
 }
