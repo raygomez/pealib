@@ -125,4 +125,22 @@ public class UserDAO {
 		Connector.close();
 	}
 
+	public static void updateUser(User user) throws Exception {
+		// TODO Auto-generated method stub
+		String sql = "UPDATE Users "
+			+ " set FirstName = ?, LastName = ?, UserName = ?, "
+			+ "Address = ?, ContactNo = ?, Email = ? " +
+					"WHERE ID = ?";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setString(1, user.getFirstName());
+		ps.setString(2, user.getLastName());
+		ps.setString(3, user.getUserName());
+		ps.setString(4, user.getAddress());
+		ps.setString(5, user.getContactNo());
+		ps.setString(6, user.getEmail());
+		ps.setString(7, user.getUserId()+"");
+		
+		Connector.close();
+	}
 }

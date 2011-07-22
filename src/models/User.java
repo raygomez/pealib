@@ -32,6 +32,18 @@ public class User {
 		this.type = type;
 	}
 
+	public User(int userId, String userName, String firstName,
+			String lastName, String email, String address, String contactNo) {
+		// TODO Auto-generated constructor stub
+		this.userId = userId;
+		this.userName = userName;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.address = address;
+		this.contactNo = contactNo;
+	}
+
 	public int getUserId() {
 		return userId;
 	}

@@ -6,6 +6,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import net.miginfocom.swing.MigLayout;
+import utilities.*;
+import models.*;
 
 public class UserInfoPanel extends JPanel {
 
@@ -35,6 +37,7 @@ public class UserInfoPanel extends JPanel {
 		tempLabel = new JLabel("Account Type");
 		accountType = new JTextField(20);
 		accountType.setEnabled(false);
+		accountType.setName("accountType");
 		
 		add(tempLabel);
 		add(accountType,"wrap");
@@ -42,6 +45,7 @@ public class UserInfoPanel extends JPanel {
 		tempLabel = new JLabel("User ID");
 		idNumber = new JTextField(20);
 		idNumber.setEnabled(false);
+		idNumber.setName("idNumber");
 		
 		add(tempLabel);
 		add(idNumber, "wrap");
@@ -49,17 +53,21 @@ public class UserInfoPanel extends JPanel {
 		tempLabel = new JLabel("Username");
 		username = new JTextField(20);
 		username.setEnabled(false);
+		username.setName("username");
 		
 		add(tempLabel);
 		add(username, "wrap");
 		
 		changePasswordButton = new JButton("Change Password");
-		add(changePasswordButton);
+		add(changePasswordButton, "wrap");
 		
 		tempLabel = new JLabel("First Name");
 		firstName = new JTextField(20);
+		firstName.setName("firstName");
+		
 		firstNameError = new JLabel();
 		firstNameError.setForeground(Color.RED);
+		firstNameError.setName("firstNameError");
 		
 		add(tempLabel);
 		add(firstName);
@@ -67,8 +75,11 @@ public class UserInfoPanel extends JPanel {
 		
 		tempLabel = new JLabel("Last Name");
 		lastName = new JTextField(20);
+		lastName.setName("lastName");
+		
 		lastNameError = new JLabel();
 		lastNameError.setForeground(Color.RED);
+		lastNameError.setName("lastNameError");
 		
 		add(tempLabel);
 		add(lastName);
@@ -82,17 +93,23 @@ public class UserInfoPanel extends JPanel {
 		
 		tempLabel = new JLabel("Contact Number");
 		contactNumber = new JTextField(20);
+		contactNumber.setName("contactNumber");
+		
 		contactNumberError = new JLabel();
 		contactNumberError.setForeground(Color.RED);
+		contactNumberError.setName("contactNumberError");
 		
 		add(tempLabel);
 		add(contactNumber);
 		add(contactNumberError, "wrap");
 		
 		tempLabel = new JLabel("Email");
-		email = new JTextField();
+		email = new JTextField(20);
+		email.setName("email");
+		
 		emailError = new JLabel();
 		emailError.setForeground(Color.RED);
+		emailError.setName("emailError");
 		
 		add(tempLabel);
 		add(email);
@@ -110,7 +127,94 @@ public class UserInfoPanel extends JPanel {
 		saveButton.addActionListener(save);
 	}
 	
-	public void displayFirstNameError()	{
+	public void displayErrors(int[] errors)	{
+		for(int i = 0; i < errors.length; i++){
+			
+			switch(errors[i]){
+				
+				case Constants.FIRST_NAME_FORMAT_ERROR:
+					firstNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
+					break;
+				
+				case Constants.LAST_NAME_FORMAT_ERROR:
+					lastNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
+					break;
+					
+				case Constants.CONTACT_NUMBER_FORMAT_ERROR:
+					contactNumber.setText(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE);
+					break;
+				
+				case Constants.EMAIL_FORMAT_ERROR:
+					emailError.setText(Constants.EMAIL_FORMAT_ERROR_MESSAGE);
+					break;
+			}
+		}
+	}
+	
+	public void resetErrorMessages(){
 		
+		firstNameError.setText("");
+		lastNameError.setText("");
+		contactNumberError.setText("");
+		emailError.setText("");
+		
+	}
+	
+	public String getAccountType() {
+		return accountType.getText();
+	}
+
+	public String getIdNumber() {
+		return idNumber.getText();
+	}
+
+	public String getUsername() {
+		return username.getText();
+	}
+
+	public String getFirstName() {
+		return firstName.getText();
+	}
+
+	public String getLastName() {
+		return lastName.getText();
+	}
+
+	public String getAddress() {
+		return address.getText();
+	}
+
+	public String getContactNumber() {
+		return contactNumber.getText();
+	}
+
+	public String getEmail() {
+		return email.getText();
+	}
+	
+	public void setFields(User user){
+		
+	}
+	
+	public void setFields(String accountType, String idNumber, String username, 
+			String firstName, String lastName, String address, String contactNumber,
+			String email)
+	{
+		this.accountType.setText(accountType);
+		this.idNumber.setText(idNumber);
+		this.username.setText(username);
+		this.firstName.setText(firstName);
+		this.lastName.setText(lastName);
+		this.address.setText(address);
+		this.contactNumber.setText(contactNumber);
+		this.email.setText(email);
+	}
+	
+	public void setFirstNameEnabled(boolean enabled){
+		firstName.setEnabled(enabled);
+	}
+	
+	public void setLastNameEnabled(boolean enabled){
+		lastName.setEnabled(enabled);
 	}
 }

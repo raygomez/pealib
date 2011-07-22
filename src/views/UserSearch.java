@@ -1,15 +1,11 @@
 package views;
 
-import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
-import models.User;
 import net.miginfocom.swing.MigLayout;
 
 public class UserSearch extends JPanel {
