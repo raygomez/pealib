@@ -48,26 +48,28 @@ public class UserController {
 			System.out.println("UserDAO " + e);
 		}
 		
-		userSearch = new UserSearch(new PendingApplicationModel());
+		userSearch = new UserSearch(new UserSearchTableModel(0));
 		//userSearch.setTableModel(new PendingApplicationModel());
 		//test
 		testingPurposes();
 	}
 	
 	//UserTableModel
-	class PendingApplicationModel extends AbstractTableModel{
+	class UserSearchTableModel extends AbstractTableModel{
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		ArrayList<String> columns = new ArrayList<String>();
-		ArrayList<ArrayList<String>> tableData = new ArrayList<ArrayList<String>>();
+		private ArrayList<String> columns = new ArrayList<String>();
+		private ArrayList<ArrayList<String>> tableData = new ArrayList<ArrayList<String>>();
 		
-		public PendingApplicationModel(){
-			init();
+		public UserSearchTableModel(int tab){
+			if(tab==0) userAcct();
+			else pending(); 
 		}
 		
-		private void init(){
+		private void pending(){}
+		private void userAcct(){
 			//Adding Columns
 			
 			columns.add("Username");
@@ -89,29 +91,27 @@ public class UserController {
 			rowData.add("kl8ss");
 			rowData.add("Kaito"+" "+"Vocaloid");
 			tableData.add(rowData);
-		}
-		
+						
+		}		
 		 //for column names
 		 public String getColumnName(int col) {
 	         return columns.get(col);
 	     }
-		 
+		 //for table to make how many columns
 		 @Override
 		public int getColumnCount() {
 			return columns.size();
 		}
-
+		 //for table to make how many rows
 		@Override
 		public int getRowCount() {
 			return tableData.size();
 		}
-
+		//for table to add data to each cell
 		@Override
 		public Object getValueAt(int row, int col) {
-			//return tableData.elementAt(arg0).elementAt(arg1);
 			return tableData.get(row).get(col);
 		}
-			
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex){
 			return false;

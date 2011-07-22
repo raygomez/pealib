@@ -22,8 +22,8 @@ public class AuthenticationController {
 	private User user;
 	private UserDAO userDao;
 	
-	String login_user;
-	String login_pass;
+	private String login_user;
+	private String login_pass;
 	
 	private static SignUpDialog signUp;
 	private String sUpFirstName;
