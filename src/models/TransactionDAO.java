@@ -113,9 +113,9 @@ public class TransactionDAO {
 		return count != 0;
 	}
 
-	public static BorrowTransaction getBorrowClass(Book book, User user) throws Exception {
+	public static BorrowTransaction getBorrowTransaction(Book book, User user) throws Exception {
 
-		String sql = "SELECT * FROM Reserves WHERE UserID = ? AND BookID = ?";
+		String sql = "SELECT * FROM Borrows WHERE UserID = ? AND BookID = ?";
 		BorrowTransaction borrow = null;
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
@@ -124,7 +124,7 @@ public class TransactionDAO {
 		ResultSet rs = ps.executeQuery();
 
 		if (rs.first()) {
-			borrow = new BorrowTransaction(rs.getInt("ID"), user, book,
+			borrow = new BorrowTransaction(rs.getInt("BorrowID"), user, book,
 					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
 					rs.getDate("DateReturned"));
 
