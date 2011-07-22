@@ -16,7 +16,7 @@ public class TransactionDAO {
 	public static void receiveBook(BorrowTransaction borrow) throws Exception {
 
 		String sql = "UPDATE Borrows SET DateReturned = ? "
-				+ "where ID = ? and DateBorrowed is not NULL and "
+				+ "where BorrowID = ? and DateBorrowed is not NULL and "
 				+ "DateRequested is not NULL";
 		Calendar today = Calendar.getInstance();
 
@@ -31,7 +31,7 @@ public class TransactionDAO {
 	public static int reserveBook(Book book, User user) throws Exception {
 		int intStat = 0;
 
-		String sql = "INSERT INTO Reserves (UserID, BookID) VALUES (?,?)";
+		String sql = "INSERT INTO Reserves (UserID, BookID, DateReserved) VALUES (?,?,CURRENT_DATE())";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, user.getUserId());
