@@ -1,26 +1,36 @@
 package views;
 
-import java.sql.SQLException;
-
 import javax.swing.JTabbedPane;
-
-import models.TransactionDAO;
-import models.User;
-import models.UserDAO;
 
 public class InOutTabbedPane extends JTabbedPane {
 
+	private static final long serialVersionUID = 1L;
 	private IncomingPanel incomingPanel;
 	private OutgoingPanel outgoingPanel;
 
-	public InOutTabbedPane(User user, UserDAO userDAO,
-			TransactionDAO transactionDAO) throws SQLException {
-
+	public InOutTabbedPane() {
+		setVisible(true);
 		incomingPanel = new IncomingPanel();
 		outgoingPanel = new OutgoingPanel();
 
 		addTab("Incoming", incomingPanel);
 		addTab("Outgoing", outgoingPanel);
+		System.out.println("InOutTabbedPane");
+	}
 
+	public IncomingPanel getIncomingPanel() {
+		return incomingPanel;
+	}
+
+	public void setIncomingPanel(IncomingPanel incomingPanel) {
+		this.incomingPanel = incomingPanel;
+	}
+
+	public OutgoingPanel getOutgoingPanel() {
+		return outgoingPanel;
+	}
+
+	public void setOutgoingPanel(OutgoingPanel outgoingPanel) {
+		this.outgoingPanel = outgoingPanel;
 	}
 }
