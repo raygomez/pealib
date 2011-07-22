@@ -118,7 +118,39 @@ public class UserDAOTest {
 
 		UserDAO.saveUser(user);
 	}
+	
+	@Test
+	@ExpectedDataSet({ "expected/updateUser.xml" })
+	public void testUpdateUser() throws Exception {
+		User user = UserDAO.getUserById(4);
+		user.setFirstName("Joseph");
+		user.setLastName("Dizon");
+		user.setEmail("jjrdizon@gmail.com");
+		user.setAddress("Fairview, Q.C.");
+		user.setContactNo("09178011454");
 
+		UserDAO.updateUser(user);
+	}
+	
+	@Test
+	public void testCheckPassword() throws Exception {
+		boolean actual = UserDAO.checkPassword(1, "1");
+		assertEquals(true, actual);
+	}
+	
+	@Test
+	public void testCheckPassword2() throws Exception {
+		boolean actual = UserDAO.checkPassword(1, "2");
+		assertEquals(false, actual);
+	}
+
+	@Test
+	@ExpectedDataSet({ "expected/changePassword.xml" })
+	public void testChangePassword() throws Exception {
+		User user = UserDAO.getUserById(4);
+		UserDAO.changePassword(user.getUserId(), "5");
+	}
+	
 	@Test
 	@DataSet({ "user_with_no_pending.xml" })
 	public void testSearchAllPendingWithNoPending() throws Exception {

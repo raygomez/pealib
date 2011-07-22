@@ -3,7 +3,6 @@ package controllers;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import models.UserDAO;
@@ -21,7 +20,6 @@ public class UserController {
 	private UserSearch userSearch;
 	private UserInfoPanel userInfoPanel;
 	private ChangePasswordDialog changePasswordDialog;
-	private UserDAO userDao;
 	private User currentUser;
 	
 	private JPanel layoutPanel;
@@ -50,12 +48,7 @@ public class UserController {
 	}
 	
 	public UserController(User user){
-		try {
-			userDao = new UserDAO();
-		} catch (Exception e) {
-			System.out.println("UserDAO " + e);
-		}
-		
+				
 		this.currentUser = user;
 		
 		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]"));		
@@ -117,27 +110,29 @@ public class UserController {
 			rowData.add("kl8ss");
 			rowData.add("Kaito"+" "+"Vocaloid");
 			tableData.add(rowData);
-						
-		}		
+		}
+		
 		 //for column names
 		 public String getColumnName(int col) {
 	         return columns.get(col);
 	     }
-		 //for table to make how many columns
+		 
 		 @Override
 		public int getColumnCount() {
 			return columns.size();
 		}
-		 //for table to make how many rows
+
 		@Override
 		public int getRowCount() {
 			return tableData.size();
 		}
-		//for table to add data to each cell
+
 		@Override
 		public Object getValueAt(int row, int col) {
+			//return tableData.elementAt(arg0).elementAt(arg1);
 			return tableData.get(row).get(col);
 		}
+			
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex){
 			return false;
@@ -216,7 +211,7 @@ public class UserController {
 	};
 		
 	private ActionListener showChangePassword = new ActionListener() {
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
@@ -226,6 +221,55 @@ public class UserController {
 					currentUser.getUserId() != Integer.parseInt(userInfoPanel.getIdNumber())){
 				changePasswordDialog.removeOldPassword();
 			}
+			
+			changePasswordDialog.addChangePasswordListener(changePassword);
 		}
 	};
+	
+	private ActionListener changePassword = new ActionListener() {
+		
+		boolean correctPassword;
+		boolean isMatchingPassword;
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			int userID;
+			if(changePasswordDialog.getOldPasswordField().isEnabled()){
+				String oldPassword = new String(changePasswordDialog.getOldPasswordField().getPassword());
+				userID = currentUser.getUserId();
+				
+				try {
+					correctPassword = UserDAO.checkPassword(userID, oldPassword);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					correctPassword = false;
+				}
+			}
+			else{
+				userID = Integer.parseInt(userInfoPanel.getIdNumber());
+			}
+			String newPassword1 = new String(changePasswordDialog.getNewPasswordField().getPassword());
+			String newPassword2 = new String(changePasswordDialog.getRepeatPasswordField().getPassword());
+			isMatchingPassword = newPassword1.equals(newPassword2);
+			
+			if(!correctPassword) changePasswordDialog.displayError(Constants.INCORRECT_PASSWORD_ERROR);
+			else if (!isMatchingPassword) changePasswordDialog.displayError(Constants.PASSWORD_NOT_MATCH_ERROR);
+			else{
+				try {
+					UserDAO.changePassword(userID, newPassword1);
+					changePasswordDialog.dispose();
+					JOptionPane.showMessageDialog(layoutPanel, "Password successfully changed!");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					changePasswordDialog.displayError(Constants.DEFAULT_ERROR);
+				}
+				
+			}
+		}
+	};
+	
+	
 }
