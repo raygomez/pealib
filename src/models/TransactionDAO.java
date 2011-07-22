@@ -71,6 +71,22 @@ public class TransactionDAO {
 		return intStat;
 	}
 
+	public static int borrowBook(Book book, User user) throws Exception {
+		int intStat = 0;
+
+		String sql = "UPDATE Borrows SET DateBorrowed = CURRENT_DATE() "
+				+ "WHERE UserID = ? and BookID = ? and "
+				+ "DateBorrowed is NULL and DateReturned is NULL";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setInt(1, user.getUserId());
+		ps.setInt(2, book.getBookId());
+
+		intStat = ps.executeUpdate();
+		Connector.close();
+		return intStat;
+	}
+
 	public static int cancelReservation(BorrowTransaction reservedBook,
 			User user) throws Exception {
 		int intStat = 0;
@@ -183,7 +199,7 @@ public class TransactionDAO {
 	}
 
 	public static ArrayList<BorrowTransaction> getRequestedBooks(User user)
-	throws Exception {
+			throws Exception {
 
 		String sql = "SELECT * FROM Borrows WHERE UserID = ? and DateBorrowed is NULL and DateReturned is NULL";
 		ArrayList<BorrowTransaction> borrows = new ArrayList<BorrowTransaction>();
@@ -207,7 +223,7 @@ public class TransactionDAO {
 	}
 
 	public static int getQueueInReservation(Book book, User user)
-	throws Exception {
+			throws Exception {
 
 		String sql = "SELECT * FROM Reserves where BookID = ?";
 
@@ -215,10 +231,11 @@ public class TransactionDAO {
 		ps.setLong(1, book.getBookId());
 		ResultSet rs = ps.executeQuery();
 		int ctr = 0;
-		
+
 		while (rs.next()) {
 			ctr++;
-			if ((user.getUserId() == rs.getInt("UserID")) && book.getBookId() == rs.getInt("ID")){
+			if ((user.getUserId() == rs.getInt("UserID"))
+					&& book.getBookId() == rs.getInt("ID")) {
 				break;
 			}
 		}
