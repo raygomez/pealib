@@ -1,12 +1,17 @@
 package views;
 
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
+
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.JViewport;
 import javax.swing.table.TableModel;
 
 public class BookSearchPanel extends JPanel {
@@ -34,24 +39,36 @@ public class BookSearchPanel extends JPanel {
 		add(btnClear, "cell 2 1,grow");
 		tableBookList = new JTable();
 		tableBookList.setName("tableList");
-		add(tableBookList, "cell 0 3 3 1,grow");
+		
+		add(new JScrollPane(tableBookList), "cell 0 3 3 1,grow");
 	}
 	
-	public void addSearchButtonListener(ActionListener search) {
+	public void setSearchButtonListener(ActionListener search) {
 		btnSearch.addActionListener(search);
 	}
 	
-	public void addClearButtonListener(ActionListener clear){
+	public void setClearButtonListener(ActionListener clear){
 		btnClear.addActionListener(clear);
+	}
+	
+	public void setTextFieldListener(KeyListener textfield) {
+		textFieldSearch.addKeyListener(textfield);
+	}
+	
+	public void setMouseListener(MouseListener table) {
+		tableBookList.addMouseListener(table);
+	}
+	
+	public void setTextFieldSearch(String textFieldSearch) {
+		this.textFieldSearch.setText(textFieldSearch);
 	}
 
 	public String getTextFieldSearch() {
 		return textFieldSearch.getText();
 	}
 	
-	public void setModel(TableModel model) {
+	public void setTableListModel(TableModel model) {
 		tableBookList.setModel(model);
 	}
-
 	
 }
