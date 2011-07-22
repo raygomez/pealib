@@ -43,16 +43,14 @@ public class TransactionDAO {
 	}
 
 	public static int borrowBook(Book book, User user) throws Exception {
-		Calendar today = Calendar.getInstance();
 		int intStat = 0;
 
 		String sql = "INSERT INTO Borrows (UserID, BookID, DateRequested) "
-				+ "VALUES (?,?,?)";
+				+ "VALUES (?,?,CURRENT_DATE())";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, user.getUserId());
 		ps.setLong(2, book.getBookId());
-		ps.setDate(3, new Date(today.getTime().getTime()));
 
 		intStat = ps.executeUpdate();
 		Connector.close();
