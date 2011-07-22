@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.sql.SQLException;
-
 import javax.swing.JDialog;
 
 import models.User;
@@ -20,10 +18,9 @@ import views.SignUpDialog;
 public class AuthenticationController {
 	private static LogInDialog login;
 	private User user;
-	private UserDAO userDao;
 	
-	String login_user;
-	String login_pass;
+	private String login_user;
+	private String login_pass;
 	
 	private static SignUpDialog signUp;
 	private String sUpFirstName;
@@ -45,13 +42,6 @@ public class AuthenticationController {
 	}
 
 	public AuthenticationController() {
-
-		try {
-			userDao = new UserDAO();
-		} catch (Exception e) {
-			System.out.println("UserDAO " + e);
-		}
-
 		login = new LogInDialog();
 		login.setActionListeners(new SignUpListener(), new SubmitListener(),
 				new SubmitKeyListener());
@@ -152,7 +142,7 @@ public class AuthenticationController {
 
 		else if (validateUsername(login_user) && validatePassword(login_pass)) {
 			try {
-				setUser(userDao.getUser(login_user, login_pass));
+				setUser(UserDAO.getUser(login_user, login_pass));
 			} catch (Exception e) {
 				System.out.println("AuthenticationController getUser: " + e);
 			}
@@ -260,9 +250,8 @@ public class AuthenticationController {
 					sUpLastName, sUpEmailAddress, sUpAddress, sUpContactNumber,
 					-1, "Pending");
 			try {
-				userDao.saveUser(newUser);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				UserDAO.saveUser(newUser);
+			} catch (Exception e) {			
 				e.printStackTrace();
 			}
 			signUpCancel();
@@ -371,7 +360,7 @@ public class AuthenticationController {
 		
 		boolean isNotUnique = true;
 		try {
-			isNotUnique = userDao.isUsernameExisting(sUpUserName);
+			isNotUnique = UserDAO.isUsernameExisting(sUpUserName);
 		} catch (Exception e) {
 			System.out.println("isUserNameValid(): userDao.isUsernameExisting - Exception");
 			e.printStackTrace();
