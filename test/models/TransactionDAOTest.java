@@ -2,9 +2,7 @@ package models;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import java.sql.Connection;
-import java.sql.SQLException;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +11,8 @@ import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
 
 import utilities.Connector;
-import utilities.PropertyLoader;
 
-@DataSet({ "book.xml", "user.xml", "reserves.xml" })
+@DataSet({ "book.xml", "user.xml", "reserves.xml", "borrows.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class TransactionDAOTest {
 
@@ -30,17 +27,30 @@ public class TransactionDAOTest {
 	}
 
 	@Test
-	public void getBorrowClass() throws Exception {
-		User user = new UserDAO().getUserById(1);
-		Book book = new BookDAO().getBookById(1);
+	public void testGetBorrowTransaction() throws Exception {
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(1);
 
 		assertNotNull(user);
 		assertNotNull(book);
-		// Borrow borrow = transactionDAO.getBorrowClass(book, user);
-		//
-		// assertNotNull(borrow);
-		// assertEquals(1,borrow.getId());
-
+		BorrowTransaction borrow = TransactionDAO.getBorrowTransaction(book, user);
+		assertNotNull(borrow);
+		assertEquals(1, borrow.getId());
+		assertEquals(book, borrow.getBook());
+		assertEquals(user, borrow.getUser());
+		assertEquals("2011-06-15", borrow.getDateRequested().toString());
+		assertEquals("2011-06-15", borrow.getDateBorrowed().toString());
+		assertEquals("2011-06-15", borrow.getDateReturned().toString());
 	}
+	
+	@Test
+	public void testGetBorrowTransactionIfNotExisting() throws Exception {
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(2);
 
+		assertNotNull(user);
+		assertNotNull(book);
+		BorrowTransaction borrow = TransactionDAO.getBorrowTransaction(book, user);
+		assertNull(borrow);
+	}
 }
