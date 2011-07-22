@@ -119,24 +119,20 @@ public class BookDAO extends AbstractDAO {
 			bookQuery = connection.prepareStatement("SELECT * FROM Books");
 		} else {
 			bookQuery = connection
-					.prepareStatement("SELECT * FROM Books WHERE ISBN LIKE ? OR Title LIKE ? OR Author LIKE ? OR Edition LIKE ? OR Publisher LIKE ?");
+					.prepareStatement("SELECT * FROM Books WHERE CONCAT(ISBN, Title, Author, Publisher) LIKE ?");
 			bookQuery.setString(1, "%" + search + "%");
-			bookQuery.setString(2, "%" + search + "%");
-			bookQuery.setString(3, "%" + search + "%");
-			bookQuery.setString(4, "%" + search + "%");
-			bookQuery.setString(5, "%" + search + "%");
 		}
 
 		ResultSet rs = bookQuery.executeQuery();
 		while (rs.next()) {
-			int bookID = Integer.parseInt(rs.getString("ID"));
+			int bookID = rs.getInt("ID");
 			String isbn = rs.getString("ISBN");
 			String title = rs.getString("Title");
 			String edition = rs.getString("Edition");
 			String author = rs.getString("Author");
 			String publisher = rs.getString("Publisher");
 			String description = rs.getString("Description");
-			int yearPublish = Integer.parseInt(rs.getString("YearPublish"));
+			int yearPublish = rs.getInt("YearPublish");
 			int copies = Integer.parseInt(rs.getString("Copies"));
 			Book addBook = new Book(bookID, isbn, title, edition, author,
 					publisher, yearPublish, description, copies);
