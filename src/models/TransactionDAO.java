@@ -12,7 +12,7 @@ import org.joda.time.Days;
 
 public class TransactionDAO extends AbstractDAO {
 
-	public TransactionDAO() throws SQLException, ClassNotFoundException {
+	public TransactionDAO() throws Exception {
 		super();
 	}
 

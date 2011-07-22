@@ -261,8 +261,8 @@ public class AuthenticationController {
 					-1, "Pending");
 			try {
 				userDao.saveUser(newUser);
-				
-			} catch (SQLException e) {
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			signUpCancel();
@@ -372,7 +372,7 @@ public class AuthenticationController {
 		boolean isNotUnique = true;
 		try {
 			isNotUnique = userDao.isUsernameExisting(sUpUserName);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println("isUserNameValid(): userDao.isUsernameExisting - Exception");
 			e.printStackTrace();
 		}
