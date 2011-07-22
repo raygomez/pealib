@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS Books
 	PRIMARY KEY (ID));
     
 CREATE TABLE IF NOT EXISTS Borrows
-	(BorrowID INT UNIQUE NOT NULL AUTO_INCREMENT,
+	(BorrowID INT UNIQUE,
 	UserID INT,
-	BOokID INT,
+	BookID INT,
 	DateRequested DATE,
 	DateBorrowed DATE,
 	DateReturned DATE,
