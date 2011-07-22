@@ -15,6 +15,7 @@ public class Constants {
 	public static final String NAME_FORMAT = "[A-Za-z]{2,}";
 	public static final String CONTACT_NUMBER_FORMAT = "(\\d{7,11})?";
 	public static final String EMAIL_FORMAT = "([a-z]+[a-z0-9]+@\\w{2,}(\\.[a-z]{2,3})+)?";
+	public static final String ADDRESS_FORMAT = ".{2,100}";
 
 	public static final String NAME_FORMAT_ERROR_MESSAGE = "Incorrect name format, please alphabetical characters only";
 	public static final String USERNAME_FORMAT_ERROR_MESSAGE = "Invalid username, please use alphanumeric characters, underscores and periods only.\n" +
