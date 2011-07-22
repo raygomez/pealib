@@ -186,6 +186,51 @@ public class TransactionDAO {
 
 	}
 
+	public static ArrayList<BorrowTransaction> getRequestedBooks(User user)
+	throws Exception {
+
+		String sql = "SELECT * FROM Borrows WHERE UserID = ? and DateBorrowed is NULL and DateReturned is NULL";
+		ArrayList<BorrowTransaction> borrows = new ArrayList<BorrowTransaction>();
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ResultSet rs = ps.executeQuery();
+
+		while (rs.next()) {
+			Book book = BookDAO.getBookById(rs.getInt("BookID"));
+			BorrowTransaction borrow = new BorrowTransaction(
+					rs.getInt("BorrowID"), user, book,
+					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
+					rs.getDate("DateReturned"));
+
+			borrows.add(borrow);
+		}
+		Connector.close();
+		return borrows;
+
+	}
+
+	public static int getQueueInReservation(Book book, User user)
+	throws Exception {
+
+		String sql = "SELECT * FROM Reserves where BookID = ?";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setLong(1, book.getBookId());
+		ResultSet rs = ps.executeQuery();
+		int ctr = 0;
+		
+		while (rs.next()) {
+			ctr++;
+			if ((user.getUserId() == rs.getInt("UserID")) && book.getBookId() == rs.getInt("ID")){
+				break;
+			}
+		}
+		Connector.close();
+		return ctr;
+
+	}
+
 	public static boolean isBorrowedByUser(Book book, User user)
 			throws Exception {
 		int count = 0;
