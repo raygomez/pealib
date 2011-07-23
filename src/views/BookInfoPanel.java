@@ -9,6 +9,7 @@ import models.User;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.Color;
 
 public class BookInfoPanel extends JPanel {
 	
@@ -23,6 +24,7 @@ public class BookInfoPanel extends JPanel {
 	private JLabel lblCopiesValue;
 	private User currUser;
 	private Book currBook;
+	private JLabel lblErrorMsg;
 
 	/**
 	 * Create the panel.
@@ -37,6 +39,10 @@ public class BookInfoPanel extends JPanel {
 	private void displayBookInfo() {
 		
 		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00][144]", "[][][][][][][][48.00][34.00][13.00][]"));
+		
+		lblErrorMsg = new JLabel("");
+		lblErrorMsg.setForeground(Color.RED);
+		add(lblErrorMsg, "cell 3 0 2 1,alignx center,aligny center");
 		
 		JLabel lblTitle = new JLabel("Title:");
 		add(lblTitle, "cell 1 1");
@@ -139,5 +145,35 @@ public class BookInfoPanel extends JPanel {
 		txtFldDescription.setText(book.getDescription());
 		lblCopiesValue.setText(Integer.toString(book.getCopies()));
 	}
+
+	public JTextField getTxtFldTitle() {
+		return txtFldTitle;
+	}
+
+	public JTextField getTxtFldAuthor() {
+		return txtFldAuthor;
+	}
+
+	public JTextField getTxtFldYrPublished() {
+		return txtFldYrPublished;
+	}
+
+	public JTextField getTxtFldPublisher() {
+		return txtFldPublisher;
+	}
+
+	public JTextField getTxtFldISBN() {
+		return txtFldISBN;
+	}
+
+	public JTextField getTxtFldDescription() {
+		return txtFldDescription;
+	}
+
+	public void setLblErrorMsg(JLabel lblErrorMsg) {
+		this.lblErrorMsg = lblErrorMsg;
+	}
+	
+	
 	
 }
