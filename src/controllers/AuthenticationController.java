@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import models.User;
 import models.UserDAO;
 
+import utilities.Connector;
 import utilities.Constants;
 
 import views.LogInDialog;
@@ -34,6 +35,8 @@ public class AuthenticationController {
 	
 	public static void main(String[] args) {
 		try {
+			//TODO change this if going to use another DB
+			new Connector("test.config"); 
 			new AuthenticationController();
 
 		} catch (Exception e) {
@@ -142,19 +145,27 @@ public class AuthenticationController {
 
 		else if (validateUsername(login_user) && validatePassword(login_pass)) {
 			try {
+				
 				setUser(UserDAO.getUser(login_user, login_pass));
+				
+				if (user == null){
+					login.setLabelError("Username/Password Mismatch");
+					login.getFieldPassword().setText("");
+				}
+				else if(user.getType().equals("Pending")){
+					login.setLabelError("<html><center>Account still being processed.<br/>" +
+							"Ask Librarian for further inquiries.</center></html>");
+					login.getFieldPassword().setText("");
+				}
+				else{
+					//TODO login --> call main frame
+					System.out.println("LOGIN");
+					login.dispose();					
+				} 
+				
 			} catch (Exception e) {
 				System.out.println("AuthenticationController getUser: " + e);
-			}
-
-			if (user != null) {
-				// login --> call main frame
-
-				System.out.println("LOGIN");
-				login.dispose();
-			} else {
-				login.setLabelError("Username/Password Mismatch");
-				login.getFieldPassword().setText("");
+				login.setLabelError("Connection Error!");
 			}
 		}
 	}
@@ -169,8 +180,7 @@ public class AuthenticationController {
 			signUpSubmit();
 			System.out.println("submit button listener");
 		}
-	}
-	
+	}	
 	
 	//Cancel Listener
 	class SignUpCancelListener implements ActionListener {
