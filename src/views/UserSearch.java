@@ -1,5 +1,9 @@
 package views;
 
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
@@ -10,6 +14,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class UserSearch extends JPanel {
 	
+	private static final long serialVersionUID = 1L;
 	private JTextField fieldSearch = new JTextField(30);
 	private JButton btnSearch = new JButton("Search",new ImageIcon("resources/images/search32x32.png"));
 	private JTabbedPane tabbedPane = new JTabbedPane();
@@ -17,14 +22,25 @@ public class UserSearch extends JPanel {
 	private JPanel usersPane = new JPanel();
 	
 	private DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
-	private JTable tablePending, tableUsers;
+	private JTable pendingTable, usersTable;
 	private TableModel modelPending, modelUsers;
 	
+	
+	public JTextField getFieldSearch() {
+		return fieldSearch;
+	}
+	
+	public int getSelectedTab(){
+		return tabbedPane.getSelectedIndex();
+	}
+	
+
 	/**
 	 * Create the panel.
 	 */
-	public UserSearch(AbstractTableModel model1) {
-		this.modelPending = model1;
+	public UserSearch(AbstractTableModel model1, AbstractTableModel model2) {
+		this.modelPending = model2;
+		this.modelUsers = model1;
 		
 		setBorder(new EmptyBorder(5, 5, 5, 5)); 
 		setLayout(new MigLayout("", "[60px][300px]10px[][grow]", "[]20px[][grow]"));
@@ -42,19 +58,23 @@ public class UserSearch extends JPanel {
 		pendingAppPanel();
 	}
 	
+	private void setTableSettings(JTable table){
+		table.setRowHeight(28);		
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		table.getColumn("Username").setCellRenderer(trender);
+		table.getColumn("Name").setCellRenderer(trender);
+	}
+	
 	private void pendingAppPanel(){
 		pendingPane.setBorder(new EmptyBorder(5, 5, 5, 5)); 
 		pendingPane.setLayout(new MigLayout("", "", ""));
 		
 		//table pane
-		tablePending = new JTable(modelPending);
-		tablePending.setName("tablePending");
-		tablePending.setRowHeight(28);		
-		tablePending.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
-		tablePending.getColumn("Username").setCellRenderer(trender);
-		tablePending.getColumn("Name").setCellRenderer(trender);
+		pendingTable = new JTable(modelPending);
+		pendingTable.setName("tablePending");		
+		setTableSettings(pendingTable);
 		
-		JScrollPane scrollPane = new JScrollPane(tablePending);
+		JScrollPane scrollPane = new JScrollPane(pendingTable);
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);			
 		pendingPane.add(scrollPane);		
@@ -65,17 +85,33 @@ public class UserSearch extends JPanel {
 		usersPane.setLayout(new MigLayout("", "", ""));
 		
 		//table pane
-		tablePending = new JTable(modelPending);
-		tablePending.setName("tablePending");
-		tablePending.setRowHeight(28);		
-		tablePending.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
-		tablePending.getColumn("Username").setCellRenderer(trender);
-		tablePending.getColumn("Name").setCellRenderer(trender);
+		usersTable = new JTable(modelUsers);
+		usersTable.setName("tablePending");
+		setTableSettings(usersTable);
 		
-		JScrollPane scrollPane = new JScrollPane(tablePending);
+		JScrollPane scrollPane = new JScrollPane(usersTable);
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);			
 		usersPane.add(scrollPane);		
+	}
+	
+	public void setTableModel(int tab, AbstractTableModel model){
+		if(tab==0) {
+			usersTable.setModel(model);
+			setTableSettings(usersTable);
+		}
+		else {
+			pendingTable.setModel(model);
+			setTableSettings(pendingTable);
+		}
+		tabbedPane.validate();
+		tabbedPane.repaint();
+	}
+	
+	public void addListeners(ActionListener button, KeyListener text, MouseListener tab){
+		btnSearch.addActionListener(button);
+		fieldSearch.addKeyListener(text);
+		tabbedPane.addMouseListener(tab);
 	}
 
 }

@@ -1,13 +1,13 @@
 package controllers;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 import models.UserDAO;
 import models.User;
 import net.miginfocom.swing.MigLayout;
+import utilities.Connector;
 import utilities.Constants;
 import views.ChangePasswordDialog;
 import views.UserInfoPanel;
@@ -24,7 +24,9 @@ public class UserController {
 	
 	private JPanel layoutPanel;
 	
-	/*
+	private String searchText;
+	
+	/* ..TODO
 	 * For visual testing purposes only
 	 */
 	public static void main(String[] args) {
@@ -47,20 +49,18 @@ public class UserController {
 		
 	}
 	
-	public UserController(User user){
-				
+	//CONSTRUCTOR
+	public UserController(User user){	
+		
 		this.currentUser = user;
 		
 		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]"));		
 		
-		userSearch = new UserSearch(new UserSearchTableModel(0));
+		userSearch = new UserSearch(new UserSearchTableModel(0,""), new UserSearchTableModel(1,""));
+		userSearch.addListeners(new SearchListener(), new SearchKeyListener(), new TabListener());
 		userInfoPanel = new UserInfoPanel();
 		
 		generateLayoutPanel();
-		
-		//userSearch.setTableModel(new PendingApplicationModel());
-		//test
-		//testingPurposes();
 	}
 	
 	private void generateLayoutPanel() {
@@ -69,74 +69,132 @@ public class UserController {
 		layoutPanel.add(userInfoPanel, "grow");
 		
 		userInfoPanel.addSaveListener(save);
-		userInfoPanel.addChangePasswordListner(showChangePassword);
-		
+		userInfoPanel.addChangePasswordListner(showChangePassword);		
+	}
+	
+	class TabListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			//JTabbedPane tp = (JTabbedPane) e.getSource();
+			//int tab = tp.indexAtLocation( e.getX(), e.getY() );
+			searchUsers();
+		}		
 	}
 
-	//UserTableModel
+	
+	private void searchUsers(){
+		int tab = userSearch.getSelectedTab();
+		
+		UserSearchTableModel model = new UserSearchTableModel(tab, searchText);
+		userSearch.setTableModel(tab, model);
+	}
+	
+	class SearchListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			searchUsers();
+		}
+	}
+
+	class SearchKeyListener implements KeyListener {
+		@Override
+		public void keyPressed(KeyEvent e) {}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			int keyCode = e.getKeyCode();
+
+			if (keyCode == 10) {
+				searchUsers();
+			} 
+			else {				
+				searchText = userSearch.getFieldSearch().getText();
+	
+				if(searchText.length()>0)   searchUsers();
+			}
+		}
+		@Override
+		public void keyTyped(KeyEvent e) {}
+	}
+
+
 	class UserSearchTableModel extends AbstractTableModel{
 		/**
-		 * 
+		 *  TableModel for User Search Panel/Tabs 
 		 */
 		private static final long serialVersionUID = 1L;
 		private ArrayList<String> columns = new ArrayList<String>();
 		private ArrayList<ArrayList<String>> tableData = new ArrayList<ArrayList<String>>();
+		private ArrayList<User> searchUsers = new ArrayList<User>();
+		private int mode;
+		private String searchStr="";
 		
-		public UserSearchTableModel(int tab){
-			if(tab==0) userAcct();
-			else pending(); 
-		}
-		
-		private void pending(){}
-		private void userAcct(){
-			//Adding Columns
-			
+		public UserSearchTableModel(int tab, String str){
+			this.mode = tab;
+			this.searchStr = str;
+					
 			columns.add("Username");
 			columns.add("Name");
 			
-			//Adding Data:
-			ArrayList<String> rowData = new ArrayList<String>();
-			rowData.add("wertyu123");
-			rowData.add("Miku"+" "+"Hatsune");
+			//TODO change if going to use another DB
+			new Connector("test.config"); 
 			
-			tableData.add(rowData);
-			
-			rowData = new ArrayList<String>();
-			rowData.add("luka123");
-			rowData.add("Luka"+" "+"Megurine");
-			tableData.add(rowData);
-			
-			rowData = new ArrayList<String>();
-			rowData.add("kl8ss");
-			rowData.add("Kaito"+" "+"Vocaloid");
-			tableData.add(rowData);
+			if(mode==0) userAcct();
+			else pending(); 
 		}
 		
-		 //for column names
-		 public String getColumnName(int col) {
-	         return columns.get(col);
-	     }
-		 
-		 @Override
-		public int getColumnCount() {
-			return columns.size();
-		}
-
-		@Override
-		public int getRowCount() {
-			return tableData.size();
-		}
-
-		@Override
-		public Object getValueAt(int row, int col) {
-			//return tableData.elementAt(arg0).elementAt(arg1);
-			return tableData.get(row).get(col);
-		}
+		private void pending(){
+			try{
+				searchUsers = UserDAO.searchAllPending(searchStr);
+			} catch(Exception e){ System.out.println("UserController: userAcct: "+e);}
 			
-		@Override
-		public boolean isCellEditable(int rowIndex, int columnIndex){
-			return false;
+			for(User i : searchUsers){
+				ArrayList<String> rowData = new ArrayList<String>();
+				rowData.add(i.getUserName());
+				rowData.add(i.getFirstName()+" "+i.getLastName());
+				tableData.add(rowData);
+			}		
+		}
+		
+		private void userAcct(){
+			try{
+				searchUsers = UserDAO.searchUsers(searchStr);
+			} catch(Exception e){ System.out.println("UserController: userAcct: "+e);}
+			
+			for(User i : searchUsers){
+				if(i.getType().equals("Pending")) continue;
+				ArrayList<String> rowData = new ArrayList<String>();				
+				rowData.add(i.getUserName());
+				rowData.add(i.getFirstName()+" "+i.getLastName());
+				tableData.add(rowData);
+			}							
 		}		
+
+		 public String getColumnName(int col) { return columns.get(col);}
+
+		 @Override
+		public int getColumnCount() { return columns.size();}
+		
+		@Override
+		public int getRowCount() { return tableData.size();}
+
+		@Override
+		public Object getValueAt(int row, int col) { return tableData.get(row).get(col);}
+
+		@Override
+		public boolean isCellEditable(int rowIndex, int columnIndex){ return false;}		
 	}
 	
 	public JPanel getUserPanel(){
@@ -145,7 +203,6 @@ public class UserController {
 	
 	private boolean validateUpdateProfile(String firstName,
 			String lastName, String email, String address, String contactNo) {
-			// TODO Auto-generated method stub
 				
 			boolean pass = true;
 			ArrayList<Integer> tempErrors = new ArrayList<Integer>();
@@ -211,7 +268,7 @@ public class UserController {
 	};
 		
 	private ActionListener showChangePassword = new ActionListener() {
-
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
@@ -221,55 +278,6 @@ public class UserController {
 					currentUser.getUserId() != Integer.parseInt(userInfoPanel.getIdNumber())){
 				changePasswordDialog.removeOldPassword();
 			}
-			
-			changePasswordDialog.addChangePasswordListener(changePassword);
 		}
 	};
-	
-	private ActionListener changePassword = new ActionListener() {
-		
-		boolean correctPassword;
-		boolean isMatchingPassword;
-		
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			int userID;
-			if(changePasswordDialog.getOldPasswordField().isEnabled()){
-				String oldPassword = new String(changePasswordDialog.getOldPasswordField().getPassword());
-				userID = currentUser.getUserId();
-				
-				try {
-					correctPassword = UserDAO.checkPassword(userID, oldPassword);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					correctPassword = false;
-				}
-			}
-			else{
-				userID = Integer.parseInt(userInfoPanel.getIdNumber());
-			}
-			String newPassword1 = new String(changePasswordDialog.getNewPasswordField().getPassword());
-			String newPassword2 = new String(changePasswordDialog.getRepeatPasswordField().getPassword());
-			isMatchingPassword = newPassword1.equals(newPassword2);
-			
-			if(!correctPassword) changePasswordDialog.displayError(Constants.INCORRECT_PASSWORD_ERROR);
-			else if (!isMatchingPassword) changePasswordDialog.displayError(Constants.PASSWORD_NOT_MATCH_ERROR);
-			else{
-				try {
-					UserDAO.changePassword(userID, newPassword1);
-					changePasswordDialog.dispose();
-					JOptionPane.showMessageDialog(layoutPanel, "Password successfully changed!");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					changePasswordDialog.displayError(Constants.DEFAULT_ERROR);
-				}
-				
-			}
-		}
-	};
-	
-	
 }
