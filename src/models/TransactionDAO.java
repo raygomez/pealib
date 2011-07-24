@@ -165,7 +165,7 @@ public class TransactionDAO {
 
 	public static boolean isReservedByUser(Book book, User user)
 			throws Exception {
-		int count = 0;
+		boolean isReserved = false;
 
 		String sql = "SELECT COUNT(*) FROM Reserves WHERE UserID = ? AND BookID = ?";
 
@@ -174,10 +174,10 @@ public class TransactionDAO {
 		ps.setLong(2, book.getBookId());
 		ResultSet rs = ps.executeQuery();
 		if (rs.first()) {
-			count = rs.getInt(1);
+			isReserved = rs.getInt(1) != 0;
 		}
 		Connector.close();
-		return count != 0;
+		return isReserved;
 	}
 
 	public static ArrayList<ReserveTransaction> getReservedBooks(User user)

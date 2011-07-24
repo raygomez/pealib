@@ -1,5 +1,8 @@
 package models;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,13 +71,26 @@ public class TransactionDAOTest {
 				.getReserveTransaction(user, book);
 		TransactionDAO.cancelReservation(rtTransaction);
 	}
-	
+
 	@Test
 	@ExpectedDataSet({ "expected/denyBookRequestBorrows.xml" })
 	public void testDenyBookRequest() throws Exception {
 		BorrowTransaction bTransaction = TransactionDAO
 				.getBorrowTransactionById(2);
-		TransactionDAO.borrowBook(bTransaction);
 		TransactionDAO.denyBookRequest(bTransaction);
+	}
+
+	@Test
+	public void testIsReserved() throws Exception {
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(1);
+		assertTrue(TransactionDAO.isReservedByUser(book, user));
+	}
+	
+	@Test
+	public void testIsNotReserved() throws Exception {
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(2);
+		assertFalse(TransactionDAO.isReservedByUser(book, user));
 	}
 }
