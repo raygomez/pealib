@@ -150,7 +150,7 @@ public class AuthenticationController {
 			getLogin().setLabelError("Invalid input");
 		}
 
-		else if (validateUsername(login_user) && validatePassword(login_pass)) {
+		else{
 			try {
 
 				setUser(UserDAO.getUser(login_user, login_pass));
