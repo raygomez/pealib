@@ -15,7 +15,7 @@ public class ChangePasswordDialogTest extends UISpecTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		window = new Window(new ChangePasswordDialog(null));
+		window = new Window(new ChangePasswordDialog());
 
 		oldpassword = window.getPasswordField("oldpassword");
 		newpassword = window.getPasswordField("newpassword");

@@ -52,13 +52,43 @@ public class UserSearchPanel extends JPanel {
 		tabbedPane.addTab("User Accounts", new ImageIcon(
 				"resources/images/useraccounts.png"), usersPane);
 		tabbedPane.addTab("Pending Applications", new ImageIcon(
-				"resources/images/pending.png"), pendingPane);
+				"resources/images/pending.png"), getPendingPane());
 
 		add(tabbedPane, "cell 0 1, span 4 3,grow");
 
 		trender.setHorizontalAlignment(SwingConstants.CENTER);
 		usersPanel();
 		pendingAppPanel();
+	}
+
+	/**
+	 * @return the pendingTable
+	 */
+	public JTable getPendingTable() {
+		return pendingTable;
+	}
+
+	/**
+	 * @param pendingTable
+	 *            the pendingTable to set
+	 */
+	public void setPendingTable(JTable pendingTable) {
+		this.pendingTable = pendingTable;
+	}
+
+	/**
+	 * @return the pendingPane
+	 */
+	public JPanel getPendingPane() {
+		return pendingPane;
+	}
+
+	/**
+	 * @param pendingPane
+	 *            the pendingPane to set
+	 */
+	public void setPendingPane(JPanel pendingPane) {
+		this.pendingPane = pendingPane;
 	}
 
 	/**
@@ -84,18 +114,18 @@ public class UserSearchPanel extends JPanel {
 	}
 
 	private void pendingAppPanel() {
-		pendingPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		pendingPane.setLayout(new MigLayout("", "", ""));
+		getPendingPane().setBorder(new EmptyBorder(5, 5, 5, 5));
+		getPendingPane().setLayout(new MigLayout("", "", ""));
 
 		// table pane
-		pendingTable = new JTable(modelPending);
-		pendingTable.setName("tablePending");
-		setTableSettings(pendingTable);
+		setPendingTable(new JTable(modelPending));
+		getPendingTable().setName("tablePending");
+		setTableSettings(getPendingTable());
 
-		JScrollPane scrollPane = new JScrollPane(pendingTable);
+		JScrollPane scrollPane = new JScrollPane(getPendingTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		pendingPane.add(scrollPane);
+		getPendingPane().add(scrollPane);
 	}
 
 	private void usersPanel() {
@@ -119,8 +149,8 @@ public class UserSearchPanel extends JPanel {
 			setTableSettings(getUsersTable());
 
 		} else {
-			pendingTable.setModel(model);
-			setTableSettings(pendingTable);
+			getPendingTable().setModel(model);
+			setTableSettings(getPendingTable());
 		}
 		tabbedPane.validate();
 		tabbedPane.repaint();
@@ -135,7 +165,8 @@ public class UserSearchPanel extends JPanel {
 		btnSearch.addActionListener(button);
 		fieldSearch.addKeyListener(text);
 		tabbedPane.addChangeListener(tab);
-		usersTable.getSelectionModel().addListSelectionListener(table);
+		getUsersTable().getSelectionModel().addListSelectionListener(table);
+		getPendingTable().getSelectionModel().addListSelectionListener(table);
 	}
 
 }
