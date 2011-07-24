@@ -46,7 +46,39 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		assertReflectionEquals(
 				BorderFactory.createMatteBorder(1, 1, 2, 1,
 						Color.getHSBColor((float) 0.0, (float) 0.6, (float) 1)),
-				password.getAwtComponent().getBorder());	
+				password.getAwtComponent().getBorder());
 		assertEquals("Incomplete fields", labelError.getText());
 	}
+
+	@Test
+	public void testEmptyPassword() {
+		username.setText("jvillar");
+		Button login = window.getButton("Log In");
+		login.click();
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
+				username.getAwtComponent().getBorder());
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 2, 1,
+						Color.getHSBColor((float) 0.0, (float) 0.6, (float) 1)),
+				password.getAwtComponent().getBorder());
+		assertEquals("Incomplete fields", labelError.getText());
+	}
+	
+	@Test
+	public void testEmptyUsername() {
+		password.setPassword("123456");
+		Button login = window.getButton("Log In");
+		login.click();
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 2, 1,
+						Color.getHSBColor((float) 0.0, (float) 0.6, (float) 1)),
+				username.getAwtComponent().getBorder());
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
+				password.getAwtComponent().getBorder());
+
+		assertEquals("Incomplete fields", labelError.getText());
+	}
+	
 }
