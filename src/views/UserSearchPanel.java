@@ -2,10 +2,10 @@ package views;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -69,7 +69,8 @@ public class UserSearchPanel extends JPanel {
 	}
 
 	/**
-	 * @param usersTable the usersTable to set
+	 * @param usersTable
+	 *            the usersTable to set
 	 */
 	public void setUsersTable(JTable usersTable) {
 		this.usersTable = usersTable;
@@ -116,7 +117,7 @@ public class UserSearchPanel extends JPanel {
 		if (tab == 0) {
 			getUsersTable().setModel(model);
 			setTableSettings(getUsersTable());
-			
+
 		} else {
 			pendingTable.setModel(model);
 			setTableSettings(pendingTable);
@@ -130,10 +131,10 @@ public class UserSearchPanel extends JPanel {
 	}
 
 	public void addListeners(ActionListener button, KeyListener text,
-			MouseListener tab, ListSelectionListener table) {
+			ChangeListener tab, ListSelectionListener table) {
 		btnSearch.addActionListener(button);
 		fieldSearch.addKeyListener(text);
-		tabbedPane.addMouseListener(tab);
+		tabbedPane.addChangeListener(tab);
 		usersTable.getSelectionModel().addListSelectionListener(table);
 	}
 

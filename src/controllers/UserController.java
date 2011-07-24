@@ -13,6 +13,8 @@ import views.ChangePasswordDialog;
 import views.UserInfoPanel;
 import views.UserSearchPanel;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 public class UserController {
@@ -60,7 +62,7 @@ public class UserController {
 		userSearch = new UserSearchPanel(new UserSearchTableModel(0, ""),
 				new UserSearchTableModel(1, ""));
 		userSearch.addListeners(new SearchListener(), new SearchKeyListener(),
-				new TabListener(), null);
+				new TabChangeListener(), null);
 		userInfoPanel = new UserInfoPanel();
 
 		generateLayoutPanel();
@@ -75,35 +77,16 @@ public class UserController {
 		userInfoPanel.addChangePasswordListener(showChangePassword);
 	}
 
-	class TabListener implements MouseListener {
-
+	class TabChangeListener implements ChangeListener {
 		@Override
-		public void mouseClicked(MouseEvent arg0) {
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// JTabbedPane tp = (JTabbedPane) e.getSource();
-			// int tab = tp.indexAtLocation( e.getX(), e.getY() );
+		public void stateChanged(ChangeEvent e) {
 			searchUsers();
 		}
 	}
 
 	private void searchUsers() {
 		int tab = userSearch.getSelectedTab();
-
+		searchText = userSearch.getFieldSearch().getText();
 		UserSearchTableModel model = new UserSearchTableModel(tab, searchText);
 		userSearch.setTableModel(tab, model);
 	}
