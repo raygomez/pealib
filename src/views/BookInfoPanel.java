@@ -1,9 +1,6 @@
 package views;
 
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
@@ -12,6 +9,7 @@ import models.User;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.Color;
 
 public class BookInfoPanel extends JPanel {
 	
@@ -26,21 +24,25 @@ public class BookInfoPanel extends JPanel {
 	private JLabel lblCopiesValue;
 	private User currUser;
 	private Book currBook;
-	
+	private JLabel lblErrorMsg;
+
 	/**
 	 * Create the panel.
 	 */
 
-	public BookInfoPanel(ArrayList<Book> book, User user,
-			JFrame frame) {
+	public BookInfoPanel(Book book, User user) {
 		this.currUser = user;
-		this.currBook = book.get(0);
+		this.currBook = book;
 		displayBookInfo();
 	}
 
 	private void displayBookInfo() {
 		
 		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00][144]", "[][][][][][][][48.00][34.00][13.00][]"));
+		
+		lblErrorMsg = new JLabel("");
+		lblErrorMsg.setForeground(Color.RED);
+		add(lblErrorMsg, "cell 3 0 2 1,alignx center,aligny center");
 		
 		JLabel lblTitle = new JLabel("Title:");
 		add(lblTitle, "cell 1 1");
@@ -61,7 +63,7 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblYearPublished = new JLabel("Year Published:");
 		add(lblYearPublished, "cell 1 3");
 		
-		txtFldYrPublished = new JTextField(currBook.getYearPublish());
+		txtFldYrPublished = new JTextField(Integer.toString(currBook.getYearPublish()));
 		txtFldYrPublished.setEditable(false);
 		add(txtFldYrPublished, "cell 3 3 2 1,growx");
 		txtFldYrPublished.setColumns(10);
@@ -122,52 +124,56 @@ public class BookInfoPanel extends JPanel {
 		btnDelete.addActionListener(deleteRecord);
 	}
 	
-	public JTextField getTxtFldTitle() {
-		return txtFldTitle;
+	public Book getCurrBook() {
+		currBook.setTitle(txtFldTitle.getText());
+		currBook.setAuthor(txtFldAuthor.getText());
+		currBook.setYearPublish(Integer.parseInt(txtFldYrPublished.getText()));
+		currBook.setPublisher(txtFldPublisher.getText());
+		currBook.setIsbn(txtFldISBN.getText());
+		currBook.setDescription(txtFldDescription.getText());
+		currBook.setCopies(Integer.parseInt(lblCopiesValue.getText()));
+		return currBook;
+	}
+	
+	public void setBookInfoData(Book book){
+		currBook = book;
+		txtFldTitle.setText(book.getTitle());
+		txtFldAuthor.setText(book.getAuthor());
+		txtFldYrPublished.setText(Integer.toString(book.getYearPublish()));
+		txtFldPublisher.setText(book.getPublisher());
+		txtFldISBN.setText(book.getIsbn());
+		txtFldDescription.setText(book.getDescription());
+		lblCopiesValue.setText(Integer.toString(book.getCopies()));
 	}
 
-	public void setTxtFldTitle(JTextField txtFldTitle) {
-		this.txtFldTitle = txtFldTitle;
+	public JTextField getTxtFldTitle() {
+		return txtFldTitle;
 	}
 
 	public JTextField getTxtFldAuthor() {
 		return txtFldAuthor;
 	}
 
-	public void setTxtFldAuthor(JTextField txtFldAuthor) {
-		this.txtFldAuthor = txtFldAuthor;
-	}
-
 	public JTextField getTxtFldYrPublished() {
 		return txtFldYrPublished;
-	}
-
-	public void setTxtFldYrPublished(JTextField txtFldYrPublished) {
-		this.txtFldYrPublished = txtFldYrPublished;
 	}
 
 	public JTextField getTxtFldPublisher() {
 		return txtFldPublisher;
 	}
 
-	public void setTxtFldPublisher(JTextField txtFldPublisher) {
-		this.txtFldPublisher = txtFldPublisher;
-	}
-
 	public JTextField getTxtFldISBN() {
 		return txtFldISBN;
-	}
-
-	public void setTxtFldISBN(JTextField txtFldISBN) {
-		this.txtFldISBN = txtFldISBN;
 	}
 
 	public JTextField getTxtFldDescription() {
 		return txtFldDescription;
 	}
 
-	public void setTxtFldDescription(JTextField txtFldDescription) {
-		this.txtFldDescription = txtFldDescription;
+	public void setLblErrorMsg(JLabel lblErrorMsg) {
+		this.lblErrorMsg = lblErrorMsg;
 	}
+	
+	
 	
 }
