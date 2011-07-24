@@ -32,8 +32,7 @@ public class UserSearch extends JPanel {
 	
 	public int getSelectedTab(){
 		return tabbedPane.getSelectedIndex();
-	}
-	
+	}	
 
 	/**
 	 * Create the panel.

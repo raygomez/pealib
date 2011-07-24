@@ -24,7 +24,7 @@ public class UserController {
 	
 	private JPanel layoutPanel;
 	
-	private String searchText;
+	private String searchText="";
 	
 	/* ..TODO
 	 * For visual testing purposes only
@@ -72,20 +72,7 @@ public class UserController {
 		userInfoPanel.addChangePasswordListner(showChangePassword);		
 	}
 	
-	class TabListener implements MouseListener{
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {}
-
+	class TabListener extends MouseAdapter{
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			//JTabbedPane tp = (JTabbedPane) e.getSource();
@@ -108,10 +95,7 @@ public class UserController {
 		}
 	}
 
-	class SearchKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent e) {}
-
+	class SearchKeyListener extends KeyAdapter {	
 		@Override
 		public void keyReleased(KeyEvent e) {
 			int keyCode = e.getKeyCode();
@@ -122,11 +106,9 @@ public class UserController {
 			else {				
 				searchText = userSearch.getFieldSearch().getText();
 	
-				if(searchText.length()>0)   searchUsers();
+				if(searchText.length()>0)  searchUsers();
 			}
 		}
-		@Override
-		public void keyTyped(KeyEvent e) {}
 	}
 
 
