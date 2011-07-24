@@ -173,9 +173,9 @@ public class TransactionDAO {
 		ps.setLong(1, user.getUserId());
 		ps.setLong(2, book.getBookId());
 		ResultSet rs = ps.executeQuery();
-		if (rs.first()) {
-			isReserved = rs.getInt(1) != 0;
-		}
+		rs.first();
+		isReserved = rs.getInt(1) != 0;
+
 		Connector.close();
 		return isReserved;
 	}
@@ -308,9 +308,10 @@ public class TransactionDAO {
 		ps.setLong(1, user.getUserId());
 		ps.setLong(2, book.getBookId());
 		ResultSet rs = ps.executeQuery();
-		if (rs.first()) {
-			count = rs.getInt(1);
-		}
+
+		rs.first();
+		count = rs.getInt(1);
+
 		Connector.close();
 		return count != 0;
 	}
@@ -326,9 +327,8 @@ public class TransactionDAO {
 		ps.setLong(1, book.getBookId());
 		ResultSet rs = ps.executeQuery();
 
-		if (rs.first()) {
-			count = rs.getInt(1);
-		}
+		rs.first();
+		count = rs.getInt(1);
 
 		available = book.getCopies() - count;
 		Connector.close();
