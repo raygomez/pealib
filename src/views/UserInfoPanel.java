@@ -124,7 +124,7 @@ public class UserInfoPanel extends JPanel {
 		add(saveButton);
 	}
 	
-	public void addChangePasswordListner(ActionListener changePassword){
+	public void addChangePasswordListener(ActionListener changePassword){
 		changePasswordButton.addActionListener(changePassword);
 	}
 	
