@@ -168,5 +168,25 @@ public class TransactionDAOTest {
 				.getRequestedBooks(user);
 		assertEquals(1, transactions.size());
 	}
+	
+	@Test
+	public void testGetQueueInReservationFirst() throws Exception {
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(2);
+		assertEquals(1, TransactionDAO.getQueueInReservation(book, user));
+	}
 
+	@Test
+	public void testGetQueueInReservationNotFirst() throws Exception {
+		User user = UserDAO.getUserById(3);
+		Book book = BookDAO.getBookById(3);
+		assertEquals(3, TransactionDAO.getQueueInReservation(book, user));
+	}
+	
+	@Test
+	public void testGetQueueInReservationNotReserved() throws Exception {
+		User user = UserDAO.getUserById(4);
+		Book book = BookDAO.getBookById(3);
+		assertEquals(0, TransactionDAO.getQueueInReservation(book, user));
+	}
 }
