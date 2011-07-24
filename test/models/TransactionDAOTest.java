@@ -273,4 +273,17 @@ public class TransactionDAOTest {
 		assertEquals(3, list.size());
 	}
 
+	@Test
+	public void testIsBorrowedByUser() throws Exception {
+		User user = UserDAO.getUserById(3);
+		Book book = BookDAO.getBookById(2);
+		assertTrue(TransactionDAO.isBorrowedByUser(book, user));
+	}
+	
+	@Test
+	public void testIsNotBorrowedByUser() throws Exception {
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(1);
+		assertFalse(TransactionDAO.isBorrowedByUser(book, user));
+	}
 }
