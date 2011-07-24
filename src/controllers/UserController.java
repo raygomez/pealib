@@ -11,13 +11,13 @@ import utilities.Connector;
 import utilities.Constants;
 import views.ChangePasswordDialog;
 import views.UserInfoPanel;
-import views.UserSearch;
+import views.UserSearchPanel;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 public class UserController {
 
-	private UserSearch userSearch;
+	private UserSearchPanel userSearch;
 	private UserInfoPanel userInfoPanel;
 	private ChangePasswordDialog changePasswordDialog;
 	private User currentUser;
@@ -56,7 +56,7 @@ public class UserController {
 		
 		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]"));		
 		
-		userSearch = new UserSearch(new UserSearchTableModel(0,""), new UserSearchTableModel(1,""));
+		userSearch = new UserSearchPanel(new UserSearchTableModel(0,""), new UserSearchTableModel(1,""));
 		userSearch.addListeners(new SearchListener(), new SearchKeyListener(), new TabListener());
 		userInfoPanel = new UserInfoPanel();
 		
@@ -69,7 +69,7 @@ public class UserController {
 		layoutPanel.add(userInfoPanel, "grow");
 		
 		userInfoPanel.addSaveListener(save);
-		userInfoPanel.addChangePasswordListner(showChangePassword);		
+		userInfoPanel.addChangePasswordListener(showChangePassword);		
 	}
 	
 	class TabListener extends MouseAdapter{

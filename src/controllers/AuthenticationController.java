@@ -2,27 +2,26 @@ package controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
 import javax.swing.JDialog;
 
 import models.User;
 import models.UserDAO;
-
 import utilities.Connector;
 import utilities.Constants;
-
 import views.LogInDialog;
 import views.SignUpDialog;
-
 
 public class AuthenticationController {
 	private static LogInDialog login;
 	private User user;
-	
+
 	private String login_user;
 	private String login_pass;
-	
+
 	private static SignUpDialog signUp;
 	private String sUpFirstName;
 	private String sUpLastName;
@@ -32,12 +31,13 @@ public class AuthenticationController {
 	private String sUpEmailAddress;
 	private String sUpContactNumber;
 	private String sUpAddress;
-	
+
 	public static void main(String[] args) {
 		try {
-			//TODO change this if going to use another DB
-			new Connector("test.config"); 
+			// TODO change this if going to use another DB
+			new Connector("test.config");
 			new AuthenticationController();
+			AuthenticationController.getLogin().setVisible(true);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -45,12 +45,25 @@ public class AuthenticationController {
 	}
 
 	public AuthenticationController() {
-		login = new LogInDialog();
-		login.setActionListeners(new SignUpListener(), new SubmitListener(),
-				new SubmitKeyListener());
-		login.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		login.setVisible(true);
+		setLogin(new LogInDialog());
+		getLogin().setActionListeners(new SignUpListener(), new SubmitListener(),
+				new SubmitKeyAdapter());
+		getLogin().setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+	}
+
+	/**
+	 * @return the login
+	 */
+	public static LogInDialog getLogin() {
+		return login;
+	}
+
+	/**
+	 * @param login the login to set
+	 */
+	public static void setLogin(LogInDialog login) {
+		AuthenticationController.login = login;
 	}
 
 	public User getUser() {
@@ -69,8 +82,9 @@ public class AuthenticationController {
 	class SignUpListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			signUp = new SignUpDialog();
-			signUp.setActionListeners(new SignUpSubmitListener(), new SignUpCancelListener(),
-					new SignUpEnterKeyListener(), new SignUpUsernameKeyListener());
+			signUp.setActionListeners(new SignUpSubmitListener(),
+					new SignUpCancelListener(), new SignUpEnterKeyListener(),
+					new SignUpUsernameKeyAdapter());
 			signUp.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			signUp.setVisible(true);
 		}
@@ -83,17 +97,13 @@ public class AuthenticationController {
 		}
 	}
 
-	// Submit Listener for Keyboard
-	class SubmitKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent e) {
-		}
-
+	// SubmitKeyAdaptor for Keyboard
+	class SubmitKeyAdapter extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
 			int keyCode = e.getKeyCode();
 
-			if (keyCode == 10) {
+			if (keyCode == KeyEvent.VK_ENTER) {
 				submit();
 			} else {
 				setUsernamePassword();
@@ -104,85 +114,80 @@ public class AuthenticationController {
 					validatePassword(login_pass);
 			}
 		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-		}
 	}
 
 	private boolean validateUsername(String username) {
 		boolean result = (username.matches(Constants.USERNAME_FORMAT));
-
-		login.getFieldUsername().hasError(!result);
+		getLogin().getFieldUsername().hasError(!result);
 
 		return result;
 	}
 
 	private boolean validatePassword(String password) {
 		boolean result = (password.matches(Constants.PASSWORD_FORMAT));
-		
-		login.getFieldPassword().hasError(!result);		
+		getLogin().getFieldPassword().hasError(!result);
 
 		return result;
 	}
-	
-	private void setUsernamePassword(){
-		login_user = login.getFieldUsername().getText();
-		login_pass = new String(login.getFieldPassword().getPassword());
+
+	private void setUsernamePassword() {
+		login_user = getLogin().getFieldUsername().getText();
+		login_pass = new String(getLogin().getFieldPassword().getPassword());
 	}
 
 	private void submit() {
 		setUsernamePassword();
 		if (login_user.equals("") || login_pass.equals("")) {
-			
-			login.setLabelError("Incomplete fields");
-			login.getFieldUsername().hasError(login_user.equals("") || !validateUsername(login_user));
-			login.getFieldPassword().hasError(login_pass.equals("") || !validatePassword(login_pass));
-			
-		} else if (!validateUsername(login_user) || !validatePassword(login_pass)) {
-			login.setLabelError("Invalid input");
+
+			getLogin().setLabelError("Incomplete fields");
+			getLogin().getFieldUsername().hasError(
+					login_user.equals("") || !validateUsername(login_user));
+			getLogin().getFieldPassword().hasError(
+					login_pass.equals("") || !validatePassword(login_pass));
+
+		} else if (!validateUsername(login_user)
+				|| !validatePassword(login_pass)) {
+			getLogin().setLabelError("Invalid input");
 		}
 
-		else if (validateUsername(login_user) && validatePassword(login_pass)) {
+		else{
 			try {
-				
+
 				setUser(UserDAO.getUser(login_user, login_pass));
-				
-				if (user == null){
-					login.setLabelError("Username/Password Mismatch");
-					login.getFieldPassword().setText("");
-				}
-				else if(user.getType().equals("Pending")){
-					login.setLabelError("<html><center>Account still being processed.<br/>" +
-							"Ask Librarian for further inquiries.</center></html>");
-					login.getFieldPassword().setText("");
-				}
-				else{
-					//TODO login --> call main frame
+
+				if (user == null) {
+					getLogin().setLabelError("Username/Password Mismatch");
+					getLogin().getFieldPassword().setText("");
+				} else if (user.getType().equals("Pending")) {
+					getLogin().setLabelError("<html><center>Account still being processed.<br/>"
+							+ "Ask Librarian for further inquiries.</center></html>");
+					getLogin().getFieldPassword().setText("");
+				} else {
+					// TODO login --> call main frame
 					System.out.println("LOGIN");
-					login.dispose();					
-				} 
-				
+					getLogin().dispose();
+				}
+
 			} catch (Exception e) {
 				System.out.println("AuthenticationController getUser: " + e);
-				login.setLabelError("Connection Error!");
+				getLogin().setLabelError("Connection Error!");
 			}
 		}
 	}
-	
+
 	/*
-	 *  SIGN UP   LISTENERS
+	 * SIGN UP LISTENERS
 	 */
-	//Submit Listener
+	// Submit Listener
 	class SignUpSubmitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			signUpSubmit();
 			System.out.println("submit button listener");
 		}
-	}	
-	
-	//Cancel Listener
+	}
+
+	// Cancel Listener
 	class SignUpCancelListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -190,8 +195,8 @@ public class AuthenticationController {
 			System.out.println("cancel button listener");
 		}
 	}
-	
-	//Enter Key Listener (Submit through Enter)
+
+	// Enter Key Listener (Submit through Enter)
 	class SignUpEnterKeyListener implements KeyListener {
 		@Override
 		public void keyPressed(KeyEvent arg0) {
@@ -199,10 +204,9 @@ public class AuthenticationController {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			final int enterKey = 10; 
 			int userKey = arg0.getKeyCode();
-	
-			if (userKey == enterKey) {
+
+			if (userKey == KeyEvent.VK_ENTER) {
 				signUpSubmit();
 				System.out.println("enter keylistener");
 			}
@@ -212,19 +216,14 @@ public class AuthenticationController {
 		public void keyTyped(KeyEvent arg0) {
 		}
 	}
-	
-	//User name Key Listener (every input)
-	class SignUpUsernameKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-		}
 
+	// User name Key Listener (every input)
+	class SignUpUsernameKeyAdapter extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			final int enterKey = 10; 
 			int userKey = arg0.getKeyCode();
-			
-			if (userKey != enterKey) {
+
+			if (userKey != KeyEvent.VK_ENTER) {
 				getUserName();
 				if (sUpUserName.length() > 3) {
 					isUserNameValid();
@@ -232,27 +231,24 @@ public class AuthenticationController {
 				}
 			}
 		}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {
-		}
 	}
-	
+
 	private void signUpSubmit() {
 		int maskedLabel = 0;
 		signUp.setFieldBorderColor(maskedLabel);
 		signUp.setLblErrorMessage("");
-		
+
 		getSignUpData();
-		if (! isSignUpFieldComplete(maskedLabel)) {
+		if (!isSignUpFieldComplete(maskedLabel)) {
 			signUp.setLblErrorMessage("Cannot leave mandatory fields empty.");
-		} else if (! isUserNameValid()) {
-			
-		} else if (! isSignUpInputValid(maskedLabel)) {
+		} else if (!isUserNameValid()) {
+
+		} else if (!isSignUpInputValid(maskedLabel)) {
 			signUp.setLblErrorMessage("Invalid Input.");
-		} else if (! sUpConfirmPassword.equals(sUpPassword)) {
+		} else if (!sUpConfirmPassword.equals(sUpPassword)) {
 			signUp.setLblErrorMessage("Mismatch in Confirm Password.");
-			signUp.setFieldBorderColor(signUp.passwordFlag | signUp.confirmPasswordFlag);
+			signUp.setFieldBorderColor(signUp.passwordFlag
+					| signUp.confirmPasswordFlag);
 			signUp.getTxtfldPassword().setText("");
 			signUp.getTxtfldConfirmPassword().setText("");
 		} else {
@@ -261,28 +257,29 @@ public class AuthenticationController {
 					-1, "Pending");
 			try {
 				UserDAO.saveUser(newUser);
-			} catch (Exception e) {			
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			signUpCancel();
 		}
 	}
-	
+
 	private void getSignUpData() {
 		sUpFirstName = signUp.getTxtfldFirstName().getText();
 		sUpLastName = signUp.getTxtfldLastName().getText();
 		getUserName();
 		sUpPassword = new String(signUp.getTxtfldPassword().getPassword());
-		sUpConfirmPassword = new String(signUp.getTxtfldConfirmPassword().getPassword());
+		sUpConfirmPassword = new String(signUp.getTxtfldConfirmPassword()
+				.getPassword());
 		sUpEmailAddress = signUp.getTxtfldEmailAddress().getText();
 		sUpContactNumber = signUp.getTxtfldContactNumber().getText();
 		sUpAddress = signUp.getTxtfldAddress().getText();
 	}
-	
+
 	private void getUserName() {
 		sUpUserName = signUp.getTxtfldUserName().getText();
 	}
-	
+
 	private boolean isSignUpFieldComplete(int maskedLabel) {
 		if (sUpFirstName.isEmpty()) {
 			maskedLabel |= signUp.firstNameFlag;
@@ -315,67 +312,71 @@ public class AuthenticationController {
 		}
 		return true;
 	}
-	
+
 	private boolean isSignUpInputValid(int maskedLabel) {
 		boolean isFirstNameValid = sUpFirstName.matches(Constants.NAME_FORMAT);
 		boolean isLastNameValid = sUpLastName.matches(Constants.NAME_FORMAT);
-		boolean isPasswordValid = sUpPassword.matches(Constants.PASSWORD_FORMAT);
-		boolean isEMailAddressValid = sUpEmailAddress.matches(Constants.EMAIL_FORMAT);
-		boolean isContactNumberValid = sUpContactNumber.matches(Constants.CONTACT_NUMBER_FORMAT);
+		boolean isPasswordValid = sUpPassword
+				.matches(Constants.PASSWORD_FORMAT);
+		boolean isEMailAddressValid = sUpEmailAddress
+				.matches(Constants.EMAIL_FORMAT);
+		boolean isContactNumberValid = sUpContactNumber
+				.matches(Constants.CONTACT_NUMBER_FORMAT);
 		boolean isAddressValid = sUpAddress.matches(Constants.ADDRESS_FORMAT);
-		
-		if (! isFirstNameValid) {
+
+		if (!isFirstNameValid) {
 			maskedLabel |= signUp.firstNameFlag;
 			signUp.getTxtfldFirstName().setText("");
 		}
-		if (! isLastNameValid) {
+		if (!isLastNameValid) {
 			maskedLabel |= signUp.lastNameFlag;
 			signUp.getTxtfldLastName().setText("");
 		}
-		if (! isPasswordValid) {
+		if (!isPasswordValid) {
 			maskedLabel |= (signUp.passwordFlag | signUp.confirmPasswordFlag);
 			signUp.getTxtfldPassword().setText("");
 			signUp.getTxtfldConfirmPassword().setText("");
 		}
-		if (! isEMailAddressValid) {
+		if (!isEMailAddressValid) {
 			maskedLabel |= signUp.eMailAddressFlag;
 			signUp.getTxtfldEmailAddress().setText("");
 		}
-		if (! isContactNumberValid) {
+		if (!isContactNumberValid) {
 			maskedLabel |= signUp.contactNumberFlag;
 			signUp.getTxtfldContactNumber().setText("");
 		}
-		if (! isAddressValid) {
+		if (!isAddressValid) {
 			maskedLabel |= signUp.addressFlag;
 			signUp.getTxtfldAddress().setText("");
 		}
-		
+
 		if (maskedLabel != 0) {
 			signUp.setFieldBorderColor(maskedLabel);
 			return false;
 		}
 		return true;
 	}
-	
+
 	private boolean isUserNameValid() {
 		signUp.setLblErrorMessage("");
 		signUp.setFieldBorderColor(0);
-		
+
 		boolean isValid = sUpUserName.matches(Constants.USERNAME_FORMAT);
-		if (! isValid) {
+		if (!isValid) {
 			signUp.setLblErrorMessage("Invalid Input.");
 			signUp.setFieldBorderColor(signUp.userNameFlag);
 			return false;
 		}
-		
+
 		boolean isNotUnique = true;
 		try {
 			isNotUnique = UserDAO.isUsernameExisting(sUpUserName);
 		} catch (Exception e) {
-			System.out.println("isUserNameValid(): userDao.isUsernameExisting - Exception");
+			System.out
+					.println("isUserNameValid(): userDao.isUsernameExisting - Exception");
 			e.printStackTrace();
 		}
-		
+
 		if (isNotUnique) {
 			signUp.setLblErrorMessage("User name is already in use.");
 			signUp.setFieldBorderColor(signUp.userNameFlag);
@@ -383,7 +384,7 @@ public class AuthenticationController {
 		}
 		return true;
 	}
-	
+
 	private void signUpCancel() {
 		sUpFirstName = "";
 		sUpLastName = "";

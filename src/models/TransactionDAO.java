@@ -71,6 +71,56 @@ public class TransactionDAO {
 		return intStat;
 	}
 
+	public static BorrowTransaction getBorrowTransactionById(int id)
+			throws Exception {
+		BorrowTransaction borTransaction = null;
+
+		String sql = "SELECT * FROM Borrows where BorrowID = ?";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setInt(1, id);
+
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			int BorrowID = rs.getInt("BorrowID");
+			User user = UserDAO.getUserById(rs.getInt("UserID"));
+			Book book = BookDAO.getBookById(rs.getInt("BookID"));
+			Date dateRequested = rs.getDate("DateRequested");
+			Date dateBorrowed = rs.getDate("DateBorrowed");
+			Date dateReturned = rs.getDate("DateReturned");
+
+			borTransaction = new BorrowTransaction(BorrowID, user, book,
+					dateRequested, dateBorrowed, dateReturned);
+
+		}
+		Connector.close();
+
+		return borTransaction;
+
+	}
+
+	public static ReserveTransaction getReserveTransaction(User user, Book book)
+			throws Exception {
+		ReserveTransaction rTransaction = null;
+
+		String sql = "SELECT DateReserved FROM Reserves where UserID = ? and BookID = ? ";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setInt(1, user.getUserId());
+		ps.setInt(2, book.getBookId());
+
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			Date dateReserved = rs.getDate("DateReserved");
+			rTransaction = new ReserveTransaction(user, book, dateReserved);
+
+		}
+		Connector.close();
+
+		return rTransaction;
+
+	}
+
 	public static int borrowBook(Book book, User user) throws Exception {
 		int intStat = 0;
 
@@ -87,15 +137,15 @@ public class TransactionDAO {
 		return intStat;
 	}
 
-	public static int cancelReservation(BorrowTransaction reservedBook,
-			User user) throws Exception {
+	public static int cancelReservation(ReserveTransaction rTransaction)
+			throws Exception {
 		int intStat = 0;
 
-		String sql = "DELETE FROM Reserves WHERE UserID = ? AND BOokID = ?";
+		String sql = "DELETE FROM Reserves WHERE UserID = ? AND BookID = ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
-		ps.setLong(1, user.getUserId());
-		ps.setLong(2, reservedBook.getBook().getBookId());
+		ps.setLong(1, rTransaction.getUser().getUserId());
+		ps.setLong(2, rTransaction.getBook().getBookId());
 
 		intStat = ps.executeUpdate();
 		Connector.close();
@@ -105,7 +155,7 @@ public class TransactionDAO {
 	public static void denyBookRequest(BorrowTransaction borrow)
 			throws Exception {
 
-		String sql = "Delete from Borrows where ID = ?";
+		String sql = "Delete from Borrows where BorrowID = ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setInt(1, borrow.getId());
@@ -115,7 +165,7 @@ public class TransactionDAO {
 
 	public static boolean isReservedByUser(Book book, User user)
 			throws Exception {
-		int count = 0;
+		boolean isReserved = false;
 
 		String sql = "SELECT COUNT(*) FROM Reserves WHERE UserID = ? AND BookID = ?";
 
@@ -123,11 +173,11 @@ public class TransactionDAO {
 		ps.setLong(1, user.getUserId());
 		ps.setLong(2, book.getBookId());
 		ResultSet rs = ps.executeQuery();
-		if (rs.first()) {
-			count = rs.getInt(1);
-		}
+		rs.first();
+		isReserved = rs.getInt(1) != 0;
+
 		Connector.close();
-		return count != 0;
+		return isReserved;
 	}
 
 	public static ArrayList<ReserveTransaction> getReservedBooks(User user)
@@ -232,10 +282,13 @@ public class TransactionDAO {
 		ResultSet rs = ps.executeQuery();
 		int ctr = 0;
 
+		if (!isReservedByUser(book, user)) {
+			return 0;
+		}
+
 		while (rs.next()) {
 			ctr++;
-			if ((user.getUserId() == rs.getInt("UserID"))
-					&& book.getBookId() == rs.getInt("ID")) {
+			if (user.getUserId() == rs.getInt("UserID")) {
 				break;
 			}
 		}
@@ -255,9 +308,10 @@ public class TransactionDAO {
 		ps.setLong(1, user.getUserId());
 		ps.setLong(2, book.getBookId());
 		ResultSet rs = ps.executeQuery();
-		if (rs.first()) {
-			count = rs.getInt(1);
-		}
+
+		rs.first();
+		count = rs.getInt(1);
+
 		Connector.close();
 		return count != 0;
 	}
@@ -273,9 +327,8 @@ public class TransactionDAO {
 		ps.setLong(1, book.getBookId());
 		ResultSet rs = ps.executeQuery();
 
-		if (rs.first()) {
-			count = rs.getInt(1);
-		}
+		rs.first();
+		count = rs.getInt(1);
 
 		available = book.getCopies() - count;
 		Connector.close();
@@ -307,6 +360,31 @@ public class TransactionDAO {
 
 	}
 
+	public static int getDaysOverdue(BorrowTransaction transaction)
+			throws Exception {
+		int days = 0;
+		Date borrowedDate = null;
+		Calendar today = Calendar.getInstance();
+
+		String sql = "SELECT DateBorrowed FROM Borrows "
+				+ "WHERE BookID = ? AND UserID = ? AND DateReturned is NULL";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setLong(1, transaction.getBook().getBookId());
+		ps.setLong(2, transaction.getUser().getUserId());
+		ResultSet rs = ps.executeQuery();
+
+		if (rs.first()) {
+			borrowedDate = rs.getDate(1);
+		}
+
+		Days d = Days.daysBetween(new DateMidnight(borrowedDate.getTime()),
+				new DateMidnight(today.getTime().getTime()));
+		days = d.getDays();
+		Connector.close();
+		return days;
+	}
+
 	public static ArrayList<BorrowTransaction> searchOutgoingBook(String search)
 			throws Exception {
 		ArrayList<BorrowTransaction> bookCollection = new ArrayList<BorrowTransaction>();
@@ -326,9 +404,9 @@ public class TransactionDAO {
 					+ "INNER JOIN Borrows ON Books.ID=Borrows.BookID "
 					+ "JOIN Users ON Borrows.UserID=Users.ID WHERE "
 					+ "(DateBorrowed is NULL AND DateReturned is NULL) AND "
-					+ "(CONCAT(Books.ISBN, Books.Title, Users.ID, "
-					+ "Users.FirstName, Users.LastName) LIKE ?) ORDER BY "
-					+ "Borrows.DateRequested";
+					+ "(CONCAT(Books.ISBN, Books.Title, Books.Author, "
+					+ "Users.UserName, Users.FirstName, Users.LastName) "
+					+ "LIKE ?) ORDER BY Borrows.DateRequested";
 			ps = Connector.getConnection().prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
 		}
@@ -381,8 +459,9 @@ public class TransactionDAO {
 			sql = "SELECT * FROM Books INNER JOIN Borrows ON "
 					+ "Books.ID=Borrows.BookID JOIN Users ON "
 					+ "Borrows.UserID=Users.ID WHERE (DateBorrowed is not "
-					+ "NULL AND DateReturned is NULL) AND (CONCAT(Books.ISBN, "
-					+ "Books.Title, Users.ID, Users.FirstName, Users.LastName) "
+					+ "NULL AND DateReturned is NULL) AND "
+					+ "(CONCAT(Books.ISBN, Books.Title, Books.Author, "
+					+ "Users.UserName, Users.FirstName, Users.LastName) "
 					+ "LIKE ?) ORDER BY Borrows.DateRequested";
 			ps = Connector.getConnection().prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
@@ -417,4 +496,5 @@ public class TransactionDAO {
 		Connector.close();
 		return bookCollection;
 	}
+
 }

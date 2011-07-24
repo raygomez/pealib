@@ -13,28 +13,29 @@
 	<property name="resources.dir" value="resources" />
 
 	<path id="pealib.classpath">
-		<pathelement location="bin"/>
-		<pathelement location="lib/miglayout15-swing.jar"/>
-		<pathelement location="lib/mysql-connector-java-5.1.16-bin.jar"/>
-		<pathelement location="lib/commons-pool-1.5.6.jar"/>
-		<pathelement location="lib/dbunit-2.4.3.jar"/>
-		<pathelement location="lib/slf4j-api-1.6.1.jar"/>
-		<pathelement location="lib/slf4j-nop-1.6.1.jar"/>
-		<pathelement location="lib/spring-2.5.4.jar"/>
-		<pathelement location="lib/uispec4j-2.4-jdk16.jar"/>
-		<pathelement location="lib/unitils-3.1/unitils-core-3.1.jar"/>
-		<pathelement location="lib/unitils-3.1/unitils-database-3.1.jar"/>
-		<pathelement location="lib/unitils-3.1/unitils-dbunit-3.1.jar"/>
-		<pathelement location="lib/org.junit_4.8.2/junit.jar"/>
-		<pathelement location="lib/org.junit_4.8.2/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-		<pathelement location="lib/emma/emma_ant.jar"/>
-		<pathelement location="lib/emma/emma.jar"/>
-		<pathelement location="lib/commons/commons-collections-3.2.jar"/>
-		<pathelement location="lib/commons/commons-dbcp-1.4.jar"/>
-		<pathelement location="lib/commons/commons-io-2.0.1.jar"/>
-		<pathelement location="lib/commons/commons-lang-2.3.jar"/>
-		<pathelement location="lib/commons/commons-logging-1.1.jar"/>
-        <pathelement location="lib/joda-time-1.6.2.jar"/>
+		<pathelement location="bin" />
+		<pathelement location="lib/miglayout15-swing.jar" />
+		<pathelement location="lib/mysql-connector-java-5.1.16-bin.jar" />
+		<pathelement location="lib/commons-pool-1.5.6.jar" />
+		<pathelement location="lib/dbunit-2.4.3.jar" />
+		<pathelement location="lib/slf4j-api-1.6.1.jar" />
+		<pathelement location="lib/slf4j-nop-1.6.1.jar" />
+		<pathelement location="lib/spring-2.5.4.jar" />
+		<pathelement location="lib/uispec4j-2.4-jdk16.jar" />
+		<pathelement location="lib/unitils-3.1/unitils-core-3.1.jar" />
+		<pathelement location="lib/unitils-3.1/unitils-database-3.1.jar" />
+		<pathelement location="lib/unitils-3.1/unitils-dbunit-3.1.jar" />
+		<pathelement location="lib/org.junit_4.8.2/junit.jar" />
+		<pathelement location="lib/org.junit_4.8.2/org.hamcrest.core_1.1.0.v20090501071000.jar" />
+		<pathelement location="lib/emma/emma_ant.jar" />
+		<pathelement location="lib/emma/emma.jar" />
+		<pathelement location="lib/commons/commons-collections-3.2.jar" />
+		<pathelement location="lib/commons/commons-dbcp-1.4.jar" />
+		<pathelement location="lib/commons/commons-io-2.0.1.jar" />
+		<pathelement location="lib/commons/commons-lang-2.3.jar" />
+		<pathelement location="lib/commons/commons-logging-1.1.jar" />
+		<pathelement location="lib/joda-time-1.6.2.jar" />
+		<pathelement location="lib/ognl-2.6.9.jar" />
 	</path>
 
 	<path id="cobertura_classpath">

@@ -1,7 +1,6 @@
 package models;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
 import org.unitils.dbunit.annotation.ExpectedDataSet;
-
+import static org.unitils.reflectionassert.ReflectionAssert.*;
 import utilities.Connector;
 import utilities.Constants;
 
@@ -27,8 +26,9 @@ public class UserDAOTest {
 
 	@Test
 	public void testGetUserInDatabase() throws Exception {
-		User user = UserDAO.getUser("jvillar", "1");
-		assertNotNull(user);
+		User user = UserDAO.getUser("jvillar", "123456");
+		User expected = UserDAO.getUserById(1);
+		assertReflectionEquals(expected, user);
 	}
 
 	@Test
@@ -109,12 +109,12 @@ public class UserDAOTest {
 	@Test
 	@ExpectedDataSet({ "expected/saveUser.xml" })
 	public void testSaveUser() throws Exception {
-		User user = UserDAO.getUser("jvillar", "1");
+		User user = UserDAO.getUser("jvillar", "123456");
 		user.setFirstName("Janine June");
 		user.setLastName("Lim");
 		user.setUserName("jlim");
 		user.setEmail("jlim@gmail.com");
-		user.setPassword("1");
+		user.setPassword("1234567");
 
 		UserDAO.saveUser(user);
 	}
@@ -134,7 +134,7 @@ public class UserDAOTest {
 	
 	@Test
 	public void testCheckPassword() throws Exception {
-		boolean actual = UserDAO.checkPassword(1, "1");
+		boolean actual = UserDAO.checkPassword(1, "123456");
 		assertEquals(true, actual);
 	}
 	
@@ -148,7 +148,7 @@ public class UserDAOTest {
 	@ExpectedDataSet({ "expected/changePassword.xml" })
 	public void testChangePassword() throws Exception {
 		User user = UserDAO.getUserById(4);
-		UserDAO.changePassword(user.getUserId(), "5");
+		UserDAO.changePassword(user.getUserId(), "1234567");
 	}
 	
 	@Test
