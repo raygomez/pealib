@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-	<books  
-		   ID="1"
+	<books 
+		   ID="1" 
 		   ISBN="1234567890120"
 		   Title="Harry Poter 1"
 		   Author="Ewan ko"
@@ -14,7 +14,7 @@
 		   ID="2" 
 		   ISBN="1234567890121"
 		   Title="Harry Poter 2"
-		   Author="Ewan ko"
+		   Author="Niel"
 		   Edition="1st"
 		   Publisher="HarryPublisher1"
 		   Description="wizard book"
@@ -53,11 +53,11 @@
 	<books 
 		   ID="6" 
 		   ISBN="1234567890125"
-		   Title="title3"
+		   Title="title3Pantaleon"
 		   Author="author2"
 		   Edition="edition3"
 		   Publisher="publisher1"
 		   Description="wizard book"
 		   YearPublish="1905"
-		   Copies="1" />		   		  		   
+		   Copies="1" />	
 </dataset>

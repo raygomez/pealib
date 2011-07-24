@@ -12,7 +12,7 @@ import javax.swing.table.TableModel;
 
 import net.miginfocom.swing.MigLayout;
 
-public class UserSearch extends JPanel {
+public class UserSearchPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private JTextField fieldSearch = new JTextField(30);
@@ -37,7 +37,7 @@ public class UserSearch extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public UserSearch(AbstractTableModel model1, AbstractTableModel model2) {
+	public UserSearchPanel(AbstractTableModel model1, AbstractTableModel model2) {
 		this.modelPending = model2;
 		this.modelUsers = model1;
 		

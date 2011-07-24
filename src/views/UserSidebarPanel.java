@@ -1,14 +1,20 @@
 package views;
 
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
 public class UserSidebarPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton viewBooksButton;
 	private JButton editProfileButton;
 	private JButton logoutButton;

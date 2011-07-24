@@ -1,8 +1,6 @@
 package views;
 
 
-import javax.swing.JTable;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +11,6 @@ import org.uispec4j.TextBox;
 import org.uispec4j.UISpecTestCase;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 
-import views.BookSearchPanel;
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class BookSearchPanelTest extends UISpecTestCase{
 

@@ -11,6 +11,11 @@ import models.*;
 
 public class UserInfoPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private JLabel tempLabel;
 	
 	private JButton changePasswordButton;
@@ -119,7 +124,7 @@ public class UserInfoPanel extends JPanel {
 		add(saveButton);
 	}
 	
-	public void addChangePasswordListner(ActionListener changePassword){
+	public void addChangePasswordListener(ActionListener changePassword){
 		changePasswordButton.addActionListener(changePassword);
 	}
 	
