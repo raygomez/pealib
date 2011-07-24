@@ -1,23 +1,31 @@
 package controllers;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import models.UserDAO;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+
 import models.User;
+import models.UserDAO;
 import net.miginfocom.swing.MigLayout;
 import utilities.Connector;
 import utilities.Constants;
 import views.ChangePasswordDialog;
 import views.UserInfoPanel;
 import views.UserSearchPanel;
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
 
 public class UserController {
 
@@ -28,6 +36,7 @@ public class UserController {
 	private UserInfoPanel userInfoPanel;
 	private ChangePasswordDialog changePasswordDialog;
 	private User currentUser;
+	private User selectedUser;
 
 	private JPanel layoutPanel;
 
@@ -62,7 +71,7 @@ public class UserController {
 	// CONSTRUCTOR
 	public UserController(User user) {
 
-		this.currentUser = user;
+		this.setCurrentUser(user);
 		setLayoutPanel(new JPanel(new MigLayout("wrap 2", "[grow][grow]")));
 
 		setUserSearch(new UserSearchPanel(new UserSearchTableModel(USER, ""),
@@ -72,6 +81,29 @@ public class UserController {
 				new UserSelectionListener());
 		setUserInfoPanel(new UserInfoPanel());
 		generateLayoutPanel();
+	}
+
+	public User getSelectedUser() {
+		return selectedUser;
+	}
+
+	public void setSelectedUser(User selectedUser) {
+		this.selectedUser = selectedUser;
+	}
+
+	/**
+	 * @return the currentUser
+	 */
+	public User getCurrentUser() {
+		return currentUser;
+	}
+
+	/**
+	 * @param currentUser
+	 *            the currentUser to set
+	 */
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
 	}
 
 	/**
@@ -340,6 +372,8 @@ public class UserController {
 			} else {
 				user = getSearchedPending().get(row);
 			}
+			
+			setSelectedUser(user);
 			getUserInfoPanel().setFields(user.getType(), "" + user.getUserId(),
 					user.getUserName(), user.getFirstName(),
 					user.getLastName(), user.getAddress(), user.getContactNo(),
@@ -381,12 +415,45 @@ public class UserController {
 		public void actionPerformed(ActionEvent e) {
 			changePasswordDialog = new ChangePasswordDialog();
 
-			if (currentUser.getType().equals("Librarian")
+			if (getCurrentUser().getType().equals("Librarian")
 					&& !getUserInfoPanel().getIdNumber().isEmpty()
-					&& currentUser.getUserId() != Integer
+					&& getCurrentUser().getUserId() != Integer
 							.parseInt(getUserInfoPanel().getIdNumber())) {
 				changePasswordDialog.removeOldPassword();
 			}
+			changePasswordDialog
+					.addChangePasswordListener(new ChangePasswordListener());
+			changePasswordDialog.setVisible(true);
 		}
 	};
+
+	private class ChangePasswordListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String newPassword = new String(changePasswordDialog
+					.getNewPasswordField().getPassword());
+			String passwordAgain = new String(changePasswordDialog
+					.getRepeatPasswordField().getPassword());
+
+			if (newPassword.isEmpty() || passwordAgain.isEmpty()) {
+				changePasswordDialog.getErrorLabel().setText(
+						"Enter New Password twice.");
+			} else if (newPassword.equals(passwordAgain)) {
+
+				try {
+					UserDAO.changePassword(getSelectedUser().getUserId(),
+							newPassword);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				JOptionPane.showMessageDialog(null,
+						"Password Change Successful.", "Success!",
+						JOptionPane.PLAIN_MESSAGE);
+				changePasswordDialog.dispose();
+			} else {
+				changePasswordDialog
+						.displayError(Constants.PASSWORD_NOT_MATCH_ERROR);
+			}
+		}
+	}
 }
