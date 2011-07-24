@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.unitils.reflectionassert.ReflectionAssert.*;
 
 import java.util.ArrayList;
 
@@ -102,16 +103,29 @@ public class TransactionDAOTest {
 	@Test
 	public void testGetReservedBooksMany() throws Exception {
 		User user = UserDAO.getUserById(1);
+		Book book1 = BookDAO.getBookById(1);
+		Book book2 = BookDAO.getBookById(2);
+		Book book3 = BookDAO.getBookById(3);
+		
 		ArrayList<ReserveTransaction> transactions = TransactionDAO
 				.getReservedBooks(user);
+		ReserveTransaction r1 = TransactionDAO.getReserveTransaction(user, book1);
+		ReserveTransaction r2 = TransactionDAO.getReserveTransaction(user, book2);
+		ReserveTransaction r3 = TransactionDAO.getReserveTransaction(user, book3);
+		assertReflectionEquals(r1, transactions.get(0));
+		assertReflectionEquals(r2, transactions.get(1));
+		assertReflectionEquals(r3, transactions.get(2));
 		assertEquals(3, transactions.size());
 	}
 
 	@Test
 	public void testGetReservedBooksOne() throws Exception {
 		User user = UserDAO.getUserById(3);
+		Book book = BookDAO.getBookById(3);
 		ArrayList<ReserveTransaction> transactions = TransactionDAO
 				.getReservedBooks(user);
+		ReserveTransaction r1 = TransactionDAO.getReserveTransaction(user, book);
+		assertReflectionEquals(r1, transactions.get(0));
 		assertEquals(1, transactions.size());
 	}
 
@@ -176,6 +190,7 @@ public class TransactionDAOTest {
 		User user = UserDAO.getUserById(1);
 		Book book = BookDAO.getBookById(2);
 		assertEquals(1, TransactionDAO.getQueueInReservation(book, user));
+
 	}
 
 	@Test
@@ -290,13 +305,15 @@ public class TransactionDAOTest {
 
 	@Test
 	public void testGetBorrowTransactionById() throws Exception {
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(1);
 		BorrowTransaction transaction = TransactionDAO
 				.getBorrowTransactionById(1);
 
 		assertNotNull(transaction);
 		assertEquals(1, transaction.getId());
-		assertEquals(1, transaction.getBook().getBookId());
-		assertEquals(1, transaction.getUser().getUserId());
+		assertReflectionEquals(user, transaction.getUser());
+		assertReflectionEquals(book, transaction.getBook());
 		assertEquals("2011-06-15", transaction.getDateRequested().toString());
 		assertEquals("2011-06-15", transaction.getDateBorrowed().toString());
 		assertEquals("2011-06-15", transaction.getDateReturned().toString());
@@ -316,8 +333,8 @@ public class TransactionDAOTest {
 		Book book = BookDAO.getBookById(1);
 		ReserveTransaction transaction = TransactionDAO.getReserveTransaction(
 				user, book);
-		assertEquals(1, transaction.getBook().getBookId());
-		assertEquals(1, transaction.getUser().getUserId());
+		assertReflectionEquals(user, transaction.getUser());
+		assertReflectionEquals(book, transaction.getBook());
 		assertEquals("2011-06-15", transaction.getDateReserved().toString());
 	}
 
