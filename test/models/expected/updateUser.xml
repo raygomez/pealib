@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<users FirstName="Jomel" LastName="Pantaleon" UserName="jvillar"
+		Password="6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+		Type="User" Address="USA" ContactNo="1234567890" Email="jomel.villar@gmail.com"
+		ID="1" />
+	<users FirstName="Annuary" LastName="Pantaleon" UserName="apantaleon"
+		Password="6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+		Type="Librarian" Address="USA" ContactNo="1234567890" Email="apantaleon@gmail.com"
+		ID="2" />
+	<users FirstName="Niel" LastName="Lazada" UserName="nlazada"
+		Password="6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+		Type="User" Address="USA" ContactNo="1234567890" Email="nlazada@gmail.com"
+		ID="3" />
+
+	<users FirstName="Joseph" LastName="Dizon" UserName="ndizon"
+		Password="6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+		Type="User" Address="Fairview, Q.C." ContactNo="09178011454" Email="jjrdizon@gmail.com"
+		ID="4" />
+
+</dataset>
