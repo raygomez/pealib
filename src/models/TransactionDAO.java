@@ -359,6 +359,30 @@ public class TransactionDAO {
 		return days;
 
 	}
+	
+	public static int getDaysOverdue(BorrowTransaction transaction) throws Exception {
+		int days = 0;
+		Date borrowedDate = null;
+		Calendar today = Calendar.getInstance();
+
+		String sql = "SELECT DateBorrowed FROM Borrows "
+				+ "WHERE BookID = ? AND UserID = ? AND DateReturned is NULL";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setLong(1, transaction.getBook().getBookId());
+		ps.setLong(2, transaction.getUser().getUserId());
+		ResultSet rs = ps.executeQuery();
+
+		if (rs.first()) {
+			borrowedDate = rs.getDate(1);
+		}
+
+		Days d = Days.daysBetween(new DateMidnight(borrowedDate.getTime()),
+				new DateMidnight(today.getTime().getTime()));
+		days = d.getDays();
+		Connector.close();
+		return days;
+	}
 
 	public static ArrayList<BorrowTransaction> searchOutgoingBook(String search)
 			throws Exception {
@@ -470,4 +494,5 @@ public class TransactionDAO {
 		Connector.close();
 		return bookCollection;
 	}
+
 }
