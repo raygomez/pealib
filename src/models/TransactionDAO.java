@@ -282,10 +282,13 @@ public class TransactionDAO {
 		ResultSet rs = ps.executeQuery();
 		int ctr = 0;
 
+		if(!isReservedByUser(book, user)){
+			return 0;
+		}
+		
 		while (rs.next()) {
 			ctr++;
-			if ((user.getUserId() == rs.getInt("UserID"))
-					&& book.getBookId() == rs.getInt("ID")) {
+			if (user.getUserId() == rs.getInt("UserID")) {
 				break;
 			}
 		}
