@@ -2,16 +2,17 @@ package views;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
+import controllers.UserController;
+
+import models.User;
 import net.miginfocom.swing.MigLayout;
 
 public class ELibTabbedPanel extends JPanel{
@@ -25,28 +26,9 @@ public class ELibTabbedPanel extends JPanel{
 	private JPanel request = new JPanel();
 	private JPanel reserve = new JPanel();
 	
-	private JTable dataTable;
-	//private DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
-	
-	/*
-	 * For visual testing purposes only
-	 */
-	public static void main(String[] args) {
-		
-		ELibTabbedPanel tabpane = new ELibTabbedPanel();
-		
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setUndecorated(true);
-		frame.setVisible(true);
-		frame.setResizable(false);
-	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	      
-	    frame.setBounds(0,0,screenSize.width, screenSize.height);
-	      
-	    frame.setContentPane(tabpane);
-		
-	}
+	private JTable requestTable, reserveTable, onloanTable, historyTable;
+	private DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
+
 	public ELibTabbedPanel(){		
 		setBorder(new EmptyBorder(5, 5, 5, 5)); 
 		setLayout(new MigLayout("", "[600px]", "[]20px[500px]"));
@@ -64,19 +46,64 @@ public class ELibTabbedPanel extends JPanel{
 		addReservePane();
 	}
 	
+	public int getSelectedTab(){
+		return tabs.getSelectedIndex();
+	}
+	
+	public void addListener(MouseListener tab){
+		tabs.addMouseListener(tab);		
+	}
+	
+	private void setTableSettings(JTable table){
+		table.setRowHeight(28);		
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		for(int i=0; i<table.getColumnCount(); i++){
+			table.getColumn(i).setCellRenderer(trender);
+		}
+	}
+	
+	public void setTableModel(int tab, AbstractTableModel model){
+		
+		switch(tab){
+			case 0:
+				requestTable.setModel(model);
+				setTableSettings(requestTable);
+				break;
+				
+			case 1:
+				reserveTable.setModel(model);
+				setTableSettings(reserveTable);
+				break;
+			
+			case 2:
+				onloanTable.setModel(model);
+				setTableSettings(onloanTable);
+				break;
+			
+			case 3:
+				historyTable.setModel(model);
+				setTableSettings(historyTable);
+				break;				
+		}
+		
+		tabs.validate();
+		tabs.repaint();
+	}
+	
 	private void addHistoryPane(){
 		history.setBorder(new EmptyBorder(5, 5, 5, 5)); 
 		history.setLayout(new MigLayout("", "", ""));
 
 		//TODO add table model
-		dataTable = new JTable();
-		dataTable.setName("historyTable");
-		dataTable.setRowHeight(28);		
-		dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		historyTable = new JTable();
+		historyTable.setName("historyTable");
+		historyTable.setRowHeight(28);		
+		historyTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		//histTable.getColumn("Username").setCellRenderer(trender);
 		//histTable.getColumn("Name").setCellRenderer(trender);
 		
-		JScrollPane scrollPane = new JScrollPane(dataTable);
+		JScrollPane scrollPane = new JScrollPane(historyTable);
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);			
 		history.add(scrollPane);		
@@ -87,14 +114,14 @@ public class ELibTabbedPanel extends JPanel{
 		onloan.setLayout(new MigLayout("", "", ""));
 
 		//TODO add table model
-		dataTable = new JTable();
-		dataTable.setName("onloanTable");
-		dataTable.setRowHeight(28);		
-		dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		onloanTable = new JTable();
+		onloanTable.setName("onloanTable");
+		onloanTable.setRowHeight(28);		
+		onloanTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		//histTable.getColumn("Username").setCellRenderer(trender);
 		//histTable.getColumn("Name").setCellRenderer(trender);
 		
-		JScrollPane scrollPane = new JScrollPane(dataTable);
+		JScrollPane scrollPane = new JScrollPane(onloanTable);
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);			
 		onloan.add(scrollPane);		
@@ -105,14 +132,14 @@ public class ELibTabbedPanel extends JPanel{
 		request.setLayout(new MigLayout("", "", ""));
 
 		//TODO add table model
-		dataTable = new JTable();
-		dataTable.setName("requestTable");
-		dataTable.setRowHeight(28);		
-		dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		requestTable = new JTable();
+		requestTable.setName("requestTable");
+		requestTable.setRowHeight(28);		
+		requestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		//histTable.getColumn("Username").setCellRenderer(trender);
 		//histTable.getColumn("Name").setCellRenderer(trender);
 		
-		JScrollPane scrollPane = new JScrollPane(dataTable);
+		JScrollPane scrollPane = new JScrollPane(requestTable);
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);			
 		request.add(scrollPane);		
@@ -123,18 +150,16 @@ public class ELibTabbedPanel extends JPanel{
 		reserve.setLayout(new MigLayout("", "", ""));
 
 		//TODO add table model
-		dataTable = new JTable();
-		dataTable.setName("reserveTable");
-		dataTable.setRowHeight(28);		
-		dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		reserveTable = new JTable();
+		reserveTable.setName("reserveTable");
+		reserveTable.setRowHeight(28);		
+		reserveTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		//histTable.getColumn("Username").setCellRenderer(trender);
 		//histTable.getColumn("Name").setCellRenderer(trender);
 		
-		JScrollPane scrollPane = new JScrollPane(dataTable);
+		JScrollPane scrollPane = new JScrollPane(reserveTable);
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);			
 		reserve.add(scrollPane);		
-	}
-	
-	
+	}		
 }
