@@ -222,25 +222,55 @@ public class TransactionDAOTest {
 				.searchOutgoingBook("*");
 		assertEquals(3, list.size());
 	}
-	
+
 	@Test
 	public void testSearchOutgoingBookNone() throws Exception {
 		ArrayList<BorrowTransaction> list = TransactionDAO
 				.searchOutgoingBook("gomez0");
 		assertEquals(0, list.size());
 	}
-	
+
 	@Test
 	public void testSearchOutgoingBookMany() throws Exception {
 		ArrayList<BorrowTransaction> list = TransactionDAO
 				.searchOutgoingBook("title");
 		assertEquals(2, list.size());
 	}
-	
+
 	@Test
 	public void testSearchOutgoingBookManyUserBook() throws Exception {
 		ArrayList<BorrowTransaction> list = TransactionDAO
 				.searchOutgoingBook("Pantaleon");
 		assertEquals(2, list.size());
 	}
+
+	@Test
+	public void testSearchIncomingBookAll() throws Exception {
+		ArrayList<BorrowTransaction> list = TransactionDAO
+				.searchIncomingBook("*");
+		assertEquals(5, list.size());
+	}
+	
+
+	@Test
+	public void testSearchIncomingBookNone() throws Exception {
+		ArrayList<BorrowTransaction> list = TransactionDAO
+				.searchIncomingBook("gomez0");
+		assertEquals(0, list.size());
+	}
+
+	@Test
+	public void testSearchIncomingBookMany() throws Exception {
+		ArrayList<BorrowTransaction> list = TransactionDAO
+				.searchIncomingBook("Pantaleon");
+		assertEquals(3, list.size());
+	}
+
+	@Test
+	public void testSearchIncomingBookManyUserBook() throws Exception {
+		ArrayList<BorrowTransaction> list = TransactionDAO
+				.searchIncomingBook("Niel");
+		assertEquals(3, list.size());
+	}
+
 }
