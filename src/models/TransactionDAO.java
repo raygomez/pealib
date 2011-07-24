@@ -403,7 +403,7 @@ public class TransactionDAO {
 					+ "INNER JOIN Borrows ON Books.ID=Borrows.BookID "
 					+ "JOIN Users ON Borrows.UserID=Users.ID WHERE "
 					+ "(DateBorrowed is NULL AND DateReturned is NULL) AND "
-					+ "(CONCAT(Books.ISBN, Books.Title, Users.ID, "
+					+ "(CONCAT(Books.ISBN, Books.Title, Users.UserName, "
 					+ "Users.FirstName, Users.LastName) LIKE ?) ORDER BY "
 					+ "Borrows.DateRequested";
 			ps = Connector.getConnection().prepareStatement(sql);
@@ -459,7 +459,7 @@ public class TransactionDAO {
 					+ "Books.ID=Borrows.BookID JOIN Users ON "
 					+ "Borrows.UserID=Users.ID WHERE (DateBorrowed is not "
 					+ "NULL AND DateReturned is NULL) AND (CONCAT(Books.ISBN, "
-					+ "Books.Title, Users.ID, Users.FirstName, Users.LastName) "
+					+ "Books.Title, Users.UserName, Users.FirstName, Users.LastName) "
 					+ "LIKE ?) ORDER BY Borrows.DateRequested";
 			ps = Connector.getConnection().prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
