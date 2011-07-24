@@ -13,6 +13,10 @@ import java.awt.Color;
 
 public class BookInfoPanel extends JPanel {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField txtFldTitle;
 	private JTextField txtFldAuthor;
 	private JTextField txtFldYrPublished;
