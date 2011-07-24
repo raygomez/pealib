@@ -282,10 +282,10 @@ public class TransactionDAO {
 		ResultSet rs = ps.executeQuery();
 		int ctr = 0;
 
-		if(!isReservedByUser(book, user)){
+		if (!isReservedByUser(book, user)) {
 			return 0;
 		}
-		
+
 		while (rs.next()) {
 			ctr++;
 			if (user.getUserId() == rs.getInt("UserID")) {
@@ -359,8 +359,9 @@ public class TransactionDAO {
 		return days;
 
 	}
-	
-	public static int getDaysOverdue(BorrowTransaction transaction) throws Exception {
+
+	public static int getDaysOverdue(BorrowTransaction transaction)
+			throws Exception {
 		int days = 0;
 		Date borrowedDate = null;
 		Calendar today = Calendar.getInstance();
@@ -403,9 +404,9 @@ public class TransactionDAO {
 					+ "INNER JOIN Borrows ON Books.ID=Borrows.BookID "
 					+ "JOIN Users ON Borrows.UserID=Users.ID WHERE "
 					+ "(DateBorrowed is NULL AND DateReturned is NULL) AND "
-					+ "(CONCAT(Books.ISBN, Books.Title, Users.UserName, "
-					+ "Users.FirstName, Users.LastName) LIKE ?) ORDER BY "
-					+ "Borrows.DateRequested";
+					+ "(CONCAT(Books.ISBN, Books.Title, Books.Author, "
+					+ "Users.UserName, Users.FirstName, Users.LastName) "
+					+ "LIKE ?) ORDER BY Borrows.DateRequested";
 			ps = Connector.getConnection().prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
 		}
@@ -458,8 +459,9 @@ public class TransactionDAO {
 			sql = "SELECT * FROM Books INNER JOIN Borrows ON "
 					+ "Books.ID=Borrows.BookID JOIN Users ON "
 					+ "Borrows.UserID=Users.ID WHERE (DateBorrowed is not "
-					+ "NULL AND DateReturned is NULL) AND (CONCAT(Books.ISBN, "
-					+ "Books.Title, Users.UserName, Users.FirstName, Users.LastName) "
+					+ "NULL AND DateReturned is NULL) AND "
+					+ "(CONCAT(Books.ISBN, Books.Title, Books.Author, "
+					+ "Users.UserName, Users.FirstName, Users.LastName) "
 					+ "LIKE ?) ORDER BY Borrows.DateRequested";
 			ps = Connector.getConnection().prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
