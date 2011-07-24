@@ -71,6 +71,56 @@ public class TransactionDAO {
 		return intStat;
 	}
 
+	public static BorrowTransaction getBorrowTransactionById(int id)
+			throws Exception {
+		BorrowTransaction borTransaction = null;
+
+		String sql = "SELECT * FROM Borrows where BorrowID = ?";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setInt(1, id);
+
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			int BorrowID = rs.getInt("BorrowID");
+			User user = UserDAO.getUserById(rs.getInt("UserID"));
+			Book book = BookDAO.getBookById(rs.getInt("BookID"));
+			Date dateRequested = rs.getDate("DateRequested");
+			Date dateBorrowed = rs.getDate("DateBorrowed");
+			Date dateReturned = rs.getDate("DateReturned");
+
+			borTransaction = new BorrowTransaction(BorrowID, user, book,
+					dateRequested, dateBorrowed, dateReturned);
+
+		}
+		Connector.close();
+
+		return borTransaction;
+
+	}
+
+	public static ReserveTransaction getReserveTransaction(User user, Book book)
+			throws Exception {
+		ReserveTransaction rTransaction = null;
+
+		String sql = "SELECT DateReserved FROM Reserves where UserID = ? and BookID = ? ";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setInt(1, user.getUserId());
+		ps.setInt(2, book.getBookId());
+
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			Date dateReserved = rs.getDate("DateReserved");
+			rTransaction = new ReserveTransaction(user, book, dateReserved);
+
+		}
+		Connector.close();
+
+		return rTransaction;
+
+	}
+
 	public static int borrowBook(Book book, User user) throws Exception {
 		int intStat = 0;
 
@@ -87,15 +137,15 @@ public class TransactionDAO {
 		return intStat;
 	}
 
-	public static int cancelReservation(BorrowTransaction reservedBook,
-			User user) throws Exception {
+	public static int cancelReservation(ReserveTransaction rTransaction)
+			throws Exception {
 		int intStat = 0;
 
-		String sql = "DELETE FROM Reserves WHERE UserID = ? AND BOokID = ?";
+		String sql = "DELETE FROM Reserves WHERE UserID = ? AND BookID = ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
-		ps.setLong(1, user.getUserId());
-		ps.setLong(2, reservedBook.getBook().getBookId());
+		ps.setLong(1, rTransaction.getUser().getUserId());
+		ps.setLong(2, rTransaction.getBook().getBookId());
 
 		intStat = ps.executeUpdate();
 		Connector.close();
@@ -105,7 +155,7 @@ public class TransactionDAO {
 	public static void denyBookRequest(BorrowTransaction borrow)
 			throws Exception {
 
-		String sql = "Delete from Borrows where ID = ?";
+		String sql = "Delete from Borrows where BorrowID = ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setInt(1, borrow.getId());
