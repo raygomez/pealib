@@ -104,7 +104,7 @@ public class TransactionDAOTest {
 				.getReservedBooks(user);
 		assertEquals(3, transactions.size());
 	}
-	
+
 	@Test
 	public void testGetReservedBooksOne() throws Exception {
 		User user = UserDAO.getUserById(3);
@@ -112,12 +112,36 @@ public class TransactionDAOTest {
 				.getReservedBooks(user);
 		assertEquals(1, transactions.size());
 	}
-	
+
 	@Test
 	public void testGetReservedBooksNone() throws Exception {
 		User user = UserDAO.getUserById(4);
 		ArrayList<ReserveTransaction> transactions = TransactionDAO
 				.getReservedBooks(user);
 		assertEquals(0, transactions.size());
+	}
+
+	@Test
+	public void testGetHistoryMany() throws Exception {
+		User user = UserDAO.getUserById(1);
+		ArrayList<BorrowTransaction> transactions = TransactionDAO
+				.getHistory(user);
+		assertEquals(2, transactions.size());
+	}
+	
+	@Test
+	public void testGetHistoryNone() throws Exception {
+		User user = UserDAO.getUserById(3);
+		ArrayList<BorrowTransaction> transactions = TransactionDAO
+				.getHistory(user);
+		assertEquals(0, transactions.size());
+	}
+
+	@Test
+	public void testGetHistoryOne() throws Exception {
+		User user = UserDAO.getUserById(2);
+		ArrayList<BorrowTransaction> transactions = TransactionDAO
+				.getHistory(user);
+		assertEquals(1, transactions.size());
 	}
 }
