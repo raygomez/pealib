@@ -3,13 +3,15 @@ package views;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 
-import controllers.UserController;
-
-import models.User;
 import net.miginfocom.swing.MigLayout;
 
 public class ELibTabbedPanel extends JPanel{
@@ -24,7 +26,7 @@ public class ELibTabbedPanel extends JPanel{
 	private JPanel reserve = new JPanel();
 	
 	private JTable dataTable;
-	private DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
+	//private DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
 	
 	/*
 	 * For visual testing purposes only

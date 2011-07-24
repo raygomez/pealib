@@ -1,15 +1,20 @@
 package views;
 
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
 public class LibrarianSidebarPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton viewBooksButton;
 	private JButton viewUsersButton;
 	private JButton editProfileButton;
