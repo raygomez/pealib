@@ -33,6 +33,8 @@ public class UserController {
 	 */
 	public static void main(String[] args) {
 
+		new Connector(Constants.TEST_CONFIG);
+
 		User user = new User(1011, "jjlim", "1234567", "Janine June", "Lim",
 				"jaja.lim@yahoo.com", "UP Ayala Technohub", "09171234567", 1,
 				"Librarian");
@@ -45,9 +47,7 @@ public class UserController {
 		frame.setVisible(true);
 		frame.setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
 		frame.setBounds(0, 0, screenSize.width, screenSize.height);
-
 		frame.setContentPane(userController.getUserPanel());
 
 	}
@@ -56,9 +56,7 @@ public class UserController {
 	public UserController(User user) {
 
 		this.currentUser = user;
-
 		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]"));
-
 		userSearch = new UserSearchPanel(new UserSearchTableModel(0, ""),
 				new UserSearchTableModel(1, ""));
 		userSearch.addListeners(new SearchListener(), new SearchKeyListener(),
@@ -72,7 +70,6 @@ public class UserController {
 
 		layoutPanel.add(userSearch, "grow");
 		layoutPanel.add(userInfoPanel, "grow");
-
 		userInfoPanel.addSaveListener(save);
 		userInfoPanel.addChangePasswordListener(showChangePassword);
 	}
@@ -97,27 +94,18 @@ public class UserController {
 		}
 	}
 
-	class SearchKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent e) {
-		}
-
+	class SearchKeyListener extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent e) {
-			int keyCode = e.getKeyCode();
 
-			if (keyCode == 10) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				searchUsers();
 			} else {
 				searchText = userSearch.getFieldSearch().getText();
-
-				if (searchText.length() > 0)
+				if (searchText.length() > 2 || searchText.length() == 0)
 					searchUsers();
-			}
-		}
 
-		@Override
-		public void keyTyped(KeyEvent e) {
+			}
 		}
 	}
 
@@ -126,7 +114,7 @@ public class UserController {
 		 * TableModel for User Search Panel/Tabs
 		 */
 		private static final long serialVersionUID = 1L;
-		private ArrayList<String> columns = new ArrayList<String>();
+		private String[] columns = { "Username", "Name" };
 		private ArrayList<ArrayList<String>> tableData = new ArrayList<ArrayList<String>>();
 		private ArrayList<User> searchUsers = new ArrayList<User>();
 		private int mode;
@@ -135,12 +123,6 @@ public class UserController {
 		public UserSearchTableModel(int tab, String str) {
 			this.mode = tab;
 			this.searchStr = str;
-
-			columns.add("Username");
-			columns.add("Name");
-
-			// TODO change if going to use another DB
-			new Connector("test.config");
 
 			if (mode == 0)
 				userAcct();
@@ -181,25 +163,21 @@ public class UserController {
 		}
 
 		public String getColumnName(int col) {
-			return columns.get(col);
+			return columns[col];
 		}
 
-		@Override
 		public int getColumnCount() {
-			return columns.size();
+			return columns.length;
 		}
 
-		@Override
 		public int getRowCount() {
 			return tableData.size();
 		}
 
-		@Override
 		public Object getValueAt(int row, int col) {
 			return tableData.get(row).get(col);
 		}
 
-		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return false;
 		}
@@ -241,10 +219,9 @@ public class UserController {
 		}
 
 		userInfoPanel.displayErrors(errors);
-
 		return pass;
 
-	};
+	}
 
 	private ActionListener save = new ActionListener() {
 
@@ -258,7 +235,6 @@ public class UserController {
 			String email = userInfoPanel.getEmail();
 			String address = userInfoPanel.getAddress();
 			String contactNo = userInfoPanel.getContactNumber();
-			// TODO Auto-generated method stub
 
 			if (validateUpdateProfile(firstName, lastName, email, address,
 					contactNo)) {
@@ -268,7 +244,6 @@ public class UserController {
 				try {
 					UserDAO.updateUser(user);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -279,7 +254,6 @@ public class UserController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
 			changePasswordDialog = new ChangePasswordDialog(
 					(JFrame) userInfoPanel.getParent());
 
