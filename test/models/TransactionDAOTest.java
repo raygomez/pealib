@@ -1,7 +1,10 @@
 package models;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -86,11 +89,35 @@ public class TransactionDAOTest {
 		Book book = BookDAO.getBookById(1);
 		assertTrue(TransactionDAO.isReservedByUser(book, user));
 	}
-	
+
 	@Test
 	public void testIsNotReserved() throws Exception {
-		User user = UserDAO.getUserById(1);
-		Book book = BookDAO.getBookById(2);
+		User user = UserDAO.getUserById(4);
+		Book book = BookDAO.getBookById(1);
 		assertFalse(TransactionDAO.isReservedByUser(book, user));
+	}
+
+	@Test
+	public void testGetReservedBooksMany() throws Exception {
+		User user = UserDAO.getUserById(1);
+		ArrayList<ReserveTransaction> transactions = TransactionDAO
+				.getReservedBooks(user);
+		assertEquals(3, transactions.size());
+	}
+	
+	@Test
+	public void testGetReservedBooksOne() throws Exception {
+		User user = UserDAO.getUserById(3);
+		ArrayList<ReserveTransaction> transactions = TransactionDAO
+				.getReservedBooks(user);
+		assertEquals(1, transactions.size());
+	}
+	
+	@Test
+	public void testGetReservedBooksNone() throws Exception {
+		User user = UserDAO.getUserById(4);
+		ArrayList<ReserveTransaction> transactions = TransactionDAO
+				.getReservedBooks(user);
+		assertEquals(0, transactions.size());
 	}
 }
