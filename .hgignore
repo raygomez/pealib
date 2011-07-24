@@ -36,3 +36,7 @@ syntax: regexp
 ^src/unitils-local\.properties$
 syntax: regexp
 ^test\.config$
+syntax: regexp
+^src/unitils-local\.properties$
+syntax: regexp
+^test\.config$
