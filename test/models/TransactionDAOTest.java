@@ -202,4 +202,18 @@ public class TransactionDAOTest {
 		assertEquals(1, TransactionDAO.getAvailableCopies(book));
 	}
 
+	@Test
+	public void testGetDaysOverdue() throws Exception {
+		User user = UserDAO.getUserById(3);
+		Book book = BookDAO.getBookById(2);
+		assertEquals(39, TransactionDAO.getDaysOverdue(book, user));
+	}
+
+	@Test
+	public void testGetDaysOverdueBorrowTransaction() throws Exception {
+		BorrowTransaction transaction = TransactionDAO
+				.getBorrowTransactionById(3);
+		assertEquals(39, TransactionDAO.getDaysOverdue(transaction));
+	}
+
 }
