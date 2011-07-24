@@ -2,6 +2,8 @@ package models;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -285,5 +287,27 @@ public class TransactionDAOTest {
 		User user = UserDAO.getUserById(1);
 		Book book = BookDAO.getBookById(1);
 		assertFalse(TransactionDAO.isBorrowedByUser(book, user));
+	}
+	
+	@Test
+	public void testGetBorrowTransactionById() throws Exception {
+		BorrowTransaction transaction = TransactionDAO
+				.getBorrowTransactionById(1);
+		
+		assertNotNull(transaction);
+		assertEquals(1, transaction.getId());
+		assertEquals(1, transaction.getBook().getBookId());
+		assertEquals(1, transaction.getUser().getUserId());
+		assertEquals("2011-06-15", transaction.getDateRequested().toString());
+		assertEquals("2011-06-15", transaction.getDateBorrowed().toString());
+		assertEquals("2011-06-15", transaction.getDateReturned().toString());
+	}
+	
+	@Test
+	public void testGetBorrowTransactionByIdNotExisting() throws Exception {
+		BorrowTransaction transaction = TransactionDAO
+				.getBorrowTransactionById(0);
+		
+		assertNull(transaction);
 	}
 }
