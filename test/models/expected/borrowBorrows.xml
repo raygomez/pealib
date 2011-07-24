@@ -15,5 +15,12 @@
 	<borrows BookID="5" UserID="1" DateRequested="2011-06-15"
 		DateBorrowed="2011-06-15" DateReturned="[null]" BorrowID='7' />
 	<borrows BookID="4" UserID="1" DateRequested="2011-06-15"
-		DateBorrowed="2011-06-15" DateReturned="2011-06-15" BorrowID='8' />			
+		DateBorrowed="2011-06-15" DateReturned="2011-06-15" BorrowID='8' />
+	<borrows BookID="2" UserID="2" DateRequested="2011-06-15"
+		DateBorrowed="2011-06-15" DateReturned="2011-06-15" BorrowID='9' />
+	<borrows BookID="2" UserID="4" DateRequested="2011-06-15"
+		DateBorrowed="[null]" DateReturned="[null]" BorrowID='10' />
+	<borrows BookID="2" UserID="4" DateRequested="2011-06-15"
+		DateBorrowed="[null]" DateReturned="[null]" BorrowID='11' />
+
 </dataset>
