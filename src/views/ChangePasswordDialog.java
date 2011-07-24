@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -32,8 +31,8 @@ import utilities.ErrorLabel;
 		/**
 		 * Create the dialog.
 		 */
-		public ChangePasswordDialog(JFrame frame) {
-			super(frame, "Change Password", true);
+		public ChangePasswordDialog() {
+			setModal(true);
 			createGUI();
 		}
 
