@@ -37,6 +37,7 @@ public class AuthenticationController {
 			// TODO change this if going to use another DB
 			new Connector("test.config");
 			new AuthenticationController();
+			AuthenticationController.getLogin().setVisible(true);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,12 +45,25 @@ public class AuthenticationController {
 	}
 
 	public AuthenticationController() {
-		login = new LogInDialog();
-		login.setActionListeners(new SignUpListener(), new SubmitListener(),
+		setLogin(new LogInDialog());
+		getLogin().setActionListeners(new SignUpListener(), new SubmitListener(),
 				new SubmitKeyAdapter());
-		login.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		login.setVisible(true);
+		getLogin().setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+	}
+
+	/**
+	 * @return the login
+	 */
+	public static LogInDialog getLogin() {
+		return login;
+	}
+
+	/**
+	 * @param login the login to set
+	 */
+	public static void setLogin(LogInDialog login) {
+		AuthenticationController.login = login;
 	}
 
 	public User getUser() {
@@ -104,36 +118,36 @@ public class AuthenticationController {
 
 	private boolean validateUsername(String username) {
 		boolean result = (username.matches(Constants.USERNAME_FORMAT));
-		login.getFieldUsername().hasError(!result);
+		getLogin().getFieldUsername().hasError(!result);
 
 		return result;
 	}
 
 	private boolean validatePassword(String password) {
 		boolean result = (password.matches(Constants.PASSWORD_FORMAT));
-		login.getFieldPassword().hasError(!result);
+		getLogin().getFieldPassword().hasError(!result);
 
 		return result;
 	}
 
 	private void setUsernamePassword() {
-		login_user = login.getFieldUsername().getText();
-		login_pass = new String(login.getFieldPassword().getPassword());
+		login_user = getLogin().getFieldUsername().getText();
+		login_pass = new String(getLogin().getFieldPassword().getPassword());
 	}
 
 	private void submit() {
 		setUsernamePassword();
 		if (login_user.equals("") || login_pass.equals("")) {
 
-			login.setLabelError("Incomplete fields");
-			login.getFieldUsername().hasError(
+			getLogin().setLabelError("Incomplete fields");
+			getLogin().getFieldUsername().hasError(
 					login_user.equals("") || !validateUsername(login_user));
-			login.getFieldPassword().hasError(
+			getLogin().getFieldPassword().hasError(
 					login_pass.equals("") || !validatePassword(login_pass));
 
 		} else if (!validateUsername(login_user)
 				|| !validatePassword(login_pass)) {
-			login.setLabelError("Invalid input");
+			getLogin().setLabelError("Invalid input");
 		}
 
 		else if (validateUsername(login_user) && validatePassword(login_pass)) {
@@ -142,21 +156,21 @@ public class AuthenticationController {
 				setUser(UserDAO.getUser(login_user, login_pass));
 
 				if (user == null) {
-					login.setLabelError("Username/Password Mismatch");
-					login.getFieldPassword().setText("");
+					getLogin().setLabelError("Username/Password Mismatch");
+					getLogin().getFieldPassword().setText("");
 				} else if (user.getType().equals("Pending")) {
-					login.setLabelError("<html><center>Account still being processed.<br/>"
+					getLogin().setLabelError("<html><center>Account still being processed.<br/>"
 							+ "Ask Librarian for further inquiries.</center></html>");
-					login.getFieldPassword().setText("");
+					getLogin().getFieldPassword().setText("");
 				} else {
 					// TODO login --> call main frame
 					System.out.println("LOGIN");
-					login.dispose();
+					getLogin().dispose();
 				}
 
 			} catch (Exception e) {
 				System.out.println("AuthenticationController getUser: " + e);
-				login.setLabelError("Connection Error!");
+				getLogin().setLabelError("Connection Error!");
 			}
 		}
 	}
