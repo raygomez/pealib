@@ -18,7 +18,7 @@
 		DateBorrowed="2011-06-15" DateReturned="2011-06-15" BorrowID='9' />
 	<borrows BookID="5" UserID="4" DateRequested="2011-06-15"
 		DateBorrowed="[null]" DateReturned="[null]" BorrowID='10' />
-	<borrows BookID="5" UserID="4" DateRequested="2011-06-15"
+	<borrows BookID="6" UserID="4" DateRequested="2011-06-15"
 		DateBorrowed="[null]" DateReturned="[null]" BorrowID='11' />
 	<borrows BookID="2" UserID="6" DateRequested="2011-06-15"
 		DateBorrowed="2011-06-15" DateReturned="[null]" BorrowID='12' />

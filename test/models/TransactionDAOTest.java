@@ -192,14 +192,14 @@ public class TransactionDAOTest {
 
 	@Test
 	public void testGetAvailableCopiesNoBorrows() throws Exception {
-		Book book = BookDAO.getBookById(6);
+		Book book = BookDAO.getBookById(1);
 		assertEquals(1, TransactionDAO.getAvailableCopies(book));
 	}
 
 	@Test
 	public void testGetAvailableCopiesWithLoanAndRequests() throws Exception {
 		Book book = BookDAO.getBookById(5);
-		assertEquals(1, TransactionDAO.getAvailableCopies(book));
+		assertEquals(2, TransactionDAO.getAvailableCopies(book));
 	}
 
 	@Test
@@ -216,4 +216,31 @@ public class TransactionDAOTest {
 		assertEquals(39, TransactionDAO.getDaysOverdue(transaction));
 	}
 
+	@Test
+	public void testSearchOutgoingBookAll() throws Exception {
+		ArrayList<BorrowTransaction> list = TransactionDAO
+				.searchOutgoingBook("*");
+		assertEquals(3, list.size());
+	}
+	
+	@Test
+	public void testSearchOutgoingBookNone() throws Exception {
+		ArrayList<BorrowTransaction> list = TransactionDAO
+				.searchOutgoingBook("gomez0");
+		assertEquals(0, list.size());
+	}
+	
+	@Test
+	public void testSearchOutgoingBookMany() throws Exception {
+		ArrayList<BorrowTransaction> list = TransactionDAO
+				.searchOutgoingBook("title");
+		assertEquals(2, list.size());
+	}
+	
+	@Test
+	public void testSearchOutgoingBookManyUserBook() throws Exception {
+		ArrayList<BorrowTransaction> list = TransactionDAO
+				.searchOutgoingBook("Pantaleon");
+		assertEquals(2, list.size());
+	}
 }
