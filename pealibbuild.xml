@@ -151,7 +151,7 @@
 		<cobertura-instrument todir="${instrumented.dir}">
 			<fileset dir="${bin.dir}">
 				<include name="**/*.class" />
-				<exclude name="**/*$*.class" />
+<!--				<exclude name="**/*$*.class" />-->
 				<exclude name="**/*Test.class" />
 			</fileset>
 		</cobertura-instrument>
