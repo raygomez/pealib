@@ -252,7 +252,6 @@ public class TransactionDAOTest {
 				.searchIncomingBook("*");
 		assertEquals(5, list.size());
 	}
-	
 
 	@Test
 	public void testSearchIncomingBookNone() throws Exception {
@@ -281,19 +280,19 @@ public class TransactionDAOTest {
 		Book book = BookDAO.getBookById(2);
 		assertTrue(TransactionDAO.isBorrowedByUser(book, user));
 	}
-	
+
 	@Test
 	public void testIsNotBorrowedByUser() throws Exception {
 		User user = UserDAO.getUserById(1);
 		Book book = BookDAO.getBookById(1);
 		assertFalse(TransactionDAO.isBorrowedByUser(book, user));
 	}
-	
+
 	@Test
 	public void testGetBorrowTransactionById() throws Exception {
 		BorrowTransaction transaction = TransactionDAO
 				.getBorrowTransactionById(1);
-		
+
 		assertNotNull(transaction);
 		assertEquals(1, transaction.getId());
 		assertEquals(1, transaction.getBook().getBookId());
@@ -302,12 +301,32 @@ public class TransactionDAOTest {
 		assertEquals("2011-06-15", transaction.getDateBorrowed().toString());
 		assertEquals("2011-06-15", transaction.getDateReturned().toString());
 	}
-	
+
 	@Test
 	public void testGetBorrowTransactionByIdNotExisting() throws Exception {
 		BorrowTransaction transaction = TransactionDAO
 				.getBorrowTransactionById(0);
-		
+
+		assertNull(transaction);
+	}
+
+	@Test
+	public void testGetReserveTransaction() throws Exception {
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(1);
+		ReserveTransaction transaction = TransactionDAO.getReserveTransaction(
+				user, book);
+		assertEquals(1, transaction.getBook().getBookId());
+		assertEquals(1, transaction.getUser().getUserId());
+		assertEquals("2011-06-15", transaction.getDateReserved().toString());
+	}
+
+	@Test
+	public void testGetReserveTransactionNotExisting() throws Exception {
+		User user = UserDAO.getUserById(2);
+		Book book = BookDAO.getBookById(1);
+		ReserveTransaction transaction = TransactionDAO.getReserveTransaction(
+				user, book);
 		assertNull(transaction);
 	}
 }
