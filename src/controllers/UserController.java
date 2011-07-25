@@ -507,6 +507,7 @@ public class UserController {
 
 				try {
 					UserDAO.updateUser(user);
+					JOptionPane.showMessageDialog(layoutPanel, "Record successfully updated!");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
