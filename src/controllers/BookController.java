@@ -39,9 +39,10 @@ public class BookController {
 	private User currentUser;
 	private ArrayList<Book> bookList;
 
-	public static void main(String args[]){
-		new Connector(Constants.TEST_CONFIG);
-		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "Librarian");
+	public static void main(String args[]) throws Exception{
+		new Connector(Constants.APP_CONFIG);
+		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
+//		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", 1, "User");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -191,7 +192,7 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				TransactionDAO.borrowBook(bookList.get(currTableRowSelection), currentUser);
+				TransactionDAO.requestBook(bookList.get(currTableRowSelection), currentUser);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -224,14 +225,18 @@ public class BookController {
 			currTableRowSelection = tableRow;
 			bookInfo.setBookInfoData(bookList.get(tableRow));
 			try {
-				if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) > 0 && 
-						!TransactionDAO.isBorrowedByUser(bookList.get(currTableRowSelection), currentUser)){
-					bookInfo.getBtnBorrow().setEnabled(true);
-				}
-				if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) < 1 && 
+				if (!TransactionDAO.isBorrowedByUser(bookList.get(currTableRowSelection), currentUser) && 
 						!TransactionDAO.isReservedByUser(bookList.get(currTableRowSelection), currentUser)){
-					bookInfo.getBtnReserve().setEnabled(true);
+					if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) > 0){
+						bookInfo.getBtnBorrow().setEnabled(true);
+					} else {
+						bookInfo.getBtnReserve().setEnabled(true);
+						bookInfo.getLblErrorMsg().setText("No available copies");
+					}
+				} else {
+					bookInfo.getLblErrorMsg().setText("You already have a pending transaction for the following book: ");
 				}
+				
 			} catch (Exception ex){
 				
 			}
@@ -243,7 +248,7 @@ public class BookController {
 			bookInfo.getBtnDelete().setEnabled(false);
 			bookInfo.getBtnBorrow().setEnabled(false);
 			bookInfo.getBtnReserve().setEnabled(false);
-
+			bookInfo.getLblErrorMsg().setText("");
 		}
 
 		@Override

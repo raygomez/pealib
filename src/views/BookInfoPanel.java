@@ -52,7 +52,7 @@ public class BookInfoPanel extends JPanel {
 
 	private void displayBookInfo() {
 		
-		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[][][][][][][grow][48.00][34.00][13.00][]"));
+		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[40][][][][][][grow][48.00][34.00][13.00][]"));
 		
 		lblErrorMsg = new JLabel("");
 		lblErrorMsg.setForeground(Color.RED);
@@ -212,6 +212,10 @@ public class BookInfoPanel extends JPanel {
 		txtFldISBN.setText(book.getIsbn());
 		txtFldDescription.setText(book.getDescription());
 		spinCopyVal.getModel().setValue(book.getCopies());
+	}
+
+	public JLabel getLblErrorMsg() {
+		return lblErrorMsg;
 	}
 
 	public JTextField getTxtFldTitle() {
