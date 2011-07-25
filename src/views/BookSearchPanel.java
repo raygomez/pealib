@@ -4,14 +4,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.TableModel;
-
 import net.miginfocom.swing.MigLayout;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTable;
+import javax.swing.JButton;
+import javax.swing.table.TableModel;
 
 public class BookSearchPanel extends JPanel {
 	/**

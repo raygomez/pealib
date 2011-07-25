@@ -100,6 +100,7 @@ public class BookInfoPanel extends JPanel {
 		
 		txtFldDescription = new JTextArea();
 		add(txtFldDescription, "cell 3 6 2 3,grow");
+		txtFldDescription.setEditable(false);
 		
 		JLabel lblCopies = new JLabel("Copies:");
 		add(lblCopies, "cell 1 9,alignx left,aligny center");
