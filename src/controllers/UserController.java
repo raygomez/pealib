@@ -35,15 +35,15 @@ public class UserController {
 	private String searchText;
 	private ArrayList<User> searchedUsers;
 	private ArrayList<User> searchedPending;
-	private ArrayList<Integer> accepted = new ArrayList<Integer>();
+	private ArrayList<Integer> checkList = new ArrayList<Integer>();
 
 	/*
 	 * ..TODO For visual testing purposes only
 	 */
 	public static void main(String[] args) {
 		
-		//new Connector(Constants.TEST_CONFIG);
-		new Connector();
+		new Connector(Constants.TEST_CONFIG);
+//		new Connector();
 
 		User user = new User(1011, "jjlim", "1234567", "Janine June", "Lim",
 				"jaja.lim@yahoo.com", "UP Ayala Technohub", "09171234567",
@@ -172,7 +172,14 @@ public class UserController {
 	 *            the searchedPending to set
 	 */
 	public void setSearchedPending(ArrayList<User> searchedPending) {
-		this.searchedPending = searchedPending;
+		if(searchedPending.size()>0){
+			this.searchedPending = searchedPending;
+			getUserSearch().togglePendingButtons(true);
+		}
+		else{
+			this.searchedPending = null;
+			getUserSearch().togglePendingButtons(false);
+		}
 	}
 
 	/**
@@ -201,10 +208,8 @@ public class UserController {
 	class CheckBoxListener extends MouseAdapter {
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
 			checkBoxToggle();
-		}
-		
+		}		
 	}
 	
 	private void checkBoxToggle(){
@@ -213,26 +218,47 @@ public class UserController {
 		if(getUserSearch().getcbAll().isSelected())   model.toggleAllCheckBox(true);		
 		else   model.toggleAllCheckBox(false);	
 		
-		getUserSearch().setTableModel(1, model);
-				
+		getUserSearch().setTableModel(1, model);				
 	}
 	
 	class AcceptListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			for(int i = 0; i<searchedPending.size(); i++){
-				if(accepted.contains(i)) {
+				if(checkList.contains(i)) {
 					User temp = searchedPending.get(i);
 					temp.setType("User");
 					
 					try { UserDAO.updateUser(temp);} 
 					catch (Exception e1) { e1.printStackTrace(); }
 					
-					getUserSearch().getcbAll().setSelected(false);
-					getUserSearch().validate();
-					getUserSearch().repaint();
+					getUserSearch().getcbAll().setSelected(false);															
 				}
 			}
+			JOptionPane.showMessageDialog(getUserSearch(), "Successfully accepted ("+checkList.size()+") application/s.");
+			searchUsers();
+			checkList = new ArrayList<Integer>();
+			getUserSearch().resetTable();
+		}
+	}
+	
+	class DenyListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			for(int i = 0; i<searchedPending.size(); i++){
+				if(checkList.contains(i)) {
+					User temp = searchedPending.get(i);					
+					
+					try { UserDAO.updateUser(temp);} 
+					catch (Exception e1) { e1.printStackTrace(); }
+					
+					getUserSearch().getcbAll().setSelected(false);															
+				}
+			}
+			JOptionPane.showMessageDialog(getUserSearch(), "Successfully accepted ("+checkList.size()+") application/s.");
+			searchUsers();
+			checkList = new ArrayList<Integer>();
+			getUserSearch().resetTable();
 		}
 	}
 	
@@ -278,14 +304,15 @@ public class UserController {
 		 * TableModel for User Search Panel/Tabs
 		 */
 		private static final long serialVersionUID = 1L;
-		private ArrayList<String> columns = new ArrayList<String>();	
-		private ArrayList<ArrayList<Object>> tableData = new ArrayList<ArrayList<Object>>();		
+		private ArrayList<String> columns;	
+		private ArrayList<ArrayList<Object>> tableData;		
 		private int mode;
 		private String searchStr = "";
 
 		public UserSearchTableModel(int tab, String str) {
 			this.mode = tab;
 			this.searchStr = str;
+			tableData = new ArrayList<ArrayList<Object>>();
 
 			if (mode == USER){
 				userAcct();
@@ -303,17 +330,19 @@ public class UserController {
 
 			try {
 				setSearchedPending(UserDAO.searchAllPending(searchStr));
+				
+				if(getSearchedPending() != null){
+					for (User i : getSearchedPending()) {
+						ArrayList<Object> rowData = new ArrayList<Object>();
+						rowData.add(i.getUserName());
+						rowData.add(i.getFirstName() + " " + i.getLastName());				
+						rowData.add(new Boolean(false));
+						tableData.add(rowData);
+					}
+				}
 			} catch (Exception e) {
 				System.out.println("UserController: pending: " + e);
-			}
-
-			for (User i : getSearchedPending()) {
-				ArrayList<Object> rowData = new ArrayList<Object>();
-				rowData.add(i.getUserName());
-				rowData.add(i.getFirstName() + " " + i.getLastName());				
-				rowData.add(new Boolean(false));
-				tableData.add(rowData);
-			}
+			}			
 		}
 				
 		public void toggleAllCheckBox(boolean value){
@@ -332,16 +361,17 @@ public class UserController {
 	
 			try {
 				setSearchedUsers(UserDAO.searchActiveUsers(searchStr));
+				
+				for (User i : getSearchedUsers()) {
+
+					ArrayList<Object> rowData = new ArrayList<Object>();
+					rowData.add(i.getUserName());
+					rowData.add(i.getFirstName() + " " + i.getLastName());				
+					tableData.add(rowData);
+				}
 			} catch (Exception e) {
 				System.out.println("UserController: userAcct: " + e);
-			}
-			for (User i : getSearchedUsers()) {
-
-				ArrayList<Object> rowData = new ArrayList<Object>();
-				rowData.add(i.getUserName());
-				rowData.add(i.getFirstName() + " " + i.getLastName());				
-				tableData.add(rowData);
-			}
+			}			
 		}
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -354,13 +384,13 @@ public class UserController {
 			 if(!(Boolean)value){
 				 getUserSearch().getcbAll().setSelected(false);
 				 
-				 if(accepted.contains(row))
-					 accepted.remove((Object)row);				
+				 if(checkList.contains(row))
+					 checkList.remove((Object)row);				
 				 	 System.out.println("Removed "+row);
 			 }
 			 else{
-				 if(!accepted.contains(row)){
-					 accepted.add(row);
+				 if(!checkList.contains(row)){
+					 checkList.add(row);
 					 System.out.println("Added "+row);
 				 }
 			 }				 
@@ -439,18 +469,20 @@ public class UserController {
 			if (row < 0)
 				return;
 
-			if (tab == 0) {
+			if (tab == 0) {				
 				user = getSearchedUsers().get(row);
 			} else {
-				user = getSearchedPending().get(row);
+				if(getSearchedPending()!=null)
+					user = getSearchedPending().get(row);
 			}
 
-			setSelectedUser(user);
-			getUserInfoPanel().setFields(user.getType(), "" + user.getUserId(),
+			if(user!=null){
+				setSelectedUser(user);
+				getUserInfoPanel().setFields(user.getType(), "" + user.getUserId(),
 					user.getUserName(), user.getFirstName(),
 					user.getLastName(), user.getAddress(), user.getContactNo(),
 					user.getEmail());
-
+			}
 		}
 	}
 
@@ -491,14 +523,12 @@ public class UserController {
                 if(currentUser.getType().equals("Librarian") && !userInfoPanel.getIdNumber().isEmpty() &&
                                 currentUser.getUserId() != Integer.parseInt(userInfoPanel.getIdNumber())){
                         changePasswordDialog.removeOldPassword();
-                }
-                
+                }                
                 changePasswordDialog.addChangePasswordListener(changePassword);
         }
     };
 
-	private ActionListener changePassword = new ActionListener() {
-        
+	private ActionListener changePassword = new ActionListener() {        
         boolean correctPassword;
         boolean isMatchingPassword;
         
