@@ -398,7 +398,7 @@ public class TransactionDAO {
 					+ "INNER JOIN Borrows ON Books.ID=Borrows.BookID "
 					+ "JOIN Users ON Borrows.UserID=Users.ID WHERE "
 					+ "DateBorrowed is NULL AND DateReturned is NULL ORDER "
-					+ "BY Borrows.DateRequested";
+					+ "BY Borrows.BorrowID";
 			ps = Connector.getConnection().prepareStatement(sql);
 
 		} else {
@@ -408,7 +408,7 @@ public class TransactionDAO {
 					+ "(DateBorrowed is NULL AND DateReturned is NULL) AND "
 					+ "(CONCAT(Books.ISBN, Books.Title, Books.Author, "
 					+ "Users.UserName, Users.FirstName, Users.LastName) "
-					+ "LIKE ?) ORDER BY Borrows.DateRequested";
+					+ "LIKE ?) ORDER BY Borrows.BorrowID";
 			ps = Connector.getConnection().prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
 		}
@@ -454,7 +454,7 @@ public class TransactionDAO {
 					+ "Books.ID=Borrows.BookID JOIN Users ON "
 					+ "Borrows.UserID=Users.ID WHERE DateBorrowed is not "
 					+ "NULL AND DateReturned is NULL ORDER BY "
-					+ "Borrows.DateRequested";
+					+ "Borrows.DateBorrowed";
 			ps = Connector.getConnection().prepareStatement(sql);
 
 		} else {
@@ -464,7 +464,7 @@ public class TransactionDAO {
 					+ "NULL AND DateReturned is NULL) AND "
 					+ "(CONCAT(Books.ISBN, Books.Title, Books.Author, "
 					+ "Users.UserName, Users.FirstName, Users.LastName) "
-					+ "LIKE ?) ORDER BY Borrows.DateRequested";
+					+ "LIKE ?) ORDER BY Borrows.DateBorrowed";
 			ps = Connector.getConnection().prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
 		}
@@ -498,5 +498,36 @@ public class TransactionDAO {
 		Connector.close();
 		return bookCollection;
 	}
+	
+	public static boolean isBookReservedbyOtherUsers(Book currentBook) throws Exception {
+		String sql;
+		PreparedStatement ps;
+		
+		sql = "SELECT COUNT(*) FROM RESERVES WHERE BookID = ?";
+		ps = Connector.getConnection().prepareStatement(sql);
+		ps.setLong(1, currentBook.getBookId());
+		
+		ResultSet rs = ps.executeQuery();
+		int countReservations = 0;
+		if (rs.first()) {
+			countReservations = rs.getInt(1);
+		}
+		return (countReservations != 0);
+	}
 
+	public static User getNextUser(Book currentBook) throws Exception {
+		String sql;
+		PreparedStatement ps;
+		
+		sql = "SELECT * FROM RESERVES WHERE BookID = ? ORDER BY DateReserved";
+		ps = Connector.getConnection().prepareStatement(sql);
+		ps.setLong(1, currentBook.getBookId());
+		
+		ResultSet rs = ps.executeQuery();
+		Integer nextUserID = 0;
+		if (rs.first()) {
+			nextUserID = rs.getInt(1);
+		}
+		return UserDAO.getUserById(nextUserID);
+	}
 }
