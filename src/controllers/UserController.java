@@ -1,31 +1,23 @@
 package controllers;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-
-import models.User;
 import models.UserDAO;
+import models.User;
 import net.miginfocom.swing.MigLayout;
 import utilities.Connector;
 import utilities.Constants;
 import views.ChangePasswordDialog;
 import views.UserInfoPanel;
 import views.UserSearchPanel;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
 
 public class UserController {
 
@@ -246,8 +238,10 @@ public class UserController {
 		 * TableModel for User Search Panel/Tabs
 		 */
 		private static final long serialVersionUID = 1L;
-		private String[] columns = { "Username", "Name" };
-		private ArrayList<ArrayList<String>> tableData = new ArrayList<ArrayList<String>>();
+		// private String[] columns = { "Username", "Name" };
+		private ArrayList<String> columns = new ArrayList<String>();	
+
+		private ArrayList<ArrayList<Object>> tableData = new ArrayList<ArrayList<Object>>();
 		private int mode;
 		private String searchStr = "";
 
@@ -255,66 +249,79 @@ public class UserController {
 			this.mode = tab;
 			this.searchStr = str;
 
-			if (mode == USER)
+			if (mode == USER){
+
 				userAcct();
-			else
+			}
+			else{
+				
 				pending();
+			}
 		}
 
 		private void pending() {
+			columns = new ArrayList<String>();				
+			columns.add("Username");
+			columns.add("Name");
+			columns.add("Accept");
+
 			try {
 				setSearchedPending(UserDAO.searchAllPending(searchStr));
 			} catch (Exception e) {
-				System.out.println("UserController: userAcct: " + e);
+				System.out.println("UserController: pending: " + e);
 			}
 
 			for (User i : getSearchedPending()) {
-				ArrayList<String> rowData = new ArrayList<String>();
+				ArrayList<Object> rowData = new ArrayList<Object>();
 				rowData.add(i.getUserName());
 				rowData.add(i.getFirstName() + " " + i.getLastName());
+				rowData.add(new Boolean(false));
 				tableData.add(rowData);
 			}
 		}
 
 		private void userAcct() {
+			columns = new ArrayList<String>();				
+			columns.add("Username");
+			columns.add("Name");
+	
 			try {
-				setSearchedUsers(UserDAO.searchUsers(searchStr));
+				setSearchedUsers(UserDAO.searchActiveUsers(searchStr));
 			} catch (Exception e) {
 				System.out.println("UserController: userAcct: " + e);
 			}
 			for (User i : getSearchedUsers()) {
-				ArrayList<String> rowData = new ArrayList<String>();
+
+				ArrayList<Object> rowData = new ArrayList<Object>();
 				rowData.add(i.getUserName());
-				rowData.add(i.getFirstName() + " " + i.getLastName());
+				rowData.add(i.getFirstName() + " " + i.getLastName());				
 				tableData.add(rowData);
 			}
-
 		}
 
-		public String getColumnName(int col) {
-			return columns[col];
-		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		public Class getColumnClass(int c) { return getValueAt(0, c).getClass();}
+		
+		@Override
+		public String getColumnName(int col) { return columns.get(col);}
 
-		public int getColumnCount() {
-			return columns.length;
-		}
+		@Override
+		public int getColumnCount() { return columns.size();}
 
-		public int getRowCount() {
-			return tableData.size();
-		}
+		@Override
+		public int getRowCount() { return tableData.size();}
 
-		public Object getValueAt(int row, int col) {
-			return tableData.get(row).get(col);
-		}
+		@Override
+		public Object getValueAt(int row, int col) { return tableData.get(row).get(col);}
 
+		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			return false;
+			if(columnIndex<2) return false;
+			else return true;
 		}
 	}
 
-	public JPanel getUserPanel() {
-		return getLayoutPanel();
-	}
+	public JPanel getUserPanel() { return getLayoutPanel();}
 
 	private boolean validateUpdateProfile(String firstName, String lastName,
 			String email, String address, String contactNo) {
@@ -372,7 +379,7 @@ public class UserController {
 			} else {
 				user = getSearchedPending().get(row);
 			}
-			
+
 			setSelectedUser(user);
 			getUserInfoPanel().setFields(user.getType(), "" + user.getUserId(),
 					user.getUserName(), user.getFirstName(),
@@ -408,7 +415,68 @@ public class UserController {
 			}
 		}
 	};
+    private ActionListener showChangePassword = new ActionListener() {
 
+        @Override
+        public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                changePasswordDialog = new ChangePasswordDialog();
+                
+                if(currentUser.getType().equals("Librarian") && !userInfoPanel.getIdNumber().isEmpty() &&
+                                currentUser.getUserId() != Integer.parseInt(userInfoPanel.getIdNumber())){
+                        changePasswordDialog.removeOldPassword();
+                }
+                
+                changePasswordDialog.addChangePasswordListener(changePassword);
+        }
+};
+
+private ActionListener changePassword = new ActionListener() {
+        
+        boolean correctPassword;
+        boolean isMatchingPassword;
+        
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+                // TODO Auto-generated method stub
+                int userID;
+                if(changePasswordDialog.getOldPasswordField().isEnabled()){
+                        String oldPassword = new String(changePasswordDialog.getOldPasswordField().getPassword());
+                        userID = currentUser.getUserId();
+                        
+                        try {
+                                correctPassword = UserDAO.checkPassword(userID, oldPassword);
+                        } catch (Exception e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                                correctPassword = false;
+                        }
+                }
+                else{
+                        userID = Integer.parseInt(userInfoPanel.getIdNumber());
+                }
+                String newPassword1 = new String(changePasswordDialog.getNewPasswordField().getPassword());
+                String newPassword2 = new String(changePasswordDialog.getRepeatPasswordField().getPassword());
+                isMatchingPassword = newPassword1.equals(newPassword2);
+                
+                if(!correctPassword) changePasswordDialog.displayError(Constants.INCORRECT_PASSWORD_ERROR);
+                else if (!isMatchingPassword) changePasswordDialog.displayError(Constants.PASSWORD_NOT_MATCH_ERROR);
+                else{
+                        try {
+                                UserDAO.changePassword(userID, newPassword1);
+                                changePasswordDialog.dispose();
+                                JOptionPane.showMessageDialog(layoutPanel, "Password successfully changed!");
+                        } catch (Exception e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                                changePasswordDialog.displayError(Constants.DEFAULT_ERROR);
+                        }
+                        
+                }
+        }
+};
+}
+/*
 	private ActionListener showChangePassword = new ActionListener() {
 
 		@Override
@@ -457,3 +525,4 @@ public class UserController {
 		}
 	}
 }
+*/

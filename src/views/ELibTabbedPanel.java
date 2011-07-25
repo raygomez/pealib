@@ -1,18 +1,13 @@
 package views;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
-import controllers.UserController;
-
-import models.User;
 import net.miginfocom.swing.MigLayout;
 
 public class ELibTabbedPanel extends JPanel{
@@ -39,6 +34,7 @@ public class ELibTabbedPanel extends JPanel{
 		tabs.addTab("History",new ImageIcon("resources/images/history.png"), history );
 		
 		add(tabs, "cell 0 1, grow");
+		trender.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		addHistoryPane();
 		addOnLoanPane();
@@ -59,8 +55,9 @@ public class ELibTabbedPanel extends JPanel{
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		for(int i=0; i<table.getColumnCount(); i++){
-			table.getColumn(i).setCellRenderer(trender);
+			table.getColumn(table.getColumnName(i)).setCellRenderer(trender);
 		}
+
 	}
 	
 	public void setTableModel(int tab, AbstractTableModel model){

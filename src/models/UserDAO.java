@@ -77,12 +77,12 @@ public class UserDAO {
 		return user;
 	}
 
-	public static ArrayList<User> searchUsers(String keyword) throws Exception {
+	public static ArrayList<User> searchActiveUsers(String keyword) throws Exception {
 		ArrayList<User> users = new ArrayList<User>();
 
 		String sql = "SELECT * from Users "
 				+ "where CONCAT(LastName,FirstName,UserName) like ? "
-				+ "and Type != 'Librarian'";
+				+ "and Type = 'User'";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, "%" + keyword + "%");
