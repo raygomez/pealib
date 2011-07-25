@@ -15,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 
@@ -472,36 +473,48 @@ public class BookController {
 	
 	class TextFieldListener implements KeyListener{
 
+		Timer timer = new Timer(Constants.TIMER_DELAY, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				timer.stop();
+				String strSearch = bookSearch.getTextFieldSearch();
+				try {
+					if(!strSearch.trim().isEmpty()){
+						currSearchString = strSearch;
+						bookList = BookDAO.searchBook(strSearch);
+						bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+						if(bookList.size() == 0){
+							bookInfo.getBtnDelete().setEnabled(false);
+							bookInfo.getBtnSave().setEnabled(false);
+						}else{
+							bookInfo.getBtnDelete().setEnabled(true);
+							bookInfo.getBtnSave().setEnabled(true);
+							bookInfo.setBookInfoData(bookList.get(0));
+							if(bookList.get(0).getCopies() == 0){
+								bookInfo.getBtnDelete().setEnabled(false);
+							}
+						}
+					}
+				} catch (Exception f) {
+					f.printStackTrace();
+				}
+			}
+		});
+		
 		@Override
 		public void keyPressed(KeyEvent key) {
+			
 		}
 
 		@Override
 		public void keyReleased(KeyEvent key) {
 			if(key.getKeyCode() != KeyEvent.VK_ENTER){
-				String strSearch = bookSearch.getTextFieldSearch();
-				if(strSearch.length() > 2){
-					try {
-						if(!strSearch.trim().isEmpty()){
-							currSearchString = strSearch;
-							bookList = BookDAO.searchBook(strSearch);
-							bookSearch.getTableBookList().setModel(new BookListModel(bookList));
-							if(bookList.size() == 0){
-								bookInfo.getBtnDelete().setEnabled(false);
-								bookInfo.getBtnSave().setEnabled(false);
-							}else{
-								bookInfo.getBtnDelete().setEnabled(true);
-								bookInfo.getBtnSave().setEnabled(true);
-								bookInfo.setBookInfoData(bookList.get(0));
-								if(bookList.get(0).getCopies() == 0){
-									bookInfo.getBtnDelete().setEnabled(false);
-								}
-							}
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
+				if(timer.isRunning())
+					timer.restart();
+				else
+					timer.start();
 			}
 			
 		}
