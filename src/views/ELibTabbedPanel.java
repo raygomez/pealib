@@ -16,12 +16,8 @@ import javax.swing.table.TableCellEditor;
 import net.miginfocom.swing.MigLayout;
 import controllers.ELibController.CancelButtonRenderer;
 
-;
-
 public class ELibTabbedPanel extends JPanel {
-	/**
-	 * //TODO: NEED GENERIC TABLE
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabs = new JTabbedPane();
 	private JPanel historyPanel = new JPanel();
@@ -29,7 +25,11 @@ public class ELibTabbedPanel extends JPanel {
 	private JPanel requestPanel = new JPanel();
 	private JPanel reservePanel = new JPanel();
 
-	private JTable requestTable, reserveTable, onloanTable, historyTable;
+	private JTable requestTable;
+	private JTable reserveTable;
+	private JTable onloanTable;
+	private JTable historyTable;
+
 	private DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
 
 	public ELibTabbedPanel() {
@@ -40,7 +40,7 @@ public class ELibTabbedPanel extends JPanel {
 				requestPanel);
 		tabs.addTab("Reservations", new ImageIcon(
 				"resources/images/reserve.png"), reservePanel);
-		tabs.addTab("On-Loans", new ImageIcon("resources/images/onloan.png"),
+		tabs.addTab("On Loan", new ImageIcon("resources/images/onloan.png"),
 				onloanPanel);
 		tabs.addTab("History", new ImageIcon("resources/images/history.png"),
 				historyPanel);
@@ -62,7 +62,8 @@ public class ELibTabbedPanel extends JPanel {
 	}
 
 	/**
-	 * @param historyTable the historyTable to set
+	 * @param historyTable
+	 *            the historyTable to set
 	 */
 	public void setHistoryTable(JTable historyTable) {
 		this.historyTable = historyTable;
@@ -76,7 +77,8 @@ public class ELibTabbedPanel extends JPanel {
 	}
 
 	/**
-	 * @param onloanTable the onloanTable to set
+	 * @param onloanTable
+	 *            the onloanTable to set
 	 */
 	public void setOnloanTable(JTable onloanTable) {
 		this.onloanTable = onloanTable;
@@ -90,7 +92,8 @@ public class ELibTabbedPanel extends JPanel {
 	}
 
 	/**
-	 * @param reserveTable the reserveTable to set
+	 * @param reserveTable
+	 *            the reserveTable to set
 	 */
 	public void setReserveTable(JTable reserveTable) {
 		this.reserveTable = reserveTable;
