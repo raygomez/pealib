@@ -8,7 +8,9 @@ import models.UserDAO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.TextBox;
 import org.uispec4j.UISpecTestCase;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
@@ -41,27 +43,30 @@ public class BookInfoPanelTest extends UISpecTestCase {
 
 	@Test
 	public void testInitialStateUser() {
-		assertNotNull(panelUser.getTextBox("Title:"));
-		assertNotNull(panelUser.getTextBox("Author:"));
-		assertNotNull(panelUser.getTextBox("Year Published:"));
-		assertNotNull(panelUser.getTextBox("Publisher:"));
-		assertNotNull(panelUser.getTextBox("ISBN:"));
-		assertNotNull(panelUser.getTextBox("Description:"));
-		assertNotNull(panelUser.getTextBox("Copies:"));
-
-		assertNotNull(panelUser.getInputTextBox("titleTextField"));
-		assertNotNull(panelUser.getInputTextBox("authorTextField"));
-		assertNotNull(panelUser.getInputTextBox("yearPublishTextField"));
-		assertNotNull(panelUser.getInputTextBox("publisherTextField"));
-		assertNotNull(panelUser.getInputTextBox("isbnTextField"));
-		assertNotNull(panelUser.getInputTextBox("descriptionTextArea"));
+		TextBox label;
+		TextBox textField;
+		Button button;
 		
-		assertFalse(panelUser.getInputTextBox("titleTextField").isEditable());
-		assertFalse(panelUser.getInputTextBox("authorTextField").isEditable());
-		assertFalse(panelUser.getInputTextBox("yearPublishTextField").isEditable());
-		assertFalse(panelUser.getInputTextBox("publisherTextField").isEditable());
-		assertFalse(panelUser.getInputTextBox("isbnTextField").isEditable());
-		assertFalse(panelUser.getInputTextBox("descriptionTextArea").isEditable());
+		String[] labelArray = new String[] { "Title:", "Author:",
+				"Year Published:", "Publisher:", "ISBN:", "Description:",
+				"Copies:" };
+
+		for (String l : labelArray) {
+			label = panelUser.getTextBox(l);
+			assertNotNull(label);
+			assertThat(label.isVisible());
+		}
+
+		String[] textInputArray = new String[] { "titleTextField",
+				"authorTextField", "yearPublishTextField",
+				"publisherTextField", "isbnTextField", "descriptionTextArea" };
+						
+		for (String l : textInputArray) {
+			textField = panelUser.getTextBox(l);
+			assertNotNull(textField);
+			assertThat(textField.isVisible());
+			assertFalse(textField.isEditable());
+		}	
 
 		assertEquals(book.getTitle(),
 				panelUser.getInputTextBox("titleTextField").getText());
@@ -76,37 +81,42 @@ public class BookInfoPanelTest extends UISpecTestCase {
 		assertEquals(book.getDescription(),
 				panelUser.getInputTextBox("descriptionTextArea").getText());
 		
-		assertNotNull(panelUser.getButton("Borrow"));
-		assertThat(panelUser.getButton("Borrow").isEnabled());
-		assertThat(panelUser.getButton("Borrow").isVisible());
-		assertNotNull(panelUser.getButton("Reserve"));
-		assertThat(panelUser.getButton("Reserve").isEnabled());
-		assertThat(panelUser.getButton("Reserve").isVisible());
+		String[] buttonArray = new String[] { "Borrow", "Reserve" };
+
+		for (String s : buttonArray) {
+			button = panelUser.getButton(s);
+			assertNotNull(button);
+			assertThat(button.isEnabled());
+			assertThat(button.isVisible());
+		}
 	}
 	
 	@Test
 	public void testInitialStateLibrarian() {
-		assertNotNull(panelLibrarian.getTextBox("Title:"));
-		assertNotNull(panelLibrarian.getTextBox("Author:"));
-		assertNotNull(panelLibrarian.getTextBox("Year Published:"));
-		assertNotNull(panelLibrarian.getTextBox("Publisher:"));
-		assertNotNull(panelLibrarian.getTextBox("ISBN:"));
-		assertNotNull(panelLibrarian.getTextBox("Description:"));
-		assertNotNull(panelLibrarian.getTextBox("Copies:"));
+		TextBox label;
+		TextBox textField;
+		Button button;
+		
+		String[] labelArray = new String[] { "Title:", "Author:",
+				"Year Published:", "Publisher:", "ISBN:", "Description:",
+				"Copies:" };
 
-		assertNotNull(panelLibrarian.getInputTextBox("titleTextField"));
-		assertNotNull(panelLibrarian.getInputTextBox("authorTextField"));
-		assertNotNull(panelLibrarian.getInputTextBox("yearPublishTextField"));
-		assertNotNull(panelLibrarian.getInputTextBox("publisherTextField"));
-		assertNotNull(panelLibrarian.getInputTextBox("isbnTextField"));
-		assertNotNull(panelLibrarian.getInputTextBox("descriptionTextArea"));
-
-		assertThat(panelLibrarian.getInputTextBox("titleTextField").isEditable());
-		assertThat(panelLibrarian.getInputTextBox("authorTextField").isEditable());
-		assertThat(panelLibrarian.getInputTextBox("yearPublishTextField").isEditable());
-		assertThat(panelLibrarian.getInputTextBox("publisherTextField").isEditable());
-		assertThat(panelLibrarian.getInputTextBox("isbnTextField").isEditable());
-		assertThat(panelLibrarian.getInputTextBox("descriptionTextArea").isEditable());
+		for (String l : labelArray) {
+			label = panelLibrarian.getTextBox(l);
+			assertNotNull(label);
+			assertThat(label.isVisible());
+		}
+		
+		String[] textInputArray = new String[] { "titleTextField",
+				"authorTextField", "yearPublishTextField",
+				"publisherTextField", "isbnTextField", "descriptionTextArea" };
+						
+		for (String l : textInputArray) {
+			textField = panelLibrarian.getTextBox(l);
+			assertNotNull(textField);
+			assertThat(textField.isVisible());
+			assertThat(textField.isEditable());
+		}	
 
 		assertEquals(book.getTitle(),
 				panelLibrarian.getInputTextBox("titleTextField").getText());
@@ -120,13 +130,15 @@ public class BookInfoPanelTest extends UISpecTestCase {
 				.getText());
 		assertEquals(book.getDescription(),
 				panelLibrarian.getInputTextBox("descriptionTextArea").getText());
-		
-		assertNotNull(panelLibrarian.getButton("Save"));
-		assertThat(panelLibrarian.getButton("Save").isEnabled());
-		assertThat(panelLibrarian.getButton("Save").isVisible());
-		assertNotNull(panelLibrarian.getButton("Delete"));
-		assertThat(panelLibrarian.getButton("Delete").isEnabled());
-		assertThat(panelLibrarian.getButton("Delete").isVisible());
+
+		String[] buttonArray = new String[] { "Save", "Delete" };
+
+		for (String s : buttonArray) {
+			button = panelLibrarian.getButton(s);
+			assertNotNull(button);
+			assertThat(button.isEnabled());
+			assertThat(button.isVisible());
+		}
 		
 		assertNotNull(panelLibrarian.getSpinner());
 		assertThat(panelLibrarian.getSpinner().isEnabled());
