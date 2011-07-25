@@ -306,22 +306,23 @@ public class ELibController {
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int response = JOptionPane.showConfirmDialog(null,
-							"Do you really want to cancel the reservation",
+							"Do you really want to cancel the request",
 							"Confirm", JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE);
 					if (response == JOptionPane.YES_OPTION) {
 
 						try {
 							TransactionDAO.denyBookRequest(selectedBook);
-						} catch (Exception e1) {
-							System.out.println("CancelRequest: requestData: "
-									+ e1);
 							tab = getTabpane().getSelectedTab();
 							ELibTableModel model = new ELibTableModel(tab);
 							getTabpane().setTableModel(tab, model);
 							getTabpane().setCellRenderer(tab,
 									new ButtonRenderer());
 							getTabpane().setCellEditor(tab, new ButtonEditor());
+						} catch (Exception e1) {
+							System.out.println("CancelRequest: requestData: "
+									+ e1);
+
 						}
 					}
 					fireEditingStopped();
