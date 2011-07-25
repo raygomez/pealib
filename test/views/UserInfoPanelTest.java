@@ -1,5 +1,6 @@
 package views;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
@@ -24,6 +25,24 @@ public class UserInfoPanelTest extends UISpecTestCase {
 	private String address;
 	private String contactNumber;
 	private String email;
+
+	@Before
+	public void setUp() throws Exception {
+		userInfoPanel = new UserInfoPanel();
+		panel = new Panel(userInfoPanel);
+
+		accountType = "User";
+		idNumber = "19216811";
+		username = "jajalim";
+		firstName = "Jaja";
+		lastName = "Lim";
+		address = "NetworkLabs Bldg, UP Ayala Technohub, Diliman, Q.C.";
+		contactNumber = "09171234567";
+		email = "jaja.lim@yahoo.com";
+
+		userInfoPanel.setFields(accountType, idNumber, username, firstName,
+				lastName, address, contactNumber, email);
+	}
 
 	@Test
 	public void testInitialState() {
