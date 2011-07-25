@@ -28,7 +28,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	@Before
 	public void setUp() throws Exception {
 		new Connector(Constants.TEST_CONFIG);
-		new AuthenticationController();
+		new AuthenticationController(null);
 		window = new Window(AuthenticationController.getLogin());
 
 	}
