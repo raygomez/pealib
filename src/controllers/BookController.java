@@ -337,21 +337,23 @@ public class BookController {
 						bookInfo.getBtnDelete().setEnabled(false);
 					}else bookInfo.getBtnDelete().setEnabled(true);
 				}
-				if (bookList.get(currTableRowSelection).getCopies() > 0){
-					if (currentUser.getType().equals("User")){
-						if (!TransactionDAO.isBorrowedByUser(bookList.get(currTableRowSelection), currentUser) && 
-								!TransactionDAO.isReservedByUser(bookList.get(currTableRowSelection), currentUser)){
-							if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) > 0){
-								bookInfo.getBtnBorrow().setEnabled(true);
-							} else {
-								bookInfo.getBtnReserve().setEnabled(true);
-								bookInfo.getLblErrorMsg().setText("No available copies");
-								bookInfo.getLblErrorMsg().setForeground(Color.RED);
-							}
+				if (currentUser.getType().equals("User")){
+					if (!TransactionDAO.isBorrowedByUser(bookList.get(currTableRowSelection), currentUser) && 
+							!TransactionDAO.isReservedByUser(bookList.get(currTableRowSelection), currentUser)){
+						if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) > 0){
+							bookInfo.getBtnBorrow().setEnabled(true);
 						} else {
-							bookInfo.getLblErrorMsg().setText("You already have a pending transaction for the following book: ");
-							bookInfo.getLblErrorMsg().setForeground(Color.RED);
+							if (bookList.get(currTableRowSelection).getCopies() > 0){
+								bookInfo.getBtnReserve().setEnabled(true);
+								bookInfo.getLblErrorMsg().setText("No available copies at this time");
+								bookInfo.getLblErrorMsg().setForeground(Color.RED);
+							} else {
+								bookInfo.getLblErrorMsg().setText("Not yet available in the library");
+							}
 						}
+					} else {
+						bookInfo.getLblErrorMsg().setText("You already have a pending transaction for the following book: ");
+						bookInfo.getLblErrorMsg().setForeground(Color.RED);
 					}
 				}
 				
