@@ -181,13 +181,14 @@ public class UserSearchPanel extends JPanel {
 	}
 
 	public void addListeners(ActionListener button, KeyListener text,
-			ChangeListener tab, ListSelectionListener table, MouseListener cbox) {
+			ChangeListener tab, ListSelectionListener table, MouseListener cbox, ActionListener accept) {
 		btnSearch.addActionListener(button);
 		fieldSearch.addKeyListener(text);
 		tabbedPane.addChangeListener(tab);
 		getUsersTable().getSelectionModel().addListSelectionListener(table);
 		getPendingTable().getSelectionModel().addListSelectionListener(table);
 		getcbAll().addMouseListener(cbox);
+		btnAccept.addActionListener(accept);
 	}
 
 }
