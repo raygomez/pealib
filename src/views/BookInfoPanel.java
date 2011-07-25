@@ -31,6 +31,8 @@ public class BookInfoPanel extends JPanel {
 	private JTextField txtFldISBN;
 	private JButton btnSave;
 	private JButton btnDelete;
+	private JButton btnBorrow;
+	private JButton btnReserve;
 	private User currUser;
 	private Book currBook;
 	private JLabel lblErrorMsg;
@@ -119,6 +121,10 @@ public class BookInfoPanel extends JPanel {
 		
 		btnDelete = new JButton("Delete");
 		
+		btnBorrow = new JButton("Borrow");
+		
+		btnReserve = new JButton("Reserve");
+		
 		if (currUser.getType().equals("Librarian")){
 			add(btnSave, "cell 3 10,alignx right");
 			add(btnDelete, "cell 4 10");
@@ -130,8 +136,44 @@ public class BookInfoPanel extends JPanel {
 			txtFldYrPublished.setEditable(true);
 			spinCopyVal.setEnabled(true);
 		}
+		if (currUser.getType().equals("User")){
+			add(btnBorrow, "cell 3 10,alignx right");
+			add(btnReserve, "cell 4 10");
+		}
 		
 		
+	}
+
+	public JButton getBtnBorrow() {
+		return btnBorrow;
+	}
+
+	public JButton getBtnSave() {
+		return btnSave;
+	}
+
+	public void setBtnSave(JButton btnSave) {
+		this.btnSave = btnSave;
+	}
+
+	public JButton getBtnDelete() {
+		return btnDelete;
+	}
+
+	public void setBtnDelete(JButton btnDelete) {
+		this.btnDelete = btnDelete;
+	}
+
+	public void setBtnBorrow(JButton btnBorrow) {
+		this.btnBorrow = btnBorrow;
+	}
+
+	public JButton getBtnReserve() {
+		return btnReserve;
+	}
+
+	public void setBtnReserve(JButton btnReserve) {
+		this.btnReserve = btnReserve;
 	}
 
 	public void addSaveListener(ActionListener saveInfo){
@@ -140,6 +182,14 @@ public class BookInfoPanel extends JPanel {
 	
 	public void addDeleteListener(ActionListener deleteRecord){
 		btnDelete.addActionListener(deleteRecord);
+	}
+	
+	public void addBorrowListener(ActionListener borrowBook){
+		btnBorrow.addActionListener(borrowBook);
+	}
+	
+	public void addReserveListener(ActionListener reserveBook){
+		btnReserve.addActionListener(reserveBook);
 	}
 	
 	public Book getCurrBook() {	

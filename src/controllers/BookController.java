@@ -22,6 +22,7 @@ import views.BookInfoPanel;
 import views.BookSearchPanel;
 import models.Book;
 import models.BookDAO;
+import models.TransactionDAO;
 import models.User;
 
 public class BookController {
@@ -35,8 +36,9 @@ public class BookController {
 	private ArrayList<Book> bookList;
 
 	public static void main(String args[]) throws Exception{
-		new Connector(Constants.TEST_CONFIG);
-		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "Librarian");
+		new Connector(Constants.APP_CONFIG);
+//		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
+		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", 1, "User");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -69,6 +71,8 @@ public class BookController {
 		bookSearch.setMouseListener(new BookListMouseListener());
 		bookInfo.addSaveListener(new SaveButtonListener());
 		bookInfo.addDeleteListener(new DeleteButtonListener());
+		bookInfo.addBorrowListener(new BorrowButtonListener());
+		bookInfo.addReserveListener(new ReserveButtonListener());
 	}
 	
 	public JPanel getBookLayoutPanel() {
@@ -110,14 +114,64 @@ public class BookController {
 		
 	}
 	
+	class BorrowButtonListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				TransactionDAO.borrowBook(bookList.get(currTableRowSelection), currentUser);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+	
+	
+	class ReserveButtonListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				TransactionDAO.reserveBook(bookList.get(currTableRowSelection), currentUser);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+	
+	
 	class BookListMouseListener implements MouseListener{
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			resetButton();
 			JTable table = (JTable) e.getSource();
 			int tableRow = table.getSelectedRow();
 			currTableRowSelection = tableRow;
 			bookInfo.setBookInfoData(bookList.get(tableRow));
+			try {
+				if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) > 0 && 
+						!TransactionDAO.isBorrowedByUser(bookList.get(currTableRowSelection), currentUser)){
+					bookInfo.getBtnBorrow().setEnabled(true);
+				}
+				if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) < 1 && 
+						!TransactionDAO.isReservedByUser(bookList.get(currTableRowSelection), currentUser)){
+					bookInfo.getBtnReserve().setEnabled(true);
+				}
+			} catch (Exception ex){
+				
+			}
+		
+		}
+
+		private void resetButton() {
+			bookInfo.getBtnSave().setEnabled(false);
+			bookInfo.getBtnDelete().setEnabled(false);
+			bookInfo.getBtnBorrow().setEnabled(false);
+			bookInfo.getBtnReserve().setEnabled(false);
+			
 		}
 
 		@Override
