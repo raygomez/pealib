@@ -39,6 +39,7 @@ public class BookInfoPanel extends JPanel {
 	private JTextArea txtFldDescription;
 	private JSpinner spinCopyVal;
 	private JFormattedTextField spinValue;
+	private JLabel lblCopiesVal;
 
 	/**
 	 * Create the panel.
@@ -115,7 +116,7 @@ public class BookInfoPanel extends JPanel {
 		spinCopyVal.setModel(new SpinnerNumberModel(0, 0, 2147483647, 1));
 		spinCopyVal.getModel().setValue(currBook.getCopies());
 		
-		JLabel lblCopiesVal = new JLabel(Integer.toString(currBook.getCopies()));
+		lblCopiesVal = new JLabel(Integer.toString(currBook.getCopies()));
 		
 		btnSave = new JButton("Save");
 		
@@ -213,6 +214,7 @@ public class BookInfoPanel extends JPanel {
 		txtFldISBN.setText(book.getIsbn());
 		txtFldDescription.setText(book.getDescription());
 		spinCopyVal.getModel().setValue(book.getCopies());
+		lblCopiesVal.setText(book.getClass().toString());
 	}
 
 	public JLabel getLblErrorMsg() {
