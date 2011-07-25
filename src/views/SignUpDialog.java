@@ -36,8 +36,8 @@ public class SignUpDialog extends JDialog {
 	private MyTextField addressTextField;
 	private JLabel lblErrorMessage;
 
-	private JButton btnSubmit;
-	private JButton btnCancel;
+	private JButton submitButton;
+	private JButton cancelButton;
 	
 	public static final int EMPTY_FLAG = 0;
 	public static final int FIRSTNAME_FLAG = 1 << 0; 
@@ -74,7 +74,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblFirstName, "cell 1 1,alignx left,aligny center");
 
 		firstNameTextField = new MyTextField();
-		firstNameTextField.setName("txtfldFirstName");
+		firstNameTextField.setName("firstNameTextField");
 		lblFirstName.setLabelFor(firstNameTextField);
 		contentPanel.add(firstNameTextField, "cell 2 1,growx,aligny center");
 		firstNameTextField.setColumns(10);
@@ -83,7 +83,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblLastName, "cell 1 2,alignx left,aligny center");
 
 		lastNameTextField = new MyTextField();
-		lastNameTextField.setName("txtfldLastName");
+		lastNameTextField.setName("lastNameTextField");
 		lblLastName.setLabelFor(lastNameTextField);
 		contentPanel.add(lastNameTextField, "cell 2 2,growx,aligny center");
 		lastNameTextField.setColumns(10);
@@ -92,7 +92,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblUserName, "cell 1 4,alignx left,aligny center");
 
 		userNameTextField = new MyTextField();
-		userNameTextField.setName("txtfldUserName");
+		userNameTextField.setName("userNameTextField");
 		lblUserName.setLabelFor(userNameTextField);
 		contentPanel.add(userNameTextField, "cell 2 4,growx,aligny center");
 		userNameTextField.setColumns(10);
@@ -101,7 +101,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblPassword, "cell 1 5,alignx left,aligny center");
 
 		passwordTextField = new MyPasswordField();
-		passwordTextField.setName("txtfldPassword");
+		passwordTextField.setName("passwordTextField");
 		lblPassword.setLabelFor(passwordTextField);
 		contentPanel.add(passwordTextField, "cell 2 5,growx,aligny center");
 		passwordTextField.setColumns(10);
@@ -111,7 +111,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblConfirmPassword, "cell 1 6,alignx left,aligny center");
 
 		confirmPasswordTextField = new MyPasswordField();
-		confirmPasswordTextField.setName("txtfldConfirmPassword");
+		confirmPasswordTextField.setName("confirmPasswordTextField");
 		lblConfirmPassword.setLabelFor(confirmPasswordTextField);
 		contentPanel.add(confirmPasswordTextField, "cell 2 6,growx,aligny center");
 		confirmPasswordTextField.setColumns(10);
@@ -121,7 +121,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblEmailAddress, "cell 1 8,alignx left,aligny center");
 
 		emailAddressTextField = new MyTextField();
-		emailAddressTextField.setName("txtfldEmailAddress");
+		emailAddressTextField.setName("emailAddressTextField");
 		lblEmailAddress.setLabelFor(emailAddressTextField);
 		contentPanel.add(emailAddressTextField, "cell 2 8,growx,aligny center");
 		emailAddressTextField.setColumns(10);
@@ -130,7 +130,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblContactNumber, "cell 1 9,alignx left,aligny center");
 
 		contactNumberTextField = new MyTextField();
-		contactNumberTextField.setName("txtfldContactNumber");
+		contactNumberTextField.setName("contactNumberTextField");
 		contentPanel.add(contactNumberTextField, "cell 2 9,growx,aligny center");
 		contactNumberTextField.setColumns(10);
 
@@ -138,7 +138,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblAddress, "cell 1 10,alignx left,aligny center");
 
 		addressTextField = new MyTextField();
-		addressTextField.setName("txtfldAddress");
+		addressTextField.setName("addressTextField");
 		lblAddress.setLabelFor(addressTextField);
 		contentPanel.add(addressTextField, "cell 2 10,growx,aligny center");
 		addressTextField.setColumns(10);
@@ -147,18 +147,18 @@ public class SignUpDialog extends JDialog {
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		buttonPane.setLayout(new MigLayout("", "[80:n:80][100:n:100][10:n:10][100:n:100][80:n:80]", "[45:n:45]"));
 		
-		btnSubmit = new JButton("Submit", new ImageIcon("resources/images/signin.png"));
-		btnSubmit.setActionCommand("Submit");
-		buttonPane.add(btnSubmit, "cell 1 0,growx,aligny top");
-		btnCancel = new JButton("Cancel", new ImageIcon("resources/images/logout32x32.png"));
-		btnCancel.setActionCommand("Cancel");
-		buttonPane.add(btnCancel, "cell 3 0,growx,aligny top");
+		submitButton = new JButton("Submit", new ImageIcon("resources/images/signin.png"));
+		submitButton.setActionCommand("Submit");
+		buttonPane.add(submitButton, "cell 1 0,growx,aligny top");
+		cancelButton = new JButton("Cancel", new ImageIcon("resources/images/logout32x32.png"));
+		cancelButton.setActionCommand("Cancel");
+		buttonPane.add(cancelButton, "cell 3 0,growx,aligny top");
 	}
 	
 	/* Action Listeners */
 	public void setActionListeners(ActionListener submit, ActionListener cancel, KeyListener enter, KeyListener username) {
-		btnSubmit.addActionListener(submit);
-		btnCancel.addActionListener(cancel);
+		submitButton.addActionListener(submit);
+		cancelButton.addActionListener(cancel);
 		firstNameTextField.addKeyListener(enter);
 		lastNameTextField.addKeyListener(enter);
 		userNameTextField.addKeyListener(enter);
