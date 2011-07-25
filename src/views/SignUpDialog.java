@@ -1,7 +1,6 @@
 package views;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -18,6 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
 
 import net.miginfocom.swing.MigLayout;
+import utilities.ErrorLabel;
 import utilities.MyPasswordField;
 import utilities.MyTextField;
 
@@ -46,15 +46,15 @@ public class SignUpDialog extends JDialog {
 	private JButton btnSubmit;
 	private JButton btnCancel;
 	
-	public final int emptyFlag = 0;
-	public final int firstNameFlag = 1 << 0; 
-	public final int lastNameFlag = 1 << 1; 
-	public final int userNameFlag = 1 << 2;
-	public final int passwordFlag = 1 << 3;
-	public final int confirmPasswordFlag = 1 << 4;
-	public final int eMailAddressFlag = 1 << 5;
-	public final int contactNumberFlag = 1 << 6;
-	public final int addressFlag = 1 << 7;
+	public static final int EMPTY_FLAG = 0;
+	public static final int FIRSTNAME_FLAG = 1 << 0; 
+	public static final int LASTNAME_FLAG = 1 << 1; 
+	public static final int USERNAME_FLAG = 1 << 2;
+	public static final int PASSWORD_FLAG = 1 << 3;
+	public static final int CONFIRM_PASSWORD_FLAG = 1 << 4;
+	public static final int EMAIL_ADDRESS_FLAG = 1 << 5;
+	public static final int CONTACT_NUMBER_FLAG = 1 << 6;
+	public static final int ADDRESS_FLAG = 1 << 7;
 
 	/**
 	 * Create the dialog.
@@ -75,8 +75,7 @@ public class SignUpDialog extends JDialog {
 			contentPanel.add(lblPleaseFillin, "cell 0 0 2 1,growx,aligny center");
 		}
 		{
-			lblErrorMessage = new JLabel("");
-			lblErrorMessage.setForeground(Color.red);
+			lblErrorMessage = new ErrorLabel("");
 			contentPanel.add(lblErrorMessage, "cell 2 0,alignx left,aligny center");
 		}
 		{
@@ -85,6 +84,7 @@ public class SignUpDialog extends JDialog {
 		}
 		{
 			txtfldFirstName = new MyTextField();
+			txtfldFirstName.setName("txtfldFirstName");
 			lblFirstName.setLabelFor(txtfldFirstName);
 			contentPanel.add(txtfldFirstName, "cell 2 1,growx,aligny center");
 			txtfldFirstName.setColumns(10);
@@ -95,6 +95,7 @@ public class SignUpDialog extends JDialog {
 		}
 		{
 			txtfldLastName = new MyTextField();
+			txtfldLastName.setName("txtfldLastName");
 			lblLastName.setLabelFor(txtfldLastName);
 			contentPanel.add(txtfldLastName, "cell 2 2,growx,aligny center");
 			txtfldLastName.setColumns(10);
@@ -105,6 +106,7 @@ public class SignUpDialog extends JDialog {
 		}
 		{
 			txtfldUserName = new MyTextField();
+			txtfldUserName.setName("txtfldUserName");
 			lblUserName.setLabelFor(txtfldUserName);
 			contentPanel.add(txtfldUserName, "cell 2 4,growx,aligny center");
 			txtfldUserName.setColumns(10);
@@ -115,6 +117,7 @@ public class SignUpDialog extends JDialog {
 		}
 		{
 			txtfldPassword = new MyPasswordField();
+			txtfldPassword.setName("txtfldPassword");
 			lblPassword.setLabelFor(txtfldPassword);
 			contentPanel.add(txtfldPassword, "cell 2 5,growx,aligny center");
 			txtfldPassword.setColumns(10);
@@ -126,17 +129,19 @@ public class SignUpDialog extends JDialog {
 		}
 		{
 			txtfldConfirmPassword = new MyPasswordField();
+			txtfldConfirmPassword.setName("txtfldConfirmPassword");
 			lblConfirmPassword.setLabelFor(txtfldConfirmPassword);
 			contentPanel.add(txtfldConfirmPassword, "cell 2 6,growx,aligny center");
 			txtfldConfirmPassword.setColumns(10);
 			txtfldConfirmPassword.setEchoChar('*');
 		}
 		{
-			lblEmailAddress = new JLabel("e-mail Address:");
+			lblEmailAddress = new JLabel("E-mail Address:");
 			contentPanel.add(lblEmailAddress, "cell 1 8,alignx left,aligny center");
 		}
 		{
 			txtfldEmailAddress = new MyTextField();
+			txtfldEmailAddress.setName("txtfldEmailAddress");
 			lblEmailAddress.setLabelFor(txtfldEmailAddress);
 			contentPanel.add(txtfldEmailAddress, "cell 2 8,growx,aligny center");
 			txtfldEmailAddress.setColumns(10);
@@ -147,6 +152,7 @@ public class SignUpDialog extends JDialog {
 		}
 		{
 			txtfldContactNumber = new MyTextField();
+			txtfldContactNumber.setName("txtfldContactNumber");
 			contentPanel.add(txtfldContactNumber, "cell 2 9,growx,aligny center");
 			txtfldContactNumber.setColumns(10);
 		}
@@ -156,6 +162,7 @@ public class SignUpDialog extends JDialog {
 		}
 		{
 			txtfldAddress = new MyTextField();
+			txtfldAddress.setName("txtfldAddress");
 			lblAddress.setLabelFor(txtfldAddress);
 			contentPanel.add(txtfldAddress, "cell 2 10,growx,aligny center");
 			txtfldAddress.setColumns(10);
@@ -192,16 +199,16 @@ public class SignUpDialog extends JDialog {
 	}
 	
 	public void setFieldBorderColor(int maskedLabel) {
-		if ((maskedLabel & firstNameFlag) == firstNameFlag) txtfldFirstName.hasError(true);
-		if ((maskedLabel & lastNameFlag) == lastNameFlag) txtfldLastName.hasError(true);
-		if ((maskedLabel & userNameFlag) == userNameFlag) txtfldUserName.hasError(true);
-		if ((maskedLabel & passwordFlag) == passwordFlag) txtfldPassword.hasError(true);
-		if ((maskedLabel & confirmPasswordFlag) == confirmPasswordFlag) txtfldConfirmPassword.hasError(true); 
-		if ((maskedLabel & eMailAddressFlag) == eMailAddressFlag) txtfldEmailAddress.hasError(true);
-		if ((maskedLabel & contactNumberFlag) == contactNumberFlag) txtfldContactNumber.hasError(true);
-		if ((maskedLabel & addressFlag) == addressFlag) txtfldAddress.hasError(true);
+		if ((maskedLabel & FIRSTNAME_FLAG) == FIRSTNAME_FLAG) txtfldFirstName.hasError(true);
+		if ((maskedLabel & LASTNAME_FLAG) == LASTNAME_FLAG) txtfldLastName.hasError(true);
+		if ((maskedLabel & USERNAME_FLAG) == USERNAME_FLAG) txtfldUserName.hasError(true);
+		if ((maskedLabel & PASSWORD_FLAG) == PASSWORD_FLAG) txtfldPassword.hasError(true);
+		if ((maskedLabel & CONFIRM_PASSWORD_FLAG) == CONFIRM_PASSWORD_FLAG) txtfldConfirmPassword.hasError(true); 
+		if ((maskedLabel & EMAIL_ADDRESS_FLAG) == EMAIL_ADDRESS_FLAG) txtfldEmailAddress.hasError(true);
+		if ((maskedLabel & CONTACT_NUMBER_FLAG) == CONTACT_NUMBER_FLAG) txtfldContactNumber.hasError(true);
+		if ((maskedLabel & ADDRESS_FLAG) == ADDRESS_FLAG) txtfldAddress.hasError(true);
 		
-		if (maskedLabel == emptyFlag) {
+		if (maskedLabel == EMPTY_FLAG) {
 			txtfldFirstName.hasError(false);
 			txtfldLastName.hasError(false);
 			txtfldUserName.hasError(false);
