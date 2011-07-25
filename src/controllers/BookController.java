@@ -41,9 +41,9 @@ public class BookController {
 
 	public static void main(String args[]){
 		new Connector(Constants.APP_CONFIG);
-		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", 1, "User");
+//		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", 1, "User");
 		//User user = new User(3, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
-		//User user = new User(4, "dota", "dota", "Domingo", "Tanael", "dota@gmail.com", "USA", "09187658790", 1, "Librarian");
+		User user = new User(4, "dota", "dota", "Domingo", "Tanael", "dota@gmail.com", "USA", "09187658790", 1, "Librarian");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -126,7 +126,8 @@ public class BookController {
 					}else addBook.getTxtFldYearPublish().setBorder(defaultBorder);
 				}else addBook.getTxtFldYearPublish().setBorder(defaultBorder);
 				
-				if(!addBook.getTxtFldIsbn().getText().matches(Constants.ISBN_FORMAT)){
+				if(!addBook.getTxtFldIsbn().getText().matches(Constants.ISBN_FORMAT_1) && 
+						!addBook.getTxtFldIsbn().getText().matches(Constants.ISBN_FORMAT_2)){
 					addBook.getTxtFldIsbn().setBorder(redBorder);
 					validate = false;
 				}else addBook.getTxtFldIsbn().setBorder(defaultBorder);
