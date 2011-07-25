@@ -124,7 +124,7 @@ public class TransactionController {
 	private void grantBorrowRequest() {
 		int affectedRows = 0;
 		try {
-			affectedRows = TransactionDAO.acceptBookRequest(getBookTransactionDetails());
+			affectedRows = TransactionDAO.borrowBook(getBookTransactionDetails());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -155,7 +155,7 @@ public class TransactionController {
 	private void returnBook() {
 		//# check if reserved by other users
 		try {
-			TransactionDAO.receiveBook(getBookTransactionDetails());
+			TransactionDAO.returnBook(getBookTransactionDetails());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
