@@ -9,6 +9,10 @@ import net.miginfocom.swing.MigLayout;
 
 public class MainFrame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel sidebarPanel;
 	private JPanel contentPanel;
 	private JPanel welcomePanel;

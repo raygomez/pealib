@@ -35,6 +35,20 @@ public class PeaLibrary {
 		initialize();	
 	}
 
+	/**
+	 * @return the transactionControl
+	 */
+	public TransactionController getTransactionControl() {
+		return transactionControl;
+	}
+
+	/**
+	 * @param transactionControl the transactionControl to set
+	 */
+	public void setTransactionControl(TransactionController transactionControl) {
+		this.transactionControl = transactionControl;
+	}
+
 	private void initialize() {
 		// TODO Auto-generated method stub
 
@@ -71,7 +85,7 @@ public class PeaLibrary {
 	private void initializeLibrarian(){
 		
 		try {
-			transactionControl = new TransactionController();
+			setTransactionControl(new TransactionController());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
