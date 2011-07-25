@@ -227,7 +227,8 @@ public class TransactionDAO {
 	public static ArrayList<BorrowTransaction> getOnLoanBooks(User user)
 			throws Exception {
 
-		String sql = "SELECT * FROM Borrows WHERE UserID = ? and DateReturned is NULL";
+		String sql = "SELECT * FROM Borrows WHERE UserID = ? "
+				+ "and DateReturned is NULL and DateBorrowed is NOT NULL";
 		ArrayList<BorrowTransaction> borrows = new ArrayList<BorrowTransaction>();
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
@@ -251,7 +252,8 @@ public class TransactionDAO {
 	public static ArrayList<BorrowTransaction> getRequestedBooks(User user)
 			throws Exception {
 
-		String sql = "SELECT * FROM Borrows WHERE UserID = ? and DateBorrowed is NULL and DateReturned is NULL";
+		String sql = "SELECT * FROM Borrows WHERE UserID = ? and "
+				+ "DateBorrowed is NULL and DateReturned is NULL";
 		ArrayList<BorrowTransaction> borrows = new ArrayList<BorrowTransaction>();
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
