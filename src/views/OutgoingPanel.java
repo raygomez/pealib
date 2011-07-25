@@ -16,15 +16,17 @@ public class OutgoingPanel extends JPanel{
 	private JButton btnDeny;
 	
 	public OutgoingPanel() {
-		setLayout(new MigLayout("", "[25:n:25][537:n:537][100:n:100][100:n:100]", "[65:n:65][325:n:325][25:n:25]"));
+		setLayout(new MigLayout("", "[25:n:25][536:n:536][100:n:100][100:n:100]", "[65:n:65][325:n:325][25:n:25]"));
 		
 		searchPanel = new InOutBookSearchPanel();
 		add(searchPanel, "cell 0 0 4 2,grow");
 		
 		btnGrant = new JButton("Grant");
+		btnGrant.setEnabled(false);
 		add(btnGrant, "cell 2 2,growx");
 		
 		btnDeny = new JButton("Deny");
+		btnDeny.setEnabled(false);
 		add(btnDeny, "cell 3 2,growx");
 	}
 
