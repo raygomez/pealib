@@ -50,7 +50,7 @@ public class ELibController {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setBounds(0, 0, screenSize.width, screenSize.height);
 
-		User user = UserDAO.getUserById(2);
+		User user = UserDAO.getUserById(1);
 		frame.setContentPane(new ELibController(user).getTabpane());
 
 		frame.setUndecorated(true);
@@ -64,8 +64,23 @@ public class ELibController {
 		getTabpane().addChangeTabListener(new TabChangeListener());
 		ELibTableModel model = new ELibTableModel(0);
 		getTabpane().setTableModel(0, model);
-		getTabpane().setCellRenderer(0, new ButtonRenderer());
-		getTabpane().setCellEditor(0, new ButtonEditor());
+		getTabpane().setCellRenderer(0, new CancelButtonRenderer());
+		getTabpane().setCellEditor(0, new CancelRequestButtonEditor());
+	}
+
+	/**
+	 * @return the bookDataReserve
+	 */
+	public ArrayList<ReserveTransaction> getBookDataReserve() {
+		return bookDataReserve;
+	}
+
+	/**
+	 * @param bookDataReserve
+	 *            the bookDataReserve to set
+	 */
+	public void setBookDataReserve(ArrayList<ReserveTransaction> bookDataReserve) {
+		this.bookDataReserve = bookDataReserve;
 	}
 
 	/**
@@ -104,8 +119,15 @@ public class ELibController {
 			tab = getTabpane().getSelectedTab();
 			ELibTableModel model = new ELibTableModel(tab);
 			getTabpane().setTableModel(tab, model);
-			getTabpane().setCellRenderer(tab, new ButtonRenderer());
-			getTabpane().setCellEditor(tab, new ButtonEditor());
+
+			getTabpane().setCellRenderer(tab, new CancelButtonRenderer());
+			if (tab == 0) {
+				getTabpane()
+						.setCellEditor(tab, new CancelRequestButtonEditor());
+			} else if (tab == 1) {
+				getTabpane()
+						.setCellEditor(tab, new CancelReservationButtonEditor());
+			}
 		}
 	}
 
@@ -172,13 +194,14 @@ public class ELibController {
 			columns.add("Author");
 			columns.add("Date Reserved");
 			columns.add("Queue Number");
+			columns.add("Cancel");
 
 			tableData = new ArrayList<ArrayList<Object>>();
 			try {
-				bookDataReserve = TransactionDAO.getReservedBooks(getUser());
+				setBookDataReserve(TransactionDAO.getReservedBooks(getUser()));
 
-				if (bookDataReserve.size() != 0) {
-					for (ReserveTransaction i : bookDataReserve) {
+				if (getBookDataReserve().size() != 0) {
+					for (ReserveTransaction i : getBookDataReserve()) {
 						ArrayList<Object> rowData = new ArrayList<Object>(5);
 						rowData.add(i.getBook().getIsbn());
 						rowData.add(i.getBook().getTitle());
@@ -187,6 +210,7 @@ public class ELibController {
 						rowData.add(""
 								+ TransactionDAO.getQueueInReservation(
 										i.getBook(), i.getUser()));
+						rowData.add(new JButton("Cancel"));
 						tableData.add(rowData);
 					}
 				}
@@ -280,13 +304,16 @@ public class ELibController {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			if (columnIndex == 4)
+			if (columnIndex == 4 && tabpane.getSelectedTab() == 0)
 				return true;
+			else if (columnIndex == 5 && tabpane.getSelectedTab() == 1)
+				return true;
+
 			return false;
 		}
 	}
 
-	public class ButtonRenderer implements TableCellRenderer {
+	public class CancelButtonRenderer implements TableCellRenderer {
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
@@ -294,13 +321,13 @@ public class ELibController {
 		}
 	}
 
-	public class ButtonEditor extends AbstractCellEditor implements
+	public class CancelRequestButtonEditor extends AbstractCellEditor implements
 			TableCellEditor {
 		private static final long serialVersionUID = 1L;
 		protected JButton button;
 		private BorrowTransaction selectedBook;
 
-		public ButtonEditor() {
+		public CancelRequestButtonEditor() {
 			button = new JButton("Cancel");
 			button.setOpaque(true);
 			button.addActionListener(new ActionListener() {
@@ -317,12 +344,12 @@ public class ELibController {
 							ELibTableModel model = new ELibTableModel(tab);
 							getTabpane().setTableModel(tab, model);
 							getTabpane().setCellRenderer(tab,
-									new ButtonRenderer());
-							getTabpane().setCellEditor(tab, new ButtonEditor());
+									new CancelButtonRenderer());
+							getTabpane().setCellEditor(tab,
+									new CancelRequestButtonEditor());
 						} catch (Exception e1) {
 							System.out.println("CancelRequest: requestData: "
 									+ e1);
-
 						}
 					}
 					fireEditingStopped();
@@ -334,11 +361,61 @@ public class ELibController {
 				Object value, boolean isSelected, int row, int column) {
 
 			if (value != null) {
-				if (getTabpane().getSelectedTab() == 0) {
-					selectedBook = bookData.get(row);
-				}
+				selectedBook = bookData.get(row);
 				return button;
+			} else {
+				return null;
+			}
+		}
 
+		@Override
+		public Object getCellEditorValue() {
+			return null;
+		}
+	}
+
+	public class CancelReservationButtonEditor extends AbstractCellEditor
+			implements TableCellEditor {
+		private static final long serialVersionUID = 1L;
+		protected JButton button;
+		private ReserveTransaction selectedBook;
+
+		public CancelReservationButtonEditor() {
+			button = new JButton("Cancel");
+			button.setOpaque(true);
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int response = JOptionPane.showConfirmDialog(null,
+							"Do you really want to cancel the reservation",
+							"Confirm", JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE);
+					if (response == JOptionPane.YES_OPTION) {
+
+						try {
+							TransactionDAO.cancelReservation(selectedBook);
+							tab = getTabpane().getSelectedTab();
+							ELibTableModel model = new ELibTableModel(tab);
+							getTabpane().setTableModel(tab, model);
+							getTabpane().setCellRenderer(tab,
+									new CancelButtonRenderer());
+							getTabpane().setCellEditor(tab,
+									new CancelReservationButtonEditor());
+						} catch (Exception e1) {
+							System.out.println("CancelRequest: requestData: "
+									+ e1);
+						}
+					}
+					fireEditingStopped();
+				}
+			});
+		}
+
+		public Component getTableCellEditorComponent(JTable table,
+				Object value, boolean isSelected, int row, int column) {
+
+			if (value != null) {
+				selectedBook = getBookDataReserve().get(row);
+				return button;
 			} else {
 				return null;
 			}
