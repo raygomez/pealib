@@ -204,9 +204,17 @@ public class UserDAO {
 	
 		ps.setString(1, newPassword);
 		ps.setInt(2, userID);
-		
-		System.out.println(ps.executeUpdate());
 				
+		Connector.close();
+	}
+	
+	public static void denyPendingUser(User user) throws Exception {
+
+		String sql = "DELETE from Users WHERE ID = ?";
+		
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setInt(1, user.getUserId());
+		ps.executeUpdate();
 		Connector.close();
 	}
 }
