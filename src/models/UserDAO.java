@@ -9,7 +9,6 @@ import utilities.Connector;
 public class UserDAO {
 
 	public static User getUserById(int id) throws Exception {
-
 		User user = null;
 
 		String sql = "SELECT * from Users where ID = ?";
@@ -31,7 +30,6 @@ public class UserDAO {
 		}
 
 		Connector.close();
-
 		return user;
 
 	}
@@ -45,13 +43,12 @@ public class UserDAO {
 		rs.next();
 
 		Connector.close();
-
 		return (rs.getInt(1) != 0);
 
 	}
 
-	public static User getUser(String username, String password) throws Exception {
-
+	public static User getUser(String username, String password)
+			throws Exception {
 		User user = null;
 
 		String sql = "SELECT * from Users where UserName=? and Password=SHA2(?,0)";
@@ -77,7 +74,8 @@ public class UserDAO {
 		return user;
 	}
 
-	public static ArrayList<User> searchActiveUsers(String keyword) throws Exception {
+	public static ArrayList<User> searchActiveUsers(String keyword)
+			throws Exception {
 		ArrayList<User> users = new ArrayList<User>();
 
 		String sql = "SELECT * from Users "
@@ -106,6 +104,7 @@ public class UserDAO {
 	}
 
 	public static void saveUser(User user) throws Exception {
+		
 		String sql = "INSERT INTO Users "
 				+ "(FirstName,LastName,UserName,Password,Type,"
 				+ "Address, ContactNo, Email)"
@@ -154,11 +153,10 @@ public class UserDAO {
 	}
 
 	public static void updateUser(User user) throws Exception {
-		// TODO Auto-generated method stub
 		String sql = "UPDATE Users "
-			+ " set FirstName = ?, LastName = ?, UserName = ?, "
-			+ "Address = ?, ContactNo = ?, Email = ?, Type = ? " +
-					"WHERE ID = ?";
+				+ " set FirstName = ?, LastName = ?, UserName = ?, "
+				+ "Address = ?, ContactNo = ?, Email = ?, Type = ? "
+				+ "WHERE ID = ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, user.getFirstName());
@@ -168,50 +166,49 @@ public class UserDAO {
 		ps.setString(5, user.getContactNo());
 		ps.setString(6, user.getEmail());
 		ps.setString(7, user.getType());
-		ps.setString(8, user.getUserId()+"");
-		
+		ps.setString(8, user.getUserId() + "");
+
 		ps.executeUpdate();
 		Connector.close();
 	}
 
-	public static boolean checkPassword(int userID, String oldPassword) throws Exception {
-		// TODO Auto-generated method stub
+	public static boolean checkPassword(int userID, String oldPassword)
+			throws Exception {
 		boolean equals;
-		
+
 		String sql = "SELECT * FROM Users WHERE ID = ? AND Password = SHA2(?,0)";
+
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setInt(1, userID);
 		ps.setString(2, oldPassword);
-		
 		ResultSet rs = ps.executeQuery();
-		
-		if(rs.next()){
+
+		if (rs.next()) {
 			equals = true;
-		}
-		else
+		} else
 			equals = false;
-		
+
 		Connector.close();
-		
+
 		return equals;
 	}
 
-	public static void changePassword(int userID, String newPassword) throws Exception {
-		// TODO Auto-generated method stub
+	public static void changePassword(int userID, String newPassword)
+			throws Exception {
+
 		String sql = "UPDATE Users SET Password = SHA2(?,0) WHERE ID = ?";
-		
+
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
-	
 		ps.setString(1, newPassword);
 		ps.setInt(2, userID);
-				
+		ps.executeUpdate();
 		Connector.close();
 	}
-	
+
 	public static void denyPendingUser(User user) throws Exception {
 
 		String sql = "DELETE from Users WHERE ID = ?";
-		
+
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setInt(1, user.getUserId());
 		ps.executeUpdate();

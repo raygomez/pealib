@@ -149,6 +149,7 @@ public class UserDAOTest {
 	@ExpectedDataSet({ "expected/changePassword.xml" })
 	public void testChangePassword() throws Exception {
 		User user = UserDAO.getUserById(4);
+		assertNotNull(user);
 		UserDAO.changePassword(user.getUserId(), "1234567");
 	}
 	
@@ -178,7 +179,7 @@ public class UserDAOTest {
 	}
 	
 	@Test
-	@ExpectedDataSet({ "expected/user.xml" })
+	@ExpectedDataSet({ "expected/denyPendingUser.xml" })
 	public void testdenyPendingUser() throws Exception {
 		User user = UserDAO.searchAllPending("").get(0);
 		assertNotNull(user);
