@@ -203,7 +203,7 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				TransactionDAO.requestBook(bookList.get(currTableRowSelection), currentUser);
+				TransactionDAO.borrowBook(bookList.get(currTableRowSelection), currentUser);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
