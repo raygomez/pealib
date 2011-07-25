@@ -33,4 +33,6 @@ public class Constants {
 
 	public static final String APP_CONFIG = "app.config";
 	public static final String TEST_CONFIG = "test.config";
+	
+	public static int TIMER_DELAY = 250;
 }
