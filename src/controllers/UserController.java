@@ -75,6 +75,7 @@ public class UserController {
 				new SearchKeyListener(), new TabChangeListener(),
 				new UserSelectionListener(), new CheckBoxListener(), new AcceptListener(), new DenyListener());
 		setUserInfoPanel(new UserInfoPanel());
+		
 		generateLayoutPanel();
 	}
 
@@ -116,7 +117,7 @@ public class UserController {
 		}
 		else{
 			this.searchedPending = null;
-			getUserSearch().togglePendingButtons(false);
+			getUserSearch().togglePending(false);
 		}
 	}
 
@@ -148,6 +149,11 @@ public class UserController {
 	class AcceptListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(getSearchedPending().size() == getCheckList().size()){
+				getUserInfoPanel().toggleButton(false);
+				getUserInfoPanel().clearFields();
+			}
+			
 			for(int i = 0; i < getSearchedPending().size(); i++){
 				if(getCheckList().contains(i)) {
 					User temp = getSearchedPending().get(i);
@@ -161,16 +167,22 @@ public class UserController {
 			}
 			JOptionPane.showMessageDialog(getUserSearch(), "Successfully accepted ("+getCheckList().size()+") application/s.");
 			
-			getCheckList().clear();
-			//checkList = new ArrayList<Integer>();
+			getCheckList().clear();			
 			searchUsers();
 			getUserSearch().resetTable();
+			getUserSearch().togglePendingButtons(false);
+			
 		}
 	}
 	
 	class DenyListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(getSearchedPending().size() == getCheckList().size()){
+				getUserInfoPanel().toggleButton(false);
+				getUserInfoPanel().clearFields();
+			}
+			
 			for(int i = 0; i<getSearchedPending().size(); i++){
 				if(getCheckList().contains(i)) {
 					User temp = getSearchedPending().get(i);					
@@ -183,10 +195,10 @@ public class UserController {
 			}
 			JOptionPane.showMessageDialog(getUserSearch(), "Successfully denied ("+getCheckList().size()+") application/s.");
 			
-			getCheckList().clear();
-			//checkList = new ArrayList<Integer>();
+			getCheckList().clear();			
 			searchUsers();
 			getUserSearch().resetTable();
+			getUserSearch().togglePendingButtons(false);
 		}
 	}
 	
@@ -206,23 +218,25 @@ public class UserController {
 			int index = temp.getSelectedIndex();
 			System.out.println(index);
 			searchUsers(); 
+			
 			if(index == 0){
 				getUserSearch().getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
 				getUserSearch().getUsersTable().addRowSelectionInterval(0, 0);
 			}
 			else if(index == 1){
-				if(getSearchedPending()!=null){
-					getUserSearch().getPendingTable().getSelectionModel().setSelectionInterval(0, 0);
-					//getUserSearch().getPendingTable().addRowSelectionInterval(0, 0);
-					
+				if(getSearchedPending()!=null){								
+					getUserSearch().getPendingTable().getSelectionModel().setSelectionInterval(0, 0);						
 					getUserSearch().getPendingTable().addRowSelectionInterval(0, 0);
+					
+					if(getCheckList().size()>0) getUserSearch().togglePendingButtons(true);
+					else getUserSearch().togglePendingButtons(false);
 				}
-			}
-			
-			//getUserInfoPanel().toggleButton(false);
-			//getUserInfoPanel().clearFields();
-			//setSelectedUser(null);			
-			
+				else{
+					getUserSearch().togglePending(false);			
+					getUserInfoPanel().toggleButton(false);
+					getUserInfoPanel().clearFields();
+				}
+			}					
 		}
 	}
 
@@ -331,12 +345,16 @@ public class UserController {
 			 if(!(Boolean)value){
 				 getUserSearch().getCbAll().setSelected(false);
 				 
-				 if(selectList.contains(row)){ selectList.remove((Object)row); }
+				 if(selectList.contains(row)){ selectList.remove((Object)row); }				 
 			 }
 			 else{
 				 if(!selectList.contains(row)){ selectList.add(row); }
 			 }		
+			 			 			 
 			 setCheckList(selectList);
+			 
+			 if(getCheckList().size() > 0)  getUserSearch().togglePendingButtons(true);
+			 else  getUserSearch().togglePendingButtons(false);
 			 fireTableCellUpdated(row, col);			 			 
 	     }
 		
@@ -408,7 +426,6 @@ public class UserController {
 	}
 
 	private class UserSelectionListener implements ListSelectionListener {
-//TODO
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
@@ -431,6 +448,7 @@ public class UserController {
 
 			if(user!=null){
 				setSelectedUser(user);
+				getUserInfoPanel().toggleButton(true);
 				getUserInfoPanel().setFields(user.getType(), "" + user.getUserId(),
 					user.getUserName(), user.getFirstName(),
 					user.getLastName(), user.getAddress(), user.getContactNo(),
@@ -439,6 +457,7 @@ public class UserController {
 		}
 	}
 
+	//TODO refresh after save : table and userinfo
 	private ActionListener save = new ActionListener() {
 
 		@Override
@@ -461,6 +480,8 @@ public class UserController {
 				try {
 					UserDAO.updateUser(user);
 					JOptionPane.showMessageDialog(layoutPanel, "Record successfully updated!");
+					searchUsers();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
