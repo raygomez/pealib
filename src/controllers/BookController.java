@@ -40,10 +40,8 @@ public class BookController {
 	private ArrayList<Book> bookList;
 
 	public static void main(String args[]){
-		new Connector(Constants.APP_CONFIG);
-		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", "User");
-		//User user = new User(3, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
-		//User user = new User(4, "dota", "dota", "Domingo", "Tanael", "dota@gmail.com", "USA", "09187658790", 1, "Librarian");
+		new Connector(Constants.TEST_CONFIG);
+		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", "Librarian");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -70,8 +68,13 @@ public class BookController {
 		bookSearch = new BookSearchPanel(currentUser);
 		if(bookList.size() == 0){
 			bookInfo = new BookInfoPanel(new Book(), currentUser);
+			bookInfo.getBtnDelete().setEnabled(false);
+			bookInfo.getBtnSave().setEnabled(false);
 		}else{
 			bookInfo = new BookInfoPanel(bookList.get(0), currentUser);
+			if(bookList.get(0).getCopies() == 0){
+				bookInfo.getBtnDelete().setEnabled(false);
+			}
 		}
 		currTableRowSelection = 0;
 		bookLayoutPanel.add(bookSearch, "grow");
@@ -81,7 +84,7 @@ public class BookController {
 		bookSearch.setClearButtonListener(new ClearButtonListener());
 		bookSearch.setSearchButtonListener(new SearchButtonListener());
 		bookSearch.setAddBookButtonListener(new AddBookButtonListener());
-		bookSearch.setTableListModel(new BookListModel(BookDAO.searchBook("*")));
+		bookSearch.getTableBookList().setModel(new BookListModel(bookList));
 		bookSearch.setMouseListener(new BookListMouseListener());
 		bookInfo.addSaveListener(new SaveButtonListener());
 		bookInfo.addDeleteListener(new DeleteButtonListener());
@@ -173,10 +176,63 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				BookDAO.editBook(bookInfo.getCurrBook());
-				bookList = BookDAO.searchBook(currSearchString);
-				bookSearch.setTableListModel(new BookListModel(bookList));
-				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
+				boolean validate = true;
+				Border redBorder = BorderFactory.createLineBorder(Color.red);
+				Border defaultBorder = BorderFactory.createLineBorder(Color.gray);
+				
+				if(bookInfo.getTxtFldTitle().getText().trim().isEmpty() || bookInfo.getTxtFldTitle().getText().length() > 100){
+					bookInfo.getTxtFldTitle().setBorder(redBorder);
+					validate = false;
+				}else bookInfo.getTxtFldTitle().setBorder(defaultBorder);
+				
+				if(bookInfo.getTxtFldAuthor().getText().trim().isEmpty() || bookInfo.getTxtFldAuthor().getText().length() > 100){
+					bookInfo.getTxtFldAuthor().setBorder(redBorder);
+					validate = false;
+				}else bookInfo.getTxtFldAuthor().setBorder(defaultBorder);
+				
+				if(!bookInfo.getTxtFldYrPublished().getText().trim().isEmpty()){
+					if(!bookInfo.getTxtFldYrPublished().getText().matches(Constants.YEAR_PUBLISH_FORMAT)){
+						validate = false;
+						bookInfo.getTxtFldYrPublished().setBorder(redBorder);
+					}else bookInfo.getTxtFldYrPublished().setBorder(defaultBorder);
+				}else bookInfo.getTxtFldYrPublished().setBorder(defaultBorder);
+				
+				if(bookInfo.getTxtFldPublisher().getText().length() > 100){
+					validate = false;
+					bookInfo.getTxtFldPublisher().setBorder(redBorder);
+				}else bookInfo.getTxtFldPublisher().setBorder(defaultBorder);
+				
+				if(!bookInfo.getTxtFldISBN().getText().matches(Constants.ISBN_FORMAT_1) && 
+						!bookInfo.getTxtFldISBN().getText().matches(Constants.ISBN_FORMAT_2)){
+					validate = false;
+					bookInfo.getTxtFldISBN().setBorder(redBorder);
+				}else bookInfo.getTxtFldISBN().setBorder(defaultBorder);
+
+				if(bookInfo.getTxtFldDescription().getText().length() > 300){
+					validate = false;
+					bookInfo.getTxtFldDescription().setBorder(redBorder);
+				}else bookInfo.getTxtFldDescription().setBorder(defaultBorder);
+				
+				int spinCopy = Integer.parseInt(bookInfo.getSpinCopyVal().getModel().getValue().toString());
+				int availableCopy = TransactionDAO.getAvailableCopies(bookInfo.getCurrBook());
+				int validCopy = bookInfo.getCurrBook().getCopies() - availableCopy;
+				if(spinCopy < validCopy){
+					validate = false;
+					bookInfo.getSpinCopyVal().setBorder(redBorder);
+				}else bookInfo.getSpinCopyVal().setBorder(defaultBorder);
+				
+				if(validate){
+					BookDAO.editBook(bookInfo.getCurrBook());
+					bookList = BookDAO.searchBook(currSearchString);
+					bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+					bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
+					bookInfo.getLblErrorMsg().setText("Book Updated");
+					if(bookList.get(currTableRowSelection).getCopies() > 0){
+						bookInfo.getBtnDelete().setEnabled(true);
+					}
+				}else{
+					bookInfo.getLblErrorMsg().setText("Invalid Input");
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -190,10 +246,17 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				BookDAO.deleteBook(bookInfo.getCurrBook());
-				bookList = BookDAO.searchBook(currSearchString);
-				bookSearch.setTableListModel(new BookListModel(bookList));
-				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
+				int availableCopy = TransactionDAO.getAvailableCopies(bookInfo.getCurrBook());
+				if(availableCopy == bookList.get(currTableRowSelection).getCopies()){
+					BookDAO.deleteBook(bookInfo.getCurrBook());
+					bookList = BookDAO.searchBook(currSearchString);
+					bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+					bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
+					bookInfo.getLblErrorMsg().setText("Book Deleted");
+					bookInfo.getBtnDelete().setEnabled(false);
+				}else{
+					bookInfo.getLblErrorMsg().setText("Book cannot be deleted");
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -206,12 +269,10 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				reset();
-				int request = TransactionDAO.borrowBook(bookList.get(currTableRowSelection), currentUser);
-				if (request == 1){
-					bookInfo.getLblErrorMsg().setText("The following book has been successfully added to your Requests List: ");
-					bookInfo.getLblErrorMsg().setForeground(Color.BLACK);
-				}
+				TransactionDAO.requestBook(bookList.get(currTableRowSelection), currentUser);
+				bookList = BookDAO.searchBook(currSearchString);
+				bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -225,12 +286,7 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				reset();
-				int reserve = TransactionDAO.reserveBook(bookList.get(currTableRowSelection), currentUser);
-				if (reserve == 1){
-					bookInfo.getLblErrorMsg().setText("The following book has been successfully added to your Rervations List: ");
-					bookInfo.getLblErrorMsg().setForeground(Color.BLACK);
-				}
+				TransactionDAO.reserveBook(bookList.get(currTableRowSelection), currentUser);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -243,30 +299,58 @@ public class BookController {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			reset();
+			resetButton();
 			JTable table = (JTable) e.getSource();
 			int tableRow = table.getSelectedRow();
 			currTableRowSelection = tableRow;
-			bookInfo.setBookInfoData(bookList.get(tableRow));
+			Book displayBook = bookList.get(tableRow);
+			
+			if(currentUser.getType().equals("User")){
+				try {
+					int availableCopy = TransactionDAO.getAvailableCopies(displayBook);
+					displayBook.setCopies(availableCopy);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			bookInfo.setBookInfoData(displayBook);
 			try {
+				if(currentUser.getType().equals("Librarian")){
+					bookInfo.getBtnSave().setEnabled(true);
+					if(bookList.get(tableRow).getCopies() == 0){
+						bookInfo.getBtnDelete().setEnabled(false);
+					}else bookInfo.getBtnDelete().setEnabled(true);
+				}
+				
 				if (!TransactionDAO.isBorrowedByUser(bookList.get(currTableRowSelection), currentUser) && 
 						!TransactionDAO.isReservedByUser(bookList.get(currTableRowSelection), currentUser)){
 					if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) > 0){
 						bookInfo.getBtnBorrow().setEnabled(true);
 					} else {
-						bookInfo.getBtnReserve().setEnabled(true);
+						if(bookList.get(currTableRowSelection).getCopies() > 0){
+							bookInfo.getBtnReserve().setEnabled(true);
+						}else{
+							bookInfo.getBtnReserve().setEnabled(false);
+						}
 						bookInfo.getLblErrorMsg().setText("No available copies");
-						bookInfo.getLblErrorMsg().setForeground(Color.RED);
 					}
 				} else {
 					bookInfo.getLblErrorMsg().setText("You already have a pending transaction for the following book: ");
-					bookInfo.getLblErrorMsg().setForeground(Color.RED);
 				}
 				
 			} catch (Exception ex){
 				
 			}
 		
+		}
+
+		private void resetButton() {
+			bookInfo.getBtnSave().setEnabled(false);
+			bookInfo.getBtnDelete().setEnabled(false);
+			bookInfo.getBtnBorrow().setEnabled(false);
+			bookInfo.getBtnReserve().setEnabled(false);
+			bookInfo.getLblErrorMsg().setText("");
 		}
 
 		@Override
@@ -299,15 +383,21 @@ public class BookController {
 			columnName.add("ISBN No.");
 			columnName.add("Book");
 			columnName.add("Status");
-			
+			int availableCopies = 0;
 			for(int i = 0; i < bookList.size(); i++){
 				rowData = new ArrayList<String>();
 				rowData.add(bookList.get(i).getIsbn());
 				rowData.add(bookList.get(i).getTitle()+", "+bookList.get(i).getAuthor());
 				
-				if(bookList.get(i).getCopies() == 0){
+				try {
+					availableCopies = TransactionDAO.getAvailableCopies(bookList.get(i));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				if(availableCopies == 0){
 					rowData.add("unavailable");
-				}else if(bookList.get(i).getCopies() == 1){
+				}else if(availableCopies == 1){
 					rowData.add("1 copy available");
 				}else{
 					rowData.add(bookList.get(i).getCopies()+" copies available");
@@ -351,8 +441,19 @@ public class BookController {
 				if(!strSearch.trim().isEmpty()){
 					currSearchString = strSearch;
 					bookList = BookDAO.searchBook(strSearch);
-					bookSearch.setTableListModel(new BookListModel(bookList));
-					bookInfo.setBookInfoData(bookList.get(0));
+					bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+					if(bookList.size() == 0){
+						bookInfo.setBookInfoData(new Book());
+						bookInfo.getBtnDelete().setEnabled(false);
+						bookInfo.getBtnSave().setEnabled(false);
+					}else{
+						bookInfo.getBtnDelete().setEnabled(true);
+						bookInfo.getBtnSave().setEnabled(true);
+						bookInfo.setBookInfoData(bookList.get(0));
+						if(bookList.get(0).getCopies() == 0){
+							bookInfo.getBtnDelete().setEnabled(false);
+						}
+					}
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -368,14 +469,6 @@ public class BookController {
 		}
 		
 	}
-	private void reset() {
-		bookInfo.getBtnSave().setEnabled(false);
-		bookInfo.getBtnDelete().setEnabled(false);
-		bookInfo.getBtnBorrow().setEnabled(false);
-		bookInfo.getBtnReserve().setEnabled(false);
-		bookInfo.getLblErrorMsg().setText("");
-	}
-
 	
 	class TextFieldListener implements KeyListener{
 
@@ -385,21 +478,29 @@ public class BookController {
 
 		@Override
 		public void keyReleased(KeyEvent key) {
-			if(key.getKeyCode() == KeyEvent.VK_ENTER){
-				try {
-					String strSearch = bookSearch.getTextFieldSearch();
-					if(!strSearch.trim().isEmpty()){
-						currSearchString = strSearch;
-						bookList = BookDAO.searchBook(strSearch);
-						bookSearch.setTableListModel(new BookListModel(bookList));
-						if(bookList.size() == 0){
-							bookInfo.setBookInfoData(new Book());
-						}else{
-							bookInfo.setBookInfoData(bookList.get(0));
+			if(key.getKeyCode() != KeyEvent.VK_ENTER){
+				String strSearch = bookSearch.getTextFieldSearch();
+				if(strSearch.length() > 2){
+					try {
+						if(!strSearch.trim().isEmpty()){
+							currSearchString = strSearch;
+							bookList = BookDAO.searchBook(strSearch);
+							bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+							if(bookList.size() == 0){
+								bookInfo.getBtnDelete().setEnabled(false);
+								bookInfo.getBtnSave().setEnabled(false);
+							}else{
+								bookInfo.getBtnDelete().setEnabled(true);
+								bookInfo.getBtnSave().setEnabled(true);
+								bookInfo.setBookInfoData(bookList.get(0));
+								if(bookList.get(0).getCopies() == 0){
+									bookInfo.getBtnDelete().setEnabled(false);
+								}
+							}
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
 			}
 			
