@@ -2,17 +2,12 @@ package views;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.uispec4j.Button;
 import org.uispec4j.PasswordField;
 import org.uispec4j.TextBox;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
-import org.unitils.UnitilsJUnit4TestClassRunner;
 
-import views.LogInDialog;
-
-@RunWith(UnitilsJUnit4TestClassRunner.class)
 public class LogInDialogTest extends UISpecTestCase {
 
 	Window window;
