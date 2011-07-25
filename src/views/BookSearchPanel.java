@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import models.User;
 import net.miginfocom.swing.MigLayout;
 
+import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTable;
@@ -35,18 +36,18 @@ public class BookSearchPanel extends JPanel {
 	}
 
 	private void displayBookSearch(){
-		setLayout(new MigLayout("", "[grow][grow 10][grow 10]", "[][][25px:20:25px][][grow]"));
+		setLayout(new MigLayout("", "[grow][grow 10][grow 10]", "[][][20px:20:20px][][grow]"));
 		
 		textFieldSearch = new JTextField();
 		textFieldSearch.setName("textSearch");
 		add(textFieldSearch, "cell 0 0 3 1,grow");
 		textFieldSearch.setColumns(10);
 		
-		btnAddBook = new JButton("Add Book");
+		btnAddBook = new JButton("Add Book", new ImageIcon("resources/images/add.png"));
 		btnAddBook.setVisible(false);
 		add(btnAddBook, "cell 0 1,alignx left,aligny center");
 		
-		btnSearch = new JButton("Search");
+		btnSearch = new JButton("Search", new ImageIcon("resources/images/search32x32.png"));
 		add(btnSearch, "cell 1 1,grow");
 		
 		btnClear = new JButton("Clear");
