@@ -1,5 +1,6 @@
 package controllers;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -17,8 +18,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import models.Book;
 import models.BorrowTransaction;
+import models.ReserveTransaction;
 import models.TransactionDAO;
+import models.User;
 
 import views.InOutTabbedPane;
 import views.IncomingPanel;
@@ -37,23 +41,24 @@ public class TransactionController {
 	private ArrayList<BorrowTransaction> searchResults;
 	private int selectedRow; 
 	
-	private static InOutTabbedPane tabbedPane;
+	private InOutTabbedPane tabbedPane;
 	private IncomingPanel inPanel;
 	private OutgoingPanel outPanel;
 
 
+	//# remove this
 	public static void main(String[] args) {
-		//# remove this
 		new Connector(Constants.TEST_CONFIG);
+		
+		TransactionController librarianTransactions = new TransactionController();
+		
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		testFrame.setVisible(true);
 		testFrame.setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		testFrame.setBounds(0,0,screenSize.width, screenSize.height * 3/4);
-		
-		tabbedPane = new InOutTabbedPane();
-		testFrame.setContentPane(tabbedPane);
+		testFrame.setContentPane(librarianTransactions.getTabbedPane());
 		
 		try {
 			new TransactionController();
@@ -65,7 +70,10 @@ public class TransactionController {
 	/*
 	 * LIBRARIAN Book Transactions
 	 */
-	public TransactionController() throws Exception {
+	public TransactionController() {
+		/* Create UI */
+		tabbedPane = new InOutTabbedPane();
+		
 		/* Load Event Listeners */
 		/* InOutTabbedPane */
 		tabbedPane.setEventListener(new TabChangeListener());
@@ -83,8 +91,12 @@ public class TransactionController {
 				new BookTransactionSearchClearListener(), new BookTransactionSearchKeyListener(),
 				new BookTransactionResultsMouseListener());
 		
-		/* default operation for Incoming */
+		/* Default Operation */
 		searchBookTransaction();
+	}
+	
+	public InOutTabbedPane getTabbedPane() {
+		return tabbedPane;
 	}
 	
 	class TabChangeListener implements ChangeListener {
@@ -92,11 +104,12 @@ public class TransactionController {
 		public void stateChanged(ChangeEvent arg0) {
 			if (tabbedPane.getSelectedIndex() == 0) {
 				isIncoming = true;
+				inPanel.getBtnReturn().setEnabled(false);
+				inPanel.getLblDaysOverdue().setText("");
 			} else if (tabbedPane.getSelectedIndex() == 1) {
 				isIncoming = false;
-			} else { //-1
-				//# error
-				System.out.println(tabbedPane.getSelectedIndex());
+				outPanel.getBtnGrant().setEnabled(false);
+				outPanel.getBtnDeny().setEnabled(false);
 			}
 			searchBookTransaction();
 		}
@@ -131,6 +144,8 @@ public class TransactionController {
 		if (affectedRows != 1) {
 			//# error! do something
 		}
+		outPanel.getBtnGrant().setEnabled(false);
+		outPanel.getBtnDeny().setEnabled(false);
 	}
 	
 	private void denyBorrowRequest() {
@@ -139,6 +154,8 @@ public class TransactionController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		outPanel.getBtnGrant().setEnabled(false);
+		outPanel.getBtnDeny().setEnabled(false);
 	}
 	
 	/*
@@ -153,13 +170,26 @@ public class TransactionController {
 	}
 	
 	private void returnBook() {
-		//# check if reserved by other users
 		try {
 			TransactionDAO.returnBook(getBookTransactionDetails());
+
+			/* check if the book to be returned is reserved by other users */
+			Book returnedBook = getBookTransactionDetails().getBook();
+			if (TransactionDAO.isBookReservedbyOtherUsers(returnedBook)) {
+				/* get the first user in queue */
+				User nextUser = TransactionDAO.getNextUser(returnedBook);
+				/* create borrow transaction */
+				TransactionDAO.requestBook(getBookTransactionDetails().getBook(), nextUser);
+				/* delete reservation transaction */
+				ReserveTransaction nextUserReserveTransaction =
+					TransactionDAO.getReserveTransaction(nextUser, returnedBook);
+				TransactionDAO.cancelReservation(nextUserReserveTransaction);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Return: " + getBookTransactionDetails().getBook().getTitle());
+		inPanel.getBtnReturn().setEnabled(false);
+		inPanel.getLblDaysOverdue().setText("");
 	}
 	
 	private BorrowTransaction getBookTransactionDetails() {
@@ -173,6 +203,14 @@ public class TransactionController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			searchBookTransaction();
+			if (isIncoming) {
+				inPanel.getBtnReturn().setEnabled(false);
+				inPanel.getLblDaysOverdue().setText("");
+				inPanel.getLblDaysOverdue().setText("");
+			} else {
+				outPanel.getBtnGrant().setEnabled(false);
+				outPanel.getBtnDeny().setEnabled(false);
+			}
 		}
 	}
 	
@@ -181,9 +219,15 @@ public class TransactionController {
 		public void actionPerformed(ActionEvent e) {
 			if (isIncoming) {
 				inPanel.getSearchPanel().getTxtfldSearch().setText("");
+				inPanel.getBtnReturn().setEnabled(false);
+				inPanel.getLblDaysOverdue().setText("");
+				inPanel.getLblDaysOverdue().setText("");
 			} else {
 				outPanel.getSearchPanel().getTxtfldSearch().setText("");
+				outPanel.getBtnGrant().setEnabled(false);
+				outPanel.getBtnDeny().setEnabled(false);
 			}
+			searchBookTransaction();
 		}
 	}
 	
@@ -199,6 +243,14 @@ public class TransactionController {
 	
 			if (userKey == enterKey) {
 				searchBookTransaction();
+				if (isIncoming) {
+					inPanel.getBtnReturn().setEnabled(false);
+					inPanel.getLblDaysOverdue().setText("");
+					inPanel.getLblDaysOverdue().setText("");
+				} else {
+					outPanel.getBtnGrant().setEnabled(false);
+					outPanel.getBtnDeny().setEnabled(false);
+				}
 			}
 		}
 
@@ -334,7 +386,6 @@ public class TransactionController {
 	}
 	
 	private void setSelectedItem() {
-		//# conflict with buttons and label messages
 		if (isIncoming) {
 			selectedRow = inPanel.getSearchPanel().getTblResults().getSelectedRow();
 			
@@ -344,7 +395,12 @@ public class TransactionController {
 				try {
 					int daysOverdue = TransactionDAO.getDaysOverdue(getBookTransactionDetails().getBook(),
 							getBookTransactionDetails().getUser());
-					inPanel.getLblDaysOverdue().setText(daysOverdue + " days Overdue.");
+					inPanel.getLblDaysOverdue().setText("Days Overdue: " + daysOverdue);
+					if (daysOverdue > 0) {
+						inPanel.getLblDaysOverdue().setForeground(Color.RED);
+					} else {
+						inPanel.getLblDaysOverdue().setForeground(Color.BLACK);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

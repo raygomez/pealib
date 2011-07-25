@@ -1,5 +1,6 @@
 package views;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
@@ -23,9 +24,11 @@ public class IncomingPanel extends JPanel{
 		add(searchPanel, "cell 0 0 3 2,grow");
 		
 		lblDaysOverdue = new JLabel("");
+		lblDaysOverdue.setForeground(Color.BLACK);
 		add(lblDaysOverdue, "cell 0 2 2 1,alignx left");
 		
 		btnReturn = new JButton("Return");
+		btnReturn.setEnabled(false);
 		add(btnReturn, "cell 2 2,growx");
 	}
 

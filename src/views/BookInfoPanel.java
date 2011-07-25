@@ -39,6 +39,7 @@ public class BookInfoPanel extends JPanel {
 	private JTextArea txtFldDescription;
 	private JSpinner spinCopyVal;
 	private JFormattedTextField spinValue;
+	private JLabel lblCopiesVal;
 
 	/**
 	 * Create the panel.
@@ -55,6 +56,7 @@ public class BookInfoPanel extends JPanel {
 		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[40][][][][][][grow][48.00][34.00][13.00][]"));
 		
 		lblErrorMsg = new JLabel("");
+		lblErrorMsg.setForeground(Color.RED);
 		add(lblErrorMsg, "cell 3 0 2 1,alignx center,aligny center");
 		
 		JLabel lblTitle = new JLabel("Title:");
@@ -111,10 +113,10 @@ public class BookInfoPanel extends JPanel {
 		add(lblCopies, "cell 1 9,alignx left,aligny center");
 		
 		spinCopyVal = new JSpinner();
-		spinCopyVal.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spinCopyVal.setModel(new SpinnerNumberModel(0, 0, 2147483647, 1));
 		spinCopyVal.getModel().setValue(currBook.getCopies());
-		spinCopyVal.setEnabled(false);
-		add(spinCopyVal, "cell 3 9,alignx left,aligny center");
+		
+		lblCopiesVal = new JLabel(Integer.toString(currBook.getCopies()));
 		
 		btnSave = new JButton("Save");
 		
@@ -133,11 +135,12 @@ public class BookInfoPanel extends JPanel {
 			txtFldPublisher.setEditable(true);
 			txtFldTitle.setEditable(true);
 			txtFldYrPublished.setEditable(true);
-			spinCopyVal.setEnabled(true);
+			add(spinCopyVal, "cell 3 9,alignx left,aligny center");
 		}
 		if (currUser.getType().equals("User")){
 			add(btnBorrow, "cell 3 10,alignx right");
 			add(btnReserve, "cell 4 10");
+			add(lblCopiesVal, "cell 3 9,alignx left,aligny center");
 		}
 		
 		
@@ -211,6 +214,7 @@ public class BookInfoPanel extends JPanel {
 		txtFldISBN.setText(book.getIsbn());
 		txtFldDescription.setText(book.getDescription());
 		spinCopyVal.getModel().setValue(book.getCopies());
+		lblCopiesVal.setText(Integer.toString(book.getCopies()));
 	}
 
 	public JLabel getLblErrorMsg() {
@@ -244,7 +248,9 @@ public class BookInfoPanel extends JPanel {
 	public void setLblErrorMsg(JLabel lblErrorMsg) {
 		this.lblErrorMsg = lblErrorMsg;
 	}
-	
-	
+
+	public JSpinner getSpinCopyVal() {
+		return spinCopyVal;
+	}
 	
 }

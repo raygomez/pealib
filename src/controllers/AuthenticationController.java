@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JDialog;
+import javax.swing.Timer;
 
 import models.User;
 import models.UserDAO;
@@ -216,16 +217,27 @@ public class AuthenticationController {
 
 	// User name Key Listener (every input)
 	class SignUpUsernameKeyAdapter extends KeyAdapter {
+		Timer timer = new Timer(Constants.TIMER_DELAY, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				timer.stop();
+				getUserName();
+				isUserNameValid();
+				System.out.println("username listener");
+			}
+		});
+		
 		@Override
 		public void keyReleased(KeyEvent arg0) {
 			int userKey = arg0.getKeyCode();
 
 			if (userKey != KeyEvent.VK_ENTER) {
-				getUserName();
-				if (sUpUserName.length() > 3) {
-					isUserNameValid();
-					System.out.println("username listener");
-				}
+				if(timer.isRunning())
+					timer.restart();
+				else
+					timer.start();
 			}
 		}
 	}
