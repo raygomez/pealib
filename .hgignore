@@ -28,3 +28,7 @@ syntax: regexp
 ^src/unitils-local\.properties$
 syntax: regexp
 ^app\.config$
+syntax: regexp
+^src/unitils-local\.properties$
+syntax: regexp
+^test\.config$
