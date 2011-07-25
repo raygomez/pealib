@@ -214,7 +214,7 @@ public class BookInfoPanel extends JPanel {
 		txtFldISBN.setText(book.getIsbn());
 		txtFldDescription.setText(book.getDescription());
 		spinCopyVal.getModel().setValue(book.getCopies());
-		lblCopiesVal.setText(book.getClass().toString());
+		lblCopiesVal.setText(Integer.toString(book.getCopies()));
 	}
 
 	public JLabel getLblErrorMsg() {
