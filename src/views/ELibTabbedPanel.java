@@ -1,12 +1,16 @@
 package views;
 
-import java.awt.event.*;
-
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumnModel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -45,10 +49,12 @@ public class ELibTabbedPanel extends JPanel{
 	public int getSelectedTab(){
 		return tabs.getSelectedIndex();
 	}
+
 	
-	public void addListener(MouseListener tab){
-		tabs.addMouseListener(tab);		
+	public void addChangeTabListener(ChangeListener listener){
+		tabs.addChangeListener(listener);
 	}
+	
 	
 	private void setTableSettings(JTable table){
 		table.setRowHeight(28);		
