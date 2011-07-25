@@ -1,6 +1,7 @@
 package models;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
@@ -174,5 +175,13 @@ public class UserDAOTest {
 	public void testSearchAllPendingWithKeywordwithNoResults() throws Exception {
 		ArrayList<User> users = UserDAO.searchAllPending("Karlo0");
 		assertEquals(0, users.size());
+	}
+	
+	@Test
+	@ExpectedDataSet({ "expected/user.xml" })
+	public void testdenyPendingUser() throws Exception {
+		User user = UserDAO.searchAllPending("").get(0);
+		assertNotNull(user);
+		UserDAO.denyPendingUser(user);
 	}
 }
