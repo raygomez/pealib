@@ -238,10 +238,9 @@ public class UserController {
 		 * TableModel for User Search Panel/Tabs
 		 */
 		private static final long serialVersionUID = 1L;
-		// private String[] columns = { "Username", "Name" };
 		private ArrayList<String> columns = new ArrayList<String>();	
-
 		private ArrayList<ArrayList<Object>> tableData = new ArrayList<ArrayList<Object>>();
+		private ArrayList<Integer> accepted = new ArrayList<Integer>();
 		private int mode;
 		private String searchStr = "";
 
@@ -250,11 +249,9 @@ public class UserController {
 			this.searchStr = str;
 
 			if (mode == USER){
-
 				userAcct();
 			}
 			else{
-				
 				pending();
 			}
 		}
@@ -274,7 +271,7 @@ public class UserController {
 			for (User i : getSearchedPending()) {
 				ArrayList<Object> rowData = new ArrayList<Object>();
 				rowData.add(i.getUserName());
-				rowData.add(i.getFirstName() + " " + i.getLastName());
+				rowData.add(i.getFirstName() + " " + i.getLastName());				
 				rowData.add(new Boolean(false));
 				tableData.add(rowData);
 			}
@@ -301,6 +298,17 @@ public class UserController {
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Class getColumnClass(int c) { return getValueAt(0, c).getClass();}
+		
+		 public void setValueAt(Object value, int row, int col) {
+			 
+			 tableData.get(row).set(col, value);
+			 fireTableCellUpdated(row, col);
+			 
+			 if(!accepted.contains(row)){
+				 accepted.add(row);
+				 System.out.println(row);
+			 }
+	     }
 		
 		@Override
 		public String getColumnName(int col) { return columns.get(col);}
@@ -429,9 +437,9 @@ public class UserController {
                 
                 changePasswordDialog.addChangePasswordListener(changePassword);
         }
-};
+    };
 
-private ActionListener changePassword = new ActionListener() {
+	private ActionListener changePassword = new ActionListener() {
         
         boolean correctPassword;
         boolean isMatchingPassword;
@@ -473,9 +481,9 @@ private ActionListener changePassword = new ActionListener() {
                         }
                         
                 }
-        }
-};
-}
+        	}
+		};
+	}
 /*
 	private ActionListener showChangePassword = new ActionListener() {
 
