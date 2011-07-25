@@ -1,7 +1,5 @@
 package controllers;
 
-import javax.swing.JButton;
-
 import models.User;
 import models.UserDAO;
 
