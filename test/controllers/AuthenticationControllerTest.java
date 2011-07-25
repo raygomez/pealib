@@ -30,7 +30,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	@Before
 	public void setUp() throws Exception {
 		new Connector(Constants.TEST_CONFIG);
-		new AuthenticationController(new PeaLibrary());
+		new AuthenticationController();
 		window = new Window(AuthenticationController.getLogin());
 
 	}

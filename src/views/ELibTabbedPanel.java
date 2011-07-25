@@ -1,5 +1,6 @@
 package views;
 
+import javax.swing.CellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -11,10 +12,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
 
 import net.miginfocom.swing.MigLayout;
-import controllers.ELibController.ButtonRenderer;
-import controllers.ELibController.ButtonEditor;
+import controllers.ELibController.CancelButtonRenderer;
+import controllers.ELibController.CancelRequestButtonEditor;
 
 ;
 
@@ -24,10 +26,10 @@ public class ELibTabbedPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabs = new JTabbedPane();
-	private JPanel history = new JPanel();
-	private JPanel onloan = new JPanel();
-	private JPanel request = new JPanel();
-	private JPanel reserve = new JPanel();
+	private JPanel historyPanel = new JPanel();
+	private JPanel onloanPanel = new JPanel();
+	private JPanel requestPanel = new JPanel();
+	private JPanel reservePanel = new JPanel();
 
 	private JTable requestTable, reserveTable, onloanTable, historyTable;
 	private DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
@@ -37,13 +39,13 @@ public class ELibTabbedPanel extends JPanel {
 		setLayout(new MigLayout("", "[600px]", "[]20px[500px]"));
 
 		tabs.addTab("Requests", new ImageIcon("resources/images/request.png"),
-				request);
+				requestPanel);
 		tabs.addTab("Reservations", new ImageIcon(
-				"resources/images/reserve.png"), reserve);
+				"resources/images/reserve.png"), reservePanel);
 		tabs.addTab("On-Loans", new ImageIcon("resources/images/onloan.png"),
-				onloan);
+				onloanPanel);
 		tabs.addTab("History", new ImageIcon("resources/images/history.png"),
-				history);
+				historyPanel);
 
 		add(tabs, "cell 0 1, grow");
 		trender.setHorizontalAlignment(SwingConstants.CENTER);
@@ -52,6 +54,20 @@ public class ELibTabbedPanel extends JPanel {
 		addOnLoanPane();
 		addRequestPane();
 		addReservePane();
+	}
+
+	/**
+	 * @return the reserveTable
+	 */
+	public JTable getReserveTable() {
+		return reserveTable;
+	}
+
+	/**
+	 * @param reserveTable the reserveTable to set
+	 */
+	public void setReserveTable(JTable reserveTable) {
+		this.reserveTable = reserveTable;
 	}
 
 	/**
@@ -87,14 +103,16 @@ public class ELibTabbedPanel extends JPanel {
 
 	}
 
-	public void setCellEditor(int tab, ButtonEditor renderer) {
+	public void setCellEditor(int tab, TableCellEditor renderer) {
 
 		switch (tab) {
 		case 0:
 			getRequestTable().getColumn("Cancel").setCellEditor(renderer);
 			break;
-
+			
 		case 1:
+			getReserveTable().getColumn("Cancel").setCellEditor(renderer);
+
 			break;
 
 		case 2:
@@ -105,7 +123,7 @@ public class ELibTabbedPanel extends JPanel {
 		}
 	}
 
-	public void setCellRenderer(int tab, ButtonRenderer renderer) {
+	public void setCellRenderer(int tab, CancelButtonRenderer renderer) {
 
 		switch (tab) {
 		case 0:
@@ -113,6 +131,7 @@ public class ELibTabbedPanel extends JPanel {
 			break;
 
 		case 1:
+			getReserveTable().getColumn("Cancel").setCellRenderer(renderer);
 			break;
 
 		case 2:
@@ -132,8 +151,8 @@ public class ELibTabbedPanel extends JPanel {
 			break;
 
 		case 1:
-			reserveTable.setModel(model);
-			setTableSettings(reserveTable);
+			getReserveTable().setModel(model);
+			setTableSettings(getReserveTable());
 			break;
 
 		case 2:
@@ -152,8 +171,8 @@ public class ELibTabbedPanel extends JPanel {
 	}
 
 	private void addHistoryPane() {
-		history.setBorder(new EmptyBorder(5, 5, 5, 5));
-		history.setLayout(new MigLayout("", "", ""));
+		historyPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		historyPanel.setLayout(new MigLayout("", "", ""));
 
 		historyTable = new JTable();
 		historyTable.setName("historyTable");
@@ -163,12 +182,12 @@ public class ELibTabbedPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(historyTable);
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		history.add(scrollPane);
+		historyPanel.add(scrollPane);
 	}
 
 	private void addOnLoanPane() {
-		onloan.setBorder(new EmptyBorder(5, 5, 5, 5));
-		onloan.setLayout(new MigLayout("", "", ""));
+		onloanPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		onloanPanel.setLayout(new MigLayout("", "", ""));
 
 		onloanTable = new JTable();
 		onloanTable.setName("onloanTable");
@@ -178,12 +197,12 @@ public class ELibTabbedPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(onloanTable);
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		onloan.add(scrollPane);
+		onloanPanel.add(scrollPane);
 	}
 
 	private void addRequestPane() {
-		request.setBorder(new EmptyBorder(5, 5, 5, 5));
-		request.setLayout(new MigLayout("", "", ""));
+		requestPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		requestPanel.setLayout(new MigLayout("", "", ""));
 
 		setRequestTable(new JTable());
 		getRequestTable().setName("requestTable");
@@ -193,21 +212,21 @@ public class ELibTabbedPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(getRequestTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		request.add(scrollPane);
+		requestPanel.add(scrollPane);
 	}
 
 	private void addReservePane() {
-		reserve.setBorder(new EmptyBorder(5, 5, 5, 5));
-		reserve.setLayout(new MigLayout("", "", ""));
+		reservePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		reservePanel.setLayout(new MigLayout("", "", ""));
 
-		reserveTable = new JTable();
-		reserveTable.setName("reserveTable");
-		reserveTable.setRowHeight(28);
-		reserveTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		setReserveTable(new JTable());
+		getReserveTable().setName("reserveTable");
+		getReserveTable().setRowHeight(28);
+		getReserveTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		JScrollPane scrollPane = new JScrollPane(reserveTable);
+		JScrollPane scrollPane = new JScrollPane(getReserveTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		reserve.add(scrollPane);
+		reservePanel.add(scrollPane);
 	}
 }
