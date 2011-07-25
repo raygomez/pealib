@@ -8,15 +8,17 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JDialog;
 
+import pealib.PeaLibrary;
+
 import models.User;
 import models.UserDAO;
-import utilities.Connector;
 import utilities.Constants;
 import views.LogInDialog;
 import views.SignUpDialog;
 
 public class AuthenticationController {
 	private static LogInDialog login;
+	private PeaLibrary main;
 	private User user;
 
 	private String login_user;
@@ -31,7 +33,7 @@ public class AuthenticationController {
 	private String sUpEmailAddress;
 	private String sUpContactNumber;
 	private String sUpAddress;
-
+/*
 	public static void main(String[] args) {
 		try {
 			// TODO change this if going to use another DB
@@ -43,13 +45,19 @@ public class AuthenticationController {
 			e.printStackTrace();
 		}
 	}
+	*/
 
-	public AuthenticationController() {
+	public AuthenticationController(PeaLibrary main) {
+			this.main = main;
+			init();
+	}
+	
+	public void init(){
 		setLogin(new LogInDialog());
 		getLogin().setActionListeners(new SignUpListener(), new SubmitListener(),
 				new SubmitKeyAdapter());
 		getLogin().setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+		getLogin().setVisible(true);
 	}
 
 	/**
@@ -164,6 +172,7 @@ public class AuthenticationController {
 					getLogin().getFieldPassword().setText("");
 				} else {
 					// TODO login --> call main frame
+					main.setUser(user);
 					System.out.println("LOGIN");
 					getLogin().dispose();
 				}

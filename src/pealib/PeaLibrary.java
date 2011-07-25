@@ -30,7 +30,7 @@ public class PeaLibrary {
 	private User currentUser;
 
 	public PeaLibrary(){
-		new Connector();
+		new Connector("test.config");
 		initialize();	
 	}
 
@@ -39,7 +39,7 @@ public class PeaLibrary {
 		frame = new MainFrame();
 		frame.setVisible(false);
 		
-		//authControl = new AuthenticationController(this);
+		authControl = new AuthenticationController(this);
 	}
 
 	public void setUser(User user){
@@ -49,7 +49,7 @@ public class PeaLibrary {
 	
 	private void initializedLoggedUser(){
 		//currentUser = user;
-		currentUser = new User(101123,"jajalim","1234567","Jaja","Lim","jjlim@gmail.com","UP Ayala Technohub", "09171234567",1,"Librarian");
+		//currentUser = new User(101123,"jajalim","1234567","Jaja","Lim","jjlim@gmail.com","UP Ayala Technohub", "09171234567",1,"Librarian");
 		
 		frame.setWelcomeLabel(currentUser.getFirstName()+" "+currentUser.getLastName());
 		
