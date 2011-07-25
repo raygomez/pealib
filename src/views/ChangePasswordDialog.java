@@ -83,7 +83,6 @@ import utilities.ErrorLabel;
 			buttonPane.add(cancelButton);
 			setLocationRelativeTo(null);
 			pack();
-			setVisible(true);
 		}
 
 		public JPasswordField getOldPasswordField() {

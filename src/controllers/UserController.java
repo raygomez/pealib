@@ -494,6 +494,7 @@ public class UserController {
                 }
                 
                 changePasswordDialog.addChangePasswordListener(changePassword);
+                changePasswordDialog.setVisible(true);
         }
     };
 
