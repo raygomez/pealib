@@ -16,7 +16,7 @@ public class Constants {
 	public static final String PASSWORD_FORMAT = "[^\\s]{6,20}";
 	public static final String NAME_FORMAT = "[A-Za-z\\s]{2,}";
 	public static final String CONTACT_NUMBER_FORMAT = "(\\d{7,11})?";
-	public static final String EMAIL_FORMAT = "([a-z]+[a-z0-9]+@\\w{2,}(\\.[a-z]{2,3})+)";
+	public static final String EMAIL_FORMAT = "([a-z]+[a-z0-9_\\.]+@\\w{2,}(\\.[a-z]{2,3})+)";
 	public static final String ADDRESS_FORMAT = ".{2,100}";
 	
 	public static final String ISBN_FORMAT = "[0-9]{13}";
