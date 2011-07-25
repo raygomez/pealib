@@ -72,7 +72,7 @@ public class UserController {
 				new UserSearchTableModel(PENDING, "")));
 		getUserSearch().addListeners(new SearchListener(),
 				new SearchKeyListener(), new TabChangeListener(),
-				new UserSelectionListener(), new CheckBoxListener());
+				new UserSelectionListener(), new CheckBoxListener(), new AcceptListener());
 		setUserInfoPanel(new UserInfoPanel());
 		generateLayoutPanel();
 	}
@@ -225,12 +225,12 @@ public class UserController {
 					User temp = searchedPending.get(i);
 					temp.setType("User");
 					
-					try {
-						UserDAO.updateUser(temp);
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					try { UserDAO.updateUser(temp);} 
+					catch (Exception e1) { e1.printStackTrace(); }
+					
+					getUserSearch().getcbAll().setSelected(false);
+					getUserSearch().validate();
+					getUserSearch().repaint();
 				}
 			}
 		}
