@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.JDialog;
 import javax.swing.Timer;
@@ -46,8 +45,8 @@ public class AuthenticationController {
 
 	public AuthenticationController() {
 		setLogin(new LogInDialog());
-		getLogin().setActionListeners(new SignUpListener(), new SubmitListener(),
-				new SubmitKeyAdapter());
+		getLogin().setActionListeners(new SignUpListener(),
+				new SubmitListener(), new SubmitKeyAdapter());
 		getLogin().setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 	}
@@ -60,7 +59,8 @@ public class AuthenticationController {
 	}
 
 	/**
-	 * @param login the login to set
+	 * @param login
+	 *            the login to set
 	 */
 	public static void setLogin(LogInDialog login) {
 		AuthenticationController.login = login;
@@ -83,7 +83,7 @@ public class AuthenticationController {
 		public void actionPerformed(ActionEvent e) {
 			signUp = new SignUpDialog();
 			signUp.setActionListeners(new SignUpSubmitListener(),
-					new SignUpCancelListener(), new SignUpEnterKeyListener(),
+					new SignUpCancelListener(), new SignUpEnterAdapter(),
 					new SignUpUsernameKeyAdapter());
 			signUp.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			signUp.setVisible(true);
@@ -150,7 +150,7 @@ public class AuthenticationController {
 			getLogin().setLabelError("Invalid input");
 		}
 
-		else{
+		else {
 			try {
 
 				setUser(UserDAO.getUser(login_user, login_pass));
@@ -159,8 +159,10 @@ public class AuthenticationController {
 					getLogin().setLabelError("Username/Password Mismatch");
 					getLogin().getFieldPassword().setText("");
 				} else if (user.getType().equals("Pending")) {
-					getLogin().setLabelError("<html><center>Account still being processed.<br/>"
-							+ "Ask Librarian for further inquiries.</center></html>");
+					getLogin()
+							.setLabelError(
+									"<html><center>Account still being processed.<br/>"
+											+ "Ask Librarian for further inquiries.</center></html>");
 					getLogin().getFieldPassword().setText("");
 				} else {
 					getLogin().dispose();
@@ -181,7 +183,6 @@ public class AuthenticationController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			signUpSubmit();
-			System.out.println("submit button listener");
 		}
 	}
 
@@ -190,51 +191,38 @@ public class AuthenticationController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			signUpCancel();
-			System.out.println("cancel button listener");
 		}
 	}
 
-	// Enter Key Listener (Submit through Enter)
-	class SignUpEnterKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-		}
-
+	// Enter Key Adapter (Submit through Enter)
+	class SignUpEnterAdapter extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			int userKey = arg0.getKeyCode();
-
-			if (userKey == KeyEvent.VK_ENTER) {
+			if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
 				signUpSubmit();
-				System.out.println("enter keylistener");
 			}
-		}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {
 		}
 	}
 
 	// User name Key Listener (every input)
 	class SignUpUsernameKeyAdapter extends KeyAdapter {
 		Timer timer = new Timer(Constants.TIMER_DELAY, new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				timer.stop();
 				getUserName();
 				isUserNameValid();
-				System.out.println("username listener");
 			}
 		});
-		
+
 		@Override
 		public void keyReleased(KeyEvent arg0) {
 			int userKey = arg0.getKeyCode();
 
 			if (userKey != KeyEvent.VK_ENTER) {
-				if(timer.isRunning())
+				if (timer.isRunning())
 					timer.restart();
 				else
 					timer.start();
