@@ -35,16 +35,18 @@ public class UserController {
 	private String searchText;
 	private ArrayList<User> searchedUsers;
 	private ArrayList<User> searchedPending;
+	private ArrayList<Integer> accepted = new ArrayList<Integer>();
 
 	/*
 	 * ..TODO For visual testing purposes only
 	 */
 	public static void main(String[] args) {
-
-		new Connector(Constants.TEST_CONFIG);
+		
+		//new Connector(Constants.TEST_CONFIG);
+		new Connector();
 
 		User user = new User(1011, "jjlim", "1234567", "Janine June", "Lim",
-				"jaja.lim@yahoo.com", "UP Ayala Technohub", "09171234567", 1,
+				"jaja.lim@yahoo.com", "UP Ayala Technohub", "09171234567",
 				"Librarian");
 
 		UserController userController = new UserController(user);
@@ -70,7 +72,7 @@ public class UserController {
 				new UserSearchTableModel(PENDING, "")));
 		getUserSearch().addListeners(new SearchListener(),
 				new SearchKeyListener(), new TabChangeListener(),
-				new UserSelectionListener());
+				new UserSelectionListener(), new CheckBoxListener());
 		setUserInfoPanel(new UserInfoPanel());
 		generateLayoutPanel();
 	}
@@ -196,13 +198,51 @@ public class UserController {
 		getUserInfoPanel().addChangePasswordListener(showChangePassword);
 	}
 
+	class CheckBoxListener extends MouseAdapter {
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			checkBoxToggle();
+		}
+		
+	}
+	
+	private void checkBoxToggle(){
+		UserSearchTableModel model = new UserSearchTableModel(1, getSearchText());
+		
+		if(getUserSearch().getcbAll().isSelected())   model.toggleAllCheckBox(true);		
+		else   model.toggleAllCheckBox(false);	
+		
+		getUserSearch().setTableModel(1, model);
+				
+	}
+	
+	class AcceptListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			for(int i = 0; i<searchedPending.size(); i++){
+				if(accepted.contains(i)) {
+					User temp = searchedPending.get(i);
+					temp.setType("User");
+					
+					try {
+						UserDAO.updateUser(temp);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
 	class TabChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			searchUsers();
 		}
 	}
-
+	
 	private void searchUsers() {
 		int tab = getUserSearch().getSelectedTab();
 		setSearchText(getUserSearch().getFieldSearch().getText());
@@ -239,8 +279,7 @@ public class UserController {
 		 */
 		private static final long serialVersionUID = 1L;
 		private ArrayList<String> columns = new ArrayList<String>();	
-		private ArrayList<ArrayList<Object>> tableData = new ArrayList<ArrayList<Object>>();
-		private ArrayList<Integer> accepted = new ArrayList<Integer>();
+		private ArrayList<ArrayList<Object>> tableData = new ArrayList<ArrayList<Object>>();		
 		private int mode;
 		private String searchStr = "";
 
@@ -276,6 +315,15 @@ public class UserController {
 				tableData.add(rowData);
 			}
 		}
+				
+		public void toggleAllCheckBox(boolean value){
+			
+			for(int i = 0; i<getRowCount(); i++){
+				//i.set(2, new Boolean(value));
+				setValueAt(new Boolean(value), i, 2);
+			}
+			
+		}
 
 		private void userAcct() {
 			columns = new ArrayList<String>();				
@@ -302,12 +350,21 @@ public class UserController {
 		 public void setValueAt(Object value, int row, int col) {
 			 
 			 tableData.get(row).set(col, value);
-			 fireTableCellUpdated(row, col);
 			 
-			 if(!accepted.contains(row)){
-				 accepted.add(row);
-				 System.out.println(row);
+			 if(!(Boolean)value){
+				 getUserSearch().getcbAll().setSelected(false);
+				 
+				 if(accepted.contains(row))
+					 accepted.remove((Object)row);				
+				 	 System.out.println("Removed "+row);
 			 }
+			 else{
+				 if(!accepted.contains(row)){
+					 accepted.add(row);
+					 System.out.println("Added "+row);
+				 }
+			 }				 
+			 fireTableCellUpdated(row, col);			 			 
 	     }
 		
 		@Override
@@ -409,11 +466,12 @@ public class UserController {
 			String email = getUserInfoPanel().getEmail();
 			String address = getUserInfoPanel().getAddress();
 			String contactNo = getUserInfoPanel().getContactNumber();
+			String type = getUserInfoPanel().getAccountType();
 
 			if (validateUpdateProfile(firstName, lastName, email, address,
 					contactNo)) {
-				User user = new User(userId, userName, firstName, lastName,
-						email, address, contactNo);
+				
+				User user = new User(userId, userName, firstName, lastName, email, address, contactNo, type);
 
 				try {
 					UserDAO.updateUser(user);

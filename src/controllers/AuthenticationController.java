@@ -263,7 +263,7 @@ public class AuthenticationController {
 		} else {
 			User newUser = new User(-1, sUpUserName, sUpPassword, sUpFirstName,
 					sUpLastName, sUpEmailAddress, sUpAddress, sUpContactNumber,
-					-1, "Pending");
+					"Pending");
 			try {
 				UserDAO.saveUser(newUser);
 			} catch (Exception e) {

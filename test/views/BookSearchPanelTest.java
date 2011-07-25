@@ -20,7 +20,7 @@ public class BookSearchPanelTest extends UISpecTestCase{
 	
 	@Before
 	public void setUp() throws Exception {
-		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "Librarian");
+		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", "Librarian");
 		panel = new Panel(new BookSearchPanel(user));
 	}
 	

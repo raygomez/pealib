@@ -41,7 +41,7 @@ public class BookController {
 
 	public static void main(String args[]){
 		new Connector(Constants.TEST_CONFIG);
-		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
+		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", "User");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

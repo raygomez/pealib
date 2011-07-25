@@ -2,6 +2,7 @@ package views;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -108,6 +109,13 @@ public class UserSearchPanel extends JPanel {
 	public void setUsersTable(JTable usersTable) {
 		this.usersTable = usersTable;
 	}
+	
+	/**
+	 * @return the check box - select all
+	 */
+	public JCheckBox getcbAll() {
+		return cbAll;
+	}
 
 	private void setTableSettings(JTable table, int tab) {
 		table.setRowHeight(28);
@@ -173,12 +181,13 @@ public class UserSearchPanel extends JPanel {
 	}
 
 	public void addListeners(ActionListener button, KeyListener text,
-			ChangeListener tab, ListSelectionListener table) {
+			ChangeListener tab, ListSelectionListener table, MouseListener cbox) {
 		btnSearch.addActionListener(button);
 		fieldSearch.addKeyListener(text);
 		tabbedPane.addChangeListener(tab);
 		getUsersTable().getSelectionModel().addListSelectionListener(table);
 		getPendingTable().getSelectionModel().addListSelectionListener(table);
+		getcbAll().addMouseListener(cbox);
 	}
 
 }

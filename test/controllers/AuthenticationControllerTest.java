@@ -15,6 +15,8 @@ import org.uispec4j.Window;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
 
+import pealib.PeaLibrary;
+
 import utilities.Connector;
 import utilities.Constants;
 import static org.unitils.reflectionassert.ReflectionAssert.*;
@@ -28,7 +30,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	@Before
 	public void setUp() throws Exception {
 		new Connector(Constants.TEST_CONFIG);
-		new AuthenticationController();
+		new AuthenticationController(new PeaLibrary());
 		window = new Window(AuthenticationController.getLogin());
 
 	}
