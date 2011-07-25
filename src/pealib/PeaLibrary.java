@@ -30,7 +30,7 @@ public class PeaLibrary {
 	private User currentUser;
 
 	public PeaLibrary(){
-		new Connector("test.config");
+		new Connector();
 		initialize();	
 	}
 
