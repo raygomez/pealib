@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<users FirstName="Jomel" LastName="Pantaleon" UserName="jvillar"
+		Password="8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
+		Type="User" Address="USA" ContactNo="1234567890" Email="jomel.villar@gmail.com"
+		ID="1" />
+	<users FirstName="Annuary" LastName="Pantaleon" UserName="apantaleon"
+		Password="8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
+		Type="Librarian" Address="USA" ContactNo="1234567890" Email="apantaleon@gmail.com"
+		ID="2" />
+	<users FirstName="Niel" LastName="Lazada" UserName="nlazada"
+		Password="8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
+		Type="User" Address="USA" ContactNo="1234567890" Email="nlazada@gmail.com"
+		ID="3" />
+
+	<users FirstName="Niel" LastName="Dizon" UserName="ndizon"
+		Password="8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
+		Type="User" Address="USA" ContactNo="1234567890" Email="ndizon@gmail.com"
+		ID="4" />
+
+	<users FirstName="Ray" LastName="Gomez" UserName="rdgomez"
+		Password="8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
+		Type="Pending" Address="USA" ContactNo="1234567890" Email="rdgomez@gmail.com"
+		ID="5" />
+
+	<users FirstName="Karlo" LastName="Serrano" UserName="kserrano"
+		Password="8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
+		Type="Pending" Address="USA" ContactNo="1234567890" Email="karlo@gmail.com"
+		ID="6" />
+
+</dataset>
