@@ -26,6 +26,6 @@
 		ID="6" />
 	<users FirstName="Janine June" LastName="Lim" UserName="jlim"
 		Password="8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"
-		Type="User" Address="USA" ContactNo="1234567890" Email="jlim@gmail.com"
+		Type="Pending" Address="USA" ContactNo="1234567890" Email="jlim@gmail.com"
 		ID="0" />
 </dataset>

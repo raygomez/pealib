@@ -1,5 +1,7 @@
 package controllers;
 
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
 import java.awt.Color;
 
 import javax.swing.BorderFactory;
@@ -10,16 +12,17 @@ import org.junit.runner.RunWith;
 import org.uispec4j.Button;
 import org.uispec4j.PasswordField;
 import org.uispec4j.TextBox;
+import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
-
-import pealib.PeaLibrary;
+import org.unitils.dbunit.annotation.ExpectedDataSet;
 
 import utilities.Connector;
 import utilities.Constants;
-import static org.unitils.reflectionassert.ReflectionAssert.*;
 
 @DataSet({ "../models/user.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
@@ -193,4 +196,50 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				username.getAwtComponent().getBorder());
 		assertEquals("", labelError.getText());
 	}
+
+	@Test
+	public void testSignUpEmptyFields() {
+		Button signUp = window.getButton("Sign Up");
+
+		WindowInterceptor.init(signUp.triggerClick())
+				.process(new WindowHandler() {
+					public Trigger process(Window dialog) {
+						dialog.getButton("Submit").click();
+						dialog.getTextBox("Cannot leave mandatory fields empty.");
+						return dialog.getButton("Cancel").triggerClick();
+					}
+				}).run();
+
+	}
+
+	@Test
+	@ExpectedDataSet({ "../models/expected/saveUser.xml" })
+	public void testSignUpSuccessful() {
+		Button signUp = window.getButton("Sign Up");
+
+		WindowInterceptor.init(signUp.triggerClick())
+				.process(new WindowHandler() {
+					public Trigger process(Window dialog) {
+						dialog.getInputTextBox("firstNameTextField").setText(
+								"Janine June");
+						dialog.getInputTextBox("lastNameTextField").setText(
+								"Lim");
+						dialog.getInputTextBox("userNameTextField").setText(
+								"jlim");
+						dialog.getPasswordField("passwordTextField")
+								.setPassword("1234567");
+						dialog.getPasswordField("confirmPasswordTextField")
+								.setPassword("1234567");
+						dialog.getInputTextBox("emailAddressTextField")
+								.setText("jlim@gmail.com");
+						dialog.getInputTextBox("contactNumberTextField")
+								.setText("1234567890");
+						dialog.getInputTextBox("addressTextField").setText(
+								"USA");
+						return dialog.getButton("Submit").triggerClick();
+					}
+				}).run();
+
+	}
+
 }

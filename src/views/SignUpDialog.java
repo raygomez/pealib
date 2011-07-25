@@ -34,7 +34,7 @@ public class SignUpDialog extends JDialog {
 	private MyTextField emailAddressTextField;
 	private MyTextField contactNumberTextField;
 	private MyTextField addressTextField;
-	private JLabel lblErrorMessage;
+	private JLabel errorMessageLabel;
 
 	private JButton submitButton;
 	private JButton cancelButton;
@@ -67,8 +67,9 @@ public class SignUpDialog extends JDialog {
 		lblPleaseFillin.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		contentPanel.add(lblPleaseFillin, "cell 0 0 2 1,growx,aligny center");
 
-		lblErrorMessage = new ErrorLabel("");
-		contentPanel.add(lblErrorMessage, "cell 2 0,alignx left,aligny center");
+		errorMessageLabel = new ErrorLabel("");
+		errorMessageLabel.setName("errorMessageLabel");
+		contentPanel.add(errorMessageLabel, "cell 2 0,alignx left,aligny center");
 
 		JLabel lblFirstName = new JLabel("First Name:");
 		contentPanel.add(lblFirstName, "cell 1 1,alignx left,aligny center");
@@ -194,11 +195,11 @@ public class SignUpDialog extends JDialog {
 	
 	/* Getters and Setters */
 	public JLabel getLblErrorMessage() {
-		return lblErrorMessage;
+		return errorMessageLabel;
 	}
 
 	public void setLblErrorMessage(String errorMessage) {
-		lblErrorMessage.setText(errorMessage);
+		errorMessageLabel.setText(errorMessage);
 	}
 
 	public JTextField getTxtfldFirstName() {
