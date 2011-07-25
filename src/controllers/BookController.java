@@ -39,10 +39,9 @@ public class BookController {
 	private User currentUser;
 	private ArrayList<Book> bookList;
 
-	public static void main(String args[]) throws Exception{
-		new Connector(Constants.APP_CONFIG);
-		User user = new User(3, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
-//		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", 1, "User");
+	public static void main(String args[]){
+		new Connector(Constants.TEST_CONFIG);
+		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -136,11 +135,23 @@ public class BookController {
 				}else addBook.getTxtFldPublisher().setBorder(defaultBorder);
 				
 				if(addBook.getTxtAreaDescription().getText().length() > 300){
-					
+					addBook.getTxtAreaDescription().setBorder(redBorder);
+					validate = false;
 				}else addBook.getTxtAreaDescription().setBorder(defaultBorder);
 				
 				if(validate){
-					System.out.println(addBook.getTxtFldTitle().getText());
+					try {
+						if(!BookDAO.isIsbnExisting(addBook.getBookInfo().getIsbn())){
+							BookDAO.addBook(addBook.getBookInfo());
+							addBook.getLblErrorMsg().setText("Book Added");
+						}else{
+							addBook.getLblErrorMsg().setText("ISBN Already Exist");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}else{
+					addBook.getLblErrorMsg().setText("Invalid Input");
 				}
 			}
 		}
