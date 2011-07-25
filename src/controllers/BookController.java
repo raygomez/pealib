@@ -126,7 +126,8 @@ public class BookController {
 					}else addBook.getTxtFldYearPublish().setBorder(defaultBorder);
 				}else addBook.getTxtFldYearPublish().setBorder(defaultBorder);
 				
-				if(!addBook.getTxtFldIsbn().getText().matches(Constants.ISBN_FORMAT)){
+				if(!addBook.getTxtFldIsbn().getText().matches(Constants.ISBN_FORMAT_1) && 
+						!addBook.getTxtFldIsbn().getText().matches(Constants.ISBN_FORMAT_2)){
 					addBook.getTxtFldIsbn().setBorder(redBorder);
 					validate = false;
 				}else addBook.getTxtFldIsbn().setBorder(defaultBorder);

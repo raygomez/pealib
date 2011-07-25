@@ -19,7 +19,8 @@ public class Constants {
 	public static final String EMAIL_FORMAT = "([a-z]+[a-z0-9_\\.]+@\\w{2,}(\\.[a-z]{2,3})+)";
 	public static final String ADDRESS_FORMAT = ".{2,100}";
 	
-	public static final String ISBN_FORMAT = "[0-9]{13}";
+	public static final String ISBN_FORMAT_1 = "[0-9]{13}";
+	public static final String ISBN_FORMAT_2 = "[0-9]{10}";
 	public static final String YEAR_PUBLISH_FORMAT = "[0-9]{4}";
 
 	public static final String NAME_FORMAT_ERROR_MESSAGE = "Incorrect name format, please alphabetical characters only";
