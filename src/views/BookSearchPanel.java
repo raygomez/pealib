@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.table.TableModel;
+import javax.swing.JLabel;
 
 public class BookSearchPanel extends JPanel {
 	/**
@@ -34,7 +35,7 @@ public class BookSearchPanel extends JPanel {
 	}
 
 	private void displayBookSearch(){
-		setLayout(new MigLayout("", "[grow][grow 10][grow 10]", "[][][][grow]"));
+		setLayout(new MigLayout("", "[grow][grow 10][grow 10]", "[][][25px:20:25px][][grow]"));
 		
 		textFieldSearch = new JTextField();
 		textFieldSearch.setName("textSearch");
@@ -53,7 +54,7 @@ public class BookSearchPanel extends JPanel {
 		tableBookList = new JTable();
 		tableBookList.setName("tableList");
 		
-		add(new JScrollPane(tableBookList), "cell 0 3 3 1,grow");
+		add(new JScrollPane(tableBookList), "cell 0 4 3 1,grow");
 	}
 	
 	public void setSearchButtonListener(ActionListener search) {
