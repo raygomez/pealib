@@ -1,5 +1,6 @@
 package controllers;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -10,14 +11,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 
 import net.miginfocom.swing.MigLayout;
 import utilities.Connector;
 import utilities.Constants;
+import views.AddBookDialog;
 import views.BookInfoPanel;
 import views.BookSearchPanel;
 import models.Book;
@@ -35,10 +39,9 @@ public class BookController {
 	private User currentUser;
 	private ArrayList<Book> bookList;
 
-	public static void main(String args[]) throws Exception{
-		new Connector(Constants.APP_CONFIG);
-//		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
-		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", 1, "User");
+	public static void main(String args[]){
+		new Connector(Constants.TEST_CONFIG);
+		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "Librarian");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -49,17 +52,25 @@ public class BookController {
 		testFrame.setContentPane(bookController.getBookLayoutPanel());
 	}
 	
-	public BookController(User user) throws Exception{
+	public BookController(User user){
 		currentUser = user;
-		generateBookLayoutPanel();
+		try {
+			generateBookLayoutPanel();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void generateBookLayoutPanel() throws Exception{
 		bookList = BookDAO.searchBook("*");
 		currSearchString = "*";
 		bookLayoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]"));
-		bookSearch = new BookSearchPanel();
-		bookInfo = new BookInfoPanel(bookList.get(0), currentUser);
+		bookSearch = new BookSearchPanel(currentUser);
+		if(bookList.size() == 0){
+			bookInfo = new BookInfoPanel(new Book(), currentUser);
+		}else{
+			bookInfo = new BookInfoPanel(bookList.get(0), currentUser);
+		}
 		currTableRowSelection = 0;
 		bookLayoutPanel.add(bookSearch, "grow");
 		bookLayoutPanel.add(bookInfo, "grow");
@@ -67,6 +78,7 @@ public class BookController {
 		bookSearch.setTextFieldListener(new TextFieldListener());
 		bookSearch.setClearButtonListener(new ClearButtonListener());
 		bookSearch.setSearchButtonListener(new SearchButtonListener());
+		bookSearch.setAddBookButtonListener(new AddBookButtonListener());
 		bookSearch.setTableListModel(new BookListModel(BookDAO.searchBook("*")));
 		bookSearch.setMouseListener(new BookListMouseListener());
 		bookInfo.addSaveListener(new SaveButtonListener());
@@ -79,7 +91,67 @@ public class BookController {
 		return bookLayoutPanel;
 	}
 	
-	
+	class AddBookButtonListener implements ActionListener{
+		private AddBookDialog addBook;
+		public void actionPerformed(ActionEvent arg0) {
+			addBook = new AddBookDialog();
+			addBook.setVisible(true);
+			addBook.addBookActionListener(new AddBookListener());
+			addBook.addCancelActionListener(new CancelListener());
+		}
+		
+		class AddBookListener implements ActionListener{
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				boolean validate = true;
+				Border redBorder = BorderFactory.createLineBorder(Color.red);
+				Border defaultBorder = BorderFactory.createLineBorder(Color.gray);
+				
+				if(addBook.getTxtFldTitle().getText().trim().isEmpty() || addBook.getTxtFldTitle().getText().length() > 100){
+					addBook.getTxtFldTitle().setBorder(redBorder);
+					validate = false;
+				}else addBook.getTxtFldTitle().setBorder(defaultBorder);
+				
+				if(addBook.getTxtFldAuthor().getText().trim().isEmpty() || addBook.getTxtFldAuthor().getText().length() > 100){
+					addBook.getTxtFldAuthor().setBorder(redBorder);
+					validate = false;
+				}else addBook.getTxtFldAuthor().setBorder(defaultBorder);
+				
+				if(!addBook.getTxtFldYearPublish().getText().trim().isEmpty()){
+					if(!addBook.getTxtFldYearPublish().getText().matches(Constants.YEAR_PUBLISH_FORMAT)){
+						addBook.getTxtFldYearPublish().setBorder(redBorder);
+						validate = false;
+					}else addBook.getTxtFldYearPublish().setBorder(defaultBorder);
+				}else addBook.getTxtFldYearPublish().setBorder(defaultBorder);
+				
+				if(!addBook.getTxtFldIsbn().getText().matches(Constants.ISBN_FORMAT)){
+					addBook.getTxtFldIsbn().setBorder(redBorder);
+					validate = false;
+				}else addBook.getTxtFldIsbn().setBorder(defaultBorder);
+				
+				if(addBook.getTxtFldPublisher().getText().length() > 100){
+					addBook.getTxtFldPublisher().setBorder(redBorder);
+					validate = false;
+				}else addBook.getTxtFldPublisher().setBorder(defaultBorder);
+				
+				if(addBook.getTxtAreaDescription().getText().length() > 300){
+					
+				}else addBook.getTxtAreaDescription().setBorder(defaultBorder);
+				
+				if(validate){
+					System.out.println(addBook.getTxtFldTitle().getText());
+				}
+			}
+		}
+
+		class CancelListener implements ActionListener{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addBook.dispose();
+			}
+			
+		}
+	}
 	
 	class SaveButtonListener implements ActionListener{
 
@@ -171,7 +243,7 @@ public class BookController {
 			bookInfo.getBtnDelete().setEnabled(false);
 			bookInfo.getBtnBorrow().setEnabled(false);
 			bookInfo.getBtnReserve().setEnabled(false);
-			
+
 		}
 
 		@Override
@@ -289,7 +361,11 @@ public class BookController {
 						currSearchString = strSearch;
 						bookList = BookDAO.searchBook(strSearch);
 						bookSearch.setTableListModel(new BookListModel(bookList));
-						bookInfo.setBookInfoData(bookList.get(0));
+						if(bookList.size() == 0){
+							bookInfo.setBookInfoData(new Book());
+						}else{
+							bookInfo.setBookInfoData(bookList.get(0));
+						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
