@@ -5,6 +5,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
+
+import models.User;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JScrollPane;
@@ -12,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.table.TableModel;
+import javax.swing.JLabel;
 
 public class BookSearchPanel extends JPanel {
 	/**
@@ -22,18 +25,26 @@ public class BookSearchPanel extends JPanel {
 	private JTable tableBookList;
 	private JButton btnSearch;
 	private JButton btnClear;
+	private JButton btnAddBook;
 
-	public BookSearchPanel() {
+	public BookSearchPanel(User user) {
 		displayBookSearch();
+		if(user.getType().equals("Librarian")){
+			btnAddBook.setVisible(true);
+		}
 	}
 
 	private void displayBookSearch(){
-		setLayout(new MigLayout("", "[grow][grow 10][grow 10]", "[][][][grow]"));
+		setLayout(new MigLayout("", "[grow][grow 10][grow 10]", "[][][25px:20:25px][][grow]"));
 		
 		textFieldSearch = new JTextField();
 		textFieldSearch.setName("textSearch");
 		add(textFieldSearch, "cell 0 0 3 1,grow");
 		textFieldSearch.setColumns(10);
+		
+		btnAddBook = new JButton("Add Book");
+		btnAddBook.setVisible(false);
+		add(btnAddBook, "cell 0 1,alignx left,aligny center");
 		
 		btnSearch = new JButton("Search");
 		add(btnSearch, "cell 1 1,grow");
@@ -43,7 +54,7 @@ public class BookSearchPanel extends JPanel {
 		tableBookList = new JTable();
 		tableBookList.setName("tableList");
 		
-		add(new JScrollPane(tableBookList), "cell 0 3 3 1,grow");
+		add(new JScrollPane(tableBookList), "cell 0 4 3 1,grow");
 	}
 	
 	public void setSearchButtonListener(ActionListener search) {
@@ -52,6 +63,10 @@ public class BookSearchPanel extends JPanel {
 	
 	public void setClearButtonListener(ActionListener clear){
 		btnClear.addActionListener(clear);
+	}
+	
+	public void setAddBookButtonListener(ActionListener add){
+		btnAddBook.addActionListener(add);
 	}
 	
 	public void setTextFieldListener(KeyListener textfield) {

@@ -6,6 +6,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import models.Book;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -13,6 +15,8 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class AddBookDialog extends JDialog {
 
@@ -26,11 +30,11 @@ public class AddBookDialog extends JDialog {
 	private JTextField txtFldYearPublish;
 	private JTextField txtFldPublisher;
 	private JTextField txtFldIsbn;
-	private JTextField txtFldCopies;
 	private JTextArea txtAreaDescription;
 	private JLabel lblErrorMsg;
 	private JButton btnAdd;
 	private JButton btnCancel;
+	private JSpinner spinCopyVal;
 	/**
 	 * Create the dialog.
 	 */
@@ -103,9 +107,9 @@ public class AddBookDialog extends JDialog {
 			contentPanel.add(lblCopies, "cell 0 6");
 		}
 		{
-			txtFldCopies = new JTextField();
-			contentPanel.add(txtFldCopies, "cell 1 6,growx");
-			txtFldCopies.setColumns(10);
+			spinCopyVal = new JSpinner();
+			spinCopyVal.setModel(new SpinnerNumberModel(1, 0, 2147483647, 1));
+			contentPanel.add(spinCopyVal, "cell 1 6,alignx left");
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -127,6 +131,7 @@ public class AddBookDialog extends JDialog {
 				btnCancel.setActionCommand("Cancel");
 				buttonPane.add(btnCancel, "cell 2 0,alignx left,aligny top");
 			}
+			this.setResizable(false);
 		}
 	}
 	public JTextField getTxtFldTitle() {
@@ -144,14 +149,12 @@ public class AddBookDialog extends JDialog {
 	public JTextField getTxtFldIsbn() {
 		return txtFldIsbn;
 	}
-	public JTextField getTxtFldCopies() {
-		return txtFldCopies;
-	}
+
 	public JTextArea getTxtAreaDescription() {
 		return txtAreaDescription;
 	}
-	public void setLblErrorMsg(JLabel lblErrorMsg) {
-		this.lblErrorMsg = lblErrorMsg;
+	public JLabel getLblErrorMsg() {
+		return lblErrorMsg;
 	}
 	public void addBookActionListener(ActionListener add) {
 		btnAdd.addActionListener(add);
@@ -160,4 +163,15 @@ public class AddBookDialog extends JDialog {
 		btnCancel.addActionListener(cancel);
 	}
 	
+	public Book getBookInfo(){
+		Book newBook = new Book();
+		newBook.setAuthor(txtFldAuthor.getText());
+		newBook.setCopies(Integer.parseInt(spinCopyVal.getModel().getValue().toString()));
+		newBook.setDescription(txtAreaDescription.getText());
+		newBook.setIsbn(txtFldIsbn.getText());
+		newBook.setPublisher(txtFldPublisher.getText());
+		newBook.setTitle(txtFldTitle.getText());
+		newBook.setYearPublish(Integer.parseInt(txtFldYearPublish.getText()));
+		return newBook;
+	}
 }

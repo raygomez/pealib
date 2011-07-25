@@ -17,11 +17,14 @@ public class UserSearchPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField fieldSearch = new JTextField(30);
-	private JButton btnSearch = new JButton("Search", new ImageIcon(
-			"resources/images/search32x32.png"));
+	private JButton btnSearch = new JButton("Search", new ImageIcon("resources/images/search32x32.png"));
 	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JPanel pendingPane = new JPanel();
 	private JPanel usersPane = new JPanel();
+	
+	private JButton btnAccept = new JButton("Accept", new ImageIcon("resources/images/Apply.png"));
+	private JButton btnDeny = new JButton("Deny", new ImageIcon("resources/images/Delete.png"));
+	private JCheckBox cbAll = new JCheckBox("Select All");
 
 	private DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
 	private JTable pendingTable, usersTable;
@@ -106,26 +109,35 @@ public class UserSearchPanel extends JPanel {
 		this.usersTable = usersTable;
 	}
 
-	private void setTableSettings(JTable table) {
+	private void setTableSettings(JTable table, int tab) {
 		table.setRowHeight(28);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getColumn("Username").setCellRenderer(trender);
 		table.getColumn("Name").setCellRenderer(trender);
+		
+		if(tab==1){
+			table.getColumn("Accept").setPreferredWidth(5);
+		}
 	}
 
 	private void pendingAppPanel() {
 		getPendingPane().setBorder(new EmptyBorder(5, 5, 5, 5));
-		getPendingPane().setLayout(new MigLayout("", "", ""));
+		getPendingPane().setLayout(new MigLayout("", "[]10px[40px]", "[40px]5px[40px]20px[10px][grow]"));
 
 		// table pane
 		setPendingTable(new JTable(modelPending));
 		getPendingTable().setName("tablePending");
-		setTableSettings(getPendingTable());
+		setTableSettings(getPendingTable(),1);
 
 		JScrollPane scrollPane = new JScrollPane(getPendingTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		getPendingPane().add(scrollPane);
+		getPendingPane().add(scrollPane, "cell 0 0, span 1 4");
+		
+		getPendingPane().add(btnAccept, "cell 1 0, growx");
+		getPendingPane().add(btnDeny, "cell 1 1, growx");
+		getPendingPane().add(cbAll, "cell 1 2, growx");
+		
 	}
 
 	private void usersPanel() {
@@ -135,7 +147,7 @@ public class UserSearchPanel extends JPanel {
 		// table pane
 		setUsersTable(new JTable(modelUsers));
 		getUsersTable().setName("tablePending");
-		setTableSettings(getUsersTable());
+		setTableSettings(getUsersTable(),0);
 
 		JScrollPane scrollPane = new JScrollPane(getUsersTable());
 		scrollPane.setName("scrollPane");
@@ -146,11 +158,11 @@ public class UserSearchPanel extends JPanel {
 	public void setTableModel(int tab, AbstractTableModel model) {
 		if (tab == 0) {
 			getUsersTable().setModel(model);
-			setTableSettings(getUsersTable());
+			setTableSettings(getUsersTable(), tab);
 
 		} else {
 			getPendingTable().setModel(model);
-			setTableSettings(getPendingTable());
+			setTableSettings(getPendingTable(),tab);
 		}
 		tabbedPane.validate();
 		tabbedPane.repaint();
