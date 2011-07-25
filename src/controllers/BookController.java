@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.Timer;
@@ -41,8 +42,10 @@ public class BookController {
 	private ArrayList<Book> bookList;
 
 	public static void main(String args[]){
-		new Connector(Constants.TEST_CONFIG);
-		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", "Librarian");
+		new Connector(Constants.APP_CONFIG);
+		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", "User");
+		//User user = new User(3, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
+		//User user = new User(4, "dota", "dota", "Domingo", "Tanael", "dota@gmail.com", "USA", "09187658790", 1, "Librarian");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -270,10 +273,15 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				TransactionDAO.requestBook(bookList.get(currTableRowSelection), currentUser);
+				reset();
+				int request = TransactionDAO.requestBook(bookList.get(currTableRowSelection), currentUser);
+				if (request == 1){
+					JOptionPane.showMessageDialog(bookLayoutPanel, "The book has been successfully added to your Requests List!");
+				}
 				bookList = BookDAO.searchBook(currSearchString);
 				bookSearch.getTableBookList().setModel(new BookListModel(bookList));
 				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
+			
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -287,7 +295,14 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				TransactionDAO.reserveBook(bookList.get(currTableRowSelection), currentUser);
+				reset();
+				int reserve = TransactionDAO.reserveBook(bookList.get(currTableRowSelection), currentUser);
+				if (reserve == 1){
+					JOptionPane.showMessageDialog(bookLayoutPanel, "The book has been successfully added to your Rervations List!");
+				}
+				bookList = BookDAO.searchBook(currSearchString);
+				bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -300,7 +315,7 @@ public class BookController {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			resetButton();
+			reset();
 			JTable table = (JTable) e.getSource();
 			int tableRow = table.getSelectedRow();
 			currTableRowSelection = tableRow;
@@ -323,35 +338,28 @@ public class BookController {
 						bookInfo.getBtnDelete().setEnabled(false);
 					}else bookInfo.getBtnDelete().setEnabled(true);
 				}
-				
-				if (!TransactionDAO.isBorrowedByUser(bookList.get(currTableRowSelection), currentUser) && 
-						!TransactionDAO.isReservedByUser(bookList.get(currTableRowSelection), currentUser)){
-					if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) > 0){
-						bookInfo.getBtnBorrow().setEnabled(true);
-					} else {
-						if(bookList.get(currTableRowSelection).getCopies() > 0){
-							bookInfo.getBtnReserve().setEnabled(true);
-						}else{
-							bookInfo.getBtnReserve().setEnabled(false);
+				if (bookList.get(currTableRowSelection).getCopies() > 0){
+					if (currentUser.getType().equals("User")){
+						if (!TransactionDAO.isBorrowedByUser(bookList.get(currTableRowSelection), currentUser) && 
+								!TransactionDAO.isReservedByUser(bookList.get(currTableRowSelection), currentUser)){
+							if (TransactionDAO.getAvailableCopies(bookList.get(currTableRowSelection)) > 0){
+								bookInfo.getBtnBorrow().setEnabled(true);
+							} else {
+								bookInfo.getBtnReserve().setEnabled(true);
+								bookInfo.getLblErrorMsg().setText("No available copies");
+								bookInfo.getLblErrorMsg().setForeground(Color.RED);
+							}
+						} else {
+							bookInfo.getLblErrorMsg().setText("You already have a pending transaction for the following book: ");
+							bookInfo.getLblErrorMsg().setForeground(Color.RED);
 						}
-						bookInfo.getLblErrorMsg().setText("No available copies");
 					}
-				} else {
-					bookInfo.getLblErrorMsg().setText("You already have a pending transaction for the following book: ");
 				}
 				
 			} catch (Exception ex){
 				
 			}
 		
-		}
-
-		private void resetButton() {
-			bookInfo.getBtnSave().setEnabled(false);
-			bookInfo.getBtnDelete().setEnabled(false);
-			bookInfo.getBtnBorrow().setEnabled(false);
-			bookInfo.getBtnReserve().setEnabled(false);
-			bookInfo.getLblErrorMsg().setText("");
 		}
 
 		@Override
@@ -470,6 +478,14 @@ public class BookController {
 		}
 		
 	}
+	private void reset() {
+		bookInfo.getBtnSave().setEnabled(false);
+		bookInfo.getBtnDelete().setEnabled(false);
+		bookInfo.getBtnBorrow().setEnabled(false);
+		bookInfo.getBtnReserve().setEnabled(false);
+		bookInfo.getLblErrorMsg().setText("");
+	}
+
 	
 	class TextFieldListener implements KeyListener{
 
@@ -479,8 +495,8 @@ public class BookController {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				timer.stop();
-				String strSearch = bookSearch.getTextFieldSearch();
 				try {
+					String strSearch = bookSearch.getTextFieldSearch();
 					if(!strSearch.trim().isEmpty()){
 						currSearchString = strSearch;
 						bookList = BookDAO.searchBook(strSearch);
@@ -505,7 +521,6 @@ public class BookController {
 		
 		@Override
 		public void keyPressed(KeyEvent key) {
-			
 		}
 
 		@Override
