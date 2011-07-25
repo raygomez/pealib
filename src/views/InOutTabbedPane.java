@@ -1,6 +1,7 @@
 package views;
 
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeListener;
 
 public class InOutTabbedPane extends JTabbedPane {
 
@@ -15,22 +16,19 @@ public class InOutTabbedPane extends JTabbedPane {
 
 		addTab("Incoming", incomingPanel);
 		addTab("Outgoing", outgoingPanel);
-		System.out.println("InOutTabbedPane");
 	}
 
+	/* Event Listener */
+	public void setEventListener(ChangeListener tab) {
+		addChangeListener(tab);
+	}
+	
+	/* Getters */
 	public IncomingPanel getIncomingPanel() {
 		return incomingPanel;
 	}
 
-	public void setIncomingPanel(IncomingPanel incomingPanel) {
-		this.incomingPanel = incomingPanel;
-	}
-
 	public OutgoingPanel getOutgoingPanel() {
 		return outgoingPanel;
-	}
-
-	public void setOutgoingPanel(OutgoingPanel outgoingPanel) {
-		this.outgoingPanel = outgoingPanel;
 	}
 }
