@@ -83,7 +83,6 @@ import utilities.ErrorLabel;
 			buttonPane.add(cancelButton);
 			setLocationRelativeTo(null);
 			pack();
-			setVisible(true);
 		}
 
 		public JPasswordField getOldPasswordField() {
@@ -167,11 +166,9 @@ import utilities.ErrorLabel;
 
 		public void removeOldPassword(){
 			getOldPasswordField().setVisible(false);
-			getOldPasswordLabel().setVisible(false);
-			
+			getOldPasswordLabel().setVisible(false);			
 			getOldPasswordField().setEnabled(false);
-
-		}
+		}				
 
 		public void displayError(int error) {
 			// TODO Auto-generated method stub

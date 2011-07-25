@@ -199,8 +199,31 @@ public class UserController {
 	}
 	
 	class TabChangeListener implements ChangeListener {
+		//TODO 
 		@Override
-		public void stateChanged(ChangeEvent e) { searchUsers(); }
+		public void stateChanged(ChangeEvent e) {
+			JTabbedPane temp = (JTabbedPane)e.getSource();
+			int index = temp.getSelectedIndex();
+			System.out.println(index);
+			searchUsers(); 
+			if(index == 0){
+				getUserSearch().getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
+				getUserSearch().getUsersTable().addRowSelectionInterval(0, 0);
+			}
+			else if(index == 1){
+				if(getSearchedPending()!=null){
+					getUserSearch().getPendingTable().getSelectionModel().setSelectionInterval(0, 0);
+					//getUserSearch().getPendingTable().addRowSelectionInterval(0, 0);
+					
+					getUserSearch().getPendingTable().addRowSelectionInterval(0, 0);
+				}
+			}
+			
+			//getUserInfoPanel().toggleButton(false);
+			//getUserInfoPanel().clearFields();
+			//setSelectedUser(null);			
+			
+		}
 	}
 
 	class SearchListener implements ActionListener {
@@ -336,11 +359,14 @@ public class UserController {
 		}
 	} // end of table model
 	
+	//TODO
 	private void generateLayoutPanel() {
 		getLayoutPanel().add(getUserSearch(), "grow");
 		getLayoutPanel().add(getUserInfoPanel(), "grow");
 		getUserInfoPanel().addSaveListener(save);
 		getUserInfoPanel().addChangePasswordListener(showChangePassword);
+		//getUserInfoPanel().toggleButton(false);
+		getUserSearch().getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
 	}
 
 	public JPanel getUserPanel() { return getLayoutPanel();}
@@ -382,7 +408,7 @@ public class UserController {
 	}
 
 	private class UserSelectionListener implements ListSelectionListener {
-
+//TODO
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
@@ -409,7 +435,7 @@ public class UserController {
 					user.getUserName(), user.getFirstName(),
 					user.getLastName(), user.getAddress(), user.getContactNo(),
 					user.getEmail());
-			}
+			}		
 		}
 	}
 
@@ -434,6 +460,7 @@ public class UserController {
 
 				try {
 					UserDAO.updateUser(user);
+					JOptionPane.showMessageDialog(layoutPanel, "Record successfully updated!");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -444,14 +471,17 @@ public class UserController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                changePasswordDialog = new ChangePasswordDialog();
+            
+                changePasswordDialog = new ChangePasswordDialog();               
                 
                 if(currentUser.getType().equals("Librarian") && !userInfoPanel.getIdNumber().isEmpty() &&
                                 currentUser.getUserId() != Integer.parseInt(userInfoPanel.getIdNumber())){
                         changePasswordDialog.removeOldPassword();
                 }                
                 changePasswordDialog.addChangePasswordListener(changePassword);
+                
+               // if(getSelectedUser() == null)
+                changePasswordDialog.setVisible(true);
         }
     };
 
@@ -461,7 +491,7 @@ public class UserController {
         
         @Override
         public void actionPerformed(ActionEvent arg0) {
-                // TODO Auto-generated method stub
+               
                 int userID;
                 if(changePasswordDialog.getOldPasswordField().isEnabled()){
                         String oldPassword = new String(changePasswordDialog.getOldPasswordField().getPassword());
@@ -470,7 +500,7 @@ public class UserController {
                         try {
                                 correctPassword = UserDAO.checkPassword(userID, oldPassword);
                         } catch (Exception e) {
-                                // TODO Auto-generated catch block
+                                
                                 e.printStackTrace();
                                 correctPassword = false;
                         }
@@ -490,7 +520,7 @@ public class UserController {
                                 changePasswordDialog.dispose();
                                 JOptionPane.showMessageDialog(layoutPanel, "Password successfully changed!");
                         } catch (Exception e) {
-                                // TODO Auto-generated catch block
+                               
                                 e.printStackTrace();
                                 changePasswordDialog.displayError(Constants.DEFAULT_ERROR);
                         }

@@ -222,4 +222,9 @@ public class UserInfoPanel extends JPanel {
 	public void setLastNameEnabled(boolean enabled){
 		lastName.setEnabled(enabled);
 	}
+	
+	public void toggleButton(boolean value){
+		changePasswordButton.setEnabled(value);
+		saveButton.setEnabled(value);
+	}
 }

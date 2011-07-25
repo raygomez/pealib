@@ -1,16 +1,14 @@
 package pealib;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JFrame;
 
 import models.User;
 
 import controllers.AuthenticationController;
 import controllers.BookController;
 import controllers.ELibController;
+import controllers.TransactionController;
 import controllers.UserController;
 
 import utilities.Connector;
@@ -25,6 +23,7 @@ public class PeaLibrary {
 	private UserController userControl;
 	private BookController bookControl;
 	private ELibController elibControl;
+	private TransactionController transactionControl;
 	
 	private UserSidebarPanel userSidebarPanel;
 	private LibrarianSidebarPanel librarianSidebarPanel;
@@ -70,6 +69,13 @@ public class PeaLibrary {
 	}
 	
 	private void initializeLibrarian(){
+		
+		try {
+			transactionControl = new TransactionController();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		librarianSidebarPanel = new LibrarianSidebarPanel();
 		initializeSidebarPanel(librarianSidebarPanel);
@@ -140,7 +146,7 @@ public class PeaLibrary {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			frame.setVisible(false);
-			frame = null;
+			frame.dispose();
 			currentUser = null;
 			
 			initialize();
@@ -153,16 +159,16 @@ public class PeaLibrary {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			if(currentUser.getType().equals("Librarian")){
-				
+				//frame.setContentPanel(transactionControl);
 			}
 			else if(currentUser.getType().equals("User")){
-				//frame.setContentPanel(elibControl);
+				frame.setContentPanel(elibControl.getTabpane());
 			}
 		}
 	};
 	
 	public static void main(String[] args){
 		
-		PeaLibrary main = new PeaLibrary();
+		new PeaLibrary();
 	}
 }
