@@ -9,7 +9,7 @@ import org.uispec4j.UISpecTestCase;
 public class OutgoingPanelTest extends UISpecTestCase {
 
 	Panel panel;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		panel = new Panel(new OutgoingPanel());
@@ -17,15 +17,16 @@ public class OutgoingPanelTest extends UISpecTestCase {
 
 	@Test
 	public void testInitialState() {
-		Button grantButton = panel.getButton("Grant");
-		assertNotNull(grantButton);
-		assertFalse(grantButton.isEnabled());
-		assertThat(grantButton.isVisible());
 		
-		Button denyButton = panel.getButton("Deny");
-		assertNotNull(denyButton);
-		assertFalse(denyButton.isEnabled());
-		assertThat(denyButton.isVisible());
+		String[] buttonArray = new String[] { "Grant", "Deny" };
+		Button button;
+
+		for (String s : buttonArray) {
+			button = panel.getButton(s);
+			assertNotNull(button);
+			assertFalse(button.isEnabled());
+			assertThat(button.isVisible());
+		}
 
 		Panel searchPanel = panel.getPanel("searchPanel");
 		assertNotNull(searchPanel);

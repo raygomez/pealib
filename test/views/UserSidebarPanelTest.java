@@ -1,4 +1,5 @@
 package views;
+
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.uispec4j.*;
@@ -7,56 +8,27 @@ import org.unitils.*;
 import views.UserSidebarPanel;
 
 @RunWith(UnitilsJUnit4TestClassRunner.class)
-public class UserSidebarPanelTest extends UISpecTestCase{
-	
+public class UserSidebarPanelTest extends UISpecTestCase {
+
 	private Panel panel;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		panel = new Panel(new UserSidebarPanel());
 	}
-	
-	@Test
-	public void testInitialState(){
-		Button searchButton = panel.getButton("Search Books");
-		assertNotNull(searchButton);
-		assertThat(searchButton.isEnabled());
-		assertThat(searchButton.isVisible());
-		
-		Button editProfileButton = panel.getButton("Edit Profile");
-		assertNotNull(editProfileButton);
-		assertThat(editProfileButton.isEnabled());
-		assertThat(editProfileButton.isVisible());
-		
-		Button transactionHistoryButton = panel.getButton("View E-Library Card");
-		assertNotNull(transactionHistoryButton);
-		assertThat(transactionHistoryButton.isEnabled());
-		assertThat(transactionHistoryButton.isVisible());
-		
-		Button logoutButton = panel.getButton("Logout");
-		assertNotNull(logoutButton);
-		assertThat(logoutButton.isEnabled());
-		assertThat(logoutButton.isVisible());
-	}
 
 	@Test
-	public void testAddViewBooksListener() {
-		
-	}
+	public void testInitialState() {
+		Button button;
 
-	@Test
-	public void testAddEditProfileListener() {
-		
-	}
+		String[] buttonArray = new String[] { "Search Books", "Edit Profile",
+				"View E-Library Card", "Logout" };
 
-	@Test
-	public void testAddShowTransactionHistoryListener() {
-		
+		for (String s : buttonArray) {
+			button = panel.getButton(s);
+			assertNotNull(button);
+			assertThat(button.isEnabled());
+			assertThat(button.isVisible());
+		}
 	}
-
-	@Test
-	public void testAddLogoutListener() {
-		
-	}
-
 }
