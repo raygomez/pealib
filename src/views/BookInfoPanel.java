@@ -55,7 +55,6 @@ public class BookInfoPanel extends JPanel {
 		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[40][][][][][][grow][48.00][34.00][13.00][]"));
 		
 		lblErrorMsg = new JLabel("");
-		lblErrorMsg.setForeground(Color.RED);
 		add(lblErrorMsg, "cell 3 0 2 1,alignx center,aligny center");
 		
 		JLabel lblTitle = new JLabel("Title:");

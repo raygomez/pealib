@@ -157,7 +157,7 @@ public class UserDAO {
 		// TODO Auto-generated method stub
 		String sql = "UPDATE Users "
 			+ " set FirstName = ?, LastName = ?, UserName = ?, "
-			+ "Address = ?, ContactNo = ?, Email = ? " +
+			+ "Address = ?, ContactNo = ?, Email = ?, Type = ? " +
 					"WHERE ID = ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
@@ -167,7 +167,8 @@ public class UserDAO {
 		ps.setString(4, user.getAddress());
 		ps.setString(5, user.getContactNo());
 		ps.setString(6, user.getEmail());
-		ps.setString(7, user.getUserId()+"");
+		ps.setString(7, user.getType());
+		ps.setString(8, user.getUserId()+"");
 		
 		ps.executeUpdate();
 		Connector.close();

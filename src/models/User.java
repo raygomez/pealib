@@ -9,7 +9,6 @@ public class User {
 	private String email;
 	private String address;
 	private String contactNo;
-	private int status; 
 	private String type;
 	
 	public User(){
@@ -17,8 +16,7 @@ public class User {
 	}
 	
 	public User(int userId, String userName, String password, String firstName,
-			String lastName, String email, String address, String contactNo,
-			int status, String type) {
+			String lastName, String email, String address, String contactNo, String type) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -28,13 +26,12 @@ public class User {
 		this.email = email;
 		this.address = address;
 		this.contactNo = contactNo;
-		this.status = status;
 		this.type = type;
 	}
-
+	
 	public User(int userId, String userName, String firstName,
-			String lastName, String email, String address, String contactNo) {
-		// TODO Auto-generated constructor stub
+			String lastName, String email, String address, String contactNo, String type) {
+		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.firstName = firstName;
@@ -42,6 +39,7 @@ public class User {
 		this.email = email;
 		this.address = address;
 		this.contactNo = contactNo;
+		this.type = type;
 	}
 
 	public int getUserId() {
@@ -106,14 +104,6 @@ public class User {
 
 	public void setContactNo(String contactNo) {
 		this.contactNo = contactNo;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
 	public String getType() {
