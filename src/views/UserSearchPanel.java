@@ -116,6 +116,12 @@ public class UserSearchPanel extends JPanel {
 	public JCheckBox getcbAll() {
 		return cbAll;
 	}
+	
+	public void togglePendingButtons(boolean toggle){
+		btnAccept.setEnabled(toggle);
+		btnDeny.setEnabled(toggle);
+		cbAll.setEnabled(toggle);
+	}
 
 	private void setTableSettings(JTable table, int tab) {
 		table.setRowHeight(28);
@@ -172,6 +178,12 @@ public class UserSearchPanel extends JPanel {
 			getPendingTable().setModel(model);
 			setTableSettings(getPendingTable(),tab);
 		}
+		resetTable();
+	}
+	
+	public void resetTable(){
+		getPendingPane().validate();
+		getPendingPane().repaint();
 		tabbedPane.validate();
 		tabbedPane.repaint();
 	}
