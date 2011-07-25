@@ -1,6 +1,8 @@
 package views;
 
 import java.awt.event.ActionListener;
+
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
@@ -10,6 +12,10 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Color;
+import javax.swing.JTextArea;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import java.awt.Dimension;
 
 public class BookInfoPanel extends JPanel {
 	
@@ -22,13 +28,14 @@ public class BookInfoPanel extends JPanel {
 	private JTextField txtFldYrPublished;
 	private JTextField txtFldPublisher;
 	private JTextField txtFldISBN;
-	private JTextField txtFldDescription;
 	private JButton btnSave;
 	private JButton btnDelete;
-	private JLabel lblCopiesValue;
 	private User currUser;
 	private Book currBook;
 	private JLabel lblErrorMsg;
+	private JTextArea txtFldDescription;
+	private JSpinner spinCopyVal;
+	private JFormattedTextField spinValue;
 
 	/**
 	 * Create the panel.
@@ -42,7 +49,7 @@ public class BookInfoPanel extends JPanel {
 
 	private void displayBookInfo() {
 		
-		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00][144]", "[][][][][][][][48.00][34.00][13.00][]"));
+		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[][][][][][][grow][48.00][34.00][13.00][]"));
 		
 		lblErrorMsg = new JLabel("");
 		lblErrorMsg.setForeground(Color.RED);
@@ -91,16 +98,15 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblDescription = new JLabel("Description:");
 		add(lblDescription, "cell 1 6");
 		
-		txtFldDescription = new JTextField(currBook.getDescription());
-		txtFldDescription.setEditable(false);
+		txtFldDescription = new JTextArea();
 		add(txtFldDescription, "cell 3 6 2 3,grow");
-		txtFldDescription.setColumns(10);
 		
 		JLabel lblCopies = new JLabel("Copies:");
-		add(lblCopies, "cell 1 7,aligny bottom");
+		add(lblCopies, "cell 1 9,alignx left,aligny center");
 		
-		lblCopiesValue = new JLabel("" + currBook.getCopies());
-		add(lblCopiesValue, "cell 1 8,aligny top");
+		spinCopyVal = new JSpinner();
+		spinCopyVal.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		add(spinCopyVal, "cell 3 9,alignx left,aligny center");
 		
 		btnSave = new JButton("Save");
 		
@@ -128,14 +134,14 @@ public class BookInfoPanel extends JPanel {
 		btnDelete.addActionListener(deleteRecord);
 	}
 	
-	public Book getCurrBook() {
+	public Book getCurrBook() {	
 		currBook.setTitle(txtFldTitle.getText());
 		currBook.setAuthor(txtFldAuthor.getText());
 		currBook.setYearPublish(Integer.parseInt(txtFldYrPublished.getText()));
 		currBook.setPublisher(txtFldPublisher.getText());
 		currBook.setIsbn(txtFldISBN.getText());
 		currBook.setDescription(txtFldDescription.getText());
-		currBook.setCopies(Integer.parseInt(lblCopiesValue.getText()));
+		currBook.setCopies(Integer.parseInt(spinCopyVal.getModel().getValue().toString()));
 		return currBook;
 	}
 	
@@ -147,7 +153,7 @@ public class BookInfoPanel extends JPanel {
 		txtFldPublisher.setText(book.getPublisher());
 		txtFldISBN.setText(book.getIsbn());
 		txtFldDescription.setText(book.getDescription());
-		lblCopiesValue.setText(Integer.toString(book.getCopies()));
+		spinCopyVal.getModel().setValue(book.getCopies());
 	}
 
 	public JTextField getTxtFldTitle() {
@@ -170,7 +176,7 @@ public class BookInfoPanel extends JPanel {
 		return txtFldISBN;
 	}
 
-	public JTextField getTxtFldDescription() {
+	public JTextArea getTxtFldDescription() {
 		return txtFldDescription;
 	}
 
