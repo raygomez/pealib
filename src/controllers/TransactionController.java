@@ -124,7 +124,7 @@ public class TransactionController {
 	private void grantBorrowRequest() {
 		int affectedRows = 0;
 		try {
-			affectedRows = TransactionDAO.borrowBook(getBookTransactionDetails());
+			affectedRows = TransactionDAO.acceptBookRequest(getBookTransactionDetails());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -155,7 +155,7 @@ public class TransactionController {
 	private void returnBook() {
 		//# check if reserved by other users
 		try {
-			TransactionDAO.returnBook(getBookTransactionDetails());
+			TransactionDAO.receiveBook(getBookTransactionDetails());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -342,7 +342,8 @@ public class TransactionController {
 				inPanel.getBtnReturn().setEnabled(true);
 				getBookTransactionDetails();
 				try {
-					int daysOverdue = TransactionDAO.getDaysOverdue(getBookTransactionDetails());
+					int daysOverdue = TransactionDAO.getDaysOverdue(getBookTransactionDetails().getBook(),
+							getBookTransactionDetails().getUser());
 					inPanel.getLblDaysOverdue().setText(daysOverdue + " days Overdue.");
 				} catch (Exception e) {
 					e.printStackTrace();
