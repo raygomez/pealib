@@ -38,9 +38,6 @@ public class ELibController {
 	private ArrayList<BorrowTransaction> bookData;
 	private ArrayList<ReserveTransaction> bookDataReserve;
 
-	/*
-	 * ..TODO For visual testing purposes only
-	 */
 	public static void main(String[] args) throws Exception {
 		new Connector(Constants.TEST_CONFIG);
 
@@ -60,8 +57,10 @@ public class ELibController {
 
 	public ELibController(User user) {
 		setUser(user);
+
 		setTabpane(new ELibTabbedPanel());
 		getTabpane().addChangeTabListener(new TabChangeListener());
+
 		ELibTableModel model = new ELibTableModel(0);
 		getTabpane().setTableModel(0, model);
 		getTabpane().setCellRenderer(0, new CancelButtonRenderer());
@@ -116,18 +115,21 @@ public class ELibController {
 	class TabChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			tab = getTabpane().getSelectedTab();
-			ELibTableModel model = new ELibTableModel(tab);
-			getTabpane().setTableModel(tab, model);
+			update();
+		}
+	}
 
-			getTabpane().setCellRenderer(tab, new CancelButtonRenderer());
-			if (tab == 0) {
-				getTabpane()
-						.setCellEditor(tab, new CancelRequestButtonEditor());
-			} else if (tab == 1) {
-				getTabpane()
-						.setCellEditor(tab, new CancelReservationButtonEditor());
-			}
+	private void update() {
+		tab = getTabpane().getSelectedTab();
+		ELibTableModel model = new ELibTableModel(tab);
+		getTabpane().setTableModel(tab, model);
+
+		getTabpane().setCellRenderer(tab, new CancelButtonRenderer());
+		if (tab == 0) {
+			getTabpane().setCellEditor(tab, new CancelRequestButtonEditor());
+		} else if (tab == 1) {
+			getTabpane()
+					.setCellEditor(tab, new CancelReservationButtonEditor());
 		}
 	}
 
@@ -136,10 +138,12 @@ public class ELibController {
 		 * TableModel for ELib Tabs
 		 */
 		private static final long serialVersionUID = 1L;
-		private ArrayList<String> columns;
+		private String[] columns;
 		private ArrayList<ArrayList<Object>> tableData;
 
 		public ELibTableModel(int tab) {
+
+			tableData = new ArrayList<ArrayList<Object>>();
 			switch (tab) {
 			case 0:
 				requestData();
@@ -160,14 +164,9 @@ public class ELibController {
 		}
 
 		private void requestData() {
-			columns = new ArrayList<String>();
-			columns.add("ISBN");
-			columns.add("Title");
-			columns.add("Author");
-			columns.add("Date Requested");
-			columns.add("Cancel");
+			columns = new String[] { "ISBN", "Title", "Author",
+					"Date Requested", "Cancel" };
 
-			tableData = new ArrayList<ArrayList<Object>>();
 			try {
 				bookData = TransactionDAO.getRequestedBooks(getUser());
 			} catch (Exception e) {
@@ -188,15 +187,9 @@ public class ELibController {
 		}
 
 		private void reserveData() {
-			columns = new ArrayList<String>();
-			columns.add("ISBN");
-			columns.add("Title");
-			columns.add("Author");
-			columns.add("Date Reserved");
-			columns.add("Queue Number");
-			columns.add("Cancel");
+			columns = new String[] { "ISBN", "Title", "Author",
+					"Date Reserved", "Queue Number", "Cancel" };
 
-			tableData = new ArrayList<ArrayList<Object>>();
 			try {
 				setBookDataReserve(TransactionDAO.getReservedBooks(getUser()));
 
@@ -220,14 +213,9 @@ public class ELibController {
 		}
 
 		private void onloanData() {
-			columns = new ArrayList<String>();
-			columns.add("ISBN");
-			columns.add("Title");
-			columns.add("Author");
-			columns.add("Date Borrowed");
-			columns.add("Date Due");
+			columns = new String[] { "ISBN", "Title", "Author",
+					"Date Borrowed", "Due Date" };
 
-			tableData = new ArrayList<ArrayList<Object>>();
 			try {
 				bookData = TransactionDAO.getOnLoanBooks(getUser());
 			} catch (Exception e) {
@@ -250,14 +238,9 @@ public class ELibController {
 		}
 
 		private void historyData() {
-			columns = new ArrayList<String>();
-			columns.add("ISBN");
-			columns.add("Title");
-			columns.add("Author");
-			columns.add("Date Borrowed");
-			columns.add("Date Returned");
+			columns = new String[] { "ISBN", "Title", "Author",
+					"Date Borrowed", "Date Returned" };
 
-			tableData = new ArrayList<ArrayList<Object>>();
 			try {
 				bookData = TransactionDAO.getHistory(getUser());
 			} catch (Exception e) {
@@ -278,12 +261,12 @@ public class ELibController {
 		}
 
 		public String getColumnName(int col) {
-			return columns.get(col);
+			return columns[col];
 		}
 
 		@Override
 		public int getColumnCount() {
-			return columns.size();
+			return columns.length;
 		}
 
 		@Override
@@ -340,13 +323,7 @@ public class ELibController {
 
 						try {
 							TransactionDAO.denyBookRequest(selectedBook);
-							tab = getTabpane().getSelectedTab();
-							ELibTableModel model = new ELibTableModel(tab);
-							getTabpane().setTableModel(tab, model);
-							getTabpane().setCellRenderer(tab,
-									new CancelButtonRenderer());
-							getTabpane().setCellEditor(tab,
-									new CancelRequestButtonEditor());
+							update();
 						} catch (Exception e1) {
 							System.out.println("CancelRequest: requestData: "
 									+ e1);
@@ -393,13 +370,7 @@ public class ELibController {
 
 						try {
 							TransactionDAO.cancelReservation(selectedBook);
-							tab = getTabpane().getSelectedTab();
-							ELibTableModel model = new ELibTableModel(tab);
-							getTabpane().setTableModel(tab, model);
-							getTabpane().setCellRenderer(tab,
-									new CancelButtonRenderer());
-							getTabpane().setCellEditor(tab,
-									new CancelReservationButtonEditor());
+							update();
 						} catch (Exception e1) {
 							System.out.println("CancelRequest: requestData: "
 									+ e1);
