@@ -33,47 +33,56 @@ public class SignUpDialogTest extends UISpecTestCase {
 		assertNotNull(window.getTextBox("Contact Number:"));
 		assertNotNull(window.getTextBox("Address:"));
 
-		assertNotNull(window.getInputTextBox("txtfldFirstName"));
-		assertNotNull(window.getInputTextBox("txtfldLastName"));
-		assertNotNull(window.getInputTextBox("txtfldUserName"));
-		assertNotNull(window.getPasswordField("txtfldPassword"));
-		assertNotNull(window.getPasswordField("txtfldConfirmPassword"));
-		assertNotNull(window.getInputTextBox("txtfldEmailAddress"));
-		assertNotNull(window.getInputTextBox("txtfldContactNumber"));
-		assertNotNull(window.getInputTextBox("txtfldAddress"));
+		assertNotNull(window.getInputTextBox("firstNameTextField"));
+		assertNotNull(window.getInputTextBox("lastNameTextField"));
+		assertNotNull(window.getInputTextBox("userNameTextField"));
+		assertNotNull(window.getPasswordField("passwordTextField"));
+		assertNotNull(window.getPasswordField("confirmPasswordTextField"));
+		assertNotNull(window.getInputTextBox("emailAddressTextField"));
+		assertNotNull(window.getInputTextBox("contactNumberTextField"));
+		assertNotNull(window.getInputTextBox("addressTextField"));
 
-		assertEquals("", window.getInputTextBox("txtfldFirstName").getText());
-		assertEquals("", window.getInputTextBox("txtfldLastName").getText());
-		assertEquals("", window.getInputTextBox("txtfldUserName").getText());
-		assertEquals("", window.getInputTextBox("txtfldEmailAddress").getText());
-		assertEquals("", window.getInputTextBox("txtfldContactNumber")
+		assertEquals("", window.getInputTextBox("firstNameTextField").getText());
+		assertEquals("", window.getInputTextBox("lastNameTextField").getText());
+		assertEquals("", window.getInputTextBox("userNameTextField").getText());
+		assertEquals("", window.getInputTextBox("emailAddressTextField")
 				.getText());
-		assertEquals("", window.getInputTextBox("txtfldAddress").getText());
+		assertEquals("", window.getInputTextBox("contactNumberTextField")
+				.getText());
+		assertEquals("", window.getInputTextBox("addressTextField").getText());
 
 		assertReflectionEquals(
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
-						.getInputTextBox("txtfldFirstName").getAwtComponent()
-						.getBorder());
-		assertReflectionEquals(
-				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
-						.getInputTextBox("txtfldLastName").getAwtComponent()
-						.getBorder());
-		assertReflectionEquals(
-				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
-						.getInputTextBox("txtfldUserName").getAwtComponent()
-						.getBorder());
-		assertReflectionEquals(
-				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
-						.getInputTextBox("txtfldEmailAddress")
+						.getInputTextBox("firstNameTextField")
 						.getAwtComponent().getBorder());
 		assertReflectionEquals(
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
-						.getInputTextBox("txtfldContactNumber")
+						.getInputTextBox("lastNameTextField").getAwtComponent()
+						.getBorder());
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
+						.getInputTextBox("userNameTextField").getAwtComponent()
+						.getBorder());
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
+						.getPasswordField("passwordTextField")
 						.getAwtComponent().getBorder());
 		assertReflectionEquals(
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
-						.getInputTextBox("txtfldAddress").getAwtComponent()
+						.getPasswordField("confirmPasswordTextField")
+						.getAwtComponent().getBorder());
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
+						.getInputTextBox("addressTextField").getAwtComponent()
 						.getBorder());
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
+						.getInputTextBox("contactNumberTextField")
+						.getAwtComponent().getBorder());
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray), window
+						.getInputTextBox("emailAddressTextField")
+						.getAwtComponent().getBorder());
 
 		assertNotNull(window.getButton("Submit"));
 		assertThat(window.getButton("Submit").isEnabled());

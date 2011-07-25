@@ -25,153 +25,154 @@ public class AddBookDialog extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtFldTitle;
-	private JTextField txtFldAuthor;
-	private JTextField txtFldYearPublish;
-	private JTextField txtFldPublisher;
-	private JTextField txtFldIsbn;
-	private JTextArea txtAreaDescription;
-	private JLabel lblErrorMsg;
-	private JButton btnAdd;
-	private JButton btnCancel;
-	private JSpinner spinCopyVal;
+	private JTextField titleTextField;
+	private JTextField authorTextField;
+	private JTextField yearPublishTextField;
+	private JTextField publisherTextField;
+	private JTextField isbnTextField;
+	private JTextArea descriptionTextArea;
+	private JLabel errorMessageLabel;
+	private JButton addButton;
+	private JButton cancelButton;
+	private JSpinner copyValSpinner;
+
 	/**
 	 * Create the dialog.
 	 */
 	public AddBookDialog() {
+		setModal(true);
 		setTitle("Add Book");
 		setBounds(100, 100, 450, 350);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[fill][grow]", "[20.00][20.00][20.00][20.00][20.00][20.00,grow][20.00]"));
-		{
-			JLabel lblTitle = new JLabel("Title:");
-			contentPanel.add(lblTitle, "cell 0 0");
-		}
-		{
-			txtFldTitle = new JTextField();
-			contentPanel.add(txtFldTitle, "cell 1 0,growx");
-			txtFldTitle.setColumns(10);
-		}
-		{
-			JLabel lblAuthor = new JLabel("Author:");
-			contentPanel.add(lblAuthor, "cell 0 1");
-		}
-		{
-			txtFldAuthor = new JTextField();
-			contentPanel.add(txtFldAuthor, "cell 1 1,growx");
-			txtFldAuthor.setColumns(10);
-		}
-		{
-			JLabel lblYearPublish = new JLabel("Year Published:");
-			contentPanel.add(lblYearPublish, "cell 0 2");
-		}
-		{
-			txtFldYearPublish = new JTextField();
-			contentPanel.add(txtFldYearPublish, "cell 1 2,growx");
-			txtFldYearPublish.setColumns(10);
-		}
-		{
-			JLabel lblPublisher = new JLabel("Publisher:");
-			contentPanel.add(lblPublisher, "cell 0 3");
-		}
-		{
-			txtFldPublisher = new JTextField();
-			contentPanel.add(txtFldPublisher, "cell 1 3,growx");
-			txtFldPublisher.setColumns(10);
-		}
-		{
-			JLabel lblIsbn = new JLabel("ISBN:");
-			contentPanel.add(lblIsbn, "cell 0 4");
-		}
-		{
-			txtFldIsbn = new JTextField();
-			contentPanel.add(txtFldIsbn, "cell 1 4,growx");
-			txtFldIsbn.setColumns(10);
-		}
-		{
-			JLabel lblDescription = new JLabel("Description:");
-			contentPanel.add(lblDescription, "cell 0 5,aligny top");
-		}
-		{
-			JScrollPane scrollPane = new JScrollPane();
-			contentPanel.add(scrollPane, "cell 1 5,grow");
-			{
-				txtAreaDescription = new JTextArea();
-				scrollPane.setViewportView(txtAreaDescription);
-			}
-		}
-		{
-			JLabel lblCopies = new JLabel("Copies:");
-			contentPanel.add(lblCopies, "cell 0 6");
-		}
-		{
-			spinCopyVal = new JSpinner();
-			spinCopyVal.setModel(new SpinnerNumberModel(1, 0, 2147483647, 1));
-			contentPanel.add(spinCopyVal, "cell 1 6,alignx left");
-		}
-		{
-			JPanel buttonPane = new JPanel();
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			buttonPane.setLayout(new MigLayout("", "[298.00][47px][65px]", "[23px]"));
-			{
-				lblErrorMsg = new JLabel("");
-				lblErrorMsg.setForeground(Color.RED);
-				buttonPane.add(lblErrorMsg, "cell 0 0,alignx left,aligny center");
-			}
-			{
-				btnAdd = new JButton("Add");
-				btnAdd.setActionCommand("OK");
-				buttonPane.add(btnAdd, "cell 1 0,alignx left,aligny top");
-				getRootPane().setDefaultButton(btnAdd);
-			}
-			{
-				btnCancel = new JButton("Cancel");
-				btnCancel.setActionCommand("Cancel");
-				buttonPane.add(btnCancel, "cell 2 0,alignx left,aligny top");
-			}
-			this.setResizable(false);
-		}
+		contentPanel.setLayout(new MigLayout("", "[fill][grow]",
+				"[20.00][20.00][20.00][20.00][20.00][20.00,grow][20.00]"));
+
+		JLabel lblTitle = new JLabel("Title:");
+		contentPanel.add(lblTitle, "cell 0 0");
+
+		titleTextField = new JTextField();
+		titleTextField.setName("titleTextField");
+		contentPanel.add(titleTextField, "cell 1 0,growx");
+		titleTextField.setColumns(10);
+
+		JLabel lblAuthor = new JLabel("Author:");
+		contentPanel.add(lblAuthor, "cell 0 1");
+
+		authorTextField = new JTextField();
+		authorTextField.setName("authorTextField");
+		contentPanel.add(authorTextField, "cell 1 1,growx");
+		authorTextField.setColumns(10);
+
+		JLabel lblYearPublish = new JLabel("Year Published:");
+		contentPanel.add(lblYearPublish, "cell 0 2");
+
+		yearPublishTextField = new JTextField();
+		yearPublishTextField.setName("yearPublishTextField");
+		contentPanel.add(yearPublishTextField, "cell 1 2,growx");
+		yearPublishTextField.setColumns(10);
+
+		JLabel lblPublisher = new JLabel("Publisher:");
+		contentPanel.add(lblPublisher, "cell 0 3");
+
+		publisherTextField = new JTextField();
+		publisherTextField.setName("publisherTextField");
+		contentPanel.add(publisherTextField, "cell 1 3,growx");
+		publisherTextField.setColumns(10);
+
+		JLabel lblIsbn = new JLabel("ISBN:");
+		contentPanel.add(lblIsbn, "cell 0 4");
+
+		isbnTextField = new JTextField();
+		isbnTextField.setName("isbnTextField");
+		contentPanel.add(isbnTextField, "cell 1 4,growx");
+		isbnTextField.setColumns(10);
+
+		JLabel lblDescription = new JLabel("Description:");
+		contentPanel.add(lblDescription, "cell 0 5,aligny top");
+
+		JScrollPane scrollPane = new JScrollPane();
+		contentPanel.add(scrollPane, "cell 1 5,grow");
+
+		descriptionTextArea = new JTextArea();
+		descriptionTextArea.setName("descriptionTextArea");
+		scrollPane.setViewportView(descriptionTextArea);
+
+		JLabel lblCopies = new JLabel("Copies:");
+		contentPanel.add(lblCopies, "cell 0 6");
+
+		copyValSpinner = new JSpinner();
+		copyValSpinner.setModel(new SpinnerNumberModel(1, 0, 2147483647, 1));
+		contentPanel.add(copyValSpinner, "cell 1 6,alignx left");
+
+		JPanel buttonPane = new JPanel();
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
+		buttonPane
+				.setLayout(new MigLayout("", "[298.00][47px][65px]", "[23px]"));
+
+		errorMessageLabel = new JLabel("");
+		errorMessageLabel.setForeground(Color.RED);
+		buttonPane.add(errorMessageLabel, "cell 0 0,alignx left,aligny center");
+
+		addButton = new JButton("Add");
+		addButton.setActionCommand("OK");
+		buttonPane.add(addButton, "cell 1 0,alignx left,aligny top");
+		getRootPane().setDefaultButton(addButton);
+
+		cancelButton = new JButton("Cancel");
+		cancelButton.setActionCommand("Cancel");
+		buttonPane.add(cancelButton, "cell 2 0,alignx left,aligny top");
+
+		this.setResizable(false);
 	}
+
 	public JTextField getTxtFldTitle() {
-		return txtFldTitle;
+		return titleTextField;
 	}
+
 	public JTextField getTxtFldAuthor() {
-		return txtFldAuthor;
+		return authorTextField;
 	}
+
 	public JTextField getTxtFldYearPublish() {
-		return txtFldYearPublish;
+		return yearPublishTextField;
 	}
+
 	public JTextField getTxtFldPublisher() {
-		return txtFldPublisher;
+		return publisherTextField;
 	}
+
 	public JTextField getTxtFldIsbn() {
-		return txtFldIsbn;
+		return isbnTextField;
 	}
 
 	public JTextArea getTxtAreaDescription() {
-		return txtAreaDescription;
+		return descriptionTextArea;
 	}
+
 	public JLabel getLblErrorMsg() {
-		return lblErrorMsg;
+		return errorMessageLabel;
 	}
+
 	public void addBookActionListener(ActionListener add) {
-		btnAdd.addActionListener(add);
+		addButton.addActionListener(add);
 	}
+
 	public void addCancelActionListener(ActionListener cancel) {
-		btnCancel.addActionListener(cancel);
+		cancelButton.addActionListener(cancel);
 	}
-	
-	public Book getBookInfo(){
+
+	public Book getBookInfo() {
 		Book newBook = new Book();
-		newBook.setAuthor(txtFldAuthor.getText());
-		newBook.setCopies(Integer.parseInt(spinCopyVal.getModel().getValue().toString()));
-		newBook.setDescription(txtAreaDescription.getText());
-		newBook.setIsbn(txtFldIsbn.getText());
-		newBook.setPublisher(txtFldPublisher.getText());
-		newBook.setTitle(txtFldTitle.getText());
-		newBook.setYearPublish(Integer.parseInt(txtFldYearPublish.getText()));
+		newBook.setAuthor(authorTextField.getText());
+		newBook.setCopies(Integer.parseInt(copyValSpinner.getModel().getValue()
+				.toString()));
+		newBook.setDescription(descriptionTextArea.getText());
+		newBook.setIsbn(isbnTextField.getText());
+		newBook.setPublisher(publisherTextField.getText());
+		newBook.setTitle(titleTextField.getText());
+		newBook.setYearPublish(Integer.parseInt(yearPublishTextField.getText()));
 		return newBook;
 	}
 }
