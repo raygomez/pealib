@@ -1,217 +1,268 @@
 package controllers;
 
-import java.awt.*;
-import javax.swing.*;
+import static org.junit.Assert.assertNotNull;
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import javax.swing.JFrame;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
-import controllers.UserController.UserSearchTableModel;
+import org.joda.time.DateTime;
 
-import utilities.Connector;
-import views.ELibTabbedPanel;
-import models.Book;
 import models.BorrowTransaction;
 import models.ReserveTransaction;
 import models.TransactionDAO;
 import models.User;
 import models.UserDAO;
-
-import java.awt.event.*;
-import java.util.ArrayList;
+import utilities.Connector;
+import utilities.Constants;
+import views.ELibTabbedPanel;
 
 public class ELibController {
-	
-	//TODO temporary User
-	private User user = new User();
-	
+
+	// TODO temporary User
+	private User user;
+
 	private ELibTabbedPanel tabpane;
 	private int tab;
-	
-	private static JFrame frame;
-	/* ..TODO
-	 * For visual testing purposes only
+
+	/*
+	 * ..TODO For visual testing purposes only
 	 */
-	public static void main(String[] args) {
-		
-		new ELibController();					
-	   // frame.setContentPane(tabpane);		
-	}
-	
-	ELibController(){
-		tabpane = new ELibTabbedPanel();
-		tabpane.addListener(new TabListener());				
-		
-		frame = new JFrame();
+	public static void main(String[] args) throws Exception {
+		new Connector(Constants.TEST_CONFIG);
+
+		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setBounds(0, 0, screenSize.width, screenSize.height);
+
+		User user = UserDAO.getUserById(1);
+		assertNotNull(user);
+		frame.setContentPane(new ELibController(user).tabpane);
+
 		frame.setUndecorated(true);
 		frame.setVisible(true);
 		frame.setResizable(false);
-	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	      
-	    frame.setBounds(0,0,screenSize.width, screenSize.height);	      
-		frame.setContentPane(tabpane);	
-		
-		user.setUserId(6);
-		user.setUserName("sample");
-		user.setFirstName("SAMMPLE");
-		user.setLastName("Test");
-		user.setType("User");
 	}
 
-	class TabListener extends MouseAdapter{
+	ELibController(User user) {
+		setUser(user);
+		tabpane = new ELibTabbedPanel();
+		tabpane.addChangeTabListener(new TabChangeListener());
+		ELibTableModel model = new ELibTableModel(0);
+		tabpane.setTableModel(0, model);
+		model = new ELibTableModel(1);
+		tabpane.setTableModel(1, model);
+		model = new ELibTableModel(2);
+		tabpane.setTableModel(2, model);
+		model = new ELibTableModel(3);
+		tabpane.setTableModel(3, model);
+	}
+
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user
+	 *            the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	class TabChangeListener implements ChangeListener {
 		@Override
-		public void mouseReleased(MouseEvent e) {
-			JTabbedPane tp = (JTabbedPane) e.getSource();
-			int tab = tp.indexAtLocation( e.getX(), e.getY() );
-			
-			System.out.println("SELECTED tab: "+ tab);
+		public void stateChanged(ChangeEvent e) {
+			tab = tabpane.getSelectedTab();
 			ELibTableModel model = new ELibTableModel(tab);
 			tabpane.setTableModel(tab, model);
-		}			
+		}
 	}
 
-	class ELibTableModel extends AbstractTableModel{
+	class ELibTableModel extends AbstractTableModel {
 		/**
-		 *  TableModel for ELib Tabs 
+		 * TableModel for ELib Tabs
 		 */
 		private static final long serialVersionUID = 1L;
 		private ArrayList<String> columns;
-		private ArrayList<ArrayList<String>> tableData = new ArrayList<ArrayList<String>>();
-		private ArrayList<BorrowTransaction> bookData = new ArrayList<BorrowTransaction>();
-		private ArrayList<ReserveTransaction> bookDataReserve = new ArrayList<ReserveTransaction>();
-		private int tab=0;
-		
-		public ELibTableModel(int tab){
-			//TODO change if using another db
-			new Connector("test.config"); 
+		private ArrayList<ArrayList<String>> tableData;
+		private ArrayList<BorrowTransaction> bookData;
+		private ArrayList<ReserveTransaction> bookDataReserve;
+		private int tab = 0;
+
+		public ELibTableModel(int tab) {
+			// TODO change if using another db
 			this.tab = tab;
-			switch (tab){
+			switch (tab) {
 			case 0:
 				requestData();
 				break;
-				
+
 			case 1:
 				reserveData();
 				break;
-			
+
 			case 2:
 				onloanData();
 				break;
-			
+
 			case 3:
 				historyData();
-				break;			
+				break;
 			}
-						
-			//TODO change if going to use another DB
-			new Connector("test.config"); 
 		}
-		
-		private void requestData(){
+
+		private void requestData() {
 			columns = new ArrayList<String>();
 			columns.add("ISBN");
 			columns.add("Title");
 			columns.add("Author");
 			columns.add("Date Requested");
+
 			
-			try{
-				//TODO get bookData from transaction dao
-				bookData = TransactionDAO.getRequestedBooks(user);
-			} catch(Exception e){ System.out.println("ELibController: requestData: "+e);}
-			
-			if(bookData != null){				
-				for(BorrowTransaction i : bookData){
-					ArrayList<String> rowData = new ArrayList<String>();								
+			tableData = new ArrayList<ArrayList<String>>();
+			try {
+				// TODO get bookData from transaction dao
+				bookData = TransactionDAO.getRequestedBooks(getUser());
+			} catch (Exception e) {
+				System.out.println("ELibController: requestData: " + e);
+			}
+
+			if (bookData != null) {
+				for (BorrowTransaction i : bookData) {
+					ArrayList<String> rowData = new ArrayList<String>();
 					rowData.add(i.getBook().getIsbn());
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
-					String temp = ""+ i.getDateRequested();
-					rowData.add(temp);
+					rowData.add(i.getDateRequested().toString());
 					tableData.add(rowData);
-				}			
-			}			
+				}
+			}
 		}
-		
-		private void reserveData(){
+
+		private void reserveData() {
 			columns = new ArrayList<String>();
 			columns.add("ISBN");
 			columns.add("Title");
 			columns.add("Author");
 			columns.add("Date Reserved");
 			columns.add("Queue Number");
-			
-			try{
-				//TODO get bookData from transaction dao
-				bookDataReserve = TransactionDAO.getReservedBooks(user);
-			} catch(Exception e){ System.out.println("ELibController: reserveData: "+e);}
-			
-			if(bookDataReserve != null){
-				for(ReserveTransaction i : bookDataReserve){
-					ArrayList<String> rowData = new ArrayList<String>();								
-					//rowData.add(i.getUserName());
-					//rowData.add(i.getFirstName()+" "+i.getLastName());
-					tableData.add(rowData);
+
+			tableData = new ArrayList<ArrayList<String>>();
+			try {
+				bookDataReserve = TransactionDAO.getReservedBooks(getUser());
+
+				if (bookDataReserve != null) {
+					for (ReserveTransaction i : bookDataReserve) {
+						ArrayList<String> rowData = new ArrayList<String>(5);
+						rowData.add(i.getBook().getIsbn());
+						rowData.add(i.getBook().getTitle());
+						rowData.add(i.getBook().getAuthor());
+						rowData.add(i.getDateReserved().toString());
+						rowData.add(""
+								+ TransactionDAO.getQueueInReservation(
+										i.getBook(), i.getUser()));
+						tableData.add(rowData);
+					}
 				}
+			} catch (Exception e) {
+				System.out.println("ELibController: reserveData: " + e);
 			}
 		}
-		
-		private void onloanData(){
+
+		private void onloanData() {
 			columns = new ArrayList<String>();
 			columns.add("ISBN");
 			columns.add("Title");
 			columns.add("Author");
 			columns.add("Date Borrowed");
 			columns.add("Date Due");
-			
-			try{
-				//TODO get bookData from transaction dao
-				bookData = TransactionDAO.getOnLoanBooks(user);
-			} catch(Exception e){ System.out.println("ELibController: onloanData: "+e);}
-			
-			if(bookData!=null){
-				for(BorrowTransaction i : bookData){
-					ArrayList<String> rowData = new ArrayList<String>();								
-					//rowData.add(i.getUserName());
-					//rowData.add(i.getFirstName()+" "+i.getLastName());
+
+			tableData = new ArrayList<ArrayList<String>>();
+			try {
+				// TODO get bookData from transaction dao
+				bookData = TransactionDAO.getOnLoanBooks(getUser());
+			} catch (Exception e) {
+				System.out.println("ELibController: onloanData: " + e);
+			}
+
+			if (bookData != null) {
+				for (BorrowTransaction i : bookData) {
+					DateTime dueDate = new DateTime(i.getDateBorrowed().getTime()).plusDays(14);
+					ArrayList<String> rowData = new ArrayList<String>();
+					rowData.add(i.getBook().getIsbn());
+					rowData.add(i.getBook().getTitle());
+					rowData.add(i.getBook().getAuthor());
+					rowData.add(i.getDateBorrowed().toString());
+					rowData.add(dueDate.toString("y-MM-dd"));
 					tableData.add(rowData);
 				}
 			}
 		}
-		
-		private void historyData(){
+
+		private void historyData() {
 			columns = new ArrayList<String>();
 			columns.add("ISBN");
 			columns.add("Title");
 			columns.add("Author");
 			columns.add("Date Borrowed");
 			columns.add("Date Returned");
-			
-			try{
-				//TODO get bookData from transaction dao
-				bookData = TransactionDAO.getHistory(user);
-			} catch(Exception e){ System.out.println("ELibController: historyData: "+e);}
-			
-			if(bookData!=null){
-				for(BorrowTransaction i : bookData){
-					ArrayList<String> rowData = new ArrayList<String>();								
-					//rowData.add(i.getUserName());
-					//rowData.add(i.getFirstName()+" "+i.getLastName());
+
+			tableData = new ArrayList<ArrayList<String>>();
+			try {
+				// TODO get bookData from transaction dao
+				bookData = TransactionDAO.getHistory(getUser());
+			} catch (Exception e) {
+				System.out.println("ELibController: historyData: " + e);
+			}
+
+			if (bookData != null) {
+				for (BorrowTransaction i : bookData) {
+					ArrayList<String> rowData = new ArrayList<String>();
+					rowData.add(i.getBook().getIsbn());
+					rowData.add(i.getBook().getTitle());
+					rowData.add(i.getBook().getAuthor());
+					rowData.add(i.getDateBorrowed().toString());
+					rowData.add(i.getDateReturned().toString());
 					tableData.add(rowData);
 				}
 			}
 		}
-				
-		public String getColumnName(int col) { return columns.get(col);}
+
+		public String getColumnName(int col) {
+			return columns.get(col);
+		}
 
 		@Override
-		public int getColumnCount() { return columns.size();}
-		
-		@Override
-		public int getRowCount() { return tableData.size();}
+		public int getColumnCount() {
+			return columns.size();
+		}
 
 		@Override
-		public Object getValueAt(int row, int col) { return tableData.get(row).get(col);}
+		public int getRowCount() {
+			return tableData.size();
+		}
 
 		@Override
-		public boolean isCellEditable(int rowIndex, int columnIndex){ return false;}		
+		public Object getValueAt(int row, int col) {
+			return tableData.get(row).get(col);
+		}
+
+		@Override
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
+			return false;
+		}
 	}
 }
