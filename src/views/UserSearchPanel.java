@@ -80,7 +80,11 @@ public class UserSearchPanel extends JPanel {
 	 */
 	public void togglePendingButtons(boolean toggle){
 		btnAccept.setEnabled(toggle);
-		btnDeny.setEnabled(toggle);
+		btnDeny.setEnabled(toggle);	
+	}
+	
+	public void togglePending(boolean toggle){
+		togglePendingButtons(toggle);
 		cbAll.setEnabled(toggle);
 	}
 
@@ -104,8 +108,6 @@ public class UserSearchPanel extends JPanel {
 	public UserSearchPanel(AbstractTableModel model1, AbstractTableModel model2) {
 		setUsersTableModel(model1);
 		setPendingTableModel(model2);
-	//	this.modelPending = model2;
-//		this.modelUsers = model1;
 
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new MigLayout("", "[60px][300px]10px[][grow]",
@@ -120,7 +122,7 @@ public class UserSearchPanel extends JPanel {
 				"resources/images/pending.png"), getPendingPane());
 
 		add(tabbedPane, "cell 0 1, span 4 3,grow");
-		
+				
 		usersPanel();
 		pendingAppPanel();
 	}
@@ -154,8 +156,7 @@ public class UserSearchPanel extends JPanel {
 		
 		getPendingPane().add(btnAccept, "cell 1 0, growx");
 		getPendingPane().add(btnDeny, "cell 1 1, growx");
-		getPendingPane().add(cbAll, "cell 1 2, growx");
-		
+		getPendingPane().add(cbAll, "cell 1 2, growx");						
 	}
 
 	public void setTableModel(int tab, AbstractTableModel model) {
@@ -192,5 +193,4 @@ public class UserSearchPanel extends JPanel {
 		getBtnAccept().addActionListener(accept);
 		getBtnDeny().addActionListener(deny);
 	}
-
 }
