@@ -57,39 +57,39 @@ public class UserDAOTest {
 
 	@Test
 	public void testSearchUsersWithOneResult() throws Exception {
-		ArrayList<User> users = UserDAO.searchUsers("jvillar");
+		ArrayList<User> users = UserDAO.searchActiveUsers("jvillar");
 		assertEquals(1, users.size());
 	}
 
 	@Test
 	public void testSearchUsersWithManyResults() throws Exception {
-		ArrayList<User> users = UserDAO.searchUsers("Niel");
+		ArrayList<User> users = UserDAO.searchActiveUsers("Niel");
 		assertEquals(2, users.size());
 	}
 
 	@Test
 	public void testSearchUsersWithLibrarian() throws Exception {
-		ArrayList<User> users = UserDAO.searchUsers("Pantaleon");
+		ArrayList<User> users = UserDAO.searchActiveUsers("Pantaleon");
 		assertEquals(1, users.size());
 	}
 
 	@Test
 	public void testSearchUsersWithNoResults() throws Exception {
-		ArrayList<User> users = UserDAO.searchUsers("jvillar0");
+		ArrayList<User> users = UserDAO.searchActiveUsers("jvillar0");
 		assertEquals(0, users.size());
 	}
 
 	@Test
 	public void testSearchUsersWithDatafromOtherFields() throws Exception {
-		ArrayList<User> users = UserDAO.searchUsers("User");
+		ArrayList<User> users = UserDAO.searchActiveUsers("User");
 		assertEquals(0, users.size());
-		users = UserDAO.searchUsers("nlazada@gmail.com");
+		users = UserDAO.searchActiveUsers("nlazada@gmail.com");
 		assertEquals(0, users.size());
-		users = UserDAO.searchUsers("1234567890");
+		users = UserDAO.searchActiveUsers("1234567890");
 		assertEquals(0, users.size());
-		users = UserDAO.searchUsers("USA");
+		users = UserDAO.searchActiveUsers("USA");
 		assertEquals(0, users.size());
-		users = UserDAO.searchUsers("6b86b273ff");
+		users = UserDAO.searchActiveUsers("6b86b273ff");
 		assertEquals(0, users.size());
 
 	}
