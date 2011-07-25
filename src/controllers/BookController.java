@@ -40,8 +40,10 @@ public class BookController {
 	private ArrayList<Book> bookList;
 
 	public static void main(String args[]){
-		new Connector(Constants.TEST_CONFIG);
-		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
+		new Connector(Constants.APP_CONFIG);
+		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", "User");
+		//User user = new User(3, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
+		//User user = new User(4, "dota", "dota", "Domingo", "Tanael", "dota@gmail.com", "USA", "09187658790", 1, "Librarian");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -203,7 +205,12 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				TransactionDAO.borrowBook(bookList.get(currTableRowSelection), currentUser);
+				reset();
+				int request = TransactionDAO.borrowBook(bookList.get(currTableRowSelection), currentUser);
+				if (request == 1){
+					bookInfo.getLblErrorMsg().setText("The following book has been successfully added to your Requests List: ");
+					bookInfo.getLblErrorMsg().setForeground(Color.BLACK);
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -217,7 +224,12 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				TransactionDAO.reserveBook(bookList.get(currTableRowSelection), currentUser);
+				reset();
+				int reserve = TransactionDAO.reserveBook(bookList.get(currTableRowSelection), currentUser);
+				if (reserve == 1){
+					bookInfo.getLblErrorMsg().setText("The following book has been successfully added to your Rervations List: ");
+					bookInfo.getLblErrorMsg().setForeground(Color.BLACK);
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -230,7 +242,7 @@ public class BookController {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			resetButton();
+			reset();
 			JTable table = (JTable) e.getSource();
 			int tableRow = table.getSelectedRow();
 			currTableRowSelection = tableRow;
@@ -243,23 +255,17 @@ public class BookController {
 					} else {
 						bookInfo.getBtnReserve().setEnabled(true);
 						bookInfo.getLblErrorMsg().setText("No available copies");
+						bookInfo.getLblErrorMsg().setForeground(Color.RED);
 					}
 				} else {
 					bookInfo.getLblErrorMsg().setText("You already have a pending transaction for the following book: ");
+					bookInfo.getLblErrorMsg().setForeground(Color.RED);
 				}
 				
 			} catch (Exception ex){
 				
 			}
 		
-		}
-
-		private void resetButton() {
-			bookInfo.getBtnSave().setEnabled(false);
-			bookInfo.getBtnDelete().setEnabled(false);
-			bookInfo.getBtnBorrow().setEnabled(false);
-			bookInfo.getBtnReserve().setEnabled(false);
-			bookInfo.getLblErrorMsg().setText("");
 		}
 
 		@Override
@@ -361,6 +367,14 @@ public class BookController {
 		}
 		
 	}
+	private void reset() {
+		bookInfo.getBtnSave().setEnabled(false);
+		bookInfo.getBtnDelete().setEnabled(false);
+		bookInfo.getBtnBorrow().setEnabled(false);
+		bookInfo.getBtnReserve().setEnabled(false);
+		bookInfo.getLblErrorMsg().setText("");
+	}
+
 	
 	class TextFieldListener implements KeyListener{
 

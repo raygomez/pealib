@@ -10,6 +10,7 @@ import models.User;
 
 import controllers.AuthenticationController;
 import controllers.BookController;
+import controllers.ELibController;
 import controllers.UserController;
 
 import utilities.Connector;
@@ -23,6 +24,7 @@ public class PeaLibrary {
 	private AuthenticationController authControl;
 	private UserController userControl;
 	private BookController bookControl;
+	private ELibController elibControl;
 	
 	private UserSidebarPanel userSidebarPanel;
 	private LibrarianSidebarPanel librarianSidebarPanel;
@@ -30,20 +32,23 @@ public class PeaLibrary {
 	private User currentUser;
 
 	public PeaLibrary(){
-		new Connector("test.config");
+		new Connector();
 		initialize();	
 	}
 
 	private void initialize() {
 		// TODO Auto-generated method stub
+
+		authControl = new AuthenticationController();
+		AuthenticationController.getLogin().setVisible(true);
+		currentUser = authControl.getUser();
+		
 		frame = new MainFrame();
 		frame.setVisible(false);
 		
-		authControl = new AuthenticationController(this);
-	}
-
-	public void setUser(User user){
-		currentUser = user;
+		if(currentUser == null)
+			System.exit(0);
+		
 		initializedLoggedUser();
 	}
 	
@@ -65,8 +70,6 @@ public class PeaLibrary {
 	}
 	
 	private void initializeLibrarian(){
-		bookControl = new BookController(currentUser);
-		userControl = new UserController(currentUser);
 		
 		librarianSidebarPanel = new LibrarianSidebarPanel();
 		initializeSidebarPanel(librarianSidebarPanel);
@@ -79,8 +82,26 @@ public class PeaLibrary {
 	
 	private void initializeUser(){
 		
+		elibControl = new ELibController(currentUser);
+		userSidebarPanel = new UserSidebarPanel();
+		initializeSidebarPanel(userSidebarPanel);
+		
+		frame.setSidebarPanel(userSidebarPanel);
+		frame.setContentPanel(bookControl.getBookLayoutPanel());
+		frame.validate();
+		frame.setVisible(true);
+		frame.repaint();
+		
 	}
 	
+	private void initializeSidebarPanel(UserSidebarPanel userSidebarPanel) {
+		// TODO Auto-generated method stub
+		userSidebarPanel.addViewBooksListener(viewBooks);
+		userSidebarPanel.addEditProfileListener(showEditProfile);
+		userSidebarPanel.addShowTransactionHistoryListener(showBookTransactions);
+		userSidebarPanel.addLogoutListener(logout);
+	}
+
 	private void initializeSidebarPanel(LibrarianSidebarPanel librarianSidebarPanel) {
 		// TODO Auto-generated method stub
 		librarianSidebarPanel.addViewBooksListener(viewBooks);
@@ -88,6 +109,10 @@ public class PeaLibrary {
 		librarianSidebarPanel.addEditProfileListener(showEditProfile);
 		librarianSidebarPanel.addBookTransactionsListener(showBookTransactions);
 		librarianSidebarPanel.addLogoutListener(logout);
+	}
+	
+	public MainFrame getMainFrame(){
+		return frame;
 	}
 	
 	private ActionListener viewBooks = new ActionListener() {
@@ -122,7 +147,19 @@ public class PeaLibrary {
 		}
 	};
 	
-	private ActionListener showBookTransactions;
+	private ActionListener showBookTransactions = new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			if(currentUser.getType().equals("Librarian")){
+				
+			}
+			else if(currentUser.getType().equals("User")){
+				//frame.setContentPanel(elibControl);
+			}
+		}
+	};
 	
 	public static void main(String[] args){
 		

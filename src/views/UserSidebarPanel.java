@@ -29,10 +29,10 @@ public class UserSidebarPanel extends JPanel {
 		logoutButton = new JButton("Logout");
 		transactionHistoryButton = new JButton("View E-Library Card");
 		
-		add(viewBooksButton);
-		add(editProfileButton);
-		add(transactionHistoryButton);
-		add(logoutButton);
+		add(viewBooksButton, "growx");
+		add(editProfileButton, "growx");
+		add(transactionHistoryButton, "growx");
+		add(logoutButton, "growx");
 		
 	}
 	
