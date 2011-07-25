@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 import models.Book;
 import models.User;
@@ -98,14 +99,20 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblDescription = new JLabel("Description:");
 		add(lblDescription, "cell 1 6");
 		
-		txtFldDescription = new JTextArea();
+		txtFldDescription = new JTextArea(currBook.getDescription());
+		txtFldDescription.setEditable(false);
 		add(txtFldDescription, "cell 3 6 2 3,grow");
+		
+		JScrollPane scrollDes = new JScrollPane(txtFldDescription);
+		add(scrollDes, "cell 3 6 2 3,grow");
 		
 		JLabel lblCopies = new JLabel("Copies:");
 		add(lblCopies, "cell 1 9,alignx left,aligny center");
 		
 		spinCopyVal = new JSpinner();
 		spinCopyVal.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spinCopyVal.getModel().setValue(currBook.getCopies());
+		spinCopyVal.setEnabled(false);
 		add(spinCopyVal, "cell 3 9,alignx left,aligny center");
 		
 		btnSave = new JButton("Save");
@@ -121,6 +128,7 @@ public class BookInfoPanel extends JPanel {
 			txtFldPublisher.setEditable(true);
 			txtFldTitle.setEditable(true);
 			txtFldYrPublished.setEditable(true);
+			spinCopyVal.setEnabled(true);
 		}
 		
 		
