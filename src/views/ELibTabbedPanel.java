@@ -1,6 +1,5 @@
 package views;
 
-import javax.swing.CellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,7 +15,6 @@ import javax.swing.table.TableCellEditor;
 
 import net.miginfocom.swing.MigLayout;
 import controllers.ELibController.CancelButtonRenderer;
-import controllers.ELibController.CancelRequestButtonEditor;
 
 ;
 
@@ -54,6 +52,34 @@ public class ELibTabbedPanel extends JPanel {
 		addOnLoanPane();
 		addRequestPane();
 		addReservePane();
+	}
+
+	/**
+	 * @return the historyTable
+	 */
+	public JTable getHistoryTable() {
+		return historyTable;
+	}
+
+	/**
+	 * @param historyTable the historyTable to set
+	 */
+	public void setHistoryTable(JTable historyTable) {
+		this.historyTable = historyTable;
+	}
+
+	/**
+	 * @return the onloanTable
+	 */
+	public JTable getOnloanTable() {
+		return onloanTable;
+	}
+
+	/**
+	 * @param onloanTable the onloanTable to set
+	 */
+	public void setOnloanTable(JTable onloanTable) {
+		this.onloanTable = onloanTable;
 	}
 
 	/**
@@ -109,16 +135,8 @@ public class ELibTabbedPanel extends JPanel {
 		case 0:
 			getRequestTable().getColumn("Cancel").setCellEditor(renderer);
 			break;
-			
 		case 1:
 			getReserveTable().getColumn("Cancel").setCellEditor(renderer);
-
-			break;
-
-		case 2:
-			break;
-
-		case 3:
 			break;
 		}
 	}
@@ -129,15 +147,8 @@ public class ELibTabbedPanel extends JPanel {
 		case 0:
 			getRequestTable().getColumn("Cancel").setCellRenderer(renderer);
 			break;
-
 		case 1:
 			getReserveTable().getColumn("Cancel").setCellRenderer(renderer);
-			break;
-
-		case 2:
-			break;
-
-		case 3:
 			break;
 		}
 	}
@@ -156,13 +167,13 @@ public class ELibTabbedPanel extends JPanel {
 			break;
 
 		case 2:
-			onloanTable.setModel(model);
-			setTableSettings(onloanTable);
+			getOnloanTable().setModel(model);
+			setTableSettings(getOnloanTable());
 			break;
 
 		case 3:
-			historyTable.setModel(model);
-			setTableSettings(historyTable);
+			getHistoryTable().setModel(model);
+			setTableSettings(getHistoryTable());
 			break;
 		}
 
@@ -174,12 +185,12 @@ public class ELibTabbedPanel extends JPanel {
 		historyPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		historyPanel.setLayout(new MigLayout("", "", ""));
 
-		historyTable = new JTable();
-		historyTable.setName("historyTable");
-		historyTable.setRowHeight(28);
-		historyTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		setHistoryTable(new JTable());
+		getHistoryTable().setName("historyTable");
+		getHistoryTable().setRowHeight(28);
+		getHistoryTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		JScrollPane scrollPane = new JScrollPane(historyTable);
+		JScrollPane scrollPane = new JScrollPane(getHistoryTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
 		historyPanel.add(scrollPane);
@@ -189,12 +200,12 @@ public class ELibTabbedPanel extends JPanel {
 		onloanPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		onloanPanel.setLayout(new MigLayout("", "", ""));
 
-		onloanTable = new JTable();
-		onloanTable.setName("onloanTable");
-		onloanTable.setRowHeight(28);
-		onloanTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		setOnloanTable(new JTable());
+		getOnloanTable().setName("onloanTable");
+		getOnloanTable().setRowHeight(28);
+		getOnloanTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		JScrollPane scrollPane = new JScrollPane(onloanTable);
+		JScrollPane scrollPane = new JScrollPane(getOnloanTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
 		onloanPanel.add(scrollPane);

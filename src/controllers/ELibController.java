@@ -32,9 +32,13 @@ import views.ELibTabbedPanel;
 
 public class ELibController {
 
+	private static final int REQUEST = 0;
+	private static final int RESERVE = 1;
+	private static final int ON_LOAN = 2;
+	private static final int HISTORY = 3;
+
 	private User user;
 	private ELibTabbedPanel tabpane;
-	private int tab;
 	private ArrayList<BorrowTransaction> bookData;
 	private ArrayList<ReserveTransaction> bookDataReserve;
 
@@ -120,14 +124,14 @@ public class ELibController {
 	}
 
 	private void update() {
-		tab = getTabpane().getSelectedTab();
+		int tab = getTabpane().getSelectedTab();
 		ELibTableModel model = new ELibTableModel(tab);
 		getTabpane().setTableModel(tab, model);
 
 		getTabpane().setCellRenderer(tab, new CancelButtonRenderer());
-		if (tab == 0) {
+		if (tab == REQUEST) {
 			getTabpane().setCellEditor(tab, new CancelRequestButtonEditor());
-		} else if (tab == 1) {
+		} else if (tab == RESERVE) {
 			getTabpane()
 					.setCellEditor(tab, new CancelReservationButtonEditor());
 		}
@@ -142,22 +146,19 @@ public class ELibController {
 		private ArrayList<ArrayList<Object>> tableData;
 
 		public ELibTableModel(int tab) {
-
 			tableData = new ArrayList<ArrayList<Object>>();
+
 			switch (tab) {
-			case 0:
+			case REQUEST:
 				requestData();
 				break;
-
-			case 1:
+			case RESERVE:
 				reserveData();
 				break;
-
-			case 2:
+			case ON_LOAN:
 				onloanData();
 				break;
-
-			case 3:
+			case HISTORY:
 				historyData();
 				break;
 			}
@@ -287,9 +288,10 @@ public class ELibController {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			if (columnIndex == 4 && tabpane.getSelectedTab() == 0)
+			if (columnIndex == 4 && getTabpane().getSelectedTab() == REQUEST)
 				return true;
-			else if (columnIndex == 5 && tabpane.getSelectedTab() == 1)
+			else if (columnIndex == 5
+					&& getTabpane().getSelectedTab() == RESERVE)
 				return true;
 
 			return false;
