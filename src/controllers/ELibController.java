@@ -1,25 +1,22 @@
 package controllers;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
-import org.joda.time.DateTime;
-
 import models.BorrowTransaction;
 import models.ReserveTransaction;
 import models.TransactionDAO;
 import models.User;
 import models.UserDAO;
+
+import org.joda.time.DateTime;
+
 import utilities.Connector;
 import utilities.Constants;
 import views.ELibTabbedPanel;
@@ -44,8 +41,7 @@ public class ELibController {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setBounds(0, 0, screenSize.width, screenSize.height);
 
-		User user = UserDAO.getUserById(1);
-		assertNotNull(user);
+		User user = UserDAO.getUserById(2);
 		frame.setContentPane(new ELibController(user).tabpane);
 
 		frame.setUndecorated(true);
@@ -59,12 +55,6 @@ public class ELibController {
 		tabpane.addChangeTabListener(new TabChangeListener());
 		ELibTableModel model = new ELibTableModel(0);
 		tabpane.setTableModel(0, model);
-		model = new ELibTableModel(1);
-		tabpane.setTableModel(1, model);
-		model = new ELibTableModel(2);
-		tabpane.setTableModel(2, model);
-		model = new ELibTableModel(3);
-		tabpane.setTableModel(3, model);
 	}
 
 	/**
@@ -100,11 +90,8 @@ public class ELibController {
 		private ArrayList<ArrayList<String>> tableData;
 		private ArrayList<BorrowTransaction> bookData;
 		private ArrayList<ReserveTransaction> bookDataReserve;
-		private int tab = 0;
 
 		public ELibTableModel(int tab) {
-			// TODO change if using another db
-			this.tab = tab;
 			switch (tab) {
 			case 0:
 				requestData();
@@ -131,16 +118,14 @@ public class ELibController {
 			columns.add("Author");
 			columns.add("Date Requested");
 
-			
 			tableData = new ArrayList<ArrayList<String>>();
 			try {
-				// TODO get bookData from transaction dao
 				bookData = TransactionDAO.getRequestedBooks(getUser());
 			} catch (Exception e) {
 				System.out.println("ELibController: requestData: " + e);
 			}
 
-			if (bookData != null) {
+			if (bookData.size() != 0) {
 				for (BorrowTransaction i : bookData) {
 					ArrayList<String> rowData = new ArrayList<String>();
 					rowData.add(i.getBook().getIsbn());
@@ -164,7 +149,7 @@ public class ELibController {
 			try {
 				bookDataReserve = TransactionDAO.getReservedBooks(getUser());
 
-				if (bookDataReserve != null) {
+				if (bookDataReserve.size() != 0) {
 					for (ReserveTransaction i : bookDataReserve) {
 						ArrayList<String> rowData = new ArrayList<String>(5);
 						rowData.add(i.getBook().getIsbn());
@@ -192,15 +177,15 @@ public class ELibController {
 
 			tableData = new ArrayList<ArrayList<String>>();
 			try {
-				// TODO get bookData from transaction dao
 				bookData = TransactionDAO.getOnLoanBooks(getUser());
 			} catch (Exception e) {
 				System.out.println("ELibController: onloanData: " + e);
 			}
 
-			if (bookData != null) {
+			if (bookData.size() != 0) {
 				for (BorrowTransaction i : bookData) {
-					DateTime dueDate = new DateTime(i.getDateBorrowed().getTime()).plusDays(14);
+					DateTime dueDate = new DateTime(i.getDateBorrowed()
+							.getTime()).plusDays(14);
 					ArrayList<String> rowData = new ArrayList<String>();
 					rowData.add(i.getBook().getIsbn());
 					rowData.add(i.getBook().getTitle());
@@ -222,13 +207,12 @@ public class ELibController {
 
 			tableData = new ArrayList<ArrayList<String>>();
 			try {
-				// TODO get bookData from transaction dao
 				bookData = TransactionDAO.getHistory(getUser());
 			} catch (Exception e) {
 				System.out.println("ELibController: historyData: " + e);
 			}
 
-			if (bookData != null) {
+			if (bookData.size() != 0) {
 				for (BorrowTransaction i : bookData) {
 					ArrayList<String> rowData = new ArrayList<String>();
 					rowData.add(i.getBook().getIsbn());
