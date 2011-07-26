@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.JDialog;
 import javax.swing.Timer;
@@ -35,7 +34,6 @@ public class AuthenticationController {
 
 	public static void main(String[] args) {
 		try {
-			// TODO change this if going to use another DB
 			new Connector("test.config");
 			new AuthenticationController();
 			AuthenticationController.getLogin().setVisible(true);
@@ -47,8 +45,8 @@ public class AuthenticationController {
 
 	public AuthenticationController() {
 		setLogin(new LogInDialog());
-		getLogin().setActionListeners(new SignUpListener(), new SubmitListener(),
-				new SubmitKeyAdapter());
+		getLogin().setActionListeners(new SignUpListener(),
+				new SubmitListener(), new SubmitKeyAdapter());
 		getLogin().setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 	}
@@ -61,7 +59,8 @@ public class AuthenticationController {
 	}
 
 	/**
-	 * @param login the login to set
+	 * @param login
+	 *            the login to set
 	 */
 	public static void setLogin(LogInDialog login) {
 		AuthenticationController.login = login;
@@ -84,7 +83,7 @@ public class AuthenticationController {
 		public void actionPerformed(ActionEvent e) {
 			signUp = new SignUpDialog();
 			signUp.setActionListeners(new SignUpSubmitListener(),
-					new SignUpCancelListener(), new SignUpEnterKeyListener(),
+					new SignUpCancelListener(), new SignUpEnterAdapter(),
 					new SignUpUsernameKeyAdapter());
 			signUp.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			signUp.setVisible(true);
@@ -151,7 +150,7 @@ public class AuthenticationController {
 			getLogin().setLabelError("Invalid input");
 		}
 
-		else{
+		else {
 			try {
 
 				setUser(UserDAO.getUser(login_user, login_pass));
@@ -160,12 +159,12 @@ public class AuthenticationController {
 					getLogin().setLabelError("Username/Password Mismatch");
 					getLogin().getFieldPassword().setText("");
 				} else if (user.getType().equals("Pending")) {
-					getLogin().setLabelError("<html><center>Account still being processed.<br/>"
-							+ "Ask Librarian for further inquiries.</center></html>");
+					getLogin()
+							.setLabelError(
+									"<html><center>Account still being processed.<br/>"
+											+ "Ask Librarian for further inquiries.</center></html>");
 					getLogin().getFieldPassword().setText("");
 				} else {
-					// TODO login --> call main frame
-					System.out.println("LOGIN");
 					getLogin().dispose();
 				}
 
@@ -184,7 +183,6 @@ public class AuthenticationController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			signUpSubmit();
-			System.out.println("submit button listener");
 		}
 	}
 
@@ -193,51 +191,38 @@ public class AuthenticationController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			signUpCancel();
-			System.out.println("cancel button listener");
 		}
 	}
 
-	// Enter Key Listener (Submit through Enter)
-	class SignUpEnterKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-		}
-
+	// Enter Key Adapter (Submit through Enter)
+	class SignUpEnterAdapter extends KeyAdapter {
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			int userKey = arg0.getKeyCode();
-
-			if (userKey == KeyEvent.VK_ENTER) {
+			if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
 				signUpSubmit();
-				System.out.println("enter keylistener");
 			}
-		}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {
 		}
 	}
 
 	// User name Key Listener (every input)
 	class SignUpUsernameKeyAdapter extends KeyAdapter {
 		Timer timer = new Timer(Constants.TIMER_DELAY, new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				timer.stop();
 				getUserName();
 				isUserNameValid();
-				System.out.println("username listener");
 			}
 		});
-		
+
 		@Override
 		public void keyReleased(KeyEvent arg0) {
 			int userKey = arg0.getKeyCode();
 
 			if (userKey != KeyEvent.VK_ENTER) {
-				if(timer.isRunning())
+				if (timer.isRunning())
 					timer.restart();
 				else
 					timer.start();
@@ -259,8 +244,8 @@ public class AuthenticationController {
 			signUp.setLblErrorMessage("Invalid Input.");
 		} else if (!sUpConfirmPassword.equals(sUpPassword)) {
 			signUp.setLblErrorMessage("Mismatch in Confirm Password.");
-			signUp.setFieldBorderColor(signUp.passwordFlag
-					| signUp.confirmPasswordFlag);
+			signUp.setFieldBorderColor(SignUpDialog.PASSWORD_FLAG
+					| SignUpDialog.CONFIRM_PASSWORD_FLAG);
 			signUp.getTxtfldPassword().setText("");
 			signUp.getTxtfldConfirmPassword().setText("");
 		} else {
@@ -294,28 +279,28 @@ public class AuthenticationController {
 
 	private boolean isSignUpFieldComplete(int maskedLabel) {
 		if (sUpFirstName.isEmpty()) {
-			maskedLabel |= signUp.firstNameFlag;
+			maskedLabel |= SignUpDialog.FIRSTNAME_FLAG;
 		}
 		if (sUpLastName.isEmpty()) {
-			maskedLabel |= signUp.lastNameFlag;
+			maskedLabel |= SignUpDialog.LASTNAME_FLAG;
 		}
 		if (sUpUserName.isEmpty()) {
-			maskedLabel |= signUp.userNameFlag;
+			maskedLabel |= SignUpDialog.USERNAME_FLAG;
 		}
 		if (sUpPassword.isEmpty()) {
-			maskedLabel |= signUp.passwordFlag;
+			maskedLabel |= SignUpDialog.PASSWORD_FLAG;
 		}
 		if (sUpConfirmPassword.isEmpty()) {
-			maskedLabel |= signUp.confirmPasswordFlag;
+			maskedLabel |= SignUpDialog.CONFIRM_PASSWORD_FLAG;
 		}
 		if (sUpEmailAddress.isEmpty()) {
-			maskedLabel |= signUp.eMailAddressFlag;
+			maskedLabel |= SignUpDialog.EMAIL_ADDRESS_FLAG;
 		}
 		if (sUpContactNumber.isEmpty()) {
-			maskedLabel |= signUp.contactNumberFlag;
+			maskedLabel |= SignUpDialog.CONTACT_NUMBER_FLAG;
 		}
 		if (sUpAddress.isEmpty()) {
-			maskedLabel |= signUp.addressFlag;
+			maskedLabel |= SignUpDialog.ADDRESS_FLAG;
 		}
 
 		if (maskedLabel != 0) {
@@ -337,28 +322,28 @@ public class AuthenticationController {
 		boolean isAddressValid = sUpAddress.matches(Constants.ADDRESS_FORMAT);
 
 		if (!isFirstNameValid) {
-			maskedLabel |= signUp.firstNameFlag;
+			maskedLabel |= SignUpDialog.FIRSTNAME_FLAG;
 			signUp.getTxtfldFirstName().setText("");
 		}
 		if (!isLastNameValid) {
-			maskedLabel |= signUp.lastNameFlag;
+			maskedLabel |= SignUpDialog.LASTNAME_FLAG;
 			signUp.getTxtfldLastName().setText("");
 		}
 		if (!isPasswordValid) {
-			maskedLabel |= (signUp.passwordFlag | signUp.confirmPasswordFlag);
+			maskedLabel |= (SignUpDialog.PASSWORD_FLAG | SignUpDialog.CONFIRM_PASSWORD_FLAG);
 			signUp.getTxtfldPassword().setText("");
 			signUp.getTxtfldConfirmPassword().setText("");
 		}
 		if (!isEMailAddressValid) {
-			maskedLabel |= signUp.eMailAddressFlag;
+			maskedLabel |= SignUpDialog.EMAIL_ADDRESS_FLAG;
 			signUp.getTxtfldEmailAddress().setText("");
 		}
 		if (!isContactNumberValid) {
-			maskedLabel |= signUp.contactNumberFlag;
+			maskedLabel |= SignUpDialog.CONTACT_NUMBER_FLAG;
 			signUp.getTxtfldContactNumber().setText("");
 		}
 		if (!isAddressValid) {
-			maskedLabel |= signUp.addressFlag;
+			maskedLabel |= SignUpDialog.ADDRESS_FLAG;
 			signUp.getTxtfldAddress().setText("");
 		}
 
@@ -376,7 +361,7 @@ public class AuthenticationController {
 		boolean isValid = sUpUserName.matches(Constants.USERNAME_FORMAT);
 		if (!isValid) {
 			signUp.setLblErrorMessage("Invalid Input.");
-			signUp.setFieldBorderColor(signUp.userNameFlag);
+			signUp.setFieldBorderColor(SignUpDialog.USERNAME_FLAG);
 			return false;
 		}
 
@@ -391,7 +376,7 @@ public class AuthenticationController {
 
 		if (isNotUnique) {
 			signUp.setLblErrorMessage("User name is already in use.");
-			signUp.setFieldBorderColor(signUp.userNameFlag);
+			signUp.setFieldBorderColor(SignUpDialog.USERNAME_FLAG);
 			return false;
 		}
 		return true;

@@ -31,74 +31,79 @@ import views.OutgoingPanel;
 import utilities.Connector;
 import utilities.Constants;
 
-
 public class TransactionController {
-	private boolean isIncoming = true; //isOutgoing = false
+	private boolean isIncoming = true; // isOutgoing = false
 	private TableModel bookResultsModel;
 	private String[] tableHeader;
-	private String[] incomingTableHeader = {"ISBN", "Title", "Author", "Username", "Date Borrowed"};
-	private String[] outgoingTableHeader = {"ISBN", "Title", "Author", "Username", "Date Requested"};
+	private String[] incomingTableHeader = { "ISBN", "Title", "Author",
+			"Username", "Date Borrowed" };
+	private String[] outgoingTableHeader = { "ISBN", "Title", "Author",
+			"Username", "Date Requested" };
 	private ArrayList<BorrowTransaction> searchResults;
-	private int selectedRow; 
-	
+	private int selectedRow;
+
 	private InOutTabbedPane tabbedPane;
 	private IncomingPanel inPanel;
 	private OutgoingPanel outPanel;
 
-
-	//# remove this
+	// # remove this
 	public static void main(String[] args) {
 		new Connector(Constants.TEST_CONFIG);
-		
+
 		TransactionController librarianTransactions = new TransactionController();
-		
+
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		testFrame.setVisible(true);
 		testFrame.setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		testFrame.setBounds(0,0,screenSize.width, screenSize.height * 3/4);
+		testFrame.setBounds(0, 0, screenSize.width, screenSize.height * 3 / 4);
 		testFrame.setContentPane(librarianTransactions.getTabbedPane());
-		
+
 		try {
 			new TransactionController();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/*
 	 * LIBRARIAN Book Transactions
 	 */
 	public TransactionController() {
 		/* Create UI */
 		tabbedPane = new InOutTabbedPane();
-		
+
 		/* Load Event Listeners */
 		/* InOutTabbedPane */
 		tabbedPane.setEventListener(new TabChangeListener());
 		/* OutgoingPanel */
 		outPanel = tabbedPane.getOutgoingPanel();
-		outPanel.setEventListener(new OutgoingBooksGrantListener(), new OutgoingBooksDenyListener());
+		outPanel.setEventListener(new OutgoingBooksGrantListener(),
+				new OutgoingBooksDenyListener());
 		/* IncomingPanel */
 		inPanel = tabbedPane.getIncomingPanel();
 		inPanel.setEventListener(new IncomingBooksReturnListener());
 		/* InOutBookSearchPanel */
-		outPanel.getSearchPanel().setEventListeners(new BookTransactionSearchSubmitListener(), 
-				new BookTransactionSearchClearListener(), new BookTransactionSearchKeyListener(),
+		outPanel.getSearchPanel().setEventListeners(
+				new BookTransactionSearchSubmitListener(),
+				new BookTransactionSearchClearListener(),
+				new BookTransactionSearchKeyListener(),
 				new BookTransactionResultsMouseListener());
-		inPanel.getSearchPanel().setEventListeners(new BookTransactionSearchSubmitListener(), 
-				new BookTransactionSearchClearListener(), new BookTransactionSearchKeyListener(),
+		inPanel.getSearchPanel().setEventListeners(
+				new BookTransactionSearchSubmitListener(),
+				new BookTransactionSearchClearListener(),
+				new BookTransactionSearchKeyListener(),
 				new BookTransactionResultsMouseListener());
-		
+
 		/* Default Operation */
 		searchBookTransaction();
 	}
-	
+
 	public InOutTabbedPane getTabbedPane() {
 		return tabbedPane;
 	}
-	
+
 	class TabChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent arg0) {
@@ -108,13 +113,13 @@ public class TransactionController {
 				inPanel.getLblDaysOverdue().setText("");
 			} else if (tabbedPane.getSelectedIndex() == 1) {
 				isIncoming = false;
-				outPanel.getBtnGrant().setEnabled(false);
-				outPanel.getBtnDeny().setEnabled(false);
+				outPanel.getGrantButton().setEnabled(false);
+				outPanel.getDenyButton().setEnabled(false);
 			}
 			searchBookTransaction();
 		}
 	}
-	
+
 	/*
 	 * Outgoing Transactions
 	 */
@@ -125,7 +130,7 @@ public class TransactionController {
 			searchBookTransaction();
 		}
 	}
-	
+
 	class OutgoingBooksDenyListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -133,31 +138,32 @@ public class TransactionController {
 			searchBookTransaction();
 		}
 	}
-	
+
 	private void grantBorrowRequest() {
 		int affectedRows = 0;
 		try {
-			affectedRows = TransactionDAO.borrowBook(getBookTransactionDetails());
+			affectedRows = TransactionDAO
+					.borrowBook(getBookTransactionDetails());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (affectedRows != 1) {
-			//# error! do something
+			// # error! do something
 		}
-		outPanel.getBtnGrant().setEnabled(false);
-		outPanel.getBtnDeny().setEnabled(false);
+		outPanel.getGrantButton().setEnabled(false);
+		outPanel.getDenyButton().setEnabled(false);
 	}
-	
+
 	private void denyBorrowRequest() {
 		try {
 			TransactionDAO.denyBookRequest(getBookTransactionDetails());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		outPanel.getBtnGrant().setEnabled(false);
-		outPanel.getBtnDeny().setEnabled(false);
+		outPanel.getGrantButton().setEnabled(false);
+		outPanel.getDenyButton().setEnabled(false);
 	}
-	
+
 	/*
 	 * Incoming Transactions
 	 */
@@ -168,7 +174,7 @@ public class TransactionController {
 			searchBookTransaction();
 		}
 	}
-	
+
 	private void returnBook() {
 		try {
 			TransactionDAO.returnBook(getBookTransactionDetails());
@@ -179,10 +185,11 @@ public class TransactionController {
 				/* get the first user in queue */
 				User nextUser = TransactionDAO.getNextUser(returnedBook);
 				/* create borrow transaction */
-				TransactionDAO.requestBook(getBookTransactionDetails().getBook(), nextUser);
+				TransactionDAO.requestBook(getBookTransactionDetails()
+						.getBook(), nextUser);
 				/* delete reservation transaction */
-				ReserveTransaction nextUserReserveTransaction =
-					TransactionDAO.getReserveTransaction(nextUser, returnedBook);
+				ReserveTransaction nextUserReserveTransaction = TransactionDAO
+						.getReserveTransaction(nextUser, returnedBook);
 				TransactionDAO.cancelReservation(nextUserReserveTransaction);
 			}
 		} catch (Exception e) {
@@ -191,11 +198,11 @@ public class TransactionController {
 		inPanel.getBtnReturn().setEnabled(false);
 		inPanel.getLblDaysOverdue().setText("");
 	}
-	
+
 	private BorrowTransaction getBookTransactionDetails() {
 		return searchResults.get(selectedRow);
 	}
-	
+
 	/*
 	 * Book Search and Results Table (for Borrowed and Pending books)
 	 */
@@ -208,12 +215,12 @@ public class TransactionController {
 				inPanel.getLblDaysOverdue().setText("");
 				inPanel.getLblDaysOverdue().setText("");
 			} else {
-				outPanel.getBtnGrant().setEnabled(false);
-				outPanel.getBtnDeny().setEnabled(false);
+				outPanel.getGrantButton().setEnabled(false);
+				outPanel.getDenyButton().setEnabled(false);
 			}
 		}
 	}
-	
+
 	class BookTransactionSearchClearListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -224,13 +231,13 @@ public class TransactionController {
 				inPanel.getLblDaysOverdue().setText("");
 			} else {
 				outPanel.getSearchPanel().getTxtfldSearch().setText("");
-				outPanel.getBtnGrant().setEnabled(false);
-				outPanel.getBtnDeny().setEnabled(false);
+				outPanel.getGrantButton().setEnabled(false);
+				outPanel.getDenyButton().setEnabled(false);
 			}
 			searchBookTransaction();
 		}
 	}
-	
+
 	class BookTransactionSearchKeyListener implements KeyListener {
 		@Override
 		public void keyPressed(KeyEvent e) {
@@ -238,9 +245,9 @@ public class TransactionController {
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			final int enterKey = 10; 
+			final int enterKey = 10;
 			int userKey = e.getKeyCode();
-	
+
 			if (userKey == enterKey) {
 				searchBookTransaction();
 				if (isIncoming) {
@@ -248,8 +255,8 @@ public class TransactionController {
 					inPanel.getLblDaysOverdue().setText("");
 					inPanel.getLblDaysOverdue().setText("");
 				} else {
-					outPanel.getBtnGrant().setEnabled(false);
-					outPanel.getBtnDeny().setEnabled(false);
+					outPanel.getGrantButton().setEnabled(false);
+					outPanel.getDenyButton().setEnabled(false);
 				}
 			}
 		}
@@ -258,7 +265,7 @@ public class TransactionController {
 		public void keyTyped(KeyEvent e) {
 		}
 	}
-	
+
 	class BookTransactionResultsMouseListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
@@ -281,7 +288,7 @@ public class TransactionController {
 		public void mouseReleased(MouseEvent arg0) {
 		}
 	}
-	
+
 	private void searchBookTransaction() {
 		try {
 			String keyword;
@@ -300,17 +307,18 @@ public class TransactionController {
 				searchResults = TransactionDAO.searchOutgoingBook(keyword);
 				tableHeader = outgoingTableHeader;
 			}
-			
+
 			if (searchResults.size() != 0) {
 				bookResultsModel = new AbstractTableModel() {
 					private static final long serialVersionUID = 1L;
+
 					@Override
 					public int getColumnCount() {
 						return tableHeader.length;
 					}
-					
+
 					public String getColumnName(int column) {
-							return tableHeader[column];
+						return tableHeader[column];
 					}
 
 					@Override
@@ -321,28 +329,34 @@ public class TransactionController {
 					public boolean isCellEditable(int row, int column) {
 						return false;
 					}
-					
+
 					@Override
 					public Object getValueAt(int row, int column) {
 						Object objData = null;
 						switch (column) {
 						case 0:
-							objData = searchResults.get(row).getBook().getIsbn();
+							objData = searchResults.get(row).getBook()
+									.getIsbn();
 							break;
 						case 1:
-							objData = searchResults.get(row).getBook().getTitle();
+							objData = searchResults.get(row).getBook()
+									.getTitle();
 							break;
 						case 2:
-							objData = searchResults.get(row).getBook().getAuthor();
+							objData = searchResults.get(row).getBook()
+									.getAuthor();
 							break;
 						case 3:
-							objData = searchResults.get(row).getUser().getUserName();
+							objData = searchResults.get(row).getUser()
+									.getUserName();
 							break;
 						case 4:
 							if (isIncoming) {
-								objData = searchResults.get(row).getDateBorrowed();
+								objData = searchResults.get(row)
+										.getDateBorrowed();
 							} else {
-								objData = searchResults.get(row).getDateRequested();
+								objData = searchResults.get(row)
+										.getDateRequested();
 							}
 							break;
 						default:
@@ -353,49 +367,74 @@ public class TransactionController {
 				};
 			} else {
 				String[][] emptyTable = {};
-				bookResultsModel = new DefaultTableModel(emptyTable, tableHeader) {
+				bookResultsModel = new DefaultTableModel(emptyTable,
+						tableHeader) {
 					private static final long serialVersionUID = 1L;
+
 					public boolean isCellEditable(int row, int column) {
 						return false;
 					}
 				};
 			}
 			if (isIncoming) {
-				inPanel.getSearchPanel().getTblResults().setModel(bookResultsModel);
-				inPanel.getSearchPanel().getLblTotal().setText("Total Matches: " + bookResultsModel.getRowCount());
-				inPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(0).setPreferredWidth(20);
-				inPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(1).setPreferredWidth(200);
-				inPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(2).setPreferredWidth(70);
-				inPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(3).setPreferredWidth(30);
-				inPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(4).setPreferredWidth(20);
-				
+				inPanel.getSearchPanel().getTblResults()
+						.setModel(bookResultsModel);
+				inPanel.getSearchPanel()
+						.getLblTotal()
+						.setText(
+								"Total Matches: "
+										+ bookResultsModel.getRowCount());
+				inPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(0).setPreferredWidth(20);
+				inPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(1).setPreferredWidth(200);
+				inPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(2).setPreferredWidth(70);
+				inPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(3).setPreferredWidth(30);
+				inPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(4).setPreferredWidth(20);
+
 				inPanel.getSearchPanel().repaint();
 			} else {
-				outPanel.getSearchPanel().getTblResults().setModel(bookResultsModel);
-				outPanel.getSearchPanel().getLblTotal().setText("Total Matches: " + bookResultsModel.getRowCount());
-				outPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(0).setPreferredWidth(20);
-				outPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(1).setPreferredWidth(200);
-				outPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(2).setPreferredWidth(70);
-				outPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(3).setPreferredWidth(30);
-				outPanel.getSearchPanel().getTblResults().getColumnModel().getColumn(4).setPreferredWidth(20);
+				outPanel.getSearchPanel().getTblResults()
+						.setModel(bookResultsModel);
+				outPanel.getSearchPanel()
+						.getLblTotal()
+						.setText(
+								"Total Matches: "
+										+ bookResultsModel.getRowCount());
+				outPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(0).setPreferredWidth(20);
+				outPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(1).setPreferredWidth(200);
+				outPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(2).setPreferredWidth(70);
+				outPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(3).setPreferredWidth(30);
+				outPanel.getSearchPanel().getTblResults().getColumnModel()
+						.getColumn(4).setPreferredWidth(20);
 				outPanel.getSearchPanel().repaint();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void setSelectedItem() {
 		if (isIncoming) {
-			selectedRow = inPanel.getSearchPanel().getTblResults().getSelectedRow();
-			
+			selectedRow = inPanel.getSearchPanel().getTblResults()
+					.getSelectedRow();
+
 			if (selectedRow >= 0) {
 				inPanel.getBtnReturn().setEnabled(true);
 				getBookTransactionDetails();
 				try {
-					int daysOverdue = TransactionDAO.getDaysOverdue(getBookTransactionDetails().getBook(),
+					int daysOverdue = TransactionDAO.getDaysOverdue(
+							getBookTransactionDetails().getBook(),
 							getBookTransactionDetails().getUser());
-					inPanel.getLblDaysOverdue().setText("Days Overdue: " + daysOverdue);
+					inPanel.getLblDaysOverdue().setText(
+							"Days Overdue: " + daysOverdue);
 					if (daysOverdue > 0) {
 						inPanel.getLblDaysOverdue().setForeground(Color.RED);
 					} else {
@@ -406,11 +445,12 @@ public class TransactionController {
 				}
 			}
 		} else {
-			selectedRow = outPanel.getSearchPanel().getTblResults().getSelectedRow();
-			
+			selectedRow = outPanel.getSearchPanel().getTblResults()
+					.getSelectedRow();
+
 			if (selectedRow >= 0) {
-				outPanel.getBtnGrant().setEnabled(true);
-				outPanel.getBtnDeny().setEnabled(true);
+				outPanel.getGrantButton().setEnabled(true);
+				outPanel.getDenyButton().setEnabled(true);
 			}
 		}
 	}
