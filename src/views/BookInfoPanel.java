@@ -2,6 +2,7 @@ package views;
 
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,6 +39,8 @@ public class BookInfoPanel extends JPanel {
 	private JTextArea descriptionTextArea;
 	private JSpinner copiesValSpinner;
 	private JLabel lblCopies;
+	private JTextField editionTextField;
+	private JLabel lblEdition;
 
 	/**
 	 * Create the panel.
@@ -51,8 +54,7 @@ public class BookInfoPanel extends JPanel {
 
 	private void displayBookInfo() {
 
-		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]",
-				"[40][][][][][][grow][48.00][34.00][13.00][]"));
+		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[40][][][][][][][grow][48.00][34.00][13.00][]"));
 
 		errorMessageLabel = new ErrorLabel("");
 		add(errorMessageLabel, "cell 3 0 2 1,alignx center,aligny center");
@@ -65,54 +67,62 @@ public class BookInfoPanel extends JPanel {
 		titleTextField.setEditable(false);
 		add(titleTextField, "cell 3 1 2 1,growx");
 		titleTextField.setColumns(10);
+		
+		lblEdition = new JLabel("Edition:");
+		add(lblEdition, "cell 1 2");
+		
+		editionTextField = new JTextField(currentBook.getEdition());
+		editionTextField.setEditable(false);
+		add(editionTextField, "cell 3 2 2 1,growx");
+		editionTextField.setColumns(10);
 
 		JLabel lblAuthor = new JLabel("Author:");
-		add(lblAuthor, "cell 1 2");
+		add(lblAuthor, "cell 1 3");
 
 		authorTextField = new JTextField(currentBook.getAuthor());
 		authorTextField.setName("authorTextField");
 		authorTextField.setEditable(false);
-		add(authorTextField, "cell 3 2 2 1,growx");
+		add(authorTextField, "cell 3 3 2 1,growx");
 		authorTextField.setColumns(10);
 
 		JLabel lblYearPublished = new JLabel("Year Published:");
-		add(lblYearPublished, "cell 1 3");
+		add(lblYearPublished, "cell 1 4");
 
 		yearPublishTextField = new JTextField(Integer.toString(currentBook
 				.getYearPublish()));
 		yearPublishTextField.setName("yearPublishTextField");
 		yearPublishTextField.setEditable(false);
-		add(yearPublishTextField, "cell 3 3 2 1,growx");
+		add(yearPublishTextField, "cell 3 4 2 1,growx");
 		yearPublishTextField.setColumns(10);
 
 		JLabel lblPublisher = new JLabel("Publisher:");
-		add(lblPublisher, "cell 1 4");
+		add(lblPublisher, "cell 1 5");
 
 		publisherTextField = new JTextField(currentBook.getPublisher());
 		publisherTextField.setName("publisherTextField");
 		publisherTextField.setEditable(false);
-		add(publisherTextField, "cell 3 4 2 1,growx");
+		add(publisherTextField, "cell 3 5 2 1,growx");
 		publisherTextField.setColumns(10);
 
 		JLabel lblIsbn = new JLabel("ISBN:");
-		add(lblIsbn, "cell 1 5");
+		add(lblIsbn, "cell 1 6");
 
 		isbnTextField = new JTextField(currentBook.getIsbn());
 		isbnTextField.setName("isbnTextField");
 		isbnTextField.setEditable(false);
-		add(isbnTextField, "cell 3 5 2 1,growx");
+		add(isbnTextField, "cell 3 6 2 1,growx");
 		isbnTextField.setColumns(10);
 
 		JLabel lblDescription = new JLabel("Description:");
-		add(lblDescription, "cell 1 6");
+		add(lblDescription, "cell 1 7");
 
 		descriptionTextArea = new JTextArea(currentBook.getDescription());
 		descriptionTextArea.setName("descriptionTextArea");
 		descriptionTextArea.setEditable(false);
-		add(descriptionTextArea, "cell 3 6 2 3,grow");
+		add(descriptionTextArea, "cell 3 7 2 3,grow");
 
-		JScrollPane scrollDes = new JScrollPane(descriptionTextArea);
-		add(scrollDes, "cell 3 6 2 3,grow");
+		//JScrollPane scrollDes = new JScrollPane(descriptionTextArea);
+		//add(scrollDes, "cell 3 6 2 3,grow");
 
 		lblCopies = new JLabel("Copies:");
 
@@ -120,10 +130,10 @@ public class BookInfoPanel extends JPanel {
 		copiesValSpinner.setModel(new SpinnerNumberModel(0, 0, 2147483647, 1));
 		copiesValSpinner.getModel().setValue(currentBook.getCopies());
 
-		saveButton = new JButton("Save");
-		deleteButton = new JButton("Delete");
-		borrowButton = new JButton("Borrow");
-		reserveButton = new JButton("Reserve");
+		saveButton = new JButton("Save", new ImageIcon("resources/images/save32x32.png"));
+		deleteButton = new JButton("Delete", new ImageIcon("resources/images/delete.png"));
+		borrowButton = new JButton("Borrow", new ImageIcon("resources/images/request.png"));
+		reserveButton = new JButton("Reserve", new ImageIcon("resources/images/reserve.png"));
 
 		if (currentUser.getType().equals("Librarian")) {
 			add(saveButton, "cell 3 10,alignx right");
@@ -134,6 +144,7 @@ public class BookInfoPanel extends JPanel {
 			publisherTextField.setEditable(true);
 			titleTextField.setEditable(true);
 			yearPublishTextField.setEditable(true);
+			editionTextField.setEditable(true);
 			add(lblCopies, "cell 1 9,alignx left,aligny center");
 			add(copiesValSpinner, "cell 3 9,alignx left,aligny center");
 		}
@@ -202,6 +213,7 @@ public class BookInfoPanel extends JPanel {
 		currentBook.setDescription(descriptionTextArea.getText());
 		currentBook.setCopies(Integer.parseInt(copiesValSpinner.getModel()
 				.getValue().toString()));
+		currentBook.setEdition(editionTextField.getText());
 		return currentBook;
 	}
 
@@ -214,6 +226,7 @@ public class BookInfoPanel extends JPanel {
 		isbnTextField.setText(book.getIsbn());
 		descriptionTextArea.setText(book.getDescription());
 		copiesValSpinner.getModel().setValue(book.getCopies());
+		editionTextField.setText(book.getEdition());
 	}
 
 	public JLabel getLblErrorMsg() {
@@ -242,6 +255,10 @@ public class BookInfoPanel extends JPanel {
 
 	public JTextArea getTxtFldDescription() {
 		return descriptionTextArea;
+	}
+
+	public JTextField getTxtFldEdition() {
+		return editionTextField;
 	}
 
 	public void setLblErrorMsg(JLabel lblErrorMsg) {

@@ -2,6 +2,7 @@ package views;
 
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 
@@ -14,21 +15,26 @@ public class OutgoingPanel extends JPanel{
 	private InOutBookSearchPanel searchPanel;
 	private JButton grantButton;
 	private JButton denyButton;
+	private JPanel panel;
 	
 	public OutgoingPanel() {
-		setLayout(new MigLayout("", "[25:n:25][536:n:536][100:n:100][100:n:100]", "[65:n:65][325:n:325][25:n:25]"));
+		setLayout(new MigLayout("", "[grow][grow][grow][]", "[grow][][]"));
 		
 		searchPanel = new InOutBookSearchPanel();
 		searchPanel.setName("searchPanel");
-		add(searchPanel, "cell 0 0 4 2,grow");
+		add(searchPanel, "cell 0 0 4 1,grow");
 		
-		grantButton = new JButton("Grant");
+		panel = new JPanel();
+		add(panel, "cell 0 1 4 1,alignx right,growy");
+		panel.setLayout(new MigLayout("", "[][]", "[]"));
+		
+		grantButton = new JButton("Grant", new ImageIcon("resources/images/Apply.png"));
+		panel.add(grantButton, "cell 0 0,alignx left,aligny top");
 		grantButton.setEnabled(false);
-		add(grantButton, "cell 2 2,growx");
 		
-		denyButton = new JButton("Deny");
+		denyButton = new JButton("Deny", new ImageIcon("resources/images/Delete.png"));
+		panel.add(denyButton, "cell 1 0,alignx left,aligny top");
 		denyButton.setEnabled(false);
-		add(denyButton, "cell 3 2,growx");
 	}
 
 	public JButton getGrantButton() {
