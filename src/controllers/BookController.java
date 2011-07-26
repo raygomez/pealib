@@ -411,7 +411,7 @@ public class BookController {
 				}else if(availableCopies == 1){
 					rowData.add("1 copy available");
 				}else{
-					rowData.add(bookList.get(i).getCopies()+" copies available");
+					rowData.add(availableCopies+" copies available");
 				}
 				
 				tableData.add(rowData);
