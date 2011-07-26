@@ -18,7 +18,7 @@ public class OutgoingPanel extends JPanel{
 	private JPanel panel;
 	
 	public OutgoingPanel() {
-		setLayout(new MigLayout("debug", "[grow][grow][grow][]", "[grow][][]"));
+		setLayout(new MigLayout("", "[grow][grow][grow][]", "[grow][][]"));
 		
 		searchPanel = new InOutBookSearchPanel();
 		searchPanel.setName("searchPanel");

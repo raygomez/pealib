@@ -131,7 +131,7 @@ public class UserSearchPanel extends JPanel {
 	
 	private void usersPanel() {
 		getUsersPane().setBorder(new EmptyBorder(5, 5, 5, 5));
-		getUsersPane().setLayout(new MigLayout("", "[grow]", ""));
+		getUsersPane().setLayout(new MigLayout("", "[grow]", "[grow]"));
 
 		setUsersTable(new JTable(getUsersTableModel()));
 		getUsersTable().setName("tablePending");

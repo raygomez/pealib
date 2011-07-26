@@ -67,7 +67,7 @@ public class UserController {
 	 */
 	public UserController(User user) {
 		this.setCurrentUser(user);
-		setLayoutPanel(new JPanel(new MigLayout("wrap 2", "[grow][grow]")));
+		setLayoutPanel(new JPanel(new MigLayout("wrap 2", "[grow][grow]","[grow]")));
 
 		setUserSearch(new UserSearchPanel(new UserSearchTableModel(USER, ""),
 				new UserSearchTableModel(PENDING, "")));

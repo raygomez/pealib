@@ -28,15 +28,15 @@ public class IncomingPanel extends JPanel {
 		panel_1 = new JPanel();
 		add(panel_1, "cell 2 1,alignx right,growy");
 
-		returnButton = new JButton("Return", new ImageIcon(
-				"resources/images/return32x32.png"));
-		panel_1.add(returnButton);
-		returnButton.setEnabled(false);
-
 		daysOverdueLabel = new JLabel("");
 		daysOverdueLabel.setName("daysOverdueLabel");
 		daysOverdueLabel.setForeground(Color.BLACK);
 		panel_1.add(daysOverdueLabel, "cell 0 2,alignx left,aligny top");
+
+		returnButton = new JButton("Return", new ImageIcon(
+				"resources/images/return32x32.png"));
+		panel_1.add(returnButton);
+		returnButton.setEnabled(false);
 	}
 
 	/* Event Listener */
