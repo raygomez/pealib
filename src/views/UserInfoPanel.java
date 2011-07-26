@@ -198,7 +198,14 @@ public class UserInfoPanel extends JPanel {
 	}
 	
 	public void setFields(User user){
-		
+		this.accountType.setText(user.getType());
+		this.idNumber.setText(user.getUserId()+"");
+		this.username.setText(user.getUserName());
+		this.firstName.setText(user.getFirstName());
+		this.lastName.setText(user.getLastName());
+		this.address.setText(user.getAddress());
+		this.contactNumber.setText(user.getContactNo());
+		this.email.setText(user.getEmail());
 	}
 	
 	public void setFields(String accountType, String idNumber, String username, 

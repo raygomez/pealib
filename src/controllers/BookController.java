@@ -46,23 +46,30 @@ public class BookController {
 		//User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", "User");
 		User user = new User(3, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", "User");
 		//User user = new User(4, "dota", "dota", "Domingo", "Tanael", "dota@gmail.com", "USA", "09187658790", 1, "Librarian");
-		BookController bookController = new BookController(user);
+		BookController bookController = null;
+		try {
+			bookController = new BookController(user);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		JFrame testFrame = new JFrame();
 		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		testFrame.setVisible(true);
 		testFrame.setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		testFrame.setBounds(0,0,screenSize.width, screenSize.height);
-		testFrame.setContentPane(bookController.getBookLayoutPanel());
-	}
-	
-	public BookController(User user){
-		currentUser = user;
 		try {
-			generateBookLayoutPanel();
+			testFrame.setContentPane(bookController.getBookLayoutPanel());
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public BookController(User user) throws Exception{
+		currentUser = user;
+		generateBookLayoutPanel();
 	}
 	
 	private void generateBookLayoutPanel() throws Exception{
@@ -96,7 +103,8 @@ public class BookController {
 		bookInfo.addReserveListener(new ReserveButtonListener());
 	}
 	
-	public JPanel getBookLayoutPanel() {
+	public JPanel getBookLayoutPanel() throws Exception {
+		generateBookLayoutPanel();
 		return bookLayoutPanel;
 	}
 	
