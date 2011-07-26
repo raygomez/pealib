@@ -191,6 +191,8 @@ public class ELibTabbedPanel extends JPanel {
 		getHistoryTable().setName("historyTable");
 		getHistoryTable().setRowHeight(28);
 		getHistoryTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		getHistoryTable().getTableHeader().setReorderingAllowed(false);
+		getHistoryTable().getTableHeader().setResizingAllowed(false);
 
 		JScrollPane scrollPane = new JScrollPane(getHistoryTable());
 		scrollPane.setName("scrollPane");
@@ -206,6 +208,8 @@ public class ELibTabbedPanel extends JPanel {
 		getOnloanTable().setName("onloanTable");
 		getOnloanTable().setRowHeight(28);
 		getOnloanTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		getOnloanTable().getTableHeader().setReorderingAllowed(false);
+		getOnloanTable().getTableHeader().setResizingAllowed(false);
 
 		JScrollPane scrollPane = new JScrollPane(getOnloanTable());
 		scrollPane.setName("scrollPane");
@@ -221,6 +225,8 @@ public class ELibTabbedPanel extends JPanel {
 		getRequestTable().setName("requestTable");
 		getRequestTable().setRowHeight(28);
 		getRequestTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		getRequestTable().getTableHeader().setReorderingAllowed(false);
+		getRequestTable().getTableHeader().setResizingAllowed(false);
 
 		JScrollPane scrollPane = new JScrollPane(getRequestTable());
 		scrollPane.setName("scrollPane");
@@ -236,6 +242,8 @@ public class ELibTabbedPanel extends JPanel {
 		getReserveTable().setName("reserveTable");
 		getReserveTable().setRowHeight(28);
 		getReserveTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		getReserveTable().getTableHeader().setReorderingAllowed(false);
+		getReserveTable().getTableHeader().setResizingAllowed(false);
 
 		JScrollPane scrollPane = new JScrollPane(getReserveTable());
 		scrollPane.setName("scrollPane");
