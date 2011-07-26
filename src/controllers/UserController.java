@@ -261,6 +261,18 @@ public class UserController {
 	}
 
 	class SearchKeyListener extends KeyAdapter {
+		
+		Timer timer = new Timer(Constants.TIMER_DELAY, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				timer.stop();
+				setSearchText(getUserSearch().getFieldSearch().getText());
+				if (getSearchText().length() > 2 || getSearchText().length() == 0)
+					searchUsers();
+			}
+		});
+		
 		@Override
 		public void keyReleased(KeyEvent e) {
 
@@ -268,9 +280,10 @@ public class UserController {
 				searchUsers();
 				
 			} else {
-				setSearchText(getUserSearch().getFieldSearch().getText());
-				if (getSearchText().length() > 2 || getSearchText().length() == 0)
-					searchUsers();
+				if(timer.isRunning())
+					timer.restart();
+				else
+					timer.start();
 			}
 		}
 	}
