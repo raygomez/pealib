@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Panel;
 import org.uispec4j.TabGroup;
-import org.uispec4j.Table;
-import org.uispec4j.TextBox;
 import org.uispec4j.UISpecTestCase;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
