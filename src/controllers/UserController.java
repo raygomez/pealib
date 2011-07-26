@@ -95,7 +95,10 @@ public class UserController {
 
 	public void setSearchText(String searchText) { this.searchText = searchText; }
 
-	public JPanel getLayoutPanel() { return layoutPanel; }
+	public JPanel getLayoutPanel() {
+		generateLayoutPanel();
+		return layoutPanel; 
+	}
 
 	public void setLayoutPanel(JPanel layoutPanel) { this.layoutPanel = layoutPanel; }
 
@@ -379,8 +382,8 @@ public class UserController {
 	
 	//TODO
 	private void generateLayoutPanel() {
-		getLayoutPanel().add(getUserSearch(), "grow");
-		getLayoutPanel().add(getUserInfoPanel(), "grow");
+		layoutPanel.add(getUserSearch(), "grow");
+		layoutPanel.add(getUserInfoPanel(), "grow");
 		getUserInfoPanel().addSaveListener(save);
 		getUserInfoPanel().addChangePasswordListener(showChangePassword);
 		//getUserInfoPanel().toggleButton(false);

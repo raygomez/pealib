@@ -30,7 +30,7 @@ public class MainFrame extends JFrame {
 		setBounds(0, 0, screenSize.width, screenSize.height);
 		
 		sidebarPanel = new JPanel();
-		contentPanel = new JPanel();
+		contentPanel = new JPanel(new MigLayout("","[grow]","[grow]"));
 		welcomePanel = new JPanel();
 		
 		welcomeLabel = new JLabel();
@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
 	{
 		contentPanel.setVisible(false);
 		contentPanel.removeAll();
-		contentPanel.add(cPanel);
+		contentPanel.add(cPanel, "grow");
 		contentPanel.revalidate();
 		contentPanel.setVisible(true);
 	}
