@@ -6,6 +6,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import models.User;
@@ -207,10 +208,8 @@ public class AuthenticationController {
 	// User name Key Listener (every input)
 	class SignUpUsernameKeyAdapter extends KeyAdapter {
 		Timer timer = new Timer(Constants.TIMER_DELAY, new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
 				timer.stop();
 				getUserName();
 				isUserNameValid();
@@ -219,9 +218,7 @@ public class AuthenticationController {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			int userKey = arg0.getKeyCode();
-
-			if (userKey != KeyEvent.VK_ENTER) {
+			if (arg0.getKeyCode() != KeyEvent.VK_ENTER) {
 				if (timer.isRunning())
 					timer.restart();
 				else
@@ -239,7 +236,7 @@ public class AuthenticationController {
 		if (!isSignUpFieldComplete(maskedLabel)) {
 			signUp.setLblErrorMessage("Cannot leave mandatory fields empty.");
 		} else if (!isUserNameValid()) {
-
+			/* action is handled by isUserNameValid() */
 		} else if (!isSignUpInputValid(maskedLabel)) {
 			signUp.setLblErrorMessage("Invalid Input.");
 		} else if (!sUpConfirmPassword.equals(sUpPassword)) {
@@ -254,7 +251,12 @@ public class AuthenticationController {
 					"Pending");
 			try {
 				UserDAO.saveUser(newUser);
+				JOptionPane.showMessageDialog(signUp.getContentPane(),
+						"Your account has been created. " +
+						"Please wait for the Librarian to activate your account.",
+						"Sign-up Successful", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
+				signUpFailed();
 				e.printStackTrace();
 			}
 			signUpCancel();
@@ -278,10 +280,10 @@ public class AuthenticationController {
 	}
 
 	private boolean isSignUpFieldComplete(int maskedLabel) {
-		if (sUpFirstName.isEmpty()) {
+		if (sUpFirstName.trim().isEmpty()) {
 			maskedLabel |= SignUpDialog.FIRSTNAME_FLAG;
 		}
-		if (sUpLastName.isEmpty()) {
+		if (sUpLastName.trim().isEmpty()) {
 			maskedLabel |= SignUpDialog.LASTNAME_FLAG;
 		}
 		if (sUpUserName.isEmpty()) {
@@ -296,10 +298,8 @@ public class AuthenticationController {
 		if (sUpEmailAddress.isEmpty()) {
 			maskedLabel |= SignUpDialog.EMAIL_ADDRESS_FLAG;
 		}
-		if (sUpContactNumber.isEmpty()) {
-			maskedLabel |= SignUpDialog.CONTACT_NUMBER_FLAG;
-		}
-		if (sUpAddress.isEmpty()) {
+		/* Contact Number is not a mandatory field */
+		if (sUpAddress.trim().isEmpty()) {
 			maskedLabel |= SignUpDialog.ADDRESS_FLAG;
 		}
 
@@ -369,8 +369,8 @@ public class AuthenticationController {
 		try {
 			isNotUnique = UserDAO.isUsernameExisting(sUpUserName);
 		} catch (Exception e) {
-			System.out
-					.println("isUserNameValid(): userDao.isUsernameExisting - Exception");
+			signUpFailed();
+			signUpCancel();
 			e.printStackTrace();
 		}
 
@@ -392,5 +392,12 @@ public class AuthenticationController {
 		sUpContactNumber = "";
 		sUpAddress = "";
 		signUp.dispose();
+	}
+	
+	private void signUpFailed() {
+		JOptionPane.showMessageDialog(signUp.getContentPane(),
+				"An error was encountered while creating your account. " +
+				"Please try again later.",
+				"Sign-up Failed", JOptionPane.ERROR_MESSAGE);
 	}
 }

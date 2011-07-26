@@ -63,7 +63,7 @@ public class ConstantsTest {
 
 	@Test
 	public void testNAME_FORMAT() {
-		assertEquals("[A-Za-z\\s]{2,}", Constants.NAME_FORMAT);
+		assertEquals("[A-Za-z\\s]{2,30}", Constants.NAME_FORMAT);
 	}
 
 	@Test
