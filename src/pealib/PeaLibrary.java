@@ -108,6 +108,8 @@ public class PeaLibrary {
 		}
 		userControl = new UserController(getCurrentUser());
 		
+		userControl.getUserInfoPanel().addSaveListener(updateCurrentUser);
+		
 		if(getCurrentUser().getType().equals("Librarian")){
 			initializeLibrarian();
 		}
@@ -226,6 +228,14 @@ public class PeaLibrary {
 			else if(getCurrentUser().getType().equals("User")){
 				getFrame().setContentPanel(elibControl.getTabpane());
 			}
+		}
+	};
+	
+	private ActionListener updateCurrentUser = new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			setCurrentUser(userControl.getCurrentUser());			
 		}
 	};
 	
