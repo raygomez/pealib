@@ -33,7 +33,7 @@ public class InOutBookSearchPanelTest extends UISpecTestCase {
 		assertThat(panel.getTable().isEmpty());
 
 		Button button;
-		String[] buttonArray = new String[] { "Submit", "Clear" };
+		String[] buttonArray = new String[] { "Search", "Clear" };
 
 		for (String s : buttonArray) {
 			button = panel.getButton(s);
