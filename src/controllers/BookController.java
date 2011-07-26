@@ -229,6 +229,7 @@ public class BookController {
 					BookDAO.editBook(bookInfo.getCurrBook());
 					bookList = BookDAO.searchBook(currSearchString);
 					bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+					bookSearch.getTableBookList().addRowSelectionInterval(currTableRowSelection, currTableRowSelection);
 					bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 					bookInfo.getLblErrorMsg().setText("Book Updated");
 					if(bookList.get(currTableRowSelection).getCopies() > 0){
@@ -255,6 +256,7 @@ public class BookController {
 					BookDAO.deleteBook(bookInfo.getCurrBook());
 					bookList = BookDAO.searchBook(currSearchString);
 					bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+					bookSearch.getTableBookList().addRowSelectionInterval(currTableRowSelection, currTableRowSelection);
 					bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 					bookInfo.getLblErrorMsg().setText("Book Deleted");
 					bookInfo.getBtnDelete().setEnabled(false);
@@ -280,6 +282,7 @@ public class BookController {
 				}
 				bookList = BookDAO.searchBook(currSearchString);
 				bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+				bookSearch.getTableBookList().addRowSelectionInterval(currTableRowSelection, currTableRowSelection);
 				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 			
 			} catch (Exception e1) {
@@ -302,6 +305,7 @@ public class BookController {
 				}
 				bookList = BookDAO.searchBook(currSearchString);
 				bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+				bookSearch.getTableBookList().addRowSelectionInterval(currTableRowSelection, currTableRowSelection);
 				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 			} catch (Exception e1) {
 				e1.printStackTrace();
