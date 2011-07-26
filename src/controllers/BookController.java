@@ -94,8 +94,14 @@ public class BookController {
 		bookSearch.setSearchButtonListener(new SearchButtonListener());
 		bookSearch.setAddBookButtonListener(new AddBookButtonListener());
 		bookSearch.getTableBookList().setModel(new BookListModel(bookList));
-		if(bookList != null && !bookList.isEmpty()) 
+		
+		//TODO added conditions in case empty table
+		if(bookList != null && !bookList.isEmpty()) { 
 			bookSearch.getTableBookList().addRowSelectionInterval(currTableRowSelection, currTableRowSelection);
+			setButtons(true);
+		}		
+		else{ setButtons(false);}
+
 		bookSearch.setMouseListener(new BookListMouseListener());
 		bookInfo.addSaveListener(new SaveButtonListener());
 		bookInfo.addDeleteListener(new DeleteButtonListener());
@@ -103,6 +109,12 @@ public class BookController {
 		bookInfo.addReserveListener(new ReserveButtonListener());
 	}
 
+	public void setButtons(boolean value){		
+		bookInfo.getBtnBorrow().setEnabled(value);
+		bookInfo.getBtnReserve().setEnabled(value);
+	
+	}
+	
 	public JPanel getBookLayoutPanel() throws Exception {
 		generateBookLayoutPanel();
 		return bookLayoutPanel;
