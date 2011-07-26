@@ -20,10 +20,7 @@ import javax.swing.table.TableModel;
 
 import models.Book;
 import models.BorrowTransaction;
-import models.ReserveTransaction;
 import models.TransactionDAO;
-import models.User;
-
 import views.InOutTabbedPane;
 import views.IncomingPanel;
 import views.OutgoingPanel;
@@ -157,6 +154,12 @@ public class TransactionController {
 	private void denyBorrowRequest() {
 		try {
 			TransactionDAO.denyBookRequest(getBookTransactionDetails());
+			
+			/* check if the book to be denied is reserved by other users */
+			Book deniedBook = getBookTransactionDetails().getBook();
+			if (TransactionDAO.isBookReservedByOtherUsers(deniedBook)) {
+				TransactionDAO.passToNextUser(deniedBook);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -181,16 +184,8 @@ public class TransactionController {
 
 			/* check if the book to be returned is reserved by other users */
 			Book returnedBook = getBookTransactionDetails().getBook();
-			if (TransactionDAO.isBookReservedbyOtherUsers(returnedBook)) {
-				/* get the first user in queue */
-				User nextUser = TransactionDAO.getNextUser(returnedBook);
-				/* create borrow transaction */
-				TransactionDAO.requestBook(getBookTransactionDetails()
-						.getBook(), nextUser);
-				/* delete reservation transaction */
-				ReserveTransaction nextUserReserveTransaction = TransactionDAO
-						.getReserveTransaction(nextUser, returnedBook);
-				TransactionDAO.cancelReservation(nextUserReserveTransaction);
+			if (TransactionDAO.isBookReservedByOtherUsers(returnedBook)) {
+				TransactionDAO.passToNextUser(returnedBook);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -499,7 +499,7 @@ public class TransactionDAO {
 		return bookCollection;
 	}
 	
-	public static boolean isBookReservedbyOtherUsers(Book currentBook) throws Exception {
+	public static boolean isBookReservedByOtherUsers(Book currentBook) throws Exception {
 		String sql;
 		PreparedStatement ps;
 		
@@ -529,5 +529,16 @@ public class TransactionDAO {
 			nextUserID = rs.getInt(1);
 		}
 		return UserDAO.getUserById(nextUserID);
+	}
+	
+	public static void passToNextUser(Book returnedBook) throws Exception {
+		/* get the first user in queue */
+		User nextUser = getNextUser(returnedBook);
+		/* create borrow transaction */
+		requestBook(returnedBook, nextUser);
+		/* delete reservation transaction */
+		ReserveTransaction nextUserReserveTransaction =
+			getReserveTransaction(nextUser, returnedBook);
+		cancelReservation(nextUserReserveTransaction);
 	}
 }
