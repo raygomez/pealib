@@ -89,7 +89,7 @@ public class BookDAOTest {
 
 	@Test
 	public void testSearchBookAll() throws Exception {
-		ArrayList<Book> bookList = BookDAO.searchBook("*");
+		ArrayList<Book> bookList = BookDAO.searchBook("");
 		assertEquals(1,bookList.get(0).getBookId());
 		assertEquals(2,bookList.get(1).getBookId());
 		assertEquals(3,bookList.get(2).getBookId());
