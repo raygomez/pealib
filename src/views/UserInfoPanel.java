@@ -17,10 +17,10 @@ public class UserInfoPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private JLabel tempLabel;
-	
+
 	private JButton changePasswordButton;
 	private JButton saveButton;
-	
+
 	private JTextField accountType;
 	private JTextField idNumber;
 	private JTextField username;
@@ -29,142 +29,145 @@ public class UserInfoPanel extends JPanel {
 	private JTextArea address;
 	private JTextField contactNumber;
 	private JTextField email;
-	
+
 	private JLabel firstNameError;
 	private JLabel lastNameError;
 	private JLabel contactNumberError;
 	private JLabel emailError;
-	
-	public UserInfoPanel(){
-		
-		setLayout(new MigLayout("","[]15[]","[]10[]"));
-		
+
+	public UserInfoPanel() {
+
+		setLayout(new MigLayout("", "[]15[]", "[]10[]"));
+
 		tempLabel = new JLabel("Account Type");
 		accountType = new JTextField(20);
 		accountType.setEnabled(false);
 		accountType.setName("accountType");
-		
+
 		add(tempLabel);
-		add(accountType,"wrap");
-		
+		add(accountType, "wrap");
+
 		tempLabel = new JLabel("User ID");
 		idNumber = new JTextField(20);
 		idNumber.setEnabled(false);
 		idNumber.setName("idNumber");
-		
+
 		add(tempLabel);
 		add(idNumber, "wrap");
-		
+
 		tempLabel = new JLabel("Username");
 		username = new JTextField(20);
 		username.setEnabled(false);
 		username.setName("username");
-		
+
 		add(tempLabel);
 		add(username, "wrap");
-		
-		changePasswordButton = new JButton("Change Password");
+
+		changePasswordButton = new JButton("Change Password", new ImageIcon(
+				"resources/images/changepassword32x32.png"));
 		add(changePasswordButton, "wrap");
-		
+
 		tempLabel = new JLabel("First Name");
 		firstName = new JTextField(20);
 		firstName.setName("firstName");
-		
+
 		firstNameError = new JLabel();
 		firstNameError.setForeground(Color.RED);
 		firstNameError.setName("firstNameError");
-		
+
 		add(tempLabel);
 		add(firstName);
 		add(firstNameError, "wrap");
-		
+
 		tempLabel = new JLabel("Last Name");
 		lastName = new JTextField(20);
 		lastName.setName("lastName");
-		
+
 		lastNameError = new JLabel();
 		lastNameError.setForeground(Color.RED);
 		lastNameError.setName("lastNameError");
-		
+
 		add(tempLabel);
 		add(lastName);
 		add(lastNameError, "wrap");
-		
+
 		tempLabel = new JLabel("Address");
 		address = new JTextArea(15, 20);
-		
+
 		add(tempLabel);
 		add(address, "wrap");
-		
+
 		tempLabel = new JLabel("Contact Number");
 		contactNumber = new JTextField(20);
 		contactNumber.setName("contactNumber");
-		
+
 		contactNumberError = new JLabel();
 		contactNumberError.setForeground(Color.RED);
 		contactNumberError.setName("contactNumberError");
-		
+
 		add(tempLabel);
 		add(contactNumber);
 		add(contactNumberError, "wrap");
-		
+
 		tempLabel = new JLabel("Email");
 		email = new JTextField(20);
 		email.setName("email");
-		
+
 		emailError = new JLabel();
 		emailError.setForeground(Color.RED);
 		emailError.setName("emailError");
-		
+
 		add(tempLabel);
 		add(email);
 		add(emailError, "wrap");
-		
-		saveButton = new JButton("Save Changes");
+
+		saveButton = new JButton("Save Changes", new ImageIcon(
+				"resources/images/save32x32.png"));
 		add(saveButton);
 	}
-	
-	public void addChangePasswordListener(ActionListener changePassword){
+
+	public void addChangePasswordListener(ActionListener changePassword) {
 		changePasswordButton.addActionListener(changePassword);
 	}
-	
-	public void addSaveListener(ActionListener save){
+
+	public void addSaveListener(ActionListener save) {
 		saveButton.addActionListener(save);
 	}
-	
-	public void displayErrors(int[] errors)	{
-		for(int i = 0; i < errors.length; i++){
-			
-			switch(errors[i]){
-				
-				case Constants.FIRST_NAME_FORMAT_ERROR:
-					firstNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
-					break;
-				
-				case Constants.LAST_NAME_FORMAT_ERROR:
-					lastNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
-					break;
-					
-				case Constants.CONTACT_NUMBER_FORMAT_ERROR:
-					contactNumber.setText(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE);
-					break;
-				
-				case Constants.EMAIL_FORMAT_ERROR:
-					emailError.setText(Constants.EMAIL_FORMAT_ERROR_MESSAGE);
-					break;
+
+	public void displayErrors(int[] errors) {
+		for (int i = 0; i < errors.length; i++) {
+
+			switch (errors[i]) {
+
+			case Constants.FIRST_NAME_FORMAT_ERROR:
+				firstNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
+				break;
+
+			case Constants.LAST_NAME_FORMAT_ERROR:
+				lastNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
+				break;
+
+			case Constants.CONTACT_NUMBER_FORMAT_ERROR:
+				contactNumber
+						.setText(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE);
+				break;
+
+			case Constants.EMAIL_FORMAT_ERROR:
+				emailError.setText(Constants.EMAIL_FORMAT_ERROR_MESSAGE);
+				break;
 			}
 		}
 	}
-	
-	public void resetErrorMessages(){
-		
+
+	public void resetErrorMessages() {
+
 		firstNameError.setText("");
 		lastNameError.setText("");
 		contactNumberError.setText("");
 		emailError.setText("");
-		
+
 	}
-	
+
 	public String getAccountType() {
 		return accountType.getText();
 	}
@@ -196,10 +199,10 @@ public class UserInfoPanel extends JPanel {
 	public String getEmail() {
 		return email.getText();
 	}
-	
-	public void setFields(User user){
+
+	public void setFields(User user) {
 		this.accountType.setText(user.getType());
-		this.idNumber.setText(user.getUserId()+"");
+		this.idNumber.setText(user.getUserId() + "");
 		this.username.setText(user.getUserName());
 		this.firstName.setText(user.getFirstName());
 		this.lastName.setText(user.getLastName());
@@ -207,11 +210,10 @@ public class UserInfoPanel extends JPanel {
 		this.contactNumber.setText(user.getContactNo());
 		this.email.setText(user.getEmail());
 	}
-	
-	public void setFields(String accountType, String idNumber, String username, 
-			String firstName, String lastName, String address, String contactNumber,
-			String email)
-	{
+
+	public void setFields(String accountType, String idNumber, String username,
+			String firstName, String lastName, String address,
+			String contactNumber, String email) {
 		this.accountType.setText(accountType);
 		this.idNumber.setText(idNumber);
 		this.username.setText(username);
@@ -221,9 +223,8 @@ public class UserInfoPanel extends JPanel {
 		this.contactNumber.setText(contactNumber);
 		this.email.setText(email);
 	}
-	
-	public void clearFields()
-	{
+
+	public void clearFields() {
 		this.accountType.setText("");
 		this.idNumber.setText("");
 		this.username.setText("");
@@ -233,16 +234,16 @@ public class UserInfoPanel extends JPanel {
 		this.contactNumber.setText("");
 		this.email.setText("");
 	}
-	
-	public void setFirstNameEnabled(boolean enabled){
+
+	public void setFirstNameEnabled(boolean enabled) {
 		firstName.setEnabled(enabled);
 	}
-	
-	public void setLastNameEnabled(boolean enabled){
+
+	public void setLastNameEnabled(boolean enabled) {
 		lastName.setEnabled(enabled);
 	}
-	
-	public void toggleButton(boolean value){
+
+	public void toggleButton(boolean value) {
 		changePasswordButton.setEnabled(value);
 		saveButton.setEnabled(value);
 	}
