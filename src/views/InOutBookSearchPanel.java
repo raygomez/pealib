@@ -11,6 +11,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.ListSelectionModel;
+
 import net.miginfocom.swing.MigLayout;
 
 
@@ -19,25 +21,21 @@ public class InOutBookSearchPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField searchTextField;
 	private JButton submitButton;
-	private JButton clearButton;
 	private JTable resultsTable;
 	private JLabel totalLabel;
 	/**
 	 * Create the panel.
 	 */
 	public InOutBookSearchPanel() {
-		setLayout(new MigLayout("", "[55:n:55][400:n:400][100:n:100][7.5px:n:7.5px][100:n:100]", "[][41:n:41][15:n:15][25:n:25][280:n:280]"));
+		setLayout(new MigLayout("", "[grow 50][293.00,grow][10:n:10,grow 10][120:n:120,grow][grow 50]", "[10:n:10][50:n:50][15:n:15][25:n:25][280:n:280]"));
 		
 		searchTextField = new JTextField();
 		searchTextField.setName("searchTextField");
-		add(searchTextField, "cell 0 0 5 1,growx");
+		add(searchTextField, "cell 1 1,growx");
 		searchTextField.setColumns(10);
 		
 		submitButton = new JButton("Search", new ImageIcon("resources/images/search32x32.png"));
-		add(submitButton, "cell 2 1,alignx right,growy");
-		
-		clearButton = new JButton("Clear");
-		add(clearButton, "cell 4 1,grow");
+		add(submitButton, "cell 3 1,grow");
 		
 		totalLabel = new JLabel("");
 		totalLabel.setName("totalLabel");
@@ -49,9 +47,8 @@ public class InOutBookSearchPanel extends JPanel {
 	}
 	
 	/* Event Listeners */
-	public void setEventListeners(ActionListener submit, ActionListener clear, KeyListener enter, MouseListener select) {
+	public void setEventListeners(ActionListener submit, KeyListener enter, MouseListener select) {
 		submitButton.addActionListener(submit);
-		clearButton.addActionListener(clear);
 		searchTextField.addKeyListener(enter);
 		resultsTable.addMouseListener(select);
 	}

@@ -12,6 +12,8 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.ListSelectionModel;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
@@ -45,7 +47,7 @@ public class TransactionController {
 
 	// # remove this
 	public static void main(String[] args) {
-		new Connector(Constants.TEST_CONFIG);
+		new Connector(Constants.APP_CONFIG);
 
 		TransactionController librarianTransactions = new TransactionController();
 
@@ -54,14 +56,10 @@ public class TransactionController {
 		testFrame.setVisible(true);
 		testFrame.setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		testFrame.setBounds(0, 0, screenSize.width, screenSize.height * 3 / 4);
+		testFrame.setBounds(0, 0, screenSize.width * 3/4, screenSize.height * 3 / 4);
 		testFrame.setContentPane(librarianTransactions.getTabbedPane());
 
-		try {
-			new TransactionController();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		new TransactionController();
 	}
 
 	/*
@@ -84,12 +82,10 @@ public class TransactionController {
 		/* InOutBookSearchPanel */
 		outPanel.getSearchPanel().setEventListeners(
 				new BookTransactionSearchSubmitListener(),
-				new BookTransactionSearchClearListener(),
 				new BookTransactionSearchKeyListener(),
 				new BookTransactionResultsMouseListener());
 		inPanel.getSearchPanel().setEventListeners(
 				new BookTransactionSearchSubmitListener(),
-				new BookTransactionSearchClearListener(),
 				new BookTransactionSearchKeyListener(),
 				new BookTransactionResultsMouseListener());
 
@@ -216,34 +212,11 @@ public class TransactionController {
 		}
 	}
 
-	class BookTransactionSearchClearListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (isIncoming) {
-				inPanel.getSearchPanel().getTxtfldSearch().setText("");
-				inPanel.getBtnReturn().setEnabled(false);
-				inPanel.getLblDaysOverdue().setText("");
-				inPanel.getLblDaysOverdue().setText("");
-			} else {
-				outPanel.getSearchPanel().getTxtfldSearch().setText("");
-				outPanel.getGrantButton().setEnabled(false);
-				outPanel.getDenyButton().setEnabled(false);
-			}
-			searchBookTransaction();
-		}
-	}
-
 	class BookTransactionSearchKeyListener implements KeyListener {
-		@Override
-		public void keyPressed(KeyEvent e) {
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			final int enterKey = 10;
-			int userKey = e.getKeyCode();
-
-			if (userKey == enterKey) {
+		Timer timer = new Timer(Constants.TIMER_DELAY, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				timer.stop();
 				searchBookTransaction();
 				if (isIncoming) {
 					inPanel.getBtnReturn().setEnabled(false);
@@ -252,6 +225,21 @@ public class TransactionController {
 				} else {
 					outPanel.getGrantButton().setEnabled(false);
 					outPanel.getDenyButton().setEnabled(false);
+				}
+			}
+		});
+		
+		@Override
+		public void keyPressed(KeyEvent e) {
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			if(e.getKeyCode() != KeyEvent.VK_ENTER){
+				if(timer.isRunning()) {
+					timer.restart();
+				} else {
+					timer.start();
 				}
 			}
 		}
@@ -389,7 +377,8 @@ public class TransactionController {
 						.getColumn(3).setPreferredWidth(30);
 				inPanel.getSearchPanel().getTblResults().getColumnModel()
 						.getColumn(4).setPreferredWidth(20);
-
+				inPanel.getSearchPanel().getTblResults()
+						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				inPanel.getSearchPanel().repaint();
 			} else {
 				outPanel.getSearchPanel().getTblResults()
@@ -409,6 +398,8 @@ public class TransactionController {
 						.getColumn(3).setPreferredWidth(30);
 				outPanel.getSearchPanel().getTblResults().getColumnModel()
 						.getColumn(4).setPreferredWidth(20);
+				outPanel.getSearchPanel().getTblResults()
+						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				outPanel.getSearchPanel().repaint();
 			}
 		} catch (Exception e) {
