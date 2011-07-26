@@ -24,6 +24,7 @@ public class UserControllerTest extends UISpecTestCase {
 
 	Panel userInfoPanel;
 	Panel userSearchPanel;
+	TabGroup tabGroup;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -33,12 +34,12 @@ public class UserControllerTest extends UISpecTestCase {
 		userInfoPanel = new Panel(new UserController(user).getUserInfoPanel());
 		assertNotNull(userInfoPanel);
 		userSearchPanel = new Panel(new UserController(user).getUserSearch());
-		assertNotNull(userSearchPanel);
+		assertNotNull(userSearchPanel);	
+		tabGroup = userSearchPanel.getTabGroup();
 	}
 
 	@Test
-	public void testInitialUserSearchPanel() {
-		TabGroup tabGroup = userSearchPanel.getTabGroup();
+	public void testInitialUserTab() {		
 		assertNotNull(tabGroup);
 		assertThat(tabGroup.isEnabled());
 		assertThat(tabGroup.isVisible());
@@ -50,10 +51,29 @@ public class UserControllerTest extends UISpecTestCase {
 		assertReflectionEquals(userSearchPanel.getTable("tableUsers"), tabGroup
 				.getSelectedTab().getTable());
 		
+		String temp;
+		
+		temp = userInfoPanel.getTextBox("accountType").getText();
+		assertEquals("User",temp);		
+		temp = userInfoPanel.getTextBox("idNumber").getText();
+		assertEquals("1",temp);		
+		temp = userInfoPanel.getInputTextBox("username").getText();
+		assertEquals("jvillar",temp);					
+	}
+	
+	@Test
+	public void testInitialPendingTab(){
 		tabGroup.selectTab("Pending Applications");
 		assertNotNull(tabGroup.getSelectedTab().getTable());
 		assertReflectionEquals(userSearchPanel.getTable("tablePending"), tabGroup
 				.getSelectedTab().getTable());
+		
+		assertFalse(userSearchPanel.getButton("acceptButton").isEnabled());
+		assertFalse(userSearchPanel.getButton("denyButton").isEnabled());
+		assertTrue(userSearchPanel.getCheckBox("allCheckBox").isEnabled());
+		
+		assertTrue(userSearchPanel.getButton("searchButton").isEnabled());
+		assertTrue(userSearchPanel.getTextBox("searchField").isEnabled());						
 	}
 
 }
