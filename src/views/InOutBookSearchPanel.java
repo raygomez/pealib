@@ -11,7 +11,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.ListSelectionModel;
 
 import net.miginfocom.swing.MigLayout;
 
