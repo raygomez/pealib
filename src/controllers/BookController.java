@@ -438,16 +438,11 @@ public class BookController {
 								.get(currTableRowSelection)) > 0) {
 							bookInfo.getBtnBorrow().setEnabled(true);
 						} else {
-							if (bookList.get(currTableRowSelection).getCopies() > 0) {
-								bookInfo.getBtnReserve().setEnabled(true);
-								bookInfo.getLblErrorMsg().setText(
-										"No available copies at this time");
-								bookInfo.getLblErrorMsg().setForeground(
-										Color.RED);
-							} else {
-								bookInfo.getLblErrorMsg().setText(
-										"Not yet available in the library");
-							}
+							bookInfo.getBtnReserve().setEnabled(true);
+							bookInfo.getLblErrorMsg().setText(
+									"No available copies at this time");
+							bookInfo.getLblErrorMsg().setForeground(
+									Color.RED);
 						}
 					} else {
 						bookInfo.getLblErrorMsg()
