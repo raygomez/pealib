@@ -331,8 +331,11 @@ public class TransactionController {
 									.getAuthor();
 							break;
 						case 3:
-							objData = searchResults.get(row).getUser()
-									.getUserName();
+							String user = searchResults.get(row).getUser()
+							.getUserName() + " (" + searchResults.get(row)
+							.getUser().getFirstName() + " " + searchResults
+							.get(row).getUser().getLastName() + ")";
+							objData = user;
 							break;
 						case 4:
 							if (isIncoming) {
