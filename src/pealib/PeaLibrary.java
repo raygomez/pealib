@@ -25,13 +25,13 @@ public class PeaLibrary {
 	private BookController bookControl;
 	private ELibController elibControl;
 	private TransactionController transactionControl;
-	
+
 	private UserSidebarPanel userSidebarPanel;
 	private LibrarianSidebarPanel librarianSidebarPanel;
-	
+
 	private User currentUser;
 
-	public PeaLibrary(){
+	public PeaLibrary() {
 		new Connector();
 	}
 
@@ -43,7 +43,8 @@ public class PeaLibrary {
 	}
 
 	/**
-	 * @param frame the frame to set
+	 * @param frame
+	 *            the frame to set
 	 */
 	public void setFrame(MainFrame frame) {
 		this.frame = frame;
@@ -57,7 +58,8 @@ public class PeaLibrary {
 	}
 
 	/**
-	 * @param currentUser the currentUser to set
+	 * @param currentUser
+	 *            the currentUser to set
 	 */
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
@@ -71,84 +73,91 @@ public class PeaLibrary {
 	}
 
 	/**
-	 * @param transactionControl the transactionControl to set
+	 * @param transactionControl
+	 *            the transactionControl to set
 	 */
 	public void setTransactionControl(TransactionController transactionControl) {
 		this.transactionControl = transactionControl;
 	}
-	public void authenticate(){
+
+	public void authenticate() {
 		authControl = new AuthenticationController();
 		AuthenticationController.getLogin().setVisible(true);
-		setCurrentUser(authControl.getUser());		
+		setCurrentUser(authControl.getUser());
 		initialize();
 	}
 
 	public void initialize() {
-		
+
 		setFrame(new MainFrame());
-		
-		if(getCurrentUser() == null)
+
+		if (getCurrentUser() == null)
 			System.exit(0);
-		
+
 		initializedLoggedUser();
 	}
-	
-	private void initializedLoggedUser(){
-		//currentUser = user;
-		//currentUser = new User(101123,"jajalim","1234567","Jaja","Lim","jjlim@gmail.com","UP Ayala Technohub", "09171234567",1,"Librarian");
-		
-		getFrame().setWelcomeLabel(getCurrentUser().getFirstName()+" "+getCurrentUser().getLastName());
-		
+
+	private void initializedLoggedUser() {
+		// currentUser = user;
+		// currentUser = new
+		// User(101123,"jajalim","1234567","Jaja","Lim","jjlim@gmail.com","UP Ayala Technohub",
+		// "09171234567",1,"Librarian");
+
+		getFrame().setWelcomeLabel(
+				getCurrentUser().getFirstName() + " "
+						+ getCurrentUser().getLastName());
+
 		bookControl = new BookController(getCurrentUser());
 		userControl = new UserController(getCurrentUser());
-		
-		if(getCurrentUser().getType().equals("Librarian")){
+
+		if (getCurrentUser().getType().equals("Librarian")) {
 			initializeLibrarian();
-		}
-		else if(getCurrentUser().getType().equals("User")){
+		} else if (getCurrentUser().getType().equals("User")) {
 			initializeUser();
 		}
 	}
-	
-	private void initializeLibrarian(){
-		
+
+	private void initializeLibrarian() {
+
 		try {
 			setTransactionControl(new TransactionController());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		librarianSidebarPanel = new LibrarianSidebarPanel();
 		initializeSidebarPanel(librarianSidebarPanel);
-		
+
 		getFrame().setSidebarPanel(librarianSidebarPanel);
 		getFrame().validate();
 		getFrame().repaint();
 	}
-	
-	private void initializeUser(){
-		
+
+	private void initializeUser() {
+
 		elibControl = new ELibController(getCurrentUser());
 		userSidebarPanel = new UserSidebarPanel();
 		initializeSidebarPanel(userSidebarPanel);
-		
+
 		getFrame().setSidebarPanel(userSidebarPanel);
 		getFrame().setContentPanel(bookControl.getBookLayoutPanel());
 		getFrame().validate();
 		getFrame().repaint();
-		
+
 	}
-	
+
 	private void initializeSidebarPanel(UserSidebarPanel userSidebarPanel) {
 		// TODO Auto-generated method stub
 		userSidebarPanel.addViewBooksListener(viewBooks);
 		userSidebarPanel.addEditProfileListener(showEditProfile);
-		userSidebarPanel.addShowTransactionHistoryListener(showBookTransactions);
+		userSidebarPanel
+				.addShowTransactionHistoryListener(showBookTransactions);
 		userSidebarPanel.addLogoutListener(logout);
 	}
 
-	private void initializeSidebarPanel(LibrarianSidebarPanel librarianSidebarPanel) {
+	private void initializeSidebarPanel(
+			LibrarianSidebarPanel librarianSidebarPanel) {
 		// TODO Auto-generated method stub
 		librarianSidebarPanel.addViewBooksListener(viewBooks);
 		librarianSidebarPanel.addViewUsersListener(viewUsers);
@@ -156,22 +165,22 @@ public class PeaLibrary {
 		librarianSidebarPanel.addBookTransactionsListener(showBookTransactions);
 		librarianSidebarPanel.addLogoutListener(logout);
 	}
-	
-	public MainFrame getMainFrame(){
+
+	public MainFrame getMainFrame() {
 		return getFrame();
 	}
-	
+
 	private ActionListener viewBooks = new ActionListener() {
-		
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			getFrame().setContentPanel(bookControl.getBookLayoutPanel());
 		}
 	};
-	
+
 	private ActionListener viewUsers = new ActionListener() {
-		
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
@@ -179,9 +188,9 @@ public class PeaLibrary {
 		}
 	};
 	private ActionListener showEditProfile;
-	
+
 	private ActionListener logout = new ActionListener() {
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
@@ -189,25 +198,26 @@ public class PeaLibrary {
 			getFrame().dispose();
 			setCurrentUser(null);
 			authenticate();
+			getFrame().setVisible(true);
+
 		}
 	};
-	
+
 	private ActionListener showBookTransactions = new ActionListener() {
-		
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			if(getCurrentUser().getType().equals("Librarian")){
-				//frame.setContentPanel(transactionControl);
-			}
-			else if(getCurrentUser().getType().equals("User")){
+			if (getCurrentUser().getType().equals("Librarian")) {
+				// frame.setContentPanel(transactionControl);
+			} else if (getCurrentUser().getType().equals("User")) {
 				getFrame().setContentPanel(elibControl.getTabpane());
 			}
 		}
 	};
-	
-	public static void main(String[] args){
-		
+
+	public static void main(String[] args) {
+
 		PeaLibrary app = new PeaLibrary();
 		app.authenticate();
 		app.getFrame().setVisible(true);
