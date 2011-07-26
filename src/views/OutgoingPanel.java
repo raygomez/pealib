@@ -16,7 +16,7 @@ public class OutgoingPanel extends JPanel{
 	private JButton denyButton;
 	
 	public OutgoingPanel() {
-		setLayout(new MigLayout("", "[25:n:25][536:n:536][100:n:100][100:n:100]", "[65:n:65][325:n:325][25:n:25]"));
+		setLayout(new MigLayout("", "[grow][100:n:100,grow][100:n:100,grow][3:n:3]", "[60:n:60][350:n:350][25:n:25]"));
 		
 		searchPanel = new InOutBookSearchPanel();
 		searchPanel.setName("searchPanel");
@@ -24,11 +24,11 @@ public class OutgoingPanel extends JPanel{
 		
 		grantButton = new JButton("Grant");
 		grantButton.setEnabled(false);
-		add(grantButton, "cell 2 2,growx");
+		add(grantButton, "cell 1 2,growx");
 		
 		denyButton = new JButton("Deny");
 		denyButton.setEnabled(false);
-		add(denyButton, "cell 3 2,growx");
+		add(denyButton, "cell 2 2,growx");
 	}
 
 	public JButton getGrantButton() {

@@ -17,8 +17,7 @@ public class IncomingPanel extends JPanel {
 	private JButton returnButton;
 
 	public IncomingPanel() {
-		setLayout(new MigLayout("", "[25:n:25][640:n:640][100:n:100]",
-				"[65:n:65][325:n:325][25:n:25]"));
+		setLayout(new MigLayout("", "[676.00,grow][100:n:100,grow][3:n:3,grow]", "[70:n:70][340:n:340][25:n:25]"));
 
 		searchPanel = new InOutBookSearchPanel();
 		searchPanel.setName("searchPanel");
@@ -27,11 +26,11 @@ public class IncomingPanel extends JPanel {
 		daysOverdueLabel = new JLabel("");
 		daysOverdueLabel.setName("daysOverdueLabel");
 		daysOverdueLabel.setForeground(Color.BLACK);
-		add(daysOverdueLabel, "cell 0 2 2 1,alignx left");
+		add(daysOverdueLabel, "cell 0 2,alignx left");
 
 		returnButton = new JButton("Return");
 		returnButton.setEnabled(false);
-		add(returnButton, "cell 2 2,growx");
+		add(returnButton, "cell 1 2,growx");
 	}
 
 	/* Event Listener */
