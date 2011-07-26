@@ -1,5 +1,6 @@
 package views;
 
+import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeListener;
 
@@ -14,15 +15,17 @@ public class InOutTabbedPane extends JTabbedPane {
 		incomingPanel = new IncomingPanel();
 		outgoingPanel = new OutgoingPanel();
 
-		addTab("Incoming", incomingPanel);
-		addTab("Outgoing", outgoingPanel);
+		addTab("Incoming", new ImageIcon("resources/images/incoming.png"),
+				incomingPanel);
+		addTab("Outgoing", new ImageIcon("resources/images/outgoing.png"),
+				outgoingPanel);
 	}
 
 	/* Event Listener */
 	public void setEventListener(ChangeListener tab) {
 		addChangeListener(tab);
 	}
-	
+
 	/* Getters */
 	public IncomingPanel getIncomingPanel() {
 		return incomingPanel;
