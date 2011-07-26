@@ -2,6 +2,7 @@ package views;
 
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -120,10 +121,10 @@ public class BookInfoPanel extends JPanel {
 		copiesValSpinner.setModel(new SpinnerNumberModel(0, 0, 2147483647, 1));
 		copiesValSpinner.getModel().setValue(currentBook.getCopies());
 
-		saveButton = new JButton("Save");
-		deleteButton = new JButton("Delete");
-		borrowButton = new JButton("Borrow");
-		reserveButton = new JButton("Reserve");
+		saveButton = new JButton("Save", new ImageIcon("resources/images/save32x32.png"));
+		deleteButton = new JButton("Delete", new ImageIcon("resources/images/delete.png"));
+		borrowButton = new JButton("Borrow", new ImageIcon("resources/images/request.png"));
+		reserveButton = new JButton("Reserve", new ImageIcon("resources/images/reserve.png"));
 
 		if (currentUser.getType().equals("Librarian")) {
 			add(saveButton, "cell 3 10,alignx right");
