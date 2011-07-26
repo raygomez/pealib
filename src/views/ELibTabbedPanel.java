@@ -128,7 +128,9 @@ public class ELibTabbedPanel extends JPanel {
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			table.getColumn(table.getColumnName(i)).setCellRenderer(trender);
 		}
-
+		
+		table.getTableHeader().setReorderingAllowed(false);	
+		table.getTableHeader().setResizingAllowed(false);
 	}
 
 	public void setCellEditor(int tab, TableCellEditor renderer) {

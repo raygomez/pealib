@@ -66,8 +66,13 @@ public class BookController {
 	}
 
 	private void generateBookLayoutPanel() throws Exception {
-		bookList = BookDAO.searchBook("");
-		currSearchString = "*";
+		if (currentUser.getType().equals("Librarian")){
+			bookList = BookDAO.searchBook("");
+		} else {
+			bookList = BookDAO.searchBookForUser("");			
+		}
+		currSearchString = "";
+		currTableRowSelection = 0;
 		bookLayoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]", "[grow]"));
 		bookSearch = new BookSearchPanel(currentUser);
 		if (bookList.size() == 0) {
@@ -89,6 +94,7 @@ public class BookController {
 		bookSearch.setSearchButtonListener(new SearchButtonListener());
 		bookSearch.setAddBookButtonListener(new AddBookButtonListener());
 		bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+		bookSearch.getTableBookList().addRowSelectionInterval(currTableRowSelection, currTableRowSelection);
 		bookSearch.setMouseListener(new BookListMouseListener());
 		bookInfo.addSaveListener(new SaveButtonListener());
 		bookInfo.addDeleteListener(new DeleteButtonListener());
@@ -176,7 +182,11 @@ public class BookController {
 								.getIsbn())) {
 							BookDAO.addBook(addBook.getBookInfo());
 							addBook.getLblErrorMsg().setText("Book Added");
-							bookList = BookDAO.searchBook(currSearchString);
+							if (currentUser.getType().equals("Librarian")){
+								bookList = BookDAO.searchBook(currSearchString);
+							} else {
+								bookList = BookDAO.searchBookForUser(currSearchString);			
+							}
 							bookSearch.getTableBookList().setModel(
 									new BookListModel(bookList));
 							bookSearch.getTableBookList().addRowSelectionInterval(
@@ -280,7 +290,11 @@ public class BookController {
 
 				if (validate) {
 					BookDAO.editBook(bookInfo.getCurrBook());
-					bookList = BookDAO.searchBook(currSearchString);
+					if (currentUser.getType().equals("Librarian")){
+						bookList = BookDAO.searchBook(currSearchString);
+					} else {
+						bookList = BookDAO.searchBookForUser(currSearchString);			
+					}
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
 					bookSearch.getTableBookList().addRowSelectionInterval(
@@ -311,7 +325,11 @@ public class BookController {
 				if (availableCopy == bookList.get(currTableRowSelection)
 						.getCopies()) {
 					BookDAO.deleteBook(bookInfo.getCurrBook());
-					bookList = BookDAO.searchBook(currSearchString);
+					if (currentUser.getType().equals("Librarian")){
+						bookList = BookDAO.searchBook(currSearchString);
+					} else {
+						bookList = BookDAO.searchBookForUser(currSearchString);			
+					}
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
 					bookSearch.getTableBookList().addRowSelectionInterval(
@@ -343,7 +361,11 @@ public class BookController {
 							.showMessageDialog(bookLayoutPanel,
 									"The book has been successfully added to your Requests List!");
 				}
-				bookList = BookDAO.searchBook(currSearchString);
+				if (currentUser.getType().equals("Librarian")){
+					bookList = BookDAO.searchBook(currSearchString);
+				} else {
+					bookList = BookDAO.searchBookForUser(currSearchString);			
+				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
 				bookSearch.getTableBookList().addRowSelectionInterval(
@@ -370,7 +392,11 @@ public class BookController {
 							.showMessageDialog(bookLayoutPanel,
 									"The book has been successfully added to your Rervations List!");
 				}
-				bookList = BookDAO.searchBook(currSearchString);
+				if (currentUser.getType().equals("Librarian")){
+					bookList = BookDAO.searchBook(currSearchString);
+				} else {
+					bookList = BookDAO.searchBookForUser(currSearchString);			
+				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
 				bookSearch.getTableBookList().addRowSelectionInterval(
@@ -396,7 +422,8 @@ public class BookController {
 			try {
 				if (currentUser.getType().equals("Librarian")) {
 					bookInfo.getBtnSave().setEnabled(true);
-					if (bookList.get(tableRow).getCopies() == 0) {
+					int availableCopy = TransactionDAO.getAvailableCopies(bookList.get(0));
+					if (bookList.get(tableRow).getCopies() == 0 || bookList.get(tableRow).getCopies() != availableCopy) {
 						bookInfo.getBtnDelete().setEnabled(false);
 					} else
 						bookInfo.getBtnDelete().setEnabled(true);
@@ -481,11 +508,11 @@ public class BookController {
 				}
 
 				if (availableCopies == 0) {
-					rowData.add("unavailable");
+					rowData.add("<html><font color='red'>unavailable</font></html>");
 				} else if (availableCopies == 1) {
-					rowData.add("1 copy available");
+					rowData.add("<html><font color='green'>1 copy available</font></html>");
 				} else {
-					rowData.add(availableCopies + " copies available");
+					rowData.add("<html><font color='green'>"+availableCopies+" copies available</font></html>");
 				}
 
 				tableData.add(rowData);
@@ -523,40 +550,25 @@ public class BookController {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				String strSearch = bookSearch.getTextFieldSearch();
-				if (!strSearch.trim().isEmpty()) {
-					currSearchString = strSearch;
+				currSearchString = strSearch;
+				if (currentUser.getType().equals("Librarian")){
 					bookList = BookDAO.searchBook(strSearch);
-					bookSearch.getTableBookList().setModel(
-							new BookListModel(bookList));
-					if (bookList.size() == 0) {
-						bookInfo.setBookInfoData(new Book());
-						bookInfo.getBtnDelete().setEnabled(false);
-						bookInfo.getBtnSave().setEnabled(false);
-					} else {
-						bookInfo.getBtnDelete().setEnabled(true);
-						bookInfo.getBtnSave().setEnabled(true);
-						bookInfo.setBookInfoData(bookList.get(0));
-						if (bookList.get(0).getCopies() == 0) {
-							bookInfo.getBtnDelete().setEnabled(false);
-						}
-					}
 				} else {
-					strSearch = "";
-					currSearchString = strSearch;
-					bookList = BookDAO.searchBook(strSearch);
-					bookSearch.getTableBookList().setModel(
-							new BookListModel(bookList));
-					if (bookList.size() == 0) {
-						bookInfo.setBookInfoData(new Book());
+					bookList = BookDAO.searchBookForUser(strSearch);			
+				}
+				bookSearch.getTableBookList().setModel(
+						new BookListModel(bookList));
+				if (bookList.size() == 0) {
+					bookInfo.setBookInfoData(new Book());
+					bookInfo.getBtnDelete().setEnabled(false);
+					bookInfo.getBtnSave().setEnabled(false);
+				} else {
+					bookInfo.getBtnDelete().setEnabled(true);
+					bookInfo.getBtnSave().setEnabled(true);
+					bookInfo.setBookInfoData(bookList.get(0));
+					int availableCopy = TransactionDAO.getAvailableCopies(bookList.get(0));
+					if (bookList.get(0).getCopies() == 0 || bookList.get(0).getCopies() != availableCopy) {
 						bookInfo.getBtnDelete().setEnabled(false);
-						bookInfo.getBtnSave().setEnabled(false);
-					} else {
-						bookInfo.getBtnDelete().setEnabled(true);
-						bookInfo.getBtnSave().setEnabled(true);
-						bookInfo.setBookInfoData(bookList.get(0));
-						if (bookList.get(0).getCopies() == 0) {
-							bookInfo.getBtnDelete().setEnabled(false);
-						}
 					}
 				}
 			} catch (Exception ex) {
@@ -593,7 +605,11 @@ public class BookController {
 				try {
 					String strSearch = bookSearch.getTextFieldSearch();
 					currSearchString = strSearch;
-					bookList = BookDAO.searchBook(strSearch);
+					if (currentUser.getType().equals("Librarian")){
+						bookList = BookDAO.searchBook(strSearch);
+					} else {
+						bookList = BookDAO.searchBookForUser(strSearch);			
+					}
 					bookSearch.getTableBookList().setModel(
 								new BookListModel(bookList));
 					if (bookList.size() == 0) {
@@ -603,7 +619,8 @@ public class BookController {
 						bookInfo.getBtnDelete().setEnabled(true);
 						bookInfo.getBtnSave().setEnabled(true);
 						bookInfo.setBookInfoData(bookList.get(0));
-						if (bookList.get(0).getCopies() == 0) {
+						int availableCopy = TransactionDAO.getAvailableCopies(bookList.get(0));
+						if (bookList.get(0).getCopies() == 0 || bookList.get(0).getCopies() != availableCopy) {
 								bookInfo.getBtnDelete().setEnabled(false);
 						}
 					}
