@@ -46,10 +46,9 @@ public class BookInfoPanelTest extends UISpecTestCase {
 		TextBox label;
 		TextBox textField;
 		Button button;
-		
+
 		String[] labelArray = new String[] { "Title:", "Author:",
-				"Year Published:", "Publisher:", "ISBN:", "Description:",
-				"Copies:" };
+				"Year Published:", "Publisher:", "ISBN:", "Description:" };
 
 		for (String l : labelArray) {
 			label = panelUser.getTextBox(l);
@@ -60,13 +59,13 @@ public class BookInfoPanelTest extends UISpecTestCase {
 		String[] textInputArray = new String[] { "titleTextField",
 				"authorTextField", "yearPublishTextField",
 				"publisherTextField", "isbnTextField", "descriptionTextArea" };
-						
+
 		for (String l : textInputArray) {
 			textField = panelUser.getTextBox(l);
 			assertNotNull(textField);
 			assertThat(textField.isVisible());
 			assertFalse(textField.isEditable());
-		}	
+		}
 
 		assertEquals(book.getTitle(),
 				panelUser.getInputTextBox("titleTextField").getText());
@@ -80,7 +79,7 @@ public class BookInfoPanelTest extends UISpecTestCase {
 				.getText());
 		assertEquals(book.getDescription(),
 				panelUser.getInputTextBox("descriptionTextArea").getText());
-		
+
 		String[] buttonArray = new String[] { "Borrow", "Reserve" };
 
 		for (String s : buttonArray) {
@@ -90,13 +89,13 @@ public class BookInfoPanelTest extends UISpecTestCase {
 			assertThat(button.isVisible());
 		}
 	}
-	
+
 	@Test
 	public void testInitialStateLibrarian() {
 		TextBox label;
 		TextBox textField;
 		Button button;
-		
+
 		String[] labelArray = new String[] { "Title:", "Author:",
 				"Year Published:", "Publisher:", "ISBN:", "Description:",
 				"Copies:" };
@@ -106,24 +105,24 @@ public class BookInfoPanelTest extends UISpecTestCase {
 			assertNotNull(label);
 			assertThat(label.isVisible());
 		}
-		
+
 		String[] textInputArray = new String[] { "titleTextField",
 				"authorTextField", "yearPublishTextField",
 				"publisherTextField", "isbnTextField", "descriptionTextArea" };
-						
+
 		for (String l : textInputArray) {
 			textField = panelLibrarian.getTextBox(l);
 			assertNotNull(textField);
 			assertThat(textField.isVisible());
 			assertThat(textField.isEditable());
-		}	
+		}
 
 		assertEquals(book.getTitle(),
 				panelLibrarian.getInputTextBox("titleTextField").getText());
 		assertEquals(book.getAuthor(),
 				panelLibrarian.getInputTextBox("authorTextField").getText());
-		assertEquals("" + book.getYearPublish(),
-				panelLibrarian.getInputTextBox("yearPublishTextField").getText());
+		assertEquals("" + book.getYearPublish(), panelLibrarian
+				.getInputTextBox("yearPublishTextField").getText());
 		assertEquals(book.getPublisher(),
 				panelLibrarian.getInputTextBox("publisherTextField").getText());
 		assertEquals(book.getIsbn(), panelUser.getInputTextBox("isbnTextField")
@@ -139,10 +138,10 @@ public class BookInfoPanelTest extends UISpecTestCase {
 			assertThat(button.isEnabled());
 			assertThat(button.isVisible());
 		}
-		
+
 		assertNotNull(panelLibrarian.getSpinner());
 		assertThat(panelLibrarian.getSpinner().isEnabled());
 		assertThat(panelLibrarian.getSpinner().isVisible());
-		
+
 	}
 }
