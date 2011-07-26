@@ -104,9 +104,9 @@ public class BookController {
 		private AddBookDialog addBook;
 		public void actionPerformed(ActionEvent arg0) {
 			addBook = new AddBookDialog();
-			addBook.setVisible(true);
 			addBook.addBookActionListener(new AddBookListener());
 			addBook.addCancelActionListener(new CancelListener());
+			addBook.setVisible(true);
 		}
 		
 		class AddBookListener implements ActionListener{
