@@ -110,13 +110,10 @@ public class BookDAO{
 		ArrayList<Book> bookCollection = new ArrayList<Book>();
 		PreparedStatement bookQuery = null;
 
-		if (search.equals("*")) {
-			bookQuery = Connector.getConnection().prepareStatement("SELECT * FROM Books");
-		} else {
-			bookQuery = Connector.getConnection()
+		bookQuery = Connector.getConnection()
 					.prepareStatement("SELECT * FROM Books WHERE CONCAT(ISBN, Title, Author, Publisher) LIKE ?");
-			bookQuery.setString(1, "%" + search + "%");
-		}
+		bookQuery.setString(1, "%" + search + "%");
+		
 
 		ResultSet rs = bookQuery.executeQuery();
 		while (rs.next()) {

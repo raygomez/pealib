@@ -159,6 +159,10 @@ public class AddBookDialog extends JDialog {
 		return descriptionTextArea;
 	}
 
+	public JTextField getTxtFldEdition() {
+		return editionTextField;
+	}
+
 	public JLabel getLblErrorMsg() {
 		return errorMessageLabel;
 	}
