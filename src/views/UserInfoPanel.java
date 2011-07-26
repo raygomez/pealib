@@ -215,11 +215,28 @@ public class UserInfoPanel extends JPanel {
 		this.email.setText(email);
 	}
 	
+	public void clearFields()
+	{
+		this.accountType.setText("");
+		this.idNumber.setText("");
+		this.username.setText("");
+		this.firstName.setText("");
+		this.lastName.setText("");
+		this.address.setText("");
+		this.contactNumber.setText("");
+		this.email.setText("");
+	}
+	
 	public void setFirstNameEnabled(boolean enabled){
 		firstName.setEnabled(enabled);
 	}
 	
 	public void setLastNameEnabled(boolean enabled){
 		lastName.setEnabled(enabled);
+	}
+	
+	public void toggleButton(boolean value){
+		changePasswordButton.setEnabled(value);
+		saveButton.setEnabled(value);
 	}
 }

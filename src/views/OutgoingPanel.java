@@ -12,28 +12,37 @@ public class OutgoingPanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	private InOutBookSearchPanel searchPanel;
-	private JButton btnGrant;
-	private JButton btnDeny;
+	private JButton grantButton;
+	private JButton denyButton;
 	
 	public OutgoingPanel() {
 		setLayout(new MigLayout("", "[25:n:25][536:n:536][100:n:100][100:n:100]", "[65:n:65][325:n:325][25:n:25]"));
 		
 		searchPanel = new InOutBookSearchPanel();
+		searchPanel.setName("searchPanel");
 		add(searchPanel, "cell 0 0 4 2,grow");
 		
-		btnGrant = new JButton("Grant");
-		btnGrant.setEnabled(false);
-		add(btnGrant, "cell 2 2,growx");
+		grantButton = new JButton("Grant");
+		grantButton.setEnabled(false);
+		add(grantButton, "cell 2 2,growx");
 		
-		btnDeny = new JButton("Deny");
-		btnDeny.setEnabled(false);
-		add(btnDeny, "cell 3 2,growx");
+		denyButton = new JButton("Deny");
+		denyButton.setEnabled(false);
+		add(denyButton, "cell 3 2,growx");
+	}
+
+	public JButton getGrantButton() {
+		return grantButton;
+	}
+
+	public JButton getDenyButton() {
+		return denyButton;
 	}
 
 	/* Event Listeners */
 	public void setEventListener(ActionListener grant, ActionListener deny) {
-		btnGrant.addActionListener(grant);
-		btnDeny.addActionListener(deny);
+		grantButton.addActionListener(grant);
+		denyButton.addActionListener(deny);
 	}
 		
 	/* Getters */
@@ -41,11 +50,4 @@ public class OutgoingPanel extends JPanel{
 		return searchPanel;
 	}
 
-	public JButton getBtnGrant() {
-		return btnGrant;
-	}
-
-	public JButton getBtnDeny() {
-		return btnDeny;
-	}
 }

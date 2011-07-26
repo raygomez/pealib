@@ -114,6 +114,7 @@ public class UserDAOTest {
 		user.setFirstName("Janine June");
 		user.setLastName("Lim");
 		user.setUserName("jlim");
+		user.setType("Pending");
 		user.setEmail("jlim@gmail.com");
 		user.setPassword("1234567");
 

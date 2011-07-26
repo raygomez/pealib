@@ -42,9 +42,9 @@ public class BookController {
 	private ArrayList<Book> bookList;
 
 	public static void main(String args[]){
-		new Connector(Constants.APP_CONFIG);
-		User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", "User");
-		//User user = new User(3, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", 1, "User");
+		new Connector(Constants.TEST_CONFIG);
+		//User user = new User(2, "mutya", "mutya", "Anmuary", "Pantaleon", "anmuary.pantaleon@gmail.com", "USA", "09175839123", "User");
+		User user = new User(3, "niel", "121111", "Reiniel Adam", "Lozada", "reiniel_lozada@yahoo.com", "secret", "8194000", "User");
 		//User user = new User(4, "dota", "dota", "Domingo", "Tanael", "dota@gmail.com", "USA", "09187658790", 1, "Librarian");
 		BookController bookController = new BookController(user);
 		JFrame testFrame = new JFrame();
