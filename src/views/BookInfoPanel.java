@@ -37,7 +37,7 @@ public class BookInfoPanel extends JPanel {
 	private JLabel errorMessageLabel;
 	private JTextArea descriptionTextArea;
 	private JSpinner copiesValSpinner;
-	private JLabel copiesLabel;
+	private JLabel lblCopies;
 
 	/**
 	 * Create the panel.
@@ -114,14 +114,11 @@ public class BookInfoPanel extends JPanel {
 		JScrollPane scrollDes = new JScrollPane(descriptionTextArea);
 		add(scrollDes, "cell 3 6 2 3,grow");
 
-		JLabel lblCopies = new JLabel("Copies:");
-		add(lblCopies, "cell 1 9,alignx left,aligny center");
+		lblCopies = new JLabel("Copies:");
 
 		copiesValSpinner = new JSpinner();
 		copiesValSpinner.setModel(new SpinnerNumberModel(0, 0, 2147483647, 1));
 		copiesValSpinner.getModel().setValue(currentBook.getCopies());
-
-		copiesLabel = new JLabel(Integer.toString(currentBook.getCopies()));
 
 		saveButton = new JButton("Save");
 		deleteButton = new JButton("Delete");
@@ -137,12 +134,12 @@ public class BookInfoPanel extends JPanel {
 			publisherTextField.setEditable(true);
 			titleTextField.setEditable(true);
 			yearPublishTextField.setEditable(true);
+			add(lblCopies, "cell 1 9,alignx left,aligny center");
 			add(copiesValSpinner, "cell 3 9,alignx left,aligny center");
 		}
 		if (currentUser.getType().equals("User")) {
 			add(borrowButton, "cell 3 10,alignx right");
 			add(reserveButton, "cell 4 10");
-			add(copiesLabel, "cell 3 9,alignx left,aligny center");
 		}
 
 	}
@@ -217,7 +214,6 @@ public class BookInfoPanel extends JPanel {
 		isbnTextField.setText(book.getIsbn());
 		descriptionTextArea.setText(book.getDescription());
 		copiesValSpinner.getModel().setValue(book.getCopies());
-		copiesLabel.setText(Integer.toString(book.getCopies()));
 	}
 
 	public JLabel getLblErrorMsg() {

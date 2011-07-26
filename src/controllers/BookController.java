@@ -320,16 +320,6 @@ public class BookController {
 			int tableRow = table.getSelectedRow();
 			currTableRowSelection = tableRow;
 			Book displayBook = bookList.get(tableRow);
-			
-			if(currentUser.getType().equals("User")){
-				try {
-					int availableCopy = TransactionDAO.getAvailableCopies(displayBook);
-					displayBook.setCopies(availableCopy);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-			
 			bookInfo.setBookInfoData(displayBook);
 			try {
 				if(currentUser.getType().equals("Librarian")){
