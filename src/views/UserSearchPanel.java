@@ -100,6 +100,9 @@ public class UserSearchPanel extends JPanel {
 		if(tab==PENDING){
 			table.getColumn("Accept").setPreferredWidth(5);
 		}
+		
+		table.getTableHeader().setReorderingAllowed(false);	
+		table.getTableHeader().setResizingAllowed(false);
 	}
 	
 	/**
@@ -172,7 +175,7 @@ public class UserSearchPanel extends JPanel {
 	}
 	
 	public void resetTable(){
-		getTabbedPane().validate();
+		getTabbedPane().revalidate();
 		getTabbedPane().repaint();
 	}
 
@@ -181,7 +184,7 @@ public class UserSearchPanel extends JPanel {
 	}
 
 	public void addListeners(ActionListener button, KeyListener text,
-			ChangeListener tab, ListSelectionListener table, MouseListener cbox, 
+			ChangeListener tab, ListSelectionListener table, ActionListener cbox, 
 			ActionListener accept, ActionListener deny) {
 		
 		getBtnSearch().addActionListener(button);
@@ -189,8 +192,17 @@ public class UserSearchPanel extends JPanel {
 		getTabbedPane().addChangeListener(tab);
 		getUsersTable().getSelectionModel().addListSelectionListener(table);
 		getPendingTable().getSelectionModel().addListSelectionListener(table);
-		getCbAll().addMouseListener(cbox);
+		getCbAll().addActionListener(cbox);
 		getBtnAccept().addActionListener(accept);
 		getBtnDeny().addActionListener(deny);
+	}
+	
+	
+	public void removeListener(ListSelectionListener table){
+		getPendingTable().getSelectionModel().removeListSelectionListener(table);
+	}
+	
+	public void addListener(ListSelectionListener table){
+		getPendingTable().getSelectionModel().addListSelectionListener(table);
 	}
 }
