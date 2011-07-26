@@ -237,7 +237,6 @@ public class BookController {
 			public void actionPerformed(ActionEvent e) {
 				addBook.dispose();
 			}
-
 		}
 	}
 
