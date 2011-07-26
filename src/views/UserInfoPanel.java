@@ -1,6 +1,5 @@
 package views;
 
-import java.awt.Color;
 import java.awt.event.*;
 import java.util.ArrayList;
 
@@ -22,14 +21,14 @@ public class UserInfoPanel extends JPanel {
 	private JButton changePasswordButton;
 	private SaveButton saveButton;
 
-	private JTextField accountType;
-	private JTextField idNumber;
-	private JTextField username;
-	private JTextField firstName;
-	private JTextField lastName;
+	private MyTextField accountType;
+	private MyTextField idNumber;
+	private MyTextField username;
+	private MyTextField firstName;
+	private MyTextField lastName;
 	private JTextArea address;
-	private JTextField contactNumber;
-	private JTextField email;
+	private MyTextField contactNumber;
+	private MyTextField email;
 
 	private JLabel firstNameError;
 	private JLabel lastNameError;
@@ -41,7 +40,7 @@ public class UserInfoPanel extends JPanel {
 		setLayout(new MigLayout("", "[]15[]", "[]10[]"));
 
 		tempLabel = new JLabel("Account Type");
-		accountType = new JTextField(20);
+		accountType = new MyTextField(20);
 		accountType.setEnabled(false);
 		accountType.setName("accountType");
 
@@ -49,7 +48,7 @@ public class UserInfoPanel extends JPanel {
 		add(accountType, "wrap");
 
 		tempLabel = new JLabel("User ID");
-		idNumber = new JTextField(20);
+		idNumber = new MyTextField(20);
 		idNumber.setEnabled(false);
 		idNumber.setName("idNumber");
 
@@ -57,7 +56,7 @@ public class UserInfoPanel extends JPanel {
 		add(idNumber, "wrap");
 
 		tempLabel = new JLabel("Username");
-		username = new JTextField(20);
+		username = new MyTextField(20);
 		username.setEnabled(false);
 		username.setName("username");
 
@@ -69,11 +68,10 @@ public class UserInfoPanel extends JPanel {
 		add(changePasswordButton, "wrap");
 
 		tempLabel = new JLabel("First Name");
-		firstName = new JTextField(20);
+		firstName = new MyTextField(20);
 		firstName.setName("firstName");
 
-		firstNameError = new JLabel();
-		firstNameError.setForeground(Color.RED);
+		firstNameError = new ErrorLabel();
 		firstNameError.setName("firstNameError");
 
 		add(tempLabel);
@@ -81,11 +79,10 @@ public class UserInfoPanel extends JPanel {
 		add(firstNameError, "wrap");
 
 		tempLabel = new JLabel("Last Name");
-		lastName = new JTextField(20);
+		lastName = new MyTextField(20);
 		lastName.setName("lastName");
 
-		lastNameError = new JLabel();
-		lastNameError.setForeground(Color.RED);
+		lastNameError = new ErrorLabel();
 		lastNameError.setName("lastNameError");
 
 		add(tempLabel);
@@ -99,11 +96,10 @@ public class UserInfoPanel extends JPanel {
 		add(address, "wrap");
 
 		tempLabel = new JLabel("Contact Number");
-		contactNumber = new JTextField(20);
+		contactNumber = new MyTextField(20);
 		contactNumber.setName("contactNumber");
 
-		contactNumberError = new JLabel();
-		contactNumberError.setForeground(Color.RED);
+		contactNumberError = new ErrorLabel();
 		contactNumberError.setName("contactNumberError");
 
 		add(tempLabel);
@@ -111,11 +107,10 @@ public class UserInfoPanel extends JPanel {
 		add(contactNumberError, "wrap");
 
 		tempLabel = new JLabel("Email");
-		email = new JTextField(20);
+		email = new MyTextField(20);
 		email.setName("email");
 
-		emailError = new JLabel();
-		emailError.setForeground(Color.RED);
+		emailError = new ErrorLabel();
 		emailError.setName("emailError");
 
 		add(tempLabel);
@@ -142,19 +137,22 @@ public class UserInfoPanel extends JPanel {
 
 			case Constants.FIRST_NAME_FORMAT_ERROR:
 				firstNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
+				firstName.hasError(true);
 				break;
 
 			case Constants.LAST_NAME_FORMAT_ERROR:
 				lastNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
+				lastName.hasError(true);
 				break;
 
 			case Constants.CONTACT_NUMBER_FORMAT_ERROR:
-				contactNumber
-						.setText(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE);
+				contactNumber.setText(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE);
+				contactNumber.hasError(true);
 				break;
 
 			case Constants.EMAIL_FORMAT_ERROR:
 				emailError.setText(Constants.EMAIL_FORMAT_ERROR_MESSAGE);
+				email.hasError(true);
 				break;
 			}
 		}
@@ -163,9 +161,16 @@ public class UserInfoPanel extends JPanel {
 	public void resetErrorMessages() {
 
 		firstNameError.setText("");
+		firstName.hasError(false);
+		
 		lastNameError.setText("");
+		lastName.hasError(false);
+		
 		contactNumberError.setText("");
+		contactNumber.hasError(false);
+		
 		emailError.setText("");
+		email.hasError(false);
 
 	}
 
