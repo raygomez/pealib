@@ -34,7 +34,7 @@ public class ELibTabbedPanel extends JPanel {
 
 	public ELibTabbedPanel() {
 		setBorder(new EmptyBorder(5, 5, 5, 5));
-		setLayout(new MigLayout("", "[600px]", "[]20px[500px]"));
+		setLayout(new MigLayout("", "[730px]", "[]20px[500px]"));
 
 		tabs.addTab("Requests", new ImageIcon("resources/images/request.png"),
 				requestPanel);
@@ -129,7 +129,9 @@ public class ELibTabbedPanel extends JPanel {
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			table.getColumn(table.getColumnName(i)).setCellRenderer(trender);
 		}
-
+		
+		table.getTableHeader().setReorderingAllowed(false);	
+		table.getTableHeader().setResizingAllowed(false);
 	}
 
 	public void setCellEditor(int tab, TableCellEditor renderer) {
@@ -186,7 +188,7 @@ public class ELibTabbedPanel extends JPanel {
 
 	private void addHistoryPane() {
 		historyPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		historyPanel.setLayout(new MigLayout("", "", ""));
+		historyPanel.setLayout(new MigLayout("", "[grow]", "[]"));
 
 		setHistoryTable(new JTable());
 		getHistoryTable().setName("historyTable");
@@ -196,12 +198,12 @@ public class ELibTabbedPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(getHistoryTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		historyPanel.add(scrollPane);
+		historyPanel.add(scrollPane, "cell 0 0, growx");
 	}
 
 	private void addOnLoanPane() {
 		onloanPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		onloanPanel.setLayout(new MigLayout("", "", ""));
+		onloanPanel.setLayout(new MigLayout("", "[grow]", "[]"));
 
 		setOnloanTable(new JTable());
 		getOnloanTable().setName("onloanTable");
@@ -211,12 +213,12 @@ public class ELibTabbedPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(getOnloanTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		onloanPanel.add(scrollPane);
+		onloanPanel.add(scrollPane,"cell 0 0, growx");
 	}
 
 	private void addRequestPane() {
 		requestPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		requestPanel.setLayout(new MigLayout("", "", ""));
+		requestPanel.setLayout(new MigLayout("", "[grow]", "[]"));
 
 		setRequestTable(new JTable());
 		getRequestTable().setName("requestTable");
@@ -226,12 +228,12 @@ public class ELibTabbedPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(getRequestTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		requestPanel.add(scrollPane);
+		requestPanel.add(scrollPane,"cell 0 0, growx");
 	}
 
 	private void addReservePane() {
 		reservePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		reservePanel.setLayout(new MigLayout("", "", ""));
+		reservePanel.setLayout(new MigLayout("", "[grow]", "[]"));
 
 		setReserveTable(new JTable());
 		getReserveTable().setName("reserveTable");
@@ -241,6 +243,6 @@ public class ELibTabbedPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(getReserveTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		reservePanel.add(scrollPane);
+		reservePanel.add(scrollPane,"cell 0 0, growx");
 	}
 }

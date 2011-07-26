@@ -55,10 +55,11 @@ public class BookSearchPanel extends JPanel {
 		tableBookList = new JTable();
 		tableBookList.setName("tableList");
 		tableBookList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableBookList.setRowHeight(28);
 		
 		add(new JScrollPane(tableBookList), "cell 0 4 3 1,grow");
 		tableBookList.getTableHeader().setReorderingAllowed(false);
-		tableBookList.getTableHeader().setResizingAllowed(false);
+		tableBookList.getTableHeader().setResizingAllowed(false);		
 	}
 	
 	public void setSearchButtonListener(ActionListener search) {

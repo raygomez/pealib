@@ -97,10 +97,8 @@ public class UserSearchPanel extends JPanel {
 		table.getColumn("Username").setCellRenderer(trender);
 		table.getColumn("Name").setCellRenderer(trender);
 		
-		if(tab==PENDING){
-			table.getColumn("Accept").setPreferredWidth(5);
-		}
-		
+		if(tab==PENDING)   table.getColumn("Accept").setPreferredWidth(5);
+				
 		table.getTableHeader().setReorderingAllowed(false);	
 		table.getTableHeader().setResizingAllowed(false);
 	}
@@ -113,8 +111,7 @@ public class UserSearchPanel extends JPanel {
 		setPendingTableModel(model2);
 
 		setBorder(new EmptyBorder(5, 5, 5, 5));
-		setLayout(new MigLayout("", "[60px][300px]10px[][grow]",
-				"[]20px[][grow]"));
+		setLayout(new MigLayout("", "[60px][300px]10px[][grow]", "[]20px[][grow]"));
 
 		add(fieldSearch, "cell 1 0");
 		add(btnSearch, "cell 2 0");
@@ -132,7 +129,7 @@ public class UserSearchPanel extends JPanel {
 	
 	private void usersPanel() {
 		getUsersPane().setBorder(new EmptyBorder(5, 5, 5, 5));
-		getUsersPane().setLayout(new MigLayout("", "", ""));
+		getUsersPane().setLayout(new MigLayout("", "[grow]", "[]"));
 
 		setUsersTable(new JTable(getUsersTableModel()));
 		getUsersTable().setName("tablePending");
@@ -141,7 +138,7 @@ public class UserSearchPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(getUsersTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
-		getUsersPane().add(scrollPane);
+		getUsersPane().add(scrollPane, "cell 0 0, growx");
 	}
 
 	private void pendingAppPanel() {
@@ -195,14 +192,5 @@ public class UserSearchPanel extends JPanel {
 		getCbAll().addActionListener(cbox);
 		getBtnAccept().addActionListener(accept);
 		getBtnDeny().addActionListener(deny);
-	}
-	
-	
-	public void removeListener(ListSelectionListener table){
-		getPendingTable().getSelectionModel().removeListSelectionListener(table);
-	}
-	
-	public void addListener(ListSelectionListener table){
-		getPendingTable().getSelectionModel().addListSelectionListener(table);
 	}
 }

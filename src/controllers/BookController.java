@@ -409,11 +409,11 @@ public class BookController {
 				}
 				
 				if(availableCopies == 0){
-					rowData.add("unavailable");
+					rowData.add("<html><font color='red'>unavailable</font></html>");
 				}else if(availableCopies == 1){
-					rowData.add("1 copy available");
+					rowData.add("<html><font color='green'>1 copy available</font></html>");
 				}else{
-					rowData.add(availableCopies+" copies available");
+					rowData.add("<html><font color='green'>"+availableCopies+" copies available</font></html>");
 				}
 				
 				tableData.add(rowData);
@@ -455,6 +455,7 @@ public class BookController {
 					currSearchString = strSearch;
 					bookList = BookDAO.searchBook(strSearch);
 					bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+
 					if(bookList.size() == 0){
 						bookInfo.setBookInfoData(new Book());
 						bookInfo.getBtnDelete().setEnabled(false);
@@ -472,6 +473,7 @@ public class BookController {
 					currSearchString = strSearch;
 					bookList = BookDAO.searchBook(strSearch);
 					bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+
 					if(bookList.size() == 0){
 						bookInfo.setBookInfoData(new Book());
 						bookInfo.getBtnDelete().setEnabled(false);
@@ -522,6 +524,7 @@ public class BookController {
 						currSearchString = strSearch;
 						bookList = BookDAO.searchBook(strSearch);
 						bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+				
 						if(bookList.size() == 0){
 							bookInfo.getBtnDelete().setEnabled(false);
 							bookInfo.getBtnSave().setEnabled(false);
@@ -538,6 +541,7 @@ public class BookController {
 						currSearchString = strSearch;
 						bookList = BookDAO.searchBook(strSearch);
 						bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+
 						if(bookList.size() == 0){
 							bookInfo.setBookInfoData(new Book());
 							bookInfo.getBtnDelete().setEnabled(false);
@@ -577,5 +581,4 @@ public class BookController {
 		}
 		
 	}
-	
 }
