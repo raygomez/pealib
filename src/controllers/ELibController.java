@@ -93,6 +93,10 @@ public class ELibController {
 		return tabpane;
 	}
 
+	public ELibTabbedPanel getView(){
+		update();
+		return tabpane;
+	}
 	/**
 	 * @param tabpane
 	 *            the tabpane to set

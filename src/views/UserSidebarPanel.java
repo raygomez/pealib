@@ -8,6 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import utilities.MyButton;
+
 import net.miginfocom.swing.MigLayout;
 
 public class UserSidebarPanel extends JPanel {
@@ -25,13 +27,13 @@ public class UserSidebarPanel extends JPanel {
 
 		setLayout(new MigLayout("wrap 1", "[grow]", "[]5[]"));
 
-		viewBooksButton = new JButton("Search Books", new ImageIcon(
+		viewBooksButton = new MyButton("Search Books", new ImageIcon(
 				"resources/images/Book.png"));
-		editProfileButton = new JButton("Edit Profile", new ImageIcon(
+		editProfileButton = new MyButton("Edit Profile", new ImageIcon(
 				"resources/images/editProfile.png"));
-		logoutButton = new JButton("Logout", new ImageIcon(
+		logoutButton = new MyButton("Logout", new ImageIcon(
 				"resources/images/logout32x32.png"));
-		transactionHistoryButton = new JButton("View E-Library Card",
+		transactionHistoryButton = new MyButton("View E-Library Card",
 				new ImageIcon("resources/images/elib32x32.png"));
 
 		add(viewBooksButton, "growx");
