@@ -329,7 +329,9 @@ public class ELibController {
 
 						try {
 							TransactionDAO.denyBookRequest(selectedBook);
-							TransactionDAO.passToNextUser(selectedBook.getBook());
+							if (TransactionDAO.isBookReservedByOtherUsers(selectedBook.getBook())){
+								TransactionDAO.passToNextUser(selectedBook.getBook());
+							}
 							update();
 						} catch (Exception e1) {
 							System.out.println("CancelRequest: requestData: "

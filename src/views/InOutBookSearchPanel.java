@@ -44,6 +44,8 @@ public class InOutBookSearchPanel extends JPanel {
 		add(totalLabel, "cell 0 2 2 1");
 
 		resultsTable = new JTable();
+		resultsTable.getTableHeader().setReorderingAllowed(false);
+		resultsTable.getTableHeader().setResizingAllowed(false);
 		JScrollPane sclpnResults = new JScrollPane(resultsTable);
 		add(sclpnResults, "cell 0 3 5 2,grow");
 	}
