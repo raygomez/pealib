@@ -2,6 +2,7 @@ package views;
 
 import java.awt.Color;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -19,7 +20,7 @@ public class UserInfoPanel extends JPanel {
 	private JLabel tempLabel;
 
 	private JButton changePasswordButton;
-	private JButton saveButton;
+	private SaveButton saveButton;
 
 	private JTextField accountType;
 	private JTextField idNumber;
@@ -121,7 +122,7 @@ public class UserInfoPanel extends JPanel {
 		add(email);
 		add(emailError, "wrap");
 
-		saveButton = new JButton("Save Changes", new ImageIcon(
+		saveButton = new SaveButton("Save Changes", new ImageIcon(
 				"resources/images/save32x32.png"));
 		add(saveButton);
 	}
@@ -246,5 +247,41 @@ public class UserInfoPanel extends JPanel {
 	public void toggleButton(boolean value) {
 		changePasswordButton.setEnabled(value);
 		saveButton.setEnabled(value);
+	}
+	
+	class SaveButton extends JButton{
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		ArrayList<ActionListener> actionListenerList;
+		
+		public SaveButton(){
+			super();
+			actionListenerList = new ArrayList<ActionListener>();
+		}
+		
+		public SaveButton(String arg0, Icon arg1){
+			super(arg0, arg1);
+			actionListenerList = new ArrayList<ActionListener>();
+		}
+		
+		public SaveButton(String arg0){
+			super(arg0);
+			actionListenerList = new ArrayList<ActionListener>();
+		}
+		
+		@Override
+		public void addActionListener(ActionListener l) {
+			actionListenerList.add(l);
+		}
+		
+		@Override
+		protected void fireActionPerformed(ActionEvent event) {
+			for(ActionListener l : actionListenerList){
+				l.actionPerformed(event);
+			}
+		}
 	}
 }

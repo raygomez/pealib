@@ -7,6 +7,8 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.UISpecTestCase;
 
+import views.InOutBookSearchPanel;
+
 public class InOutBookSearchPanelTest extends UISpecTestCase {
 
 	Panel panel;
@@ -33,7 +35,7 @@ public class InOutBookSearchPanelTest extends UISpecTestCase {
 		assertThat(panel.getTable().isEmpty());
 
 		Button button;
-		String[] buttonArray = new String[] { "Search", "Clear" };
+		String[] buttonArray = new String[] { "Search"};
 
 		for (String s : buttonArray) {
 			button = panel.getButton(s);

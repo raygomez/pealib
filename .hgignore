@@ -5,8 +5,6 @@ syntax: regexp
 syntax: regexp
 ^\.project$
 syntax: regexp
-^\.project$
-syntax: regexp
 ^coverage$
 syntax: regexp
 ^dist$
@@ -25,11 +23,7 @@ syntax: regexp
 syntax: regexp
 ^\.classpath$
 syntax: regexp
-^src/unitils-local\.properties$
-syntax: regexp
 ^app\.config$
-syntax: regexp
-^src/unitils-local\.properties$
 syntax: regexp
 ^test\.config$
 syntax: regexp
