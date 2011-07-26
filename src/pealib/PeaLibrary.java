@@ -12,6 +12,7 @@ import controllers.TransactionController;
 import controllers.UserController;
 
 import utilities.Connector;
+import utilities.Constants;
 import views.LibrarianSidebarPanel;
 import views.MainFrame;
 import views.UserSidebarPanel;
@@ -32,7 +33,34 @@ public class PeaLibrary {
 
 	public PeaLibrary(){
 		new Connector();
-		initialize();	
+	}
+
+	/**
+	 * @return the frame
+	 */
+	public MainFrame getFrame() {
+		return frame;
+	}
+
+	/**
+	 * @param frame the frame to set
+	 */
+	public void setFrame(MainFrame frame) {
+		this.frame = frame;
+	}
+
+	/**
+	 * @return the currentUser
+	 */
+	public User getCurrentUser() {
+		return currentUser;
+	}
+
+	/**
+	 * @param currentUser the currentUser to set
+	 */
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
 	}
 
 	/**
@@ -48,18 +76,18 @@ public class PeaLibrary {
 	public void setTransactionControl(TransactionController transactionControl) {
 		this.transactionControl = transactionControl;
 	}
-
-	private void initialize() {
-		// TODO Auto-generated method stub
-
+	public void authenticate(){
 		authControl = new AuthenticationController();
 		AuthenticationController.getLogin().setVisible(true);
-		currentUser = authControl.getUser();
+		setCurrentUser(authControl.getUser());		
+		initialize();
+	}
+
+	public void initialize() {
 		
-		frame = new MainFrame();
-		frame.setVisible(false);
+		setFrame(new MainFrame());
 		
-		if(currentUser == null)
+		if(getCurrentUser() == null)
 			System.exit(0);
 		
 		initializedLoggedUser();
@@ -69,15 +97,15 @@ public class PeaLibrary {
 		//currentUser = user;
 		//currentUser = new User(101123,"jajalim","1234567","Jaja","Lim","jjlim@gmail.com","UP Ayala Technohub", "09171234567",1,"Librarian");
 		
-		frame.setWelcomeLabel(currentUser.getFirstName()+" "+currentUser.getLastName());
+		getFrame().setWelcomeLabel(getCurrentUser().getFirstName()+" "+getCurrentUser().getLastName());
 		
-		bookControl = new BookController(currentUser);
-		userControl = new UserController(currentUser);
+		bookControl = new BookController(getCurrentUser());
+		userControl = new UserController(getCurrentUser());
 		
-		if(currentUser.getType().equals("Librarian")){
+		if(getCurrentUser().getType().equals("Librarian")){
 			initializeLibrarian();
 		}
-		else if(currentUser.getType().equals("User")){
+		else if(getCurrentUser().getType().equals("User")){
 			initializeUser();
 		}
 	}
@@ -94,23 +122,21 @@ public class PeaLibrary {
 		librarianSidebarPanel = new LibrarianSidebarPanel();
 		initializeSidebarPanel(librarianSidebarPanel);
 		
-		frame.setSidebarPanel(librarianSidebarPanel);
-		frame.validate();
-		frame.setVisible(true);
-		frame.repaint();
+		getFrame().setSidebarPanel(librarianSidebarPanel);
+		getFrame().validate();
+		getFrame().repaint();
 	}
 	
 	private void initializeUser(){
 		
-		elibControl = new ELibController(currentUser);
+		elibControl = new ELibController(getCurrentUser());
 		userSidebarPanel = new UserSidebarPanel();
 		initializeSidebarPanel(userSidebarPanel);
 		
-		frame.setSidebarPanel(userSidebarPanel);
-		frame.setContentPanel(bookControl.getBookLayoutPanel());
-		frame.validate();
-		frame.setVisible(true);
-		frame.repaint();
+		getFrame().setSidebarPanel(userSidebarPanel);
+		getFrame().setContentPanel(bookControl.getBookLayoutPanel());
+		getFrame().validate();
+		getFrame().repaint();
 		
 	}
 	
@@ -132,7 +158,7 @@ public class PeaLibrary {
 	}
 	
 	public MainFrame getMainFrame(){
-		return frame;
+		return getFrame();
 	}
 	
 	private ActionListener viewBooks = new ActionListener() {
@@ -140,7 +166,7 @@ public class PeaLibrary {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			frame.setContentPanel(bookControl.getBookLayoutPanel());
+			getFrame().setContentPanel(bookControl.getBookLayoutPanel());
 		}
 	};
 	
@@ -149,7 +175,7 @@ public class PeaLibrary {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			frame.setContentPanel(userControl.getLayoutPanel());
+			getFrame().setContentPanel(userControl.getLayoutPanel());
 		}
 	};
 	private ActionListener showEditProfile;
@@ -159,11 +185,10 @@ public class PeaLibrary {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			frame.setVisible(false);
-			frame.dispose();
-			currentUser = null;
-			
-			initialize();
+			getFrame().setVisible(false);
+			getFrame().dispose();
+			setCurrentUser(null);
+			authenticate();
 		}
 	};
 	
@@ -172,17 +197,19 @@ public class PeaLibrary {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			if(currentUser.getType().equals("Librarian")){
+			if(getCurrentUser().getType().equals("Librarian")){
 				//frame.setContentPanel(transactionControl);
 			}
-			else if(currentUser.getType().equals("User")){
-				frame.setContentPanel(elibControl.getTabpane());
+			else if(getCurrentUser().getType().equals("User")){
+				getFrame().setContentPanel(elibControl.getTabpane());
 			}
 		}
 	};
 	
 	public static void main(String[] args){
 		
-		new PeaLibrary();
+		PeaLibrary app = new PeaLibrary();
+		app.authenticate();
+		app.getFrame().setVisible(true);
 	}
 }
