@@ -134,7 +134,7 @@ public class UserSearchPanel extends JPanel {
 		getUsersPane().setLayout(new MigLayout("", "[grow]", "[grow]"));
 
 		setUsersTable(new JTable(getUsersTableModel()));
-		getUsersTable().setName("tablePending");
+		getUsersTable().setName("tableUsers");
 		setTableSettings(getUsersTable(),0);
 
 		JScrollPane scrollPane = new JScrollPane(getUsersTable());
