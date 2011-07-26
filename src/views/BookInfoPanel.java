@@ -54,7 +54,7 @@ public class BookInfoPanel extends JPanel {
 
 	private void displayBookInfo() {
 
-		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[40][][][][][][][grow][48.00][34.00][13.00][]"));
+		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[40][][][][][][][grow][48.00][34.00][][13.00][]"));
 
 		errorMessageLabel = new ErrorLabel("");
 		add(errorMessageLabel, "cell 3 0 2 1,alignx center,aligny center");
@@ -121,23 +121,24 @@ public class BookInfoPanel extends JPanel {
 		descriptionTextArea.setEditable(false);
 		add(descriptionTextArea, "cell 3 7 2 3,grow");
 
-		//JScrollPane scrollDes = new JScrollPane(descriptionTextArea);
-		//add(scrollDes, "cell 3 6 2 3,grow");
-
-		lblCopies = new JLabel("Copies:");
-
-		copiesValSpinner = new JSpinner();
-		copiesValSpinner.setModel(new SpinnerNumberModel(0, 0, 2147483647, 1));
-		copiesValSpinner.getModel().setValue(currentBook.getCopies());
-
 		saveButton = new JButton("Save", new ImageIcon("resources/images/save32x32.png"));
 		deleteButton = new JButton("Delete", new ImageIcon("resources/images/delete.png"));
 		borrowButton = new JButton("Borrow", new ImageIcon("resources/images/request.png"));
 		reserveButton = new JButton("Reserve", new ImageIcon("resources/images/reserve.png"));
+			
+		JScrollPane scrollDes = new JScrollPane(descriptionTextArea);
+		add(scrollDes, "cell 3 7 2 3,grow");
+			
+		lblCopies = new JLabel("Copies:");
+			
+		copiesValSpinner = new JSpinner();
+		copiesValSpinner.setModel(new SpinnerNumberModel(0, 0, 2147483647, 1));
+		copiesValSpinner.getModel().setValue(currentBook.getCopies());
+					
 
 		if (currentUser.getType().equals("Librarian")) {
-			add(saveButton, "cell 3 10,alignx right");
-			add(deleteButton, "cell 4 10");
+			add(saveButton, "cell 3 11,alignx right");
+			add(deleteButton, "cell 4 11");
 			authorTextField.setEditable(true);
 			descriptionTextArea.setEditable(true);
 			isbnTextField.setEditable(true);
@@ -145,8 +146,8 @@ public class BookInfoPanel extends JPanel {
 			titleTextField.setEditable(true);
 			yearPublishTextField.setEditable(true);
 			editionTextField.setEditable(true);
-			add(lblCopies, "cell 1 9,alignx left,aligny center");
-			add(copiesValSpinner, "cell 3 9,alignx left,aligny center");
+			add(copiesValSpinner, "cell 3 10,alignx left,aligny center");
+			add(lblCopies, "cell 1 10,alignx left,aligny center");
 		}
 		if (currentUser.getType().equals("User")) {
 			add(borrowButton, "cell 3 10,alignx right");
