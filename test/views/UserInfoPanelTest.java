@@ -1,5 +1,8 @@
 package views;
 
+import models.User;
+import models.UserDAO;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,40 +11,26 @@ import org.uispec4j.Panel;
 import org.uispec4j.TextBox;
 import org.uispec4j.UISpecTestCase;
 import org.unitils.UnitilsJUnit4TestClassRunner;
+import org.unitils.dbunit.annotation.DataSet;
 
+import utilities.Connector;
 import utilities.Constants;
 
+@DataSet({ "../models/user.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class UserInfoPanelTest extends UISpecTestCase {
 
 	private Panel panel;
 	private UserInfoPanel userInfoPanel;
-
-	private String accountType;
-	private String idNumber;
-	private String username;
-	private String firstName;
-	private String lastName;
-	private String address;
-	private String contactNumber;
-	private String email;
+	private User user;
 
 	@Before
 	public void setUp() throws Exception {
+		new Connector("test.config");
 		userInfoPanel = new UserInfoPanel();
 		panel = new Panel(userInfoPanel);
-
-		accountType = "User";
-		idNumber = "19216811";
-		username = "jajalim";
-		firstName = "Jaja";
-		lastName = "Lim";
-		address = "NetworkLabs Bldg, UP Ayala Technohub, Diliman, Q.C.";
-		contactNumber = "09171234567";
-		email = "jaja.lim@yahoo.com";
-
-		userInfoPanel.setFields(accountType, idNumber, username, firstName,
-				lastName, address, contactNumber, email);
+		user = UserDAO.getUserById(2);
+		userInfoPanel.setFields(user);
 	}
 
 	@Test
@@ -161,49 +150,49 @@ public class UserInfoPanelTest extends UISpecTestCase {
 	@Test
 	public void testGetAccountType() {
 		String s = userInfoPanel.getAccountType();
-		assertEquals(accountType, s);
+		assertEquals(user.getType(), s);
 	}
 
 	@Test
 	public void testGetIdNumber() {
 		String s = userInfoPanel.getIdNumber();
-		assertEquals(idNumber, s);
+		assertEquals(user.getUserId(), Integer.parseInt(s));
 	}
 
 	@Test
 	public void testGetUsername() {
 		String s = userInfoPanel.getUsername();
-		assertEquals(username, s);
+		assertEquals(user.getUserName(), s);
 	}
 
 	@Test
 	public void testGetFirstName() {
 		String s = userInfoPanel.getFirstName();
-		assertEquals(firstName, s);
+		assertEquals(user.getFirstName(), s);
 	}
 
 	@Test
 	public void testGetLastName() {
 		String s = userInfoPanel.getLastName();
-		assertEquals(lastName, s);
+		assertEquals(user.getLastName(), s);
 	}
 
 	@Test
 	public void testGetAddress() {
 		String s = userInfoPanel.getAddress();
-		assertEquals(address, s);
+		assertEquals(user.getAddress(), s);
 	}
 
 	@Test
 	public void testGetContactNumber() {
 		String s = userInfoPanel.getContactNumber();
-		assertEquals(contactNumber, s);
+		assertEquals(user.getContactNo(), s);
 	}
 
 	@Test
 	public void testGetEmail() {
 		String s = userInfoPanel.getEmail();
-		assertEquals(email, s);
+		assertEquals(user.getEmail(), s);
 	}
 
 	@Test
@@ -211,11 +200,11 @@ public class UserInfoPanelTest extends UISpecTestCase {
 		UserInfoPanel uip = new UserInfoPanel();
 		Panel p = new Panel(uip);
 
-		uip.setFields(accountType, idNumber, username, firstName, lastName,
-				address, contactNumber, email);
+		uip.setFields(user.getType(), user.getUserId()+"", user.getUserName(), user.getFirstName(), user.getLastName(),
+				user.getAddress(), user.getContactNo(), user.getEmail());
 
-		String[] fieldEntries = { accountType, idNumber, username, firstName,
-				lastName, address, contactNumber, email };
+		String[] fieldEntries = { user.getType(), user.getUserId()+"", user.getUserName(), user.getFirstName(), user.getLastName(),
+				user.getAddress(), user.getContactNo(), user.getEmail() };
 
 		for (String s : fieldEntries) {
 			TextBox tb = p.getInputTextBox(s);

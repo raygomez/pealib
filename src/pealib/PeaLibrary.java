@@ -123,7 +123,6 @@ public class PeaLibrary {
 		try {
 			setTransactionControl(new TransactionController());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
