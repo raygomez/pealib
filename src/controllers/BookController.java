@@ -1,7 +1,6 @@
 package controllers;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -95,7 +94,8 @@ public class BookController {
 		bookSearch.setSearchButtonListener(new SearchButtonListener());
 		bookSearch.setAddBookButtonListener(new AddBookButtonListener());
 		bookSearch.getTableBookList().setModel(new BookListModel(bookList));
-		bookSearch.getTableBookList().addRowSelectionInterval(currTableRowSelection, currTableRowSelection);
+		if(bookList != null && !bookList.isEmpty()) 
+			bookSearch.getTableBookList().addRowSelectionInterval(currTableRowSelection, currTableRowSelection);
 		bookSearch.setMouseListener(new BookListMouseListener());
 		bookInfo.addSaveListener(new SaveButtonListener());
 		bookInfo.addDeleteListener(new DeleteButtonListener());
@@ -199,8 +199,11 @@ public class BookController {
 							}
 							bookSearch.getTableBookList().setModel(
 									new BookListModel(bookList));
-							bookSearch.getTableBookList().addRowSelectionInterval(
-									currTableRowSelection, currTableRowSelection);
+							
+							if(bookList != null && !bookList.isEmpty()) 
+								bookSearch.getTableBookList().addRowSelectionInterval(
+										currTableRowSelection, currTableRowSelection);
+							
 							bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 						} else {
 							addBook.getLblErrorMsg().setForeground(Color.red);
@@ -309,8 +312,11 @@ public class BookController {
 					}
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
-					bookSearch.getTableBookList().addRowSelectionInterval(
-							currTableRowSelection, currTableRowSelection);
+					
+					if(bookList != null && !bookList.isEmpty()) 
+						bookSearch.getTableBookList().addRowSelectionInterval(
+								currTableRowSelection, currTableRowSelection);
+					
 					bookInfo.setBookInfoData(bookList
 							.get(currTableRowSelection));
 					JOptionPane.showMessageDialog(bookInfo,
@@ -349,8 +355,10 @@ public class BookController {
 					}
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
-					bookSearch.getTableBookList().addRowSelectionInterval(
-							currTableRowSelection, currTableRowSelection);
+					
+					if(bookList != null && !bookList.isEmpty()) 
+						bookSearch.getTableBookList().addRowSelectionInterval(
+								currTableRowSelection, currTableRowSelection);
 					bookInfo.setBookInfoData(bookList
 							.get(currTableRowSelection));
 					bookInfo.getBtnDelete().setEnabled(false);
@@ -383,8 +391,11 @@ public class BookController {
 				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
-				bookSearch.getTableBookList().addRowSelectionInterval(
-						currTableRowSelection, currTableRowSelection);
+				
+				if(bookList != null && !bookList.isEmpty()) 
+					bookSearch.getTableBookList().addRowSelectionInterval(
+							currTableRowSelection, currTableRowSelection);
+				
 				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 
 			} catch (Exception e1) {
@@ -414,8 +425,10 @@ public class BookController {
 				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
-				bookSearch.getTableBookList().addRowSelectionInterval(
-						currTableRowSelection, currTableRowSelection);
+				
+				if(bookList != null && !bookList.isEmpty()) 
+					bookSearch.getTableBookList().addRowSelectionInterval(
+							currTableRowSelection, currTableRowSelection);
 				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -611,7 +624,7 @@ public class BookController {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+
 				timer.stop();
 				try {
 					String strSearch = bookSearch.getTextFieldSearch();
