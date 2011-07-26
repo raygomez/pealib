@@ -66,7 +66,11 @@ public class BookController {
 	}
 
 	private void generateBookLayoutPanel() throws Exception {
-		bookList = BookDAO.searchBook("");
+		if (currentUser.getType().equals("Librarian")){
+			bookList = BookDAO.searchBook("");
+		} else {
+			bookList = BookDAO.searchBookForUser("");			
+		}
 		currSearchString = "";
 		currTableRowSelection = 0;
 		bookLayoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]", "[grow]"));
@@ -178,7 +182,11 @@ public class BookController {
 								.getIsbn())) {
 							BookDAO.addBook(addBook.getBookInfo());
 							addBook.getLblErrorMsg().setText("Book Added");
-							bookList = BookDAO.searchBook(currSearchString);
+							if (currentUser.getType().equals("Librarian")){
+								bookList = BookDAO.searchBook(currSearchString);
+							} else {
+								bookList = BookDAO.searchBookForUser(currSearchString);			
+							}
 							bookSearch.getTableBookList().setModel(
 									new BookListModel(bookList));
 							bookSearch.getTableBookList().addRowSelectionInterval(
@@ -282,7 +290,11 @@ public class BookController {
 
 				if (validate) {
 					BookDAO.editBook(bookInfo.getCurrBook());
-					bookList = BookDAO.searchBook(currSearchString);
+					if (currentUser.getType().equals("Librarian")){
+						bookList = BookDAO.searchBook(currSearchString);
+					} else {
+						bookList = BookDAO.searchBookForUser(currSearchString);			
+					}
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
 					bookSearch.getTableBookList().addRowSelectionInterval(
@@ -313,7 +325,11 @@ public class BookController {
 				if (availableCopy == bookList.get(currTableRowSelection)
 						.getCopies()) {
 					BookDAO.deleteBook(bookInfo.getCurrBook());
-					bookList = BookDAO.searchBook(currSearchString);
+					if (currentUser.getType().equals("Librarian")){
+						bookList = BookDAO.searchBook(currSearchString);
+					} else {
+						bookList = BookDAO.searchBookForUser(currSearchString);			
+					}
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
 					bookSearch.getTableBookList().addRowSelectionInterval(
@@ -345,7 +361,11 @@ public class BookController {
 							.showMessageDialog(bookLayoutPanel,
 									"The book has been successfully added to your Requests List!");
 				}
-				bookList = BookDAO.searchBook(currSearchString);
+				if (currentUser.getType().equals("Librarian")){
+					bookList = BookDAO.searchBook(currSearchString);
+				} else {
+					bookList = BookDAO.searchBookForUser(currSearchString);			
+				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
 				bookSearch.getTableBookList().addRowSelectionInterval(
@@ -372,7 +392,11 @@ public class BookController {
 							.showMessageDialog(bookLayoutPanel,
 									"The book has been successfully added to your Rervations List!");
 				}
-				bookList = BookDAO.searchBook(currSearchString);
+				if (currentUser.getType().equals("Librarian")){
+					bookList = BookDAO.searchBook(currSearchString);
+				} else {
+					bookList = BookDAO.searchBookForUser(currSearchString);			
+				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
 				bookSearch.getTableBookList().addRowSelectionInterval(
@@ -527,7 +551,11 @@ public class BookController {
 			try {
 				String strSearch = bookSearch.getTextFieldSearch();
 				currSearchString = strSearch;
-				bookList = BookDAO.searchBook(strSearch);
+				if (currentUser.getType().equals("Librarian")){
+					bookList = BookDAO.searchBook(strSearch);
+				} else {
+					bookList = BookDAO.searchBookForUser(strSearch);			
+				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
 				if (bookList.size() == 0) {
@@ -577,7 +605,11 @@ public class BookController {
 				try {
 					String strSearch = bookSearch.getTextFieldSearch();
 					currSearchString = strSearch;
-					bookList = BookDAO.searchBook(strSearch);
+					if (currentUser.getType().equals("Librarian")){
+						bookList = BookDAO.searchBook(strSearch);
+					} else {
+						bookList = BookDAO.searchBookForUser(strSearch);			
+					}
 					bookSearch.getTableBookList().setModel(
 								new BookListModel(bookList));
 					if (bookList.size() == 0) {
