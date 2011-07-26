@@ -352,11 +352,12 @@ public class TransactionDAO {
 
 		if (rs.first()) {
 			borrowedDate = rs.getDate(1);
+
+			Days d = Days.daysBetween(new DateMidnight(borrowedDate.getTime()),
+					new DateMidnight(today.getTime().getTime()));
+			days = d.getDays();
 		}
 
-		Days d = Days.daysBetween(new DateMidnight(borrowedDate.getTime()),
-				new DateMidnight(today.getTime().getTime()));
-		days = d.getDays();
 		Connector.close();
 		return days;
 
