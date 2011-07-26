@@ -45,9 +45,9 @@ public class PeaLibrary {
 		frame = new MainFrame();
 		frame.setVisible(false);
 		
-		if(currentUser == null)
+		if(currentUser == null){
 			System.exit(0);
-		
+		}
 		initializedLoggedUser();
 	}
 	
@@ -81,6 +81,7 @@ public class PeaLibrary {
 		initializeSidebarPanel(librarianSidebarPanel);
 		
 		frame.setSidebarPanel(librarianSidebarPanel);
+		frame.setContentPanel(transactionControl.getTabbedPane());
 		frame.validate();
 		frame.setVisible(true);
 		frame.repaint();
@@ -159,7 +160,7 @@ public class PeaLibrary {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			if(currentUser.getType().equals("Librarian")){
-				//frame.setContentPanel(transactionControl);
+				frame.setContentPanel(transactionControl.getTabbedPane());
 			}
 			else if(currentUser.getType().equals("User")){
 				frame.setContentPanel(elibControl.getTabpane());

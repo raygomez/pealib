@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
 		
 	}
 	
-	public void setSidebarPanel(JPanel sPanel)
+	public void setSidebarPanel(JComponent sPanel)
 	{
 		sidebarPanel.setVisible(false);
 		sidebarPanel.removeAll();
@@ -47,7 +47,7 @@ public class MainFrame extends JFrame {
 		sidebarPanel.setVisible(true);
 	}
 	
-	public void setContentPanel(JPanel cPanel)
+	public void setContentPanel(JComponent cPanel)
 	{
 		contentPanel.setVisible(false);
 		contentPanel.removeAll();
