@@ -149,6 +149,7 @@ public class UserController {
 		}		
 	}
 	
+	//TODO the annoying pending
 	private void processPend(boolean process){
 		String info="";
 		for(int i = 0; i < getSearchedPending().size(); i++){
@@ -179,16 +180,19 @@ public class UserController {
 			getUserInfoPanel().clearFields();
 		}
 		
-		getCheckList().clear();
+		getCheckList().clear();		
 		setInitSelectPending();
-		
 		searchUsers();
+		
 		getUserSearch().resetTable();
+		
+		
 		
 		if(getSearchedPending() == null) 
 			getUserSearch().togglePending(false);
-		else 
-			getUserSearch().togglePendingButtons(false);
+		else if(!getSearchedPending().isEmpty()){
+			getUserSearch().togglePendingButtons(false);			
+		}
 	
 	}
 	
@@ -225,9 +229,11 @@ public class UserController {
 	}
 	
 	private void setInitSelectPending(){
-		getUserSearch().getPendingTable().getSelectionModel().setSelectionInterval(0, 0);						
-		getUserSearch().getPendingTable().addRowSelectionInterval(0, 0);					
-		setSelectedUser(getSearchedPending().get(0));
+		if(getSearchedPending() != null && (!getSearchedPending().isEmpty())){
+			getUserSearch().getPendingTable().getSelectionModel().setSelectionInterval(0, 0);						
+			getUserSearch().getPendingTable().addRowSelectionInterval(0, 0);					
+			setSelectedUser(getSearchedPending().get(0));
+		}
 	}
 	
 	class TabChangeListener implements ChangeListener {
