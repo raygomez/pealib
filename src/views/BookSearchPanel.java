@@ -43,14 +43,15 @@ public class BookSearchPanel extends JPanel {
 		add(textFieldSearch, "cell 0 0 3 1,grow");
 		textFieldSearch.setColumns(10);
 		
-		btnAddBook = new JButton("Add Book", new ImageIcon("resources/images/add.png"));
+		btnAddBook = new JButton("Add Book", new ImageIcon(
+				"resources/images/add.png"));
 		btnAddBook.setVisible(false);
 		add(btnAddBook, "cell 0 1,alignx left,aligny center");
 		
 		btnSearch = new JButton("Search", new ImageIcon("resources/images/search32x32.png"));
 		add(btnSearch, "cell 1 1,grow");
 		
-		btnClear = new JButton("Clear");
+		btnClear = new JButton("Clear", new ImageIcon("resources/images/edit_clear.png"));
 		add(btnClear, "cell 2 1,grow");
 		tableBookList = new JTable();
 		tableBookList.setName("tableList");

@@ -21,7 +21,7 @@ public class MainFrame extends JFrame {
 	
 	public MainFrame(){
 		
-		setLayout(new MigLayout("","[][grow]","[][grow]"));
+		setLayout(new MigLayout("","[][fill,grow]","[][fill,grow]"));
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
@@ -30,7 +30,7 @@ public class MainFrame extends JFrame {
 		setBounds(0, 0, screenSize.width, screenSize.height);
 		
 		sidebarPanel = new JPanel();
-		contentPanel = new JPanel(new MigLayout("","[grow]","[grow]"));
+		contentPanel = new JPanel(new MigLayout("","[fill,grow]","[fill,grow]"));
 		welcomePanel = new JPanel();
 		
 		welcomeLabel = new JLabel();
