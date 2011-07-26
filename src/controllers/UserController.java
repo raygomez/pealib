@@ -212,6 +212,9 @@ public class UserController {
 		
 		UserSearchTableModel model = new UserSearchTableModel(tab,getSearchText());
 		getUserSearch().setTableModel(tab, model);
+		
+		if(tab == USER){setInitSelectUser();}
+		else setInitSelectPending();
 	}
 	
 	private void setInitSelectUser(){
@@ -268,7 +271,7 @@ public class UserController {
 			public void actionPerformed(ActionEvent e) {
 				timer.stop();
 				setSearchText(getUserSearch().getFieldSearch().getText());
-				if (getSearchText().length() > 2 || getSearchText().length() == 0)
+				if (getSearchText().length() > 0 || getSearchText().length() == 0)
 					searchUsers();
 			}
 		});
