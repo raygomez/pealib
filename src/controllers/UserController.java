@@ -494,7 +494,12 @@ public class UserController {
 				try {
 					UserDAO.updateUser(user);
 					JOptionPane.showMessageDialog(layoutPanel, "Record successfully updated!");
-					searchUsers();
+					if(currentUser.getUserId() == userId){
+						currentUser = user;
+					}
+					else{
+						searchUsers();
+					}
 					
 				} catch (Exception e) {
 					e.printStackTrace();
