@@ -378,12 +378,14 @@ public class TransactionDAO {
 
 		if (rs.first()) {
 			borrowedDate = rs.getDate(1);
-		}
 
-		Days d = Days.daysBetween(new DateMidnight(borrowedDate.getTime()),
-				new DateMidnight(today.getTime().getTime()));
-		days = d.getDays();
+			Days d = Days.daysBetween(new DateMidnight(borrowedDate.getTime()),
+					new DateMidnight(today.getTime().getTime()));
+			days = d.getDays();
+
+		}
 		Connector.close();
+
 		return days;
 	}
 
@@ -498,15 +500,16 @@ public class TransactionDAO {
 		Connector.close();
 		return bookCollection;
 	}
-	
-	public static boolean isBookReservedByOtherUsers(Book currentBook) throws Exception {
+
+	public static boolean isBookReservedByOtherUsers(Book currentBook)
+			throws Exception {
 		String sql;
 		PreparedStatement ps;
-		
+
 		sql = "SELECT COUNT(*) FROM RESERVES WHERE BookID = ?";
 		ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, currentBook.getBookId());
-		
+
 		ResultSet rs = ps.executeQuery();
 		int countReservations = 0;
 		if (rs.first()) {
@@ -518,11 +521,11 @@ public class TransactionDAO {
 	public static User getNextUser(Book currentBook) throws Exception {
 		String sql;
 		PreparedStatement ps;
-		
+
 		sql = "SELECT * FROM RESERVES WHERE BookID = ? ORDER BY DateReserved";
 		ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, currentBook.getBookId());
-		
+
 		ResultSet rs = ps.executeQuery();
 		Integer nextUserID = 0;
 		if (rs.first()) {
@@ -530,15 +533,15 @@ public class TransactionDAO {
 		}
 		return UserDAO.getUserById(nextUserID);
 	}
-	
+
 	public static void passToNextUser(Book returnedBook) throws Exception {
 		/* get the first user in queue */
 		User nextUser = getNextUser(returnedBook);
 		/* create borrow transaction */
 		requestBook(returnedBook, nextUser);
 		/* delete reservation transaction */
-		ReserveTransaction nextUserReserveTransaction =
-			getReserveTransaction(nextUser, returnedBook);
+		ReserveTransaction nextUserReserveTransaction = getReserveTransaction(
+				nextUser, returnedBook);
 		cancelReservation(nextUserReserveTransaction);
 	}
 }
