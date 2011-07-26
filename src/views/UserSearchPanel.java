@@ -131,7 +131,7 @@ public class UserSearchPanel extends JPanel {
 	
 	private void usersPanel() {
 		getUsersPane().setBorder(new EmptyBorder(5, 5, 5, 5));
-		getUsersPane().setLayout(new MigLayout("", "[grow]", ""));
+		getUsersPane().setLayout(new MigLayout("", "[grow]", "[grow]"));
 
 		setUsersTable(new JTable(getUsersTableModel()));
 		getUsersTable().setName("tablePending");
@@ -194,14 +194,5 @@ public class UserSearchPanel extends JPanel {
 		getCbAll().addActionListener(cbox);
 		getBtnAccept().addActionListener(accept);
 		getBtnDeny().addActionListener(deny);
-	}
-	
-	
-	public void removeListener(ListSelectionListener table){
-		getPendingTable().getSelectionModel().removeListSelectionListener(table);
-	}
-	
-	public void addListener(ListSelectionListener table){
-		getPendingTable().getSelectionModel().addListSelectionListener(table);
 	}
 }

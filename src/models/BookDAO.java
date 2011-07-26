@@ -136,4 +136,33 @@ public class BookDAO{
 		return bookCollection;
 	}
 
+	public static ArrayList<Book> searchBookForUser(String search) throws Exception {
+		ArrayList<Book> bookCollection = new ArrayList<Book>();
+		PreparedStatement bookQuery = null;
+
+		bookQuery = Connector.getConnection()
+					.prepareStatement("SELECT * FROM Books WHERE Copies > 0 AND CONCAT(ISBN, Title, Author, Publisher) LIKE ?");
+		bookQuery.setString(1, "%" + search + "%");
+		
+
+		ResultSet rs = bookQuery.executeQuery();
+		while (rs.next()) {
+			int bookID = rs.getInt("ID");
+			String isbn = rs.getString("ISBN");
+			String title = rs.getString("Title");
+			String edition = rs.getString("Edition");
+			String author = rs.getString("Author");
+			String publisher = rs.getString("Publisher");
+			String description = rs.getString("Description");
+			int yearPublish = rs.getInt("YearPublish");
+			int copies = Integer.parseInt(rs.getString("Copies"));
+			Book addBook = new Book(bookID, isbn, title, edition, author,
+					publisher, yearPublish, description, copies);
+			bookCollection.add(addBook);
+		}
+		
+		Connector.close();
+		
+		return bookCollection;
+	}
 }
