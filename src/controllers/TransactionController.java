@@ -47,7 +47,7 @@ public class TransactionController {
 
 	// # remove this
 	public static void main(String[] args) {
-		new Connector(Constants.APP_CONFIG);
+		new Connector(Constants.TEST_CONFIG);
 
 		TransactionController librarianTransactions = new TransactionController();
 
@@ -56,7 +56,8 @@ public class TransactionController {
 		testFrame.setVisible(true);
 		testFrame.setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		testFrame.setBounds(0, 0, screenSize.width * 3/4, screenSize.height * 3 / 4);
+		testFrame.setBounds(0, 0, screenSize.width * 3 / 4,
+				screenSize.height * 3 / 4);
 		testFrame.setContentPane(librarianTransactions.getTabbedPane());
 
 		new TransactionController();
@@ -150,7 +151,7 @@ public class TransactionController {
 	private void denyBorrowRequest() {
 		try {
 			TransactionDAO.denyBookRequest(getBookTransactionDetails());
-			
+
 			/* check if the book to be denied is reserved by other users */
 			Book deniedBook = getBookTransactionDetails().getBook();
 			if (TransactionDAO.isBookReservedByOtherUsers(deniedBook)) {
@@ -228,15 +229,15 @@ public class TransactionController {
 				}
 			}
 		});
-		
+
 		@Override
 		public void keyPressed(KeyEvent e) {
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			if(e.getKeyCode() != KeyEvent.VK_ENTER){
-				if(timer.isRunning()) {
+			if (e.getKeyCode() != KeyEvent.VK_ENTER) {
+				if (timer.isRunning()) {
 					timer.restart();
 				} else {
 					timer.start();
