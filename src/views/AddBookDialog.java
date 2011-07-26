@@ -120,7 +120,6 @@ public class AddBookDialog extends JDialog {
 				.setLayout(new MigLayout("", "[298.00][47px][65px]", "[23px]"));
 
 		errorMessageLabel = new JLabel("");
-		errorMessageLabel.setForeground(Color.RED);
 		buttonPane.add(errorMessageLabel, "cell 0 0,alignx left,aligny center");
 
 		addButton = new JButton("Add");
@@ -165,6 +164,10 @@ public class AddBookDialog extends JDialog {
 
 	public JLabel getLblErrorMsg() {
 		return errorMessageLabel;
+	}
+	
+	public JSpinner getCopyValSpinner() {
+		return copyValSpinner;
 	}
 
 	public void addBookActionListener(ActionListener add) {

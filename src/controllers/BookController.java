@@ -1,6 +1,7 @@
 package controllers;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -181,6 +182,15 @@ public class BookController {
 						if (!BookDAO.isIsbnExisting(addBook.getBookInfo()
 								.getIsbn())) {
 							BookDAO.addBook(addBook.getBookInfo());
+							addBook.getTxtAreaDescription().setText("");
+							addBook.getTxtFldAuthor().setText("");
+							addBook.getTxtFldEdition().setText("");
+							addBook.getTxtFldIsbn().setText("");
+							addBook.getTxtFldPublisher().setText("");
+							addBook.getTxtFldTitle().setText("");
+							addBook.getTxtFldYearPublish().setText("");
+							addBook.getCopyValSpinner().getModel().setValue(1);
+							addBook.getLblErrorMsg().setForeground(Color.green);
 							addBook.getLblErrorMsg().setText("Book Added");
 							if (currentUser.getType().equals("Librarian")){
 								bookList = BookDAO.searchBook(currSearchString);
@@ -193,6 +203,7 @@ public class BookController {
 									currTableRowSelection, currTableRowSelection);
 							bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
 						} else {
+							addBook.getLblErrorMsg().setForeground(Color.red);
 							addBook.getLblErrorMsg().setText(
 									"ISBN Already Exist");
 						}
@@ -200,6 +211,7 @@ public class BookController {
 						e.printStackTrace();
 					}
 				} else {
+					addBook.getLblErrorMsg().setForeground(Color.red);
 					addBook.getLblErrorMsg().setText("Invalid Input");
 				}
 			}
@@ -301,7 +313,10 @@ public class BookController {
 							currTableRowSelection, currTableRowSelection);
 					bookInfo.setBookInfoData(bookList
 							.get(currTableRowSelection));
-					bookInfo.getLblErrorMsg().setText("Book Updated");
+					JOptionPane.showMessageDialog(bookInfo,
+						    "Book updated.",
+						    "Information",
+						    JOptionPane.INFORMATION_MESSAGE);
 					if (bookList.get(currTableRowSelection).getCopies() > 0) {
 						bookInfo.getBtnDelete().setEnabled(true);
 					}
@@ -320,10 +335,12 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				int availableCopy = TransactionDAO.getAvailableCopies(bookInfo
-						.getCurrBook());
-				if (availableCopy == bookList.get(currTableRowSelection)
-						.getCopies()) {
+				int optConfirm = JOptionPane.showConfirmDialog(
+						bookInfo,
+					    "Do you really want to delete this book?",
+					    "Confirm",
+					    JOptionPane.YES_NO_OPTION);
+				if(optConfirm == 0){
 					BookDAO.deleteBook(bookInfo.getCurrBook());
 					if (currentUser.getType().equals("Librarian")){
 						bookList = BookDAO.searchBook(currSearchString);
@@ -336,10 +353,8 @@ public class BookController {
 							currTableRowSelection, currTableRowSelection);
 					bookInfo.setBookInfoData(bookList
 							.get(currTableRowSelection));
-					bookInfo.getLblErrorMsg().setText("Book Deleted");
 					bookInfo.getBtnDelete().setEnabled(false);
-				} else {
-					bookInfo.getLblErrorMsg().setText("Book cannot be deleted");
+					
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -558,6 +573,7 @@ public class BookController {
 					bookInfo.getBtnDelete().setEnabled(false);
 					bookInfo.getBtnSave().setEnabled(false);
 				} else {
+					bookSearch.getTableBookList().addRowSelectionInterval(0, 0);
 					bookInfo.getBtnDelete().setEnabled(true);
 					bookInfo.getBtnSave().setEnabled(true);
 					bookInfo.setBookInfoData(bookList.get(0));
@@ -611,6 +627,7 @@ public class BookController {
 						bookInfo.getBtnDelete().setEnabled(false);
 						bookInfo.getBtnSave().setEnabled(false);
 					} else {
+						bookSearch.getTableBookList().addRowSelectionInterval(0, 0);
 						bookInfo.getBtnDelete().setEnabled(true);
 						bookInfo.getBtnSave().setEnabled(true);
 						bookInfo.setBookInfoData(bookList.get(0));
