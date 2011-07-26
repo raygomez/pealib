@@ -61,7 +61,9 @@ public class SignUpDialog extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[10:n:10][110:n:110][225:n:225]", "[25:n:25][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20]"));
+		contentPanel.setLayout(new MigLayout("", "[10:n:10][110:n:110][225:n:225]",
+				"[25:n:25][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20]" +
+				"[20:n:20][20:n:20][20:n:20][20:n:20]"));
 		
 		JLabel lblPleaseFillin = new JLabel("Please Fill-in.");
 		lblPleaseFillin.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -75,6 +77,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblFirstName, "cell 1 1,alignx left,aligny center");
 
 		firstNameTextField = new MyTextField();
+		firstNameTextField.setToolTipText("*Maximum of 30 characters.");
 		firstNameTextField.setName("firstNameTextField");
 		lblFirstName.setLabelFor(firstNameTextField);
 		contentPanel.add(firstNameTextField, "cell 2 1,growx,aligny center");
@@ -84,6 +87,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblLastName, "cell 1 2,alignx left,aligny center");
 
 		lastNameTextField = new MyTextField();
+		lastNameTextField.setToolTipText("*Maximum of 30 characters.");
 		lastNameTextField.setName("lastNameTextField");
 		lblLastName.setLabelFor(lastNameTextField);
 		contentPanel.add(lastNameTextField, "cell 2 2,growx,aligny center");
@@ -93,6 +97,8 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblUserName, "cell 1 4,alignx left,aligny center");
 
 		userNameTextField = new MyTextField();
+		userNameTextField.setToolTipText("*Must be 4 - 20 characters long, " +
+				"composed of alphanumeric characters, underscore or period.");
 		userNameTextField.setName("userNameTextField");
 		lblUserName.setLabelFor(userNameTextField);
 		contentPanel.add(userNameTextField, "cell 2 4,growx,aligny center");
@@ -102,6 +108,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblPassword, "cell 1 5,alignx left,aligny center");
 
 		passwordTextField = new MyPasswordField();
+		passwordTextField.setToolTipText("*Must be 6 - 20 characters long.");
 		passwordTextField.setName("passwordTextField");
 		lblPassword.setLabelFor(passwordTextField);
 		contentPanel.add(passwordTextField, "cell 2 5,growx,aligny center");
@@ -112,6 +119,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblConfirmPassword, "cell 1 6,alignx left,aligny center");
 
 		confirmPasswordTextField = new MyPasswordField();
+		confirmPasswordTextField.setToolTipText("*Must be 6 - 20 characters long.");
 		confirmPasswordTextField.setName("confirmPasswordTextField");
 		lblConfirmPassword.setLabelFor(confirmPasswordTextField);
 		contentPanel.add(confirmPasswordTextField, "cell 2 6,growx,aligny center");
@@ -122,6 +130,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblEmailAddress, "cell 1 8,alignx left,aligny center");
 
 		emailAddressTextField = new MyTextField();
+		emailAddressTextField.setToolTipText("*ie. john.smith@example.com");
 		emailAddressTextField.setName("emailAddressTextField");
 		lblEmailAddress.setLabelFor(emailAddressTextField);
 		contentPanel.add(emailAddressTextField, "cell 2 8,growx,aligny center");
@@ -131,6 +140,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblContactNumber, "cell 1 9,alignx left,aligny center");
 
 		contactNumberTextField = new MyTextField();
+		contactNumberTextField.setToolTipText("*Must be 7 - 11 digits long.");
 		contactNumberTextField.setName("contactNumberTextField");
 		contentPanel.add(contactNumberTextField, "cell 2 9,growx,aligny center");
 		contactNumberTextField.setColumns(10);
@@ -139,6 +149,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblAddress, "cell 1 10,alignx left,aligny center");
 
 		addressTextField = new MyTextField();
+		addressTextField.setToolTipText("*Maximum of 100 characters.");
 		addressTextField.setName("addressTextField");
 		lblAddress.setLabelFor(addressTextField);
 		contentPanel.add(addressTextField, "cell 2 10,growx,aligny center");
@@ -146,7 +157,8 @@ public class SignUpDialog extends JDialog {
 	
 		JPanel buttonPane = new JPanel();
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-		buttonPane.setLayout(new MigLayout("", "[80:n:80][100:n:100][10:n:10][100:n:100][80:n:80]", "[45:n:45]"));
+		buttonPane.setLayout(new MigLayout("", "[80:n:80][100:n:100][10:n:10][100:n:100][80:n:80]",
+				"[45:n:45]"));
 		
 		submitButton = new JButton("Submit", new ImageIcon("resources/images/signin.png"));
 		submitButton.setActionCommand("Submit");
@@ -157,7 +169,8 @@ public class SignUpDialog extends JDialog {
 	}
 	
 	/* Action Listeners */
-	public void setActionListeners(ActionListener submit, ActionListener cancel, KeyListener enter, KeyListener username) {
+	public void setActionListeners(ActionListener submit, ActionListener cancel,
+			KeyListener enter, KeyListener username) {
 		submitButton.addActionListener(submit);
 		cancelButton.addActionListener(cancel);
 		firstNameTextField.addKeyListener(enter);
@@ -232,5 +245,9 @@ public class SignUpDialog extends JDialog {
 
 	public JTextField getTxtfldAddress() {
 		return addressTextField;
+	}
+
+	public JPanel getContentPanel() {
+		return contentPanel;
 	}
 }
