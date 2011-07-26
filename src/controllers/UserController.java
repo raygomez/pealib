@@ -76,6 +76,9 @@ public class UserController {
 				new UserSelectionListener(), new CheckBoxListener(), new AcceptListener(), new DenyListener());
 		setUserInfoPanel(new UserInfoPanel());
 		
+		getUserInfoPanel().addSaveListener(save);
+		getUserInfoPanel().addChangePasswordListener(showChangePassword);
+		
 		generateLayoutPanel();
 	}
 
@@ -384,8 +387,7 @@ public class UserController {
 	private void generateLayoutPanel() {
 		layoutPanel.add(getUserSearch(), "grow");
 		layoutPanel.add(getUserInfoPanel(), "grow");
-		getUserInfoPanel().addSaveListener(save);
-		getUserInfoPanel().addChangePasswordListener(showChangePassword);
+		
 		//getUserInfoPanel().toggleButton(false);
 		getUserSearch().getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
 	}
@@ -452,10 +454,9 @@ public class UserController {
 			if(user!=null){
 				setSelectedUser(user);
 				getUserInfoPanel().toggleButton(true);
-				getUserInfoPanel().setFields(user.getType(), "" + user.getUserId(),
-					user.getUserName(), user.getFirstName(),
-					user.getLastName(), user.getAddress(), user.getContactNo(),
-					user.getEmail());
+				getUserInfoPanel().setFields(user);
+				getUserInfoPanel().setFirstNameEnabled(true);
+				getUserInfoPanel().setLastNameEnabled(true);
 			}		
 		}
 	}
@@ -531,6 +532,7 @@ public class UserController {
                 }
                 else{
                         userID = Integer.parseInt(userInfoPanel.getIdNumber());
+                        correctPassword = true;
                 }
                 String newPassword1 = new String(changePasswordDialog.getNewPasswordField().getPassword());
                 String newPassword2 = new String(changePasswordDialog.getRepeatPasswordField().getPassword());
@@ -547,8 +549,7 @@ public class UserController {
                                
                                 e.printStackTrace();
                                 changePasswordDialog.displayError(Constants.DEFAULT_ERROR);
-                        }
-                        
+                        } 
                 }
         	}
 		};
