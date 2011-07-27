@@ -9,9 +9,14 @@ import org.junit.runner.RunWith;
 import org.uispec4j.Panel;
 import org.uispec4j.TabGroup;
 import org.uispec4j.Table;
+import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
+import org.uispec4j.Window;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
+import org.unitils.dbunit.annotation.ExpectedDataSet;
 
 import utilities.Connector;
 import utilities.Constants;
@@ -72,6 +77,34 @@ public class ELibControllerTest extends UISpecTestCase {
 				{ "1234567890123", "title1", "author1", "2011-06-15",
 						"2011-06-15" } }));
 
+	}
+	
+	@Test
+	@ExpectedDataSet({ "../models/expected/cancelReserves.xml" })
+	public void testCancelReservation() {
+		TabGroup tabGroup = panel.getTabGroup();
+
+		tabGroup.selectTab("Reservations");
+		final Table reservation = tabGroup.getSelectedTab().getTable();
+		assertTrue(reservation.getHeader().contentEquals(
+				new String[] { "ISBN", "Title", "Author", "Date Reserved",
+						"Queue Number", "Cancel" }));
+		assertEquals(2, reservation.getRowCount());
+
+		
+		WindowInterceptor.init(new Trigger() {
+
+			@Override
+			public void run() throws Exception {
+				reservation.click(0, 5);
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {
+				assertEquals("Confirm", dialog.getTitle());
+				dialog.containsLabel("Do you really want to cancel the reservation?");
+				return dialog.getButton("Yes").triggerClick();
+			}
+		}).run();
 	}
 
 }
