@@ -16,11 +16,13 @@ import org.unitils.dbunit.annotation.DataSet;
 
 import utilities.Connector;
 import utilities.Constants;
+import views.UserSearchPanel;
 
 @DataSet({ "../models/user.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class UserControllerTest extends UISpecTestCase {
 
+	UserController userControl;
 	Panel userInfoPanel;
 	Panel userSearchPanel;
 	TabGroup tabGroup;
@@ -30,9 +32,11 @@ public class UserControllerTest extends UISpecTestCase {
 		new Connector(Constants.TEST_CONFIG);
 		
 		User user = UserDAO.getUserById(2);
-		userInfoPanel = new Panel(new UserController(user).getUserInfoPanel());
+		userControl = new UserController(user);
+		
+		userInfoPanel = new Panel(userControl.getUserInfoPanel());
 		assertNotNull(userInfoPanel);
-		userSearchPanel = new Panel(new UserController(user).getUserSearch());
+		userSearchPanel = new Panel(userControl.getUserSearch());
 		assertNotNull(userSearchPanel);	
 		tabGroup = userSearchPanel.getTabGroup();
 	}
@@ -74,6 +78,18 @@ public class UserControllerTest extends UISpecTestCase {
 		
 		assertTrue(userSearchPanel.getButton("Search").isEnabled());
 		assertTrue(userSearchPanel.getTextBox().isEnabled());						
+	}
+	
+	@Test
+	public void testShowUserProfile(){
+		tabGroup.selectTab("User Accounts");
+		tabGroup.getSelectedTab().getTable().click(0, 0);
+		assertReflectionEquals(userInfoPanel, userControl.getUserInfoPanel());
+	}
+	
+	@Test
+	public void test(){
+		
 	}
 
 }

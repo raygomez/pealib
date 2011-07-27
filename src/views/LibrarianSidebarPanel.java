@@ -20,11 +20,11 @@ public class LibrarianSidebarPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JToggleButton viewBooksButton;
-	private JToggleButton viewUsersButton;
-	private JToggleButton editProfileButton;
-	private JToggleButton logoutButton;
-	private JToggleButton bookTransactionsButton;
+	private MyButton viewBooksButton;
+	private MyButton viewUsersButton;
+	private MyButton editProfileButton;
+	private MyButton logoutButton;
+	private MyButton bookTransactionsButton;
 	private ButtonGroup buttonGroup;
 
 	public LibrarianSidebarPanel() {

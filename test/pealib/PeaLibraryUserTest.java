@@ -6,6 +6,7 @@ import models.UserDAO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.uispec4j.ToggleButton;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
 import org.unitils.UnitilsJUnit4TestClassRunner;
@@ -33,7 +34,15 @@ public class PeaLibraryUserTest extends UISpecTestCase {
 	}
 
 	@Test
-	public void test() {
+	public void testSidebar() {
+		ToggleButton searchBooksButton = window.getToggleButton("Search Books");
+		searchBooksButton.click();
+		
+		ToggleButton editProfileButton = window.getToggleButton("Edit Profile");
+		editProfileButton.click();
+
+		ToggleButton libraryCardButton = window.getToggleButton("View E-Library Card");
+		libraryCardButton.click();
 	}
 
 }

@@ -19,13 +19,13 @@ public class UserSidebarPanelTest extends UISpecTestCase {
 
 	@Test
 	public void testInitialState() {
-		Button button;
+		ToggleButton button;
 
 		String[] buttonArray = new String[] { "Search Books", "Edit Profile",
 				"View E-Library Card", "Logout" };
 
 		for (String s : buttonArray) {
-			button = panel.getButton(s);
+			button = panel.getToggleButton(s);
 			assertNotNull(button);
 			assertThat(button.isEnabled());
 			assertThat(button.isVisible());

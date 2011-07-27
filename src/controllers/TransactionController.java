@@ -150,6 +150,9 @@ public class TransactionController {
 			TransactionDAO.borrowBook(selectedBookTransactions.get(i));
 			System.out.println(">" + selectedRows[i] + ": Grant: " + selectedBookTransactions.get(i).getBook().getTitle());
 		}
+		JOptionPane.showMessageDialog(tabbedPane,
+				"Successfully lent " + selectedRows.length + " book(s).",
+				"Borrow Request Granted", JOptionPane.INFORMATION_MESSAGE);
 		outPanel.getGrantButton().setEnabled(false);
 		outPanel.getDenyButton().setEnabled(false);
 	}
