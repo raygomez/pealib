@@ -42,7 +42,7 @@ public class ELibControllerTest extends UISpecTestCase {
 		assertTrue(request.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Requested",
 						"Cancel" }));
-		assertThat(request.isEmpty());
+		assertEquals(1, request.getRowCount());
 
 		tabGroup.selectTab("Reservations");
 		Table reservation = tabGroup.getSelectedTab().getTable();

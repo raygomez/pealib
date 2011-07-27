@@ -21,6 +21,16 @@
 		   YearPublish="1901"
 		   Copies="4" />
 	<books 
+		   ID="3" 
+		   ISBN="1234567890122"
+		   Title="Harry Poter 3"
+		   Author="Ewan ko1"
+		   Edition="1st"
+		   Publisher="HarryPublisher"
+		   Description="wizard book"
+		   YearPublish="1901"
+		   Copies="0" />
+	<books 
 		   ID="4" 
 		   ISBN="1234567890123"
 		   Title="title1"
@@ -49,5 +59,15 @@
 		   Publisher="publisher1"
 		   Description="wizard book"
 		   YearPublish="1905"
-		   Copies="1" />	  		   
+		   Copies="1" />
+	<books 
+		   ID="7" 
+		   ISBN="1234567890126"
+		   Title="title3Pantaleon"
+		   Author="author2"
+		   Edition="edition3"
+		   Publisher="publisher1"
+		   Description="wizard book"
+		   YearPublish="1905"
+		   Copies="1" />			   		   		   		   
 </dataset>

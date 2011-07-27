@@ -45,7 +45,7 @@ public class TransactionController {
 
 	// # remove this
 	public static void main(String[] args) throws Exception {
-		new Connector(Constants.APP_CONFIG);
+		new Connector(Constants.TEST_CONFIG);
 
 		TransactionController librarianTransactions = new TransactionController();
 
