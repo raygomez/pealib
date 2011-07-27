@@ -37,6 +37,7 @@ public class BookController {
 	private static BookSearchPanel bookSearch;
 	private static BookInfoPanel bookInfo;
 	private int currTableRowSelection;
+	private String currISBN;
 	private String currSearchString;
 	private JPanel bookLayoutPanel;
 	private User currentUser;
@@ -80,6 +81,7 @@ public class BookController {
 			bookInfo.getBtnDelete().setEnabled(false);
 			bookInfo.getBtnSave().setEnabled(false);
 		} else {
+			currISBN = bookList.get(0).getIsbn();
 			bookInfo = new BookInfoPanel(bookList.get(0), currentUser);
 			if (bookList.get(0).getCopies() == 0) {
 				bookInfo.getBtnDelete().setEnabled(false);
@@ -246,55 +248,50 @@ public class BookController {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				boolean validate = true;
-				Border redBorder = BorderFactory.createLineBorder(Color.red);
-				Border defaultBorder = BorderFactory
-						.createLineBorder(Color.gray);
 
 				if (bookInfo.getTxtFldTitle().getText().trim().isEmpty()
 						|| bookInfo.getTxtFldTitle().getText().length() > 100) {
-					bookInfo.getTxtFldTitle().setBorder(redBorder);
+					bookInfo.getTxtFldTitle().hasError(true);
 					validate = false;
 				} else
-					bookInfo.getTxtFldTitle().setBorder(defaultBorder);
+					bookInfo.getTxtFldTitle().hasError(false);
 
 				if (bookInfo.getTxtFldAuthor().getText().trim().isEmpty()
 						|| bookInfo.getTxtFldAuthor().getText().length() > 100) {
-					bookInfo.getTxtFldAuthor().setBorder(redBorder);
+					bookInfo.getTxtFldAuthor().hasError(true);
 					validate = false;
 				} else
-					bookInfo.getTxtFldAuthor().setBorder(defaultBorder);
+					bookInfo.getTxtFldAuthor().hasError(false);
 
 				if (!bookInfo.getTxtFldYrPublished().getText().trim().isEmpty()) {
 					if (!bookInfo.getTxtFldYrPublished().getText()
 							.matches(Constants.YEAR_PUBLISH_FORMAT)) {
 						validate = false;
-						bookInfo.getTxtFldYrPublished().setBorder(redBorder);
+						bookInfo.getTxtFldYrPublished().hasError(true);
 					} else
-						bookInfo.getTxtFldYrPublished()
-								.setBorder(defaultBorder);
+						bookInfo.getTxtFldYrPublished().hasError(false);
 				} else
-					bookInfo.getTxtFldYrPublished().setBorder(defaultBorder);
+					bookInfo.getTxtFldYrPublished().hasError(false);
 
 				if (bookInfo.getTxtFldPublisher().getText().length() > 100) {
 					validate = false;
-					bookInfo.getTxtFldPublisher().setBorder(redBorder);
+					bookInfo.getTxtFldPublisher().hasError(true);
 				} else
-					bookInfo.getTxtFldPublisher().setBorder(defaultBorder);
+					bookInfo.getTxtFldPublisher().hasError(false);
 
 				if (!bookInfo.getTxtFldISBN().getText()
 						.matches(Constants.ISBN_FORMAT_1)
 						&& !bookInfo.getTxtFldISBN().getText()
 								.matches(Constants.ISBN_FORMAT_2)) {
 					validate = false;
-					bookInfo.getTxtFldISBN().setBorder(redBorder);
-				} else
-					bookInfo.getTxtFldISBN().setBorder(defaultBorder);
+					bookInfo.getTxtFldISBN().hasError(true);
+				} else bookInfo.getTxtFldISBN().hasError(false);
 
 				if (bookInfo.getTxtFldDescription().getText().length() > 300) {
 					validate = false;
-					bookInfo.getTxtFldDescription().setBorder(redBorder);
+					bookInfo.getTxtFldDescription().hasError(true);
 				} else
-					bookInfo.getTxtFldDescription().setBorder(defaultBorder);
+					bookInfo.getTxtFldDescription().hasError(false);
 
 				int spinCopy = Integer.parseInt(bookInfo.getSpinCopyVal()
 						.getModel().getValue().toString());
@@ -304,15 +301,23 @@ public class BookController {
 						- availableCopy;
 				if (spinCopy < validCopy) {
 					validate = false;
-					bookInfo.getSpinCopyVal().setBorder(redBorder);
+					bookInfo.getSpinCopyVal().hasError(true);
 				} else
-					bookInfo.getSpinCopyVal().setBorder(defaultBorder);
+					bookInfo.getSpinCopyVal().hasError(false);
 				
 				if (bookInfo.getTxtFldEdition().getText().length() > 30) {
 					validate = false;
-					bookInfo.getTxtFldEdition().setBorder(redBorder);
+					bookInfo.getTxtFldEdition().hasError(true);
 				} else
-					bookInfo.getTxtFldEdition().setBorder(defaultBorder);
+					bookInfo.getTxtFldEdition().hasError(false);
+				
+				if(!currISBN.equals(bookInfo.getTxtFldISBN().getText())){
+					if(BookDAO.isIsbnExisting(bookInfo.getTxtFldISBN().getText())){
+						bookInfo.getTxtFldISBN().hasError(true);
+						validate = false;
+					} else
+						bookInfo.getTxtFldISBN().hasError(false);
+				}
 
 				if (validate) {
 					BookDAO.editBook(bookInfo.getCurrBook());
@@ -457,6 +462,7 @@ public class BookController {
 			int tableRow = table.getSelectedRow();
 			currTableRowSelection = tableRow;
 			Book displayBook = bookList.get(tableRow);
+			currISBN = displayBook.getIsbn();
 			bookInfo.setBookInfoData(displayBook);
 			try {
 				if (currentUser.getType().equals("Librarian")) {
@@ -600,6 +606,7 @@ public class BookController {
 					bookSearch.getTableBookList().addRowSelectionInterval(0, 0);
 					bookInfo.getBtnDelete().setEnabled(true);
 					bookInfo.getBtnSave().setEnabled(true);
+					currISBN = bookList.get(0).getIsbn();
 					bookInfo.setBookInfoData(bookList.get(0));
 					int availableCopy = TransactionDAO.getAvailableCopies(bookList.get(0));
 					if (bookList.get(0).getCopies() == 0 || bookList.get(0).getCopies() != availableCopy) {
@@ -654,6 +661,7 @@ public class BookController {
 						bookSearch.getTableBookList().addRowSelectionInterval(0, 0);
 						bookInfo.getBtnDelete().setEnabled(true);
 						bookInfo.getBtnSave().setEnabled(true);
+						currISBN = bookList.get(0).getIsbn();
 						bookInfo.setBookInfoData(bookList.get(0));
 						int availableCopy = TransactionDAO.getAvailableCopies(bookList.get(0));
 						if (bookList.get(0).getCopies() == 0 || bookList.get(0).getCopies() != availableCopy) {

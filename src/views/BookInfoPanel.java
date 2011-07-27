@@ -13,6 +13,9 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import utilities.ErrorLabel;
+import utilities.MyJSpinner;
+import utilities.MyTextArea;
+import utilities.MyTextField;
 
 import models.Book;
 import models.User;
@@ -24,11 +27,14 @@ public class BookInfoPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField titleTextField;
-	private JTextField authorTextField;
-	private JTextField yearPublishTextField;
-	private JTextField publisherTextField;
-	private JTextField isbnTextField;
+	private MyTextField titleTextField = new MyTextField();
+	private MyTextField authorTextField = new MyTextField();
+	private MyTextField yearPublishTextField = new MyTextField();
+	private MyTextField publisherTextField = new MyTextField();
+	private MyTextField isbnTextField = new MyTextField();
+	private MyTextField editionTextField = new MyTextField();
+	private MyTextArea descriptionTextArea = new MyTextArea();
+	private MyJSpinner copiesValSpinner = new MyJSpinner();
 	private JButton saveButton;
 	private JButton deleteButton;
 	private JButton borrowButton;
@@ -36,10 +42,7 @@ public class BookInfoPanel extends JPanel {
 	private User currentUser;
 	private Book currentBook;
 	private JLabel errorMessageLabel;
-	private JTextArea descriptionTextArea;
-	private JSpinner copiesValSpinner;
 	private JLabel lblCopies;
-	private JTextField editionTextField;
 	private JLabel lblEdition;
 
 	/**
@@ -62,7 +65,7 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblTitle = new JLabel("Title:");
 		add(lblTitle, "cell 1 1");
 
-		titleTextField = new JTextField(currentBook.getTitle());
+		titleTextField.setText(currentBook.getTitle());
 		titleTextField.setName("titleTextField");
 		titleTextField.setEditable(false);
 		add(titleTextField, "cell 3 1 2 1,growx");
@@ -71,7 +74,8 @@ public class BookInfoPanel extends JPanel {
 		lblEdition = new JLabel("Edition:");
 		add(lblEdition, "cell 1 2");
 		
-		editionTextField = new JTextField(currentBook.getEdition());
+		editionTextField.setText(currentBook.getEdition());
+		editionTextField.setName("editionTextField");
 		editionTextField.setEditable(false);
 		add(editionTextField, "cell 3 2 2 1,growx");
 		editionTextField.setColumns(10);
@@ -79,7 +83,7 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblAuthor = new JLabel("Author:");
 		add(lblAuthor, "cell 1 3");
 
-		authorTextField = new JTextField(currentBook.getAuthor());
+		authorTextField.setText(currentBook.getAuthor());
 		authorTextField.setName("authorTextField");
 		authorTextField.setEditable(false);
 		add(authorTextField, "cell 3 3 2 1,growx");
@@ -88,7 +92,7 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblYearPublished = new JLabel("Year Published:");
 		add(lblYearPublished, "cell 1 4");
 
-		yearPublishTextField = new JTextField(Integer.toString(currentBook
+		yearPublishTextField.setText(Integer.toString(currentBook
 				.getYearPublish()));
 		yearPublishTextField.setName("yearPublishTextField");
 		yearPublishTextField.setEditable(false);
@@ -98,7 +102,7 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblPublisher = new JLabel("Publisher:");
 		add(lblPublisher, "cell 1 5");
 
-		publisherTextField = new JTextField(currentBook.getPublisher());
+		publisherTextField.setText(currentBook.getPublisher());
 		publisherTextField.setName("publisherTextField");
 		publisherTextField.setEditable(false);
 		add(publisherTextField, "cell 3 5 2 1,growx");
@@ -107,7 +111,7 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblIsbn = new JLabel("ISBN:");
 		add(lblIsbn, "cell 1 6");
 
-		isbnTextField = new JTextField(currentBook.getIsbn());
+		isbnTextField.setText(currentBook.getIsbn());
 		isbnTextField.setName("isbnTextField");
 		isbnTextField.setEditable(false);
 		add(isbnTextField, "cell 3 6 2 1,growx");
@@ -116,7 +120,7 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblDescription = new JLabel("Description:");
 		add(lblDescription, "cell 1 7");
 
-		descriptionTextArea = new JTextArea(currentBook.getDescription());
+		descriptionTextArea = new MyTextArea(currentBook.getDescription());
 		descriptionTextArea.setName("descriptionTextArea");
 		descriptionTextArea.setEditable(false);
 		add(descriptionTextArea, "cell 3 7 2 3,grow");
@@ -131,7 +135,6 @@ public class BookInfoPanel extends JPanel {
 			
 		lblCopies = new JLabel("Copies:");
 			
-		copiesValSpinner = new JSpinner();
 		copiesValSpinner.setModel(new SpinnerNumberModel(0, 0, 2147483647, 1));
 		copiesValSpinner.getModel().setValue(currentBook.getCopies());
 					
@@ -234,31 +237,31 @@ public class BookInfoPanel extends JPanel {
 		return errorMessageLabel;
 	}
 
-	public JTextField getTxtFldTitle() {
+	public MyTextField getTxtFldTitle() {
 		return titleTextField;
 	}
 
-	public JTextField getTxtFldAuthor() {
+	public MyTextField getTxtFldAuthor() {
 		return authorTextField;
 	}
 
-	public JTextField getTxtFldYrPublished() {
+	public MyTextField getTxtFldYrPublished() {
 		return yearPublishTextField;
 	}
 
-	public JTextField getTxtFldPublisher() {
+	public MyTextField getTxtFldPublisher() {
 		return publisherTextField;
 	}
 
-	public JTextField getTxtFldISBN() {
+	public MyTextField getTxtFldISBN() {
 		return isbnTextField;
 	}
 
-	public JTextArea getTxtFldDescription() {
+	public MyTextArea getTxtFldDescription() {
 		return descriptionTextArea;
 	}
 
-	public JTextField getTxtFldEdition() {
+	public MyTextField getTxtFldEdition() {
 		return editionTextField;
 	}
 
@@ -266,7 +269,7 @@ public class BookInfoPanel extends JPanel {
 		this.errorMessageLabel = lblErrorMsg;
 	}
 
-	public JSpinner getSpinCopyVal() {
+	public MyJSpinner getSpinCopyVal() {
 		return copiesValSpinner;
 	}
 
