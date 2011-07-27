@@ -37,11 +37,11 @@ public class TransactionDAOTest {
 	}
 
 	@Test
-	@ExpectedDataSet({ "expected/addReserves.xml" })
 	public void testReserveBook() throws Exception {
 		User user = UserDAO.getUserById(4);
 		Book book = BookDAO.getBookById(2);
 		TransactionDAO.reserveBook(book, user);
+		assertTrue(TransactionDAO.isReservedByUser(book, user));
 	}
 
 	@Test
@@ -335,7 +335,7 @@ public class TransactionDAOTest {
 				user, book);
 		assertReflectionEquals(user, transaction.getUser());
 		assertReflectionEquals(book, transaction.getBook());
-		assertEquals("2011-06-15", transaction.getDateReserved().toString());
+		assertEquals("2011-07-27", transaction.getDateReserved().toString());
 	}
 
 	@Test
