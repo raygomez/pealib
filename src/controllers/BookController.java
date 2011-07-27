@@ -252,6 +252,7 @@ public class BookController {
 				if (bookInfo.getTxtFldTitle().getText().trim().isEmpty()
 						|| bookInfo.getTxtFldTitle().getText().length() > 100) {
 					bookInfo.getTxtFldTitle().hasError(true);
+					bookInfo.getTxtFldTitle().hasError(true);
 					validate = false;
 				} else
 					bookInfo.getTxtFldTitle().hasError(false);
