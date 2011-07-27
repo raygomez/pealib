@@ -9,6 +9,7 @@ import models.User;
 import net.miginfocom.swing.MigLayout;
 import utilities.Connector;
 import utilities.Constants;
+import utilities.CrashHandler;
 import views.ChangePasswordDialog;
 import views.UserInfoPanel;
 import views.UserSearchPanel;
@@ -175,10 +176,7 @@ public class UserController {
 			try {
 				model = new UserSearchTableModel(1, getSearchText());
 			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(null,
-						"Something really went wrong!", "Connecton Error",
-						JOptionPane.ERROR_MESSAGE);
-				System.exit(-1);
+				CrashHandler.handle(e1);
 			}
 
 			if (getUserSearch().getCbAll().isSelected())
@@ -209,10 +207,7 @@ public class UserController {
 								+ ") application/s.";
 					}
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null,
-							"Something really went wrong!", "Connecton Error",
-							JOptionPane.ERROR_MESSAGE);
-					System.exit(-1);
+					CrashHandler.handle(e1);
 				}
 			}
 		}
@@ -262,9 +257,7 @@ public class UserController {
 		try {
 			model = new UserSearchTableModel(tab, getSearchText());
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Something really went wrong!",
-					"Connecton Error", JOptionPane.ERROR_MESSAGE);
-			System.exit(-1);
+			CrashHandler.handle(e);
 		}
 		getUserSearch().setTableModel(tab, model);
 
@@ -287,7 +280,7 @@ public class UserController {
 			getUserSearch().getPendingTable().getSelectionModel()
 					.setSelectionInterval(0, 0);
 			getUserSearch().getPendingTable().addRowSelectionInterval(0, 0);
-			
+
 			setSelectedUser(getSearchedPending().get(0));
 		}
 	}
@@ -361,7 +354,7 @@ public class UserController {
 	 */
 	class UserSearchTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
-		private ArrayList<String> columns;
+		private String[] columns;
 		private ArrayList<ArrayList<Object>> tableData;
 		private int mode;
 		private String searchStr = "";
@@ -380,10 +373,7 @@ public class UserController {
 		}
 
 		private void pending() {
-			columns = new ArrayList<String>();
-			columns.add("Username");
-			columns.add("Name");
-			columns.add("Accept");
+			columns = new String[] { "Username", "Name", "Accept" };
 
 			try {
 				setSearchedPending(UserDAO.searchAllPending(searchStr));
@@ -399,10 +389,7 @@ public class UserController {
 				}
 
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null,
-						"Something really went wrong!", "Connecton Error",
-						JOptionPane.ERROR_MESSAGE);
-				System.exit(-1);
+				CrashHandler.handle(e);
 			}
 		}
 
@@ -413,9 +400,7 @@ public class UserController {
 		}
 
 		private void userAcct() throws Exception {
-			columns = new ArrayList<String>();
-			columns.add("Username");
-			columns.add("Name");
+			columns = new String[] { "Username", "Name" };
 
 			setSearchedUsers(UserDAO.searchActiveUsers(searchStr));
 
@@ -458,12 +443,12 @@ public class UserController {
 
 		@Override
 		public String getColumnName(int col) {
-			return columns.get(col);
+			return columns[col];
 		}
 
 		@Override
 		public int getColumnCount() {
-			return columns.size();
+			return columns.length;
 		}
 
 		@Override
@@ -518,7 +503,7 @@ public class UserController {
 			tempErrors.add(Constants.EMAIL_FORMAT_ERROR);
 			pass = false;
 		}
-		
+
 		if (!address.matches(Constants.ADDRESS_FORMAT)) {
 			tempErrors.add(Constants.ADDRESS_FORMAT_ERROR);
 			pass = false;
@@ -536,7 +521,7 @@ public class UserController {
 
 		getUserInfoPanel().displayErrors(errors);
 		getUserInfoPanel().revalidate();
-		
+
 		return pass;
 
 	}
@@ -579,7 +564,7 @@ public class UserController {
 		public void actionPerformed(ActionEvent arg0) {
 
 			userInfoPanel.resetErrorMessages();
-			
+
 			int userId = Integer.parseInt(getUserInfoPanel().getIdNumber());
 			String userName = getUserInfoPanel().getUsername();
 			String firstName = getUserInfoPanel().getFirstName();
@@ -606,10 +591,7 @@ public class UserController {
 					}
 
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null,
-							"Something really went wrong!", "Connecton Error",
-							JOptionPane.ERROR_MESSAGE);
-					System.exit(-1);
+					CrashHandler.handle(e);
 				}
 			}
 		}
@@ -649,10 +631,7 @@ public class UserController {
 					correctPassword = UserDAO
 							.checkPassword(userID, oldPassword);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null,
-							"Something really went wrong!", "Connecton Error",
-							JOptionPane.ERROR_MESSAGE);
-					System.exit(-1);
+					CrashHandler.handle(e);
 				}
 			} else {
 				userID = Integer.parseInt(userInfoPanel.getIdNumber());
@@ -677,10 +656,7 @@ public class UserController {
 					JOptionPane.showMessageDialog(layoutPanel,
 							"Password successfully changed!");
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null,
-							"Something really went wrong!", "Connecton Error",
-							JOptionPane.ERROR_MESSAGE);
-					System.exit(-1);
+					CrashHandler.handle(e);
 				}
 			}
 		}
