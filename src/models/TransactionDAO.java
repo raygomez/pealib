@@ -193,7 +193,7 @@ public class TransactionDAO {
 		while (rs.next()) {
 			Book book = BookDAO.getBookById(rs.getInt("BookID"));
 			ReserveTransaction reserveTransaction = new ReserveTransaction(
-					user, book, rs.getDate("DatetimeReserved"));
+					user, book, rs.getTimestamp("DatetimeReserved"));
 			reserves.add(reserveTransaction);
 		}
 		Connector.close();
