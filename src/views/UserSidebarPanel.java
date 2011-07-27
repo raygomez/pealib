@@ -20,10 +20,10 @@ public class UserSidebarPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JToggleButton viewBooksButton;
-	private JToggleButton editProfileButton;
-	private JToggleButton logoutButton;
-	private JToggleButton transactionHistoryButton;
+	private MyButton viewBooksButton;
+	private MyButton editProfileButton;
+	private MyButton logoutButton;
+	private MyButton transactionHistoryButton;
 	private ButtonGroup buttonGroup;
 	
 	public UserSidebarPanel() {
