@@ -208,12 +208,7 @@ public class BookController {
 							addBook.getTxtFldTitle().setText("");
 							addBook.getTxtFldYearPublish().setText("");
 							addBook.getCopyValSpinner().getModel().setValue(1);
-							if (currentUser.getType().equals("Librarian")) {
-								bookList = BookDAO.searchBook(currSearchString);
-							} else {
-								bookList = BookDAO
-										.searchBookForUser(currSearchString);
-							}
+							bookList = BookDAO.searchBook(currSearchString);
 							bookSearch.getTableBookList().setModel(
 									new BookListModel(bookList));
 							//TODO 
@@ -674,34 +669,36 @@ public class BookController {
 
 	private void setButtons() throws Exception {
 		int tableRow = currTableRowSelection;
-		if (currentUser.getType().equals("User")) {
-			if (bookList != null
-					&& !bookList.isEmpty()
-					&& !TransactionDAO.isBorrowedByUser(
-					bookList.get(currTableRowSelection), currentUser)
-					&& !TransactionDAO.isReservedByUser(
-							bookList.get(currTableRowSelection), currentUser)) {
-				if (TransactionDAO.getAvailableCopies(bookList
-						.get(currTableRowSelection)) > 0) {
-					bookInfo.getBtnBorrow().setEnabled(true);
-				} else {
-					bookInfo.getBtnReserve().setEnabled(true);
-					bookInfo.getLblErrorMsg().makeError("No available copies at this time");
+		if (bookList.size() != 0){
+			if (currentUser.getType().equals("User")) {
+				if (bookList != null
+						&& !bookList.isEmpty()
+						&& !TransactionDAO.isBorrowedByUser(
+						bookList.get(currTableRowSelection), currentUser)
+						&& !TransactionDAO.isReservedByUser(
+								bookList.get(currTableRowSelection), currentUser)) {
+					if (TransactionDAO.getAvailableCopies(bookList
+							.get(currTableRowSelection)) > 0) {
+						bookInfo.getBtnBorrow().setEnabled(true);
+					} else {
+						bookInfo.getBtnReserve().setEnabled(true);
+						bookInfo.getLblErrorMsg().makeError("No available copies at this time");
+					}
+				} else if (bookList != null && !bookList.isEmpty()) {
+					bookInfo.getLblErrorMsg().makeError("You already have a pending transaction for the following book: ");
 				}
-			} else if (bookList != null && !bookList.isEmpty()) {
-				bookInfo.getLblErrorMsg().makeError("You already have a pending transaction for the following book: ");
 			}
-		}
-		
-		if (currentUser.getType().equals("Librarian")) {
-			bookInfo.getBtnSave().setEnabled(true);
-			int availableCopy = TransactionDAO
-					.getAvailableCopies(bookList.get(tableRow));
-			if (bookList.get(tableRow).getCopies() == 0
-					|| bookList.get(tableRow).getCopies() != availableCopy) {
-				bookInfo.getBtnDelete().setEnabled(false);
-			} else
-				bookInfo.getBtnDelete().setEnabled(true);
+			
+			if (currentUser.getType().equals("Librarian")) {
+				bookInfo.getBtnSave().setEnabled(true);
+				int availableCopy = TransactionDAO
+						.getAvailableCopies(bookList.get(tableRow));
+				if (bookList.get(tableRow).getCopies() == 0
+						|| bookList.get(tableRow).getCopies() != availableCopy) {
+					bookInfo.getBtnDelete().setEnabled(false);
+				} else
+					bookInfo.getBtnDelete().setEnabled(true);
+			}
 		}
 	}
 }
