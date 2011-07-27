@@ -50,15 +50,16 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertTrue(outgoing.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Username",
 						"Date Requested" }));
-		assertEquals(3, outgoing.getRowCount());
+		assertEquals(4, outgoing.getRowCount());
 		assertThat(outgoing.contentEquals(new Object[][] {
 				{ "1234567890121", "Harry Poter 2", "Niel",
 						"apantaleon (Annuary Pantaleon)", "2011-06-15" },
 				{ "1234567890124", "title2", "author1", "ndizon (Niel Dizon)",
 						"2011-06-15" },
-				{ "1234567890125", "title3Pantaleon", "author2", "ndizon (Niel Dizon)",
-						"2011-06-15" } }));
+				{ "1234567890125", "title3Pantaleon", "author2",
+						"ndizon (Niel Dizon)", "2011-06-15" },
+				{ "1234567890120", "Harry Poter 1", "Ewan ko",
+						"jvillar (Jomel Pantaleon)", "2011-06-15" } }));
 
 	}
-
 }
