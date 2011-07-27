@@ -184,8 +184,5 @@ public class BookControllerTest extends UISpecTestCase {
 
 	}
 
-	@Test
-	public void testSaveValid() throws Exception {
-		
-	}
+
 }
