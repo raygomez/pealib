@@ -3,8 +3,8 @@ package views;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.uispec4j.Button;
 import org.uispec4j.Panel;
+import org.uispec4j.ToggleButton;
 import org.uispec4j.UISpecTestCase;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 
@@ -22,13 +22,13 @@ public class LibrarianSidebarPanelTest extends UISpecTestCase {
 
 	@Test
 	public void testInitialState() {
-		Button button;
+		ToggleButton button;
 
 		String[] buttonArray = new String[] { "Search Books", "Search Users",
 				"Edit Profile", "Book Transactions", "Logout" };
 
 		for (String s : buttonArray) {
-			button = panel.getButton(s);
+			button = panel.getToggleButton(s);
 			assertNotNull(button);
 			assertThat(button.isEnabled());
 			assertThat(button.isVisible());
