@@ -6,12 +6,12 @@ import models.UserDAO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.uispec4j.ToggleButton;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
 
-import utilities.Connector;
 import utilities.Constants;
 
 @DataSet({ "../models/user.xml", "../models/book.xml",
@@ -23,17 +23,28 @@ public class PeaLibraryLibrarianTest extends UISpecTestCase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		PeaLibrary peaLibrary = new PeaLibrary(Constants.TEST_CONFIG);
 		User user = UserDAO.getUserById(2);
-		PeaLibrary peaLibrary = new PeaLibrary();
 		peaLibrary.setCurrentUser(user);
 		peaLibrary.initialize();
 		window = new Window(peaLibrary.getFrame());
-		
+
 	}
 
 	@Test
-	public void test() {
-	}
+	public void testSidebar() {
+		ToggleButton searchBooksButton = window.getToggleButton("Search Books");
+		searchBooksButton.click();
 
+		ToggleButton searchUsersButton = window.getToggleButton("Search Users");
+		searchUsersButton.click();
+
+		ToggleButton editProfileButton = window.getToggleButton("Edit Profile");
+		editProfileButton.click();
+
+		ToggleButton bookTransactionsButton = window
+				.getToggleButton("Book Transactions");
+		bookTransactionsButton.click();
+
+	}
 }
