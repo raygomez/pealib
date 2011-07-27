@@ -5,6 +5,7 @@ import models.User;
 import models.UserDAO;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Panel;
@@ -59,6 +60,7 @@ public class UserControllerTest extends UISpecTestCase {
 		assertEquals("jvillar",temp);					
 	}
 	
+	@Ignore
 	@Test
 	public void testInitialPendingTab(){
 		tabGroup.selectTab("Pending Applications");
