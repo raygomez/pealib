@@ -1,14 +1,13 @@
 package views;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 
 import net.miginfocom.swing.MigLayout;
 import utilities.MyButton;
@@ -27,9 +26,8 @@ public class LibrarianSidebarPanel extends JPanel {
 	private ButtonGroup buttonGroup;
 
 	public LibrarianSidebarPanel() {
-		buttonGroup = new ButtonGroup();
-		
-		setLayout(new MigLayout("wrap 1", "[grow]", "[]5[]"));
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();				
+		setLayout(new MigLayout("wrap 1", "[grow]", "10px[]10px[]10px[]10px[]"+screenSize.height/2.3+"[]"));
 
 		viewBooksButton = new MyButton("Search Books", new ImageIcon(
 				"resources/images/Book.png"));
@@ -42,6 +40,7 @@ public class LibrarianSidebarPanel extends JPanel {
 		bookTransactionsButton = new MyButton("Book Transactions",
 				new ImageIcon("resources/images/checkInOut32x32.png"));		
 		
+		buttonGroup = new ButtonGroup();
 		buttonGroup.add(viewBooksButton);
 		buttonGroup.add(viewUsersButton);
 		buttonGroup.add(editProfileButton);

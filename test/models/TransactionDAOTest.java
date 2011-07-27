@@ -71,8 +71,8 @@ public class TransactionDAOTest {
 	@Test
 	@ExpectedDataSet({ "expected/cancelReserves.xml" })
 	public void testCancelReservation() throws Exception {
-		User user = UserDAO.getUserById(3);
-		Book book = BookDAO.getBookById(6);
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(2);
 		ReserveTransaction rtTransaction = TransactionDAO
 				.getReserveTransaction(user, book);
 		assertNotNull(rtTransaction);
@@ -211,7 +211,7 @@ public class TransactionDAOTest {
 
 	@Test
 	public void testGetAvailableCopiesNoBorrows() throws Exception {
-		Book book = BookDAO.getBookById(1);
+		Book book = BookDAO.getBookById(7);
 		assertEquals(1, TransactionDAO.getAvailableCopies(book));
 	}
 
@@ -239,7 +239,7 @@ public class TransactionDAOTest {
 	public void testSearchOutgoingBookAll() throws Exception {
 		ArrayList<BorrowTransaction> list = TransactionDAO
 				.searchOutgoingBook("*");
-		assertEquals(3, list.size());
+		assertEquals(4, list.size());
 	}
 
 	@Test
@@ -260,7 +260,7 @@ public class TransactionDAOTest {
 	public void testSearchOutgoingBookManyUserBook() throws Exception {
 		ArrayList<BorrowTransaction> list = TransactionDAO
 				.searchOutgoingBook("Pantaleon");
-		assertEquals(2, list.size());
+		assertEquals(3, list.size());
 	}
 
 	@Test
@@ -301,7 +301,7 @@ public class TransactionDAOTest {
 	@Test
 	public void testIsNotBorrowedByUser() throws Exception {
 		User user = UserDAO.getUserById(1);
-		Book book = BookDAO.getBookById(1);
+		Book book = BookDAO.getBookById(7);
 		assertFalse(TransactionDAO.isBorrowedByUser(book, user));
 	}
 

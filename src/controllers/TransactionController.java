@@ -45,7 +45,7 @@ public class TransactionController {
 
 	// # remove this
 	public static void main(String[] args) throws Exception {
-		new Connector(Constants.APP_CONFIG);
+		new Connector(Constants.TEST_CONFIG);
 
 		TransactionController librarianTransactions = new TransactionController();
 
@@ -108,11 +108,10 @@ public class TransactionController {
 				outPanel.getGrantButton().setEnabled(false);
 				outPanel.getDenyButton().setEnabled(false);
 			}
-			System.out.println(tabbedPane.getSelectedIndex());
 			try {
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
@@ -127,7 +126,7 @@ public class TransactionController {
 				grantBorrowRequest();
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
@@ -139,26 +138,23 @@ public class TransactionController {
 				denyBorrowRequest();
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
 
 	private void grantBorrowRequest() throws Exception {
-		System.out.println("number of rows: " + selectedRows.length);
 		for (int i = 0; i < selectedRows.length; i++) {
 			TransactionDAO.borrowBook(selectedBookTransactions.get(i));
-			System.out.println(">" + selectedRows[i] + ": Grant: " + selectedBookTransactions.get(i).getBook().getTitle());
 		}
 		JOptionPane.showMessageDialog(tabbedPane,
-				"Successfully lent " + selectedRows.length + " book(s).",
-				"Borrow Request Granted", JOptionPane.INFORMATION_MESSAGE);
+			"Successfully lent " + selectedRows.length + " book(s).",
+			"Borrow Request Granted", JOptionPane.INFORMATION_MESSAGE);
 		outPanel.getGrantButton().setEnabled(false);
 		outPanel.getDenyButton().setEnabled(false);
 	}
 
 	private void denyBorrowRequest() throws Exception {
-		System.out.println("number of rows: " + selectedRows.length);
 		int passCounter = 0;
 		for (int i = 0; i < selectedRows.length; i++) {
 			TransactionDAO.denyBookRequest(selectedBookTransactions.get(i));
@@ -169,18 +165,17 @@ public class TransactionController {
 				TransactionDAO.passToNextUser(deniedBook);
 				passCounter++;
 			}
-			System.out.println(">" + selectedRows[i] + ": Deny: " + selectedBookTransactions.get(i).getBook().getTitle());
 		}
 		if (passCounter == 0) {
 			JOptionPane.showMessageDialog(tabbedPane,
-					"Refused to lend " + selectedRows.length + " book(s).",
-					"Borrow Request Denied", JOptionPane.INFORMATION_MESSAGE);
+				"Refused to lend " + selectedRows.length + " book(s).",
+				"Borrow Request Denied", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(tabbedPane,
-					"<html>Refused to lend " + selectedRows.length + " book(s).<br>"
-					+ passCounter + " book(s) have pending reservations.<br>"
-					+ "See Outgoing tab for details.",
-					"Borrow Request Denied", JOptionPane.INFORMATION_MESSAGE);
+				"<html>Refused to lend " + selectedRows.length + " book(s).<br>"
+				+ passCounter + " book(s) have pending reservations.<br>"
+				+ "See Outgoing tab for details.",
+				"Borrow Request Denied", JOptionPane.INFORMATION_MESSAGE);
 		}
 		outPanel.getGrantButton().setEnabled(false);
 		outPanel.getDenyButton().setEnabled(false);
@@ -196,13 +191,12 @@ public class TransactionController {
 				returnBook();
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
 
 	private void returnBook() throws Exception {
-		System.out.println("number of rows: " + selectedRows.length);
 		int passCounter = 0;
 		for (int i = 0; i < selectedRows.length; i++) {
 			TransactionDAO.returnBook(selectedBookTransactions.get(i));
@@ -213,19 +207,18 @@ public class TransactionController {
 				TransactionDAO.passToNextUser(returnedBook);
 				passCounter++;
 			}
-			System.out.println(">" + selectedRows[i] + ": Return: " + selectedBookTransactions.get(i).getBook().getTitle());
 		}
 		if (passCounter == 0) {
 			JOptionPane.showMessageDialog(tabbedPane,
-					"Successfully returned " + selectedRows.length + " book(s).",
-					"Borrowed Book Returned",
-					JOptionPane.INFORMATION_MESSAGE);
+				"Successfully returned " + selectedRows.length + " book(s).",
+				"Borrowed Book Returned",
+				JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(tabbedPane,
-					"<html>Successfully returned " + selectedRows.length + " book(s).<br>"
-					+ passCounter + " book(s) have pending reservations.<br>"
-					+ "See Outgoing tab for details.",
-					"Borrowed Book Returned", JOptionPane.INFORMATION_MESSAGE);
+				"<html>Successfully returned " + selectedRows.length + " book(s).<br>"
+				+ passCounter + " book(s) have pending reservations.<br>"
+				+ "See Outgoing tab for details.",
+				"Borrowed Book Returned", JOptionPane.INFORMATION_MESSAGE);
 		}
 		inPanel.getBtnReturn().setEnabled(false);
 		inPanel.getLblDaysOverdue().setText("");
@@ -247,7 +240,7 @@ public class TransactionController {
 			try {
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 			if (isIncoming) {
 				inPanel.getBtnReturn().setEnabled(false);
@@ -268,7 +261,7 @@ public class TransactionController {
 				try {
 					searchBookTransaction();
 				} catch (Exception e) {
-					CrashHandler.handle();
+					CrashHandler.handle(e);
 				}
 				if (isIncoming) {
 					inPanel.getBtnReturn().setEnabled(false);
@@ -299,7 +292,7 @@ public class TransactionController {
 			try {
 				setSelectedItem();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
@@ -316,15 +309,15 @@ public class TransactionController {
 			if (keyword.isEmpty()) {
 				keyword = "*";
 			}
-			searchResults = TransactionDAO.searchIncomingBook(keyword);
 			tableHeader = incomingTableHeader;
+			searchResults = TransactionDAO.searchIncomingBook(keyword);
 		} else {
 			keyword = outPanel.getSearchPanel().getTxtfldSearch().getText();
 			if (keyword.isEmpty()) {
 				keyword = "*";
 			}
-			searchResults = TransactionDAO.searchOutgoingBook(keyword);
 			tableHeader = outgoingTableHeader;
+			searchResults = TransactionDAO.searchOutgoingBook(keyword);
 		}
 
 		if (searchResults.size() != 0) {
@@ -434,6 +427,7 @@ public class TransactionController {
 	}
 
 	private void setSelectedItem() throws Exception {
+		selectedRows = null;
 		if (isIncoming) {
 			selectedRows = inPanel.getSearchPanel().getTblResults().getSelectedRows();
 			

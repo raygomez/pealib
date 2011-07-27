@@ -84,7 +84,7 @@ public class UserControllerTest extends UISpecTestCase {
 	public void testShowUserProfile(){
 		tabGroup.selectTab("User Accounts");
 		tabGroup.getSelectedTab().getTable().click(0, 0);
-		assertReflectionEquals(userInfoPanel, userControl.getUserInfoPanel());
+		assertSame(userInfoPanel.getAwtComponent(), userControl.getUserInfoPanel());
 	}
 	
 	@Test

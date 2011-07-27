@@ -2,7 +2,6 @@ package views;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
@@ -15,7 +14,9 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 public class BookSearchPanel extends JPanel {
@@ -79,21 +80,24 @@ public class BookSearchPanel extends JPanel {
 	public void setTextFieldListener(KeyListener textfield) {
 		textFieldSearch.addKeyListener(textfield);
 	}
-	
-	public void setTextFieldSearch(String textFieldSearch) {
-		this.textFieldSearch.setText(textFieldSearch);
-	}
 
-	public String getTextFieldSearch() {
-		return textFieldSearch.getText();
-	}
-	
-	public void setTableListModel(TableModel model) {
-		tableBookList.setModel(model);
+	public JTextField getTextFieldSearch() {
+		return textFieldSearch;
 	}
 
 	public JTable getTableBookList() {
 		return tableBookList;
+	}
+	
+	public void setColumnRender(JTable table){
+		//TODO
+		DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
+		trender.setHorizontalAlignment(SwingConstants.CENTER);
+				
+	
+		table.getColumn(table.getColumnName(0)).setCellRenderer(trender);
+		table.getColumn(table.getColumnName(1)).setCellRenderer(trender);
+		table.getColumn(table.getColumnName(2)).setCellRenderer(trender);		
 	}
 	
 	public void addBookSelectionListener(ListSelectionListener listener){
