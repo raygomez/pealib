@@ -58,7 +58,7 @@ public class BookInfoPanel extends JPanel {
 		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][][][]", "[40][][][][][][][grow][48.00][34.00][][13.00][]"));
         errorMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        add(errorMessageLabel, "cell 1 0 6 1,alignx center,aligny center");
+        add(errorMessageLabel, "cell 0 0, span 6 1,alignx center,aligny center");
 
 		JLabel lblTitle = new JLabel("Title:");
 		add(lblTitle, "cell 1 1");
