@@ -193,44 +193,36 @@ public class ELibController {
 			}
 		}
 
-		private void reserveData() {
+		private void reserveData() throws Exception {
 			columns = new String[] { "ISBN", "Title", "Author",
 					"Date Reserved", "Queue Number", "Cancel" };
 
-			try {
-				setBookDataReserve(TransactionDAO.getReservedBooks(getUser()));
+			setBookDataReserve(TransactionDAO.getReservedBooks(getUser()));
 
-				if (getBookDataReserve().size() != 0) {
-					for (ReserveTransaction i : getBookDataReserve()) {
-						ArrayList<Object> rowData = new ArrayList<Object>(5);
-						DateTime reservedDate = new DateTime(i
-								.getDateReserved().getTime());
+			if (getBookDataReserve().size() != 0) {
+				for (ReserveTransaction i : getBookDataReserve()) {
+					ArrayList<Object> rowData = new ArrayList<Object>(5);
+					DateTime reservedDate = new DateTime(i.getDateReserved()
+							.getTime());
 
-						rowData.add(i.getBook().getIsbn());
-						rowData.add(i.getBook().getTitle());
-						rowData.add(i.getBook().getAuthor());
-						rowData.add(reservedDate.toString("y-MM-dd h:mm a"));
-						rowData.add(""
-								+ TransactionDAO.getQueueInReservation(
-										i.getBook(), i.getUser()));
-						rowData.add(new JButton("Cancel"));
-						tableData.add(rowData);
-					}
+					rowData.add(i.getBook().getIsbn());
+					rowData.add(i.getBook().getTitle());
+					rowData.add(i.getBook().getAuthor());
+					rowData.add(reservedDate.toString("y-MM-dd h:mm a"));
+					rowData.add(""
+							+ TransactionDAO.getQueueInReservation(i.getBook(),
+									i.getUser()));
+					rowData.add(new JButton("Cancel"));
+					tableData.add(rowData);
 				}
-			} catch (Exception e) {
-				System.out.println("ELibController: reserveData: " + e);
 			}
 		}
 
-		private void onloanData() {
+		private void onloanData() throws Exception {
 			columns = new String[] { "ISBN", "Title", "Author",
 					"Date Borrowed", "Due Date" };
 
-			try {
-				bookData = TransactionDAO.getOnLoanBooks(getUser());
-			} catch (Exception e) {
-				System.out.println("ELibController: onloanData: " + e);
-			}
+			bookData = TransactionDAO.getOnLoanBooks(getUser());
 
 			if (bookData.size() != 0) {
 				for (BorrowTransaction i : bookData) {
@@ -247,15 +239,11 @@ public class ELibController {
 			}
 		}
 
-		private void historyData() {
+		private void historyData() throws Exception {
 			columns = new String[] { "ISBN", "Title", "Author",
 					"Date Borrowed", "Date Returned" };
 
-			try {
-				bookData = TransactionDAO.getHistory(getUser());
-			} catch (Exception e) {
-				System.out.println("ELibController: historyData: " + e);
-			}
+			bookData = TransactionDAO.getHistory(getUser());
 
 			if (bookData.size() != 0) {
 				for (BorrowTransaction i : bookData) {
@@ -342,9 +330,9 @@ public class ELibController {
 							}
 							update();
 						} catch (Exception e1) {
-							System.out.println("CancelRequest: requestData: "
-									+ e1);
+							CrashHandler.handle(e1);
 						}
+
 					}
 					fireEditingStopped();
 				}
@@ -389,8 +377,7 @@ public class ELibController {
 							TransactionDAO.cancelReservation(selectedBook);
 							update();
 						} catch (Exception e1) {
-							System.out.println("CancelRequest: requestData: "
-									+ e1);
+							CrashHandler.handle(e1);
 						}
 					}
 					fireEditingStopped();
