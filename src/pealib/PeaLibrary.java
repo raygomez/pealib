@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import models.User;
 import utilities.Connector;
+import utilities.Constants;
 import utilities.CrashHandler;
 import views.LibrarianSidebarPanel;
 import views.MainFrame;
@@ -34,6 +35,10 @@ public class PeaLibrary {
 		new Connector();
 	}
 
+	public PeaLibrary(String config){
+		new Connector(config);
+	}
+	
 	/**
 	 * @return the frame
 	 */
@@ -255,7 +260,7 @@ public class PeaLibrary {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PeaLibrary app = new PeaLibrary();
+					PeaLibrary app = new PeaLibrary(Constants.TEST_CONFIG);
 					app.authenticate();
 					app.getFrame().setVisible(true);
 				} catch (Exception e) {
