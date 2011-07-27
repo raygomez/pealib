@@ -348,4 +348,38 @@ public class TransactionDAOTest {
 				user, book);
 		assertNull(transaction);
 	}
+	
+	@Test
+	public void isBookReservedByOtherUsersTrue() throws Exception {
+		Book book1 = BookDAO.getBookById(2);
+		assertTrue(TransactionDAO.isBookReservedByOtherUsers(book1));
+	}
+		
+	@Test
+	public void isBookReservedByOtherUsersFalse() throws Exception {
+		Book book4 = BookDAO.getBookById(4);
+		assertFalse(TransactionDAO.isBookReservedByOtherUsers(book4));
+	} 
+	
+	@Test
+	public void testGetNextUser() throws Exception {
+		Book book = BookDAO.getBookById(6);
+		User nextUser = TransactionDAO.getNextUser(book);
+		User expectedNextUser = UserDAO.getUserById(1);
+		assertEquals(expectedNextUser.getUserId(), nextUser.getUserId());
+	}
+	
+	@Test
+	public void testGetNextUserNone() throws Exception {
+		Book book = BookDAO.getBookById(4);
+		User nextUser = TransactionDAO.getNextUser(book);
+		assertNull(nextUser);
+	}
+	
+	@Test
+	@ExpectedDataSet({ "expected/borrowNextUser.xml", "expected/reservesNextUser.xml" })
+	public void passToNextUser() throws Exception {
+		Book book = BookDAO.getBookById(6);
+		TransactionDAO.passToNextUser(book);
+	}
 }
