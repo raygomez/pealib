@@ -51,7 +51,6 @@ public class UserSidebarPanel extends JPanel {
 		add(transactionHistoryButton, "growx");
 		add(logoutButton, "growx");
 
-		viewBooksButton.getModel().setPressed(true);
 		viewBooksButton.setSelected(true);
 	}
 
