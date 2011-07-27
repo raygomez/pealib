@@ -268,7 +268,7 @@ public class PeaLibrary {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PeaLibrary app = new PeaLibrary(Constants.TEST_CONFIG);
+					PeaLibrary app = new PeaLibrary();
 					app.authenticate();
 					app.getFrame().setVisible(true);
 				} catch (Exception e) {
