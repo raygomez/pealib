@@ -31,7 +31,7 @@ public class TransactionDAO {
 	public static int reserveBook(Book book, User user) throws Exception {
 		int intStat = 0;
 
-		String sql = "INSERT INTO Reserves (UserID, BookID, DateReserved) VALUES (?,?,CURRENT_DATE())";
+		String sql = "INSERT INTO Reserves (UserID, BookID) VALUES (?,?)";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, user.getUserId());
@@ -103,7 +103,7 @@ public class TransactionDAO {
 			throws Exception {
 		ReserveTransaction rTransaction = null;
 
-		String sql = "SELECT DateReserved FROM Reserves where UserID = ? and BookID = ? ";
+		String sql = "SELECT DatetimeReserved FROM Reserves where UserID = ? and BookID = ? ";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setInt(1, user.getUserId());
@@ -111,8 +111,8 @@ public class TransactionDAO {
 
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
-			Date dateReserved = rs.getDate("DateReserved");
-			rTransaction = new ReserveTransaction(user, book, dateReserved);
+			Date datetimeReserved = rs.getDate("DatetimeReserved");
+			rTransaction = new ReserveTransaction(user, book, datetimeReserved);
 
 		}
 		Connector.close();
@@ -193,7 +193,7 @@ public class TransactionDAO {
 		while (rs.next()) {
 			Book book = BookDAO.getBookById(rs.getInt("BookID"));
 			ReserveTransaction reserveTransaction = new ReserveTransaction(
-					user, book, rs.getDate("DateReserved"));
+					user, book, rs.getDate("DatetimeReserved"));
 			reserves.add(reserveTransaction);
 		}
 		Connector.close();
@@ -523,7 +523,7 @@ public class TransactionDAO {
 		String sql;
 		PreparedStatement ps;
 
-		sql = "SELECT * FROM RESERVES WHERE BookID = ? ORDER BY DateReserved";
+		sql = "SELECT * FROM RESERVES WHERE BookID = ? ORDER BY DatetimeReserved";
 		ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, currentBook.getBookId());
 
