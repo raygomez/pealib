@@ -1,12 +1,11 @@
 package controllers;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListSelectionModel;
@@ -607,7 +606,7 @@ public class BookController {
 		bookInfo.getLblErrorMsg().setText("");
 	}
 
-	class TextFieldListener implements KeyListener {
+	class TextFieldListener extends KeyAdapter {
 
 		Timer timer = new Timer(Constants.TIMER_DELAY, new ActionListener() {
 
@@ -649,10 +648,6 @@ public class BookController {
 		});
 
 		@Override
-		public void keyPressed(KeyEvent key) {
-		}
-
-		@Override
 		public void keyReleased(KeyEvent key) {
 			if (key.getKeyCode() != KeyEvent.VK_ENTER) {
 				if (timer.isRunning())
@@ -662,11 +657,6 @@ public class BookController {
 			}
 
 		}
-
-		@Override
-		public void keyTyped(KeyEvent key) {
-		}
-
 	}
 
 	private void setButtons() throws Exception {
