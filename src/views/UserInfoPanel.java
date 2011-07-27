@@ -27,14 +27,15 @@ public class UserInfoPanel extends JPanel {
 	private MyTextField username;
 	private MyTextField firstName;
 	private MyTextField lastName;
-	private JTextArea address;
+	private MyTextArea address;
 	private MyTextField contactNumber;
 	private MyTextField email;
 
-	private JLabel firstNameError;
-	private JLabel lastNameError;
-	private JLabel contactNumberError;
-	private JLabel emailError;
+	private ErrorLabel firstNameError;
+	private ErrorLabel lastNameError;
+	private ErrorLabel contactNumberError;
+	private ErrorLabel emailError;
+	private ErrorLabel addressError;
 
 	public UserInfoPanel() {
 
@@ -64,10 +65,6 @@ public class UserInfoPanel extends JPanel {
 		add(tempLabel);
 		add(username, "wrap");
 
-		changePasswordButton = new JButton("Change Password", new ImageIcon(
-				"resources/images/changepassword32x32.png"));
-		add(changePasswordButton, "wrap");
-
 		tempLabel = new JLabel("First Name");
 		firstName = new MyTextField(20);
 		firstName.setName("firstName");
@@ -91,7 +88,7 @@ public class UserInfoPanel extends JPanel {
 		add(lastNameError, "wrap");
 
 		tempLabel = new JLabel("Address");
-		address = new JTextArea(15, 20);
+		address = new MyTextArea("",20, 20);
 		address.setMargin(new Insets(5,5,5,5));
 		address.setLineWrap(true);
 		address.setWrapStyleWord(true);		
@@ -99,8 +96,12 @@ public class UserInfoPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(address);
 		
+		addressError = new ErrorLabel();
+		addressError.setName("addressError");
+		
 		add(tempLabel);
-		add(scrollPane, "wrap");
+		add(scrollPane);
+		add(addressError, "wrap");
 
 		tempLabel = new JLabel("Contact Number");
 		contactNumber = new MyTextField(20);
@@ -119,6 +120,7 @@ public class UserInfoPanel extends JPanel {
 
 		emailError = new ErrorLabel();
 		emailError.setName("emailError");
+				
 
 		add(tempLabel);
 		add(email);
@@ -127,6 +129,13 @@ public class UserInfoPanel extends JPanel {
 		saveButton = new SaveButton("Save Changes", new ImageIcon(
 				"resources/images/save32x32.png"));
 		add(saveButton);
+		
+		changePasswordButton = new JButton("Change Password", new ImageIcon(
+		"resources/images/changepassword32x32.png"));
+		add(changePasswordButton, "wrap");
+
+		
+		resetErrorMessages();
 	}
 
 	public void addChangePasswordListener(ActionListener changePassword) {
@@ -138,9 +147,9 @@ public class UserInfoPanel extends JPanel {
 	}
 
 	public void displayErrors(int[] errors) {
-		for (int i = 0; i < errors.length; i++) {
+		for (int i : errors) {
 
-			switch (errors[i]) {
+			switch (i) {
 
 			case Constants.FIRST_NAME_FORMAT_ERROR:
 				firstNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
@@ -153,13 +162,18 @@ public class UserInfoPanel extends JPanel {
 				break;
 
 			case Constants.CONTACT_NUMBER_FORMAT_ERROR:
-				contactNumber.setText(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE);
+				contactNumberError.setText(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE);
 				contactNumber.hasError(true);
 				break;
 
 			case Constants.EMAIL_FORMAT_ERROR:
 				emailError.setText(Constants.EMAIL_FORMAT_ERROR_MESSAGE);
 				email.hasError(true);
+				break;
+			
+			case Constants.ADDRESS_FORMAT_ERROR:
+				addressError.setText(Constants.ADDRESS_ERROR_MESSAGE);
+				address.hasError(true);
 				break;
 			}
 		}
@@ -178,7 +192,9 @@ public class UserInfoPanel extends JPanel {
 		
 		emailError.setText("");
 		email.hasError(false);
-
+		
+		addressError.setText("");
+		address.hasError(false);
 	}
 
 	public String getAccountType() {

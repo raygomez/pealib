@@ -3,10 +3,12 @@ package views;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 import net.miginfocom.swing.MigLayout;
 import utilities.MyButton;
@@ -17,14 +19,16 @@ public class LibrarianSidebarPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JButton viewBooksButton;
-	private JButton viewUsersButton;
-	private JButton editProfileButton;
-	private JButton logoutButton;
-	private JButton bookTransactionsButton;
+	private JToggleButton viewBooksButton;
+	private JToggleButton viewUsersButton;
+	private JToggleButton editProfileButton;
+	private JToggleButton logoutButton;
+	private JToggleButton bookTransactionsButton;
+	private ButtonGroup buttonGroup;
 
 	public LibrarianSidebarPanel() {
-
+		buttonGroup = new ButtonGroup();
+		
 		setLayout(new MigLayout("wrap 1", "[grow]", "[]5[]"));
 
 		viewBooksButton = new MyButton("Search Books", new ImageIcon(
@@ -38,12 +42,20 @@ public class LibrarianSidebarPanel extends JPanel {
 		bookTransactionsButton = new MyButton("Book Transactions",
 				new ImageIcon("resources/images/checkInOut32x32.png"));
 
+		buttonGroup.add(viewBooksButton);
+		buttonGroup.add(viewUsersButton);
+		buttonGroup.add(editProfileButton);
+		buttonGroup.add(logoutButton);
+		buttonGroup.add(bookTransactionsButton);
+		
 		add(viewBooksButton, "growx");
 		add(viewUsersButton, "growx");
 		add(editProfileButton, "growx");
 		add(bookTransactionsButton, "growx");
 		add(logoutButton, "growx, wrap push");
 
+		bookTransactionsButton.getModel().setPressed(true);
+		bookTransactionsButton.setSelected(true);
 	}
 
 	public void addViewBooksListener(ActionListener viewBooks) {
