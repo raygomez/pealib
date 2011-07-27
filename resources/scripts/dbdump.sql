@@ -53,8 +53,25 @@ CREATE TABLE IF NOT EXISTS Reserves
 	FOREIGN KEY (BookID) REFERENCES Books (ID) ON DELETE CASCADE
 	);
 
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Ray Vincent','Gomez','ray',SHA2("rayvincent",0),'Librarian','USA','09876543210','rayvincent.gomez@gmail.com');
 INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Jomel','Villar','jvillar',SHA2("123456",0),'User','USA','1234567890','jomel.villar@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Anmuary','Pantaleon','mutya',SHA2("anmuary",0),'User','Malabon City','09175839123','anmuary.pantaleon@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Jonalyn','Valencia','olyn',SHA2("jonalyn",0),'User','Pasig City','09156784309','jonalyn.valencia@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Ron Ivan','Lara','ron',SHA2("ronivan",0),'User','Quezon City','09173328750','ron.lara@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Madelyn','Go','madz',SHA2("madelyn",0),'User','Quezon City','09173095104','madelyn.go@gmail.com');
 
-INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('1234567890120','Harry Poter 1','Ewan ko','1st','HarryPublisher','wizard book','1990','0');
-INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('1234567890121','Harry Poter 2','Ewan ko','1st','HarryPublisher','wizard book','1991','1');
-INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('1234567890122','Harry Poter 3','Ewan ko','1st','HarryPublisher','wizard book','1992','2');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007222556','The Alchemist','Paulo Coelho','1st','HarperCollins Publishers Limited','','1990','5');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007155662','The Alchemist: A Fable about Following Your Dream','Paulo Coelho','1st','HarperCollins Publishers','','1991','1');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('1234567890122','Brida','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','2');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007214715','By the River Piedra I Sat down and Wept','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','9');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007116055','The Devil and Miss Prym: A Novel of Temptation','Paulo Coelho','1st','Zondervan','','1992','1');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0060589280','Eleven Minutes','Paulo Coelho','1st','HarperCollins Canada, Limited','','1992','1');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('000723578X','Like the Flowing River: Thoughts and Reflections','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','3');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007156324','Manual of the Warrior of the Light','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','3');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007214693','The Valkyries','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','2');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007214707','Pilgrimage','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','1');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007103468','Veronika Decides to Die','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','1');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007251866','The Witch of Portobello','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','2');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007204310','The Zahir : A Novel of Love, Longing and Obsession','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','3');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0060534184','Manual del Guerrero de la Luz','Paulo Coelho','1st','HarperCollins Publishers','','1992','9');
+INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0060534184','Harry Potter and the Chamber of Secrets','J.K Rowling','1st','HarperCollins Publishers','','1998','9');
