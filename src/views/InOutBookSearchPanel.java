@@ -11,6 +11,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -70,5 +72,18 @@ public class InOutBookSearchPanel extends JPanel {
 
 	public JTable getTblResults() {
 		return resultsTable;
+	}
+	
+	/* Setter */
+	public void setColumnRender(){
+		//TODO
+		DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
+		trender.setHorizontalAlignment(SwingConstants.CENTER);
+					
+		resultsTable.getColumn(resultsTable.getColumnName(0)).setCellRenderer(trender);
+		resultsTable.getColumn(resultsTable.getColumnName(1)).setCellRenderer(trender);
+		resultsTable.getColumn(resultsTable.getColumnName(2)).setCellRenderer(trender);		
+		resultsTable.getColumn(resultsTable.getColumnName(3)).setCellRenderer(trender);
+		resultsTable.getColumn(resultsTable.getColumnName(4)).setCellRenderer(trender);
 	}
 }

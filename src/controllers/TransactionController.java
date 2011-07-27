@@ -405,6 +405,7 @@ public class TransactionController {
 					.getColumn(3).setPreferredWidth(30);
 			inPanel.getSearchPanel().getTblResults().getColumnModel()
 					.getColumn(4).setPreferredWidth(20);
+			inPanel.getSearchPanel().setColumnRender();
 			inPanel.getSearchPanel().repaint();
 		} else {
 			outPanel.getSearchPanel().getTblResults()
@@ -422,6 +423,7 @@ public class TransactionController {
 					.getColumn(3).setPreferredWidth(30);
 			outPanel.getSearchPanel().getTblResults().getColumnModel()
 					.getColumn(4).setPreferredWidth(20);
+			outPanel.getSearchPanel().setColumnRender();
 			outPanel.getSearchPanel().repaint();
 		}
 	}
