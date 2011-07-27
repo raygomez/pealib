@@ -111,8 +111,8 @@ public class PeaLibrary {
 			
 			@Override
 			protected void done() {
-				getFrame().setVisible(true);
 				getFrame().toFront();
+				getFrame().setVisible(true);
 			}
 		};
 		

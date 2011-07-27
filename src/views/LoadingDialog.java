@@ -40,7 +40,7 @@ public class LoadingDialog extends JDialog {
 		
 		setPreferredSize(new Dimension(200, 50));
 		setUndecorated(true);
-		setModal(true);
+		setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
 				
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setBounds((screenSize.width/3), (screenSize.height/3), 200, 50);
