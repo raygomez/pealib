@@ -3,7 +3,7 @@ package pealib;
 import models.User;
 import models.UserDAO;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.UISpecTestCase;
@@ -17,14 +17,14 @@ import utilities.Constants;
 @DataSet({ "../models/user.xml", "../models/book.xml",
 		"../models/reserves.xml", "../models/borrows.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
-public class PeaLibraryTest extends UISpecTestCase {
+public class PeaLibraryLibrarianTest extends UISpecTestCase {
 
-	Window window;
+	static Window window;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
 		new Connector(Constants.TEST_CONFIG);
-		User user = UserDAO.getUserById(1);
+		User user = UserDAO.getUserById(2);
 		PeaLibrary peaLibrary = new PeaLibrary();
 		peaLibrary.setCurrentUser(user);
 		peaLibrary.initialize();
