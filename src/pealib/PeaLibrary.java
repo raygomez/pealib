@@ -104,7 +104,7 @@ public class PeaLibrary {
 					initialize();
 				}catch (Exception e) {
 					cancel(true);
-					CrashHandler.handle();
+					CrashHandler.handle(e);
 				}
 				return null;
 			}
@@ -159,13 +159,13 @@ public class PeaLibrary {
 		try {
 			bookControl = new BookController(getCurrentUser());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 
 		}
 		try {
 			userControl = new UserController(getCurrentUser());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 		}
 
 		userControl.getUserInfoPanel().addSaveListener(updateCurrentUser);
@@ -182,7 +182,7 @@ public class PeaLibrary {
 		try {
 			setTransactionControl(new TransactionController());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 		}
 
 		librarianSidebarPanel = new LibrarianSidebarPanel();
@@ -196,7 +196,13 @@ public class PeaLibrary {
 
 	private void initializeUser() {
 
-		elibControl = new ELibController(getCurrentUser());
+		try {
+			elibControl = new ELibController(getCurrentUser());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			CrashHandler.handle(e);
+		}
 		userSidebarPanel = new UserSidebarPanel();
 		initializeSidebarPanel(userSidebarPanel);
 
@@ -204,7 +210,7 @@ public class PeaLibrary {
 		try {
 			getFrame().setContentPanel(bookControl.getBookLayoutPanel());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 
 		}
 		getFrame().validate();
@@ -240,7 +246,7 @@ public class PeaLibrary {
 			try {
 				getFrame().setContentPanel(bookControl.getBookLayoutPanel());
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 
 			}
 		}
@@ -286,7 +292,13 @@ public class PeaLibrary {
 			if (getCurrentUser().getType().equals("Librarian")) {
 				frame.setContentPanel(transactionControl.getTabbedPane());
 			} else if (getCurrentUser().getType().equals("User")) {
-				getFrame().setContentPanel(elibControl.getView());
+				try {
+					getFrame().setContentPanel(elibControl.getView());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					CrashHandler.handle(e);
+				}
 			}
 		}
 	};

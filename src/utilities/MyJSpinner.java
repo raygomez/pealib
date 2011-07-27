@@ -4,16 +4,15 @@ import java.awt.Color;
 
 import javax.swing.BorderFactory;
 import javax.swing.JSpinner;
-import javax.swing.SpinnerModel;
 
 public class MyJSpinner extends JSpinner {
 
-	public MyJSpinner() {
-		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	public MyJSpinner(SpinnerModel arg0) {
-		super(arg0);
+	public MyJSpinner() {
 		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
 	}
 	
