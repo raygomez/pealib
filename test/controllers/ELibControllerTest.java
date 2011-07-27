@@ -78,7 +78,34 @@ public class ELibControllerTest extends UISpecTestCase {
 						"2011-06-15" } }));
 
 	}
-	
+
+	@Test
+	@ExpectedDataSet({ "../models/expected/denyBookRequestBorrows.xml" })
+	public void testCancelRequest() {
+		TabGroup tabGroup = panel.getTabGroup();
+
+		tabGroup.selectTab("Requests");
+		final Table requests = tabGroup.getSelectedTab().getTable();
+		assertTrue(requests.getHeader().contentEquals(
+				new String[] { "ISBN", "Title", "Author", "Date Requested",
+						"Cancel" }));
+		assertEquals(1, requests.getRowCount());
+
+		WindowInterceptor.init(new Trigger() {
+
+			@Override
+			public void run() throws Exception {
+				requests.click(0, 4);
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {
+				assertEquals("Confirm", dialog.getTitle());
+				dialog.containsLabel("Do you really want to cancel the request?");
+				return dialog.getButton("Yes").triggerClick();
+			}
+		}).run();
+	}
+
 	@Test
 	@ExpectedDataSet({ "../models/expected/cancelReserves.xml" })
 	public void testCancelReservation() {
@@ -91,7 +118,6 @@ public class ELibControllerTest extends UISpecTestCase {
 						"Queue Number", "Cancel" }));
 		assertEquals(2, reservation.getRowCount());
 
-		
 		WindowInterceptor.init(new Trigger() {
 
 			@Override
