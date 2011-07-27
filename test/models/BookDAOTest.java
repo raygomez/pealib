@@ -54,7 +54,7 @@ public class BookDAOTest {
 	@Test
 	@ExpectedDataSet({ "expected/saveBook.xml" })
 	public void testAddBook() throws Exception {
-		testBook.setIsbn("1234567890126");
+		testBook.setIsbn("1234567890127");
 		testBook.setTitle("Harry Poter 4");
 		testBook.setAuthor("Ewan ko");
 		testBook.setEdition("1st");
