@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.concurrent.Callable;
 
 import javax.swing.SwingWorker;
 
@@ -12,6 +13,8 @@ import models.User;
 import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
+import utilities.Task;
+import utilities.TaskUpdateListener;
 import views.LibrarianSidebarPanel;
 import views.LoadingDialog;
 import views.MainFrame;
@@ -35,7 +38,6 @@ public class PeaLibrary {
 	private LibrarianSidebarPanel librarianSidebarPanel;
 
 	private User currentUser;
-	private LoadingDialog loadingDialog;
 
 	public PeaLibrary() {
 		new Connector();
@@ -95,44 +97,30 @@ public class PeaLibrary {
 		AuthenticationController.getLogin().setVisible(true);
 		setCurrentUser(authControl.getUser());
 		
-		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>(){
-		
-
-			@Override
-			protected Void doInBackground() {
-				try{
-					initialize();
-				}catch (Exception e) {
-					cancel(true);
-					CrashHandler.handle(e);
-				}
-				return null;
-			}
+		Callable<Void> toDo = new Callable<Void>() {
 			
 			@Override
-			protected void done() {
-				getFrame().toFront();
-				getFrame().setVisible(true);
+			public Void call() throws Exception {
+				// TODO Auto-generated method stub
+				initialize();
+				return null;
 			}
 		};
 		
-		sw.addPropertyChangeListener(new PropertyChangeListener() {
-						
+		Callable<Void> toDoAfter = new Callable<Void>() {
+			
 			@Override
-			public void propertyChange(PropertyChangeEvent arg0) {
-				
-				if(arg0.getPropertyName().equalsIgnoreCase("state")){
-					if(arg0.getNewValue().toString().equals("STARTED")){
-						loadingDialog = new LoadingDialog();
-						loadingDialog.setVisible(true);
-					}
-					else if(arg0.getNewValue().toString().equals("DONE")){
-						loadingDialog.dispose();
-					}
-				}
+			public Void call() throws Exception {
+				getFrame().toFront();
+				getFrame().setVisible(true);
+				return null;
 			}
-		});
-		sw.execute();
+		};
+		
+		Task<Void, Void> task = new Task<Void, Void>(toDo, toDoAfter);
+		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(getFrame())));
+		
+		task.execute();
 	}
 
 	public void initialize() {
@@ -324,13 +312,5 @@ public class PeaLibrary {
 				}
 			}
 		});
-	}
-
-	public void setLoadingDialog(LoadingDialog loadingDialog) {
-		this.loadingDialog = loadingDialog;
-	}
-
-	public LoadingDialog getLoadingDialog() {
-		return loadingDialog;
 	}
 }
