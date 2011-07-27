@@ -456,7 +456,7 @@ public class TransactionDAO {
 					+ "Books.ID=Borrows.BookID JOIN Users ON "
 					+ "Borrows.UserID=Users.ID WHERE DateBorrowed is not "
 					+ "NULL AND DateReturned is NULL ORDER BY "
-					+ "Borrows.DateBorrowed";
+					+ "Borrows.DateBorrowed, Borrows.BorrowID";
 			ps = Connector.getConnection().prepareStatement(sql);
 
 		} else {
