@@ -45,6 +45,6 @@ CREATE TABLE IF NOT EXISTS Borrows
 CREATE TABLE IF NOT EXISTS Reserves
 	(UserID INT,
 	BookID INT,
-	DateReserved DATE,
+	DatetimeReserved TIMESTAMP DEFAULT NOW(),
 	PRIMARY KEY (UserID,BookID)
 	);
