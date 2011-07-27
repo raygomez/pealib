@@ -1,15 +1,12 @@
 package controllers;
 
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
@@ -22,12 +19,9 @@ import models.BorrowTransaction;
 import models.ReserveTransaction;
 import models.TransactionDAO;
 import models.User;
-import models.UserDAO;
 
 import org.joda.time.DateTime;
 
-import utilities.Connector;
-import utilities.Constants;
 import utilities.CrashHandler;
 import views.ELibTabbedPanel;
 
@@ -43,22 +37,22 @@ public class ELibController {
 	private ArrayList<BorrowTransaction> bookData;
 	private ArrayList<ReserveTransaction> bookDataReserve;
 
-	public static void main(String[] args) throws Exception {
-		new Connector(Constants.TEST_CONFIG);
-
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setBounds(0, 0, screenSize.width, screenSize.height);
-
-		User user = UserDAO.getUserById(1);
-		frame.setContentPane(new ELibController(user).getTabpane());
-
-		frame.setUndecorated(true);
-		frame.setVisible(true);
-		frame.setResizable(false);
-	}
+//	public static void main(String[] args) throws Exception {
+//		new Connector(Constants.TEST_CONFIG);
+//
+//		JFrame frame = new JFrame();
+//		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//		frame.setBounds(0, 0, screenSize.width, screenSize.height);
+//
+//		User user = UserDAO.getUserById(1);
+//		frame.setContentPane(new ELibController(user).getTabpane());
+//
+//		frame.setUndecorated(true);
+//		frame.setVisible(true);
+//		frame.setResizable(false);
+//	}
 
 	public ELibController(User user) throws Exception {
 		setUser(user);
@@ -272,10 +266,6 @@ public class ELibController {
 			return tableData.size();
 		}
 
-		@Override
-		public Class<?> getColumnClass(int c) {
-			return getValueAt(0, c).getClass();
-		}
 
 		@Override
 		public Object getValueAt(int row, int col) {
