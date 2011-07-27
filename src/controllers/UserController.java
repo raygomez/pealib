@@ -279,7 +279,7 @@ public class UserController {
 				.setSelectionInterval(0, 0);
 		getUserSearch().getUsersTable().addRowSelectionInterval(0, 0);
 
-		setSelectedUser(getSearchedUsers().get(-1));
+		setSelectedUser(getSearchedUsers().get(0));
 	}
 
 	private void setInitSelectPending() {
@@ -287,7 +287,8 @@ public class UserController {
 			getUserSearch().getPendingTable().getSelectionModel()
 					.setSelectionInterval(0, 0);
 			getUserSearch().getPendingTable().addRowSelectionInterval(0, 0);
-			setSelectedUser(getSearchedPending().get(-1));
+			
+			setSelectedUser(getSearchedPending().get(0));
 		}
 	}
 
