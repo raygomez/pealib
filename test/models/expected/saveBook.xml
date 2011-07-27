@@ -19,7 +19,7 @@
 		   Publisher="HarryPublisher1"
 		   Description="wizard book"
 		   YearPublish="1901"
-		   Copies="3" />
+		   Copies="4" />
 	<books 
 		   ID="3" 
 		   ISBN="1234567890122"
