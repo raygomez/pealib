@@ -17,6 +17,7 @@ import utilities.MyTextField;
 import models.Book;
 import models.User;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.SwingConstants;
 
 public class BookInfoPanel extends JPanel {
 
@@ -54,9 +55,10 @@ public class BookInfoPanel extends JPanel {
 
 	private void displayBookInfo() {
 
-		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00, grow][][][]", "[40][][][][][][][grow][48.00][34.00][][13.00][]"));
+		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][][][]", "[40][][][][][][][grow][48.00][34.00][][13.00][]"));
+        errorMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        add(errorMessageLabel, "cell 3 0,alignx center,aligny center");
+        add(errorMessageLabel, "cell 1 0 6 1,alignx center,aligny center");
 
 		JLabel lblTitle = new JLabel("Title:");
 		add(lblTitle, "cell 1 1");
@@ -127,8 +129,8 @@ public class BookInfoPanel extends JPanel {
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(descriptionTextArea);		
-        scrollPane.setViewportView(descriptionTextArea);
-        add(descriptionTextArea, "cell 3 7 2 3,grow");
+        //scrollPane.setViewportView(descriptionTextArea);
+        //add(descriptionTextArea, "cell 3 7 2 3,grow");
 
 		saveButton = new JButton("Save", new ImageIcon("resources/images/save32x32.png"));
 		deleteButton = new JButton("Delete", new ImageIcon("resources/images/delete.png"));
