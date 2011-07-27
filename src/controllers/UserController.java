@@ -517,6 +517,11 @@ public class UserController {
 			tempErrors.add(Constants.EMAIL_FORMAT_ERROR);
 			pass = false;
 		}
+		
+		if (!address.matches(Constants.ADDRESS_FORMAT)) {
+			tempErrors.add(Constants.ADDRESS_FORMAT_ERROR);
+			pass = false;
+		}
 
 		if (!contactNo.matches(Constants.CONTACT_NUMBER_FORMAT)) {
 			tempErrors.add(Constants.CONTACT_NUMBER_FORMAT_ERROR);
@@ -529,6 +534,8 @@ public class UserController {
 		}
 
 		getUserInfoPanel().displayErrors(errors);
+		getUserInfoPanel().revalidate();
+		
 		return pass;
 
 	}
@@ -570,6 +577,8 @@ public class UserController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
+			userInfoPanel.resetErrorMessages();
+			
 			int userId = Integer.parseInt(getUserInfoPanel().getIdNumber());
 			String userName = getUserInfoPanel().getUsername();
 			String firstName = getUserInfoPanel().getFirstName();

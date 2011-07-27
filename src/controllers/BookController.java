@@ -108,6 +108,9 @@ public class BookController {
 		bookInfo.addDeleteListener(new DeleteButtonListener());
 		bookInfo.addBorrowListener(new BorrowButtonListener());
 		bookInfo.addReserveListener(new ReserveButtonListener());
+		reset();
+		setButtons();
+
 	}
 
 	public void setButtons(boolean value){		
@@ -449,6 +452,7 @@ public class BookController {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
+			reset();
 			DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
 			.getSource();
 			int tableRow = dlSelectionModel.getLeadSelectionIndex();
@@ -470,29 +474,7 @@ public class BookController {
 					} else
 						bookInfo.getBtnDelete().setEnabled(true);
 				}
-				if (currentUser.getType().equals("User")) {
-					if (!TransactionDAO.isBorrowedByUser(
-							bookList.get(currTableRowSelection), currentUser)
-							&& !TransactionDAO.isReservedByUser(
-									bookList.get(currTableRowSelection),
-									currentUser)) {
-						if (TransactionDAO.getAvailableCopies(bookList
-								.get(currTableRowSelection)) > 0) {
-							bookInfo.getBtnBorrow().setEnabled(true);
-						} else {
-							bookInfo.getBtnReserve().setEnabled(true);
-							bookInfo.getLblErrorMsg().setText(
-									"No available copies at this time");
-							bookInfo.getLblErrorMsg().setForeground(
-									Color.RED);
-						}
-					} else {
-						bookInfo.getLblErrorMsg()
-								.setText(
-										"You already have a pending transaction for the following book: ");
-						bookInfo.getLblErrorMsg().setForeground(Color.RED);
-					}
-				}
+				setButtons();
 
 			} catch (Exception ex) {
 
@@ -678,5 +660,29 @@ public class BookController {
 		}
 
 	}
-
+	private void setButtons() throws Exception{
+		if (currentUser.getType().equals("User")) {
+			if (!TransactionDAO.isBorrowedByUser(
+					bookList.get(currTableRowSelection), currentUser)
+					&& !TransactionDAO.isReservedByUser(
+							bookList.get(currTableRowSelection),
+							currentUser)) {
+				if (TransactionDAO.getAvailableCopies(bookList
+						.get(currTableRowSelection)) > 0) {
+					bookInfo.getBtnBorrow().setEnabled(true);
+				} else {
+					bookInfo.getBtnReserve().setEnabled(true);
+					bookInfo.getLblErrorMsg().setText(
+							"No available copies at this time");
+					bookInfo.getLblErrorMsg().setForeground(
+							Color.RED);
+				}
+			} else {
+				bookInfo.getLblErrorMsg()
+						.setText(
+								"You already have a pending transaction for the following book: ");
+				bookInfo.getLblErrorMsg().setForeground(Color.RED);
+			}
+		}
+	}
 }

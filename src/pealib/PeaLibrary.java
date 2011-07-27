@@ -1,5 +1,6 @@
 package pealib;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,7 +31,7 @@ public class PeaLibrary {
 	private User currentUser;
 
 	public PeaLibrary() {
-		new Connector();
+		new Connector("test.config");
 	}
 
 	/**
@@ -209,7 +210,7 @@ public class PeaLibrary {
 		public void actionPerformed(ActionEvent arg0) {
 
 			userControl.getUserInfoPanel().setFields(currentUser);
-
+			userControl.getUserInfoPanel().resetErrorMessages();
 			userControl.getUserInfoPanel().setFirstNameEnabled(false);
 			userControl.getUserInfoPanel().setLastNameEnabled(false);
 
@@ -249,10 +250,18 @@ public class PeaLibrary {
 		}
 	};
 
-	public static void main(String[] args) {
-
-		PeaLibrary app = new PeaLibrary();
-		app.authenticate();
-		app.getFrame().setVisible(true);
+	public static void main(String[] args){
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					PeaLibrary app = new PeaLibrary();
+					app.authenticate();
+					app.getFrame().setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
