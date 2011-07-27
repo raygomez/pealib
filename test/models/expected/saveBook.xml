@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<books 
+		   ID="1" 
+		   ISBN="1234567890120"
+		   Title="Harry Poter 1"
+		   Author="Ewan ko"
+		   Edition="1st"
+		   Publisher="HarryPublisher"
+		   Description="wizard book"
+		   YearPublish="1900"
+		   Copies="1" />
+	<books 
+		   ID="2" 
+		   ISBN="1234567890121"
+		   Title="Harry Poter 2"
+		   Author="Niel"
+		   Edition="1st"
+		   Publisher="HarryPublisher1"
+		   Description="wizard book"
+		   YearPublish="1901"
+		   Copies="4" />
+	<books 
+		   ID="3" 
+		   ISBN="1234567890122"
+		   Title="Harry Poter 3"
+		   Author="Ewan ko1"
+		   Edition="1st"
+		   Publisher="HarryPublisher"
+		   Description="wizard book"
+		   YearPublish="1901"
+		   Copies="1" />
+	<books 
+		   ID="4" 
+		   ISBN="1234567890123"
+		   Title="title1"
+		   Author="author1"
+		   Edition="edition1"
+		   Publisher="publisher1"
+		   Description="wizard book"
+		   YearPublish="1901"
+		   Copies="3" />
+	<books 
+		   ID="5" 
+		   ISBN="1234567890124"
+		   Title="title2"
+		   Author="author1"
+		   Edition="edition2"
+		   Publisher="publisher2"
+		   Description="wizard book"
+		   YearPublish="1902"
+		   Copies="4" />
+	<books 
+		   ID="6" 
+		   ISBN="1234567890125"
+		   Title="title3Pantaleon"
+		   Author="author2"
+		   Edition="edition3"
+		   Publisher="publisher1"
+		   Description="wizard book"
+		   YearPublish="1905"
+		   Copies="1" />	
+	<books  
+	       ID="0"
+		   ISBN="1234567890126"
+		   Title="Harry Poter 4"
+		   Author="Ewan ko"
+		   Edition="1st"
+		   Publisher="HarryPublisher"
+		   Description="wizard book"
+		   YearPublish="1901"
+		   Copies="3" />
+</dataset>
