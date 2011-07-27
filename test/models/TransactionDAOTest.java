@@ -99,7 +99,9 @@ public class TransactionDAOTest {
 	@Test
 	public void testIsNotReserved() throws Exception {
 		User user = UserDAO.getUserById(4);
+		assertNotNull(user);
 		Book book = BookDAO.getBookById(1);
+		assertNotNull(book);
 		assertFalse(TransactionDAO.isReservedByUser(book, user));
 	}
 
