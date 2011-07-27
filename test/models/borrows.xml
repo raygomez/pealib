@@ -24,5 +24,6 @@
 		DateBorrowed="[null]" DateReturned="[null]" BorrowID='11' />
 	<borrows BookID="2" UserID="6" DateRequested="2011-06-15"
 		DateBorrowed="2011-06-15" DateReturned="[null]" BorrowID='12' />
-
+	<borrows BookID="1" UserID="1" DateRequested="2011-06-15"
+		DateBorrowed="[null]" DateReturned="[null]" BorrowID='13' />
 </dataset>
