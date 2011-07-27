@@ -15,14 +15,12 @@ public class TransactionDAO {
 
 	public static void returnBook(BorrowTransaction borrow) throws Exception {
 
-		String sql = "UPDATE Borrows SET DateReturned = ? "
+		String sql = "UPDATE Borrows SET DateReturned = CURRENT_DATE() "
 				+ "where BorrowID = ? and DateBorrowed is not NULL and "
 				+ "DateRequested is not NULL";
-		Calendar today = Calendar.getInstance();
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
-		ps.setDate(1, new Date(today.getTime().getTime()));
-		ps.setInt(2, borrow.getId());
+		ps.setInt(1, borrow.getId());
 		ps.executeUpdate();
 		Connector.close();
 
@@ -31,7 +29,7 @@ public class TransactionDAO {
 	public static int reserveBook(Book book, User user) throws Exception {
 		int intStat = 0;
 
-		String sql = "INSERT INTO Reserves (UserID, BookID) VALUES (?,?)";
+		String sql = "INSERT INTO Reserves (UserID, BookID, DateReserved) VALUES (?,?,CURRENT_DATE())";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, user.getUserId());
@@ -103,7 +101,7 @@ public class TransactionDAO {
 			throws Exception {
 		ReserveTransaction rTransaction = null;
 
-		String sql = "SELECT DatetimeReserved FROM Reserves where UserID = ? and BookID = ? ";
+		String sql = "SELECT DateReserved FROM Reserves where UserID = ? and BookID = ? ";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setInt(1, user.getUserId());
@@ -111,8 +109,8 @@ public class TransactionDAO {
 
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
-			Date datetimeReserved = rs.getDate("DatetimeReserved");
-			rTransaction = new ReserveTransaction(user, book, datetimeReserved);
+			Date dateReserved = rs.getDate("DateReserved");
+			rTransaction = new ReserveTransaction(user, book, dateReserved);
 
 		}
 		Connector.close();
@@ -193,7 +191,7 @@ public class TransactionDAO {
 		while (rs.next()) {
 			Book book = BookDAO.getBookById(rs.getInt("BookID"));
 			ReserveTransaction reserveTransaction = new ReserveTransaction(
-					user, book, rs.getDate("DatetimeReserved"));
+					user, book, rs.getDate("DateReserved"));
 			reserves.add(reserveTransaction);
 		}
 		Connector.close();
@@ -523,7 +521,7 @@ public class TransactionDAO {
 		String sql;
 		PreparedStatement ps;
 
-		sql = "SELECT * FROM RESERVES WHERE BookID = ? ORDER BY DatetimeReserved";
+		sql = "SELECT * FROM RESERVES WHERE BookID = ? ORDER BY DateReserved";
 		ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, currentBook.getBookId());
 
