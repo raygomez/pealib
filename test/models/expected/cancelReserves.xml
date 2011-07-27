@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-	<reserves BookID="2" UserID="2" DateReserved="2011-07-27 09:09:09" />
-	<reserves BookID="2" UserID="1" DateReserved="2011-07-27 09:09:09" />
-	<reserves BookID="3" UserID="1" DateReserved="2011-07-27 09:09:09" />
-	<reserves BookID="3" UserID="2" DateReserved="2011-07-27 09:09:09" />
-	<reserves BookID="3" UserID="3" DateReserved="2011-07-27 09:09:09" />
+	<reserves BookID="2" UserID="2" DatetimeReserved="2011-07-27 09:09:09" />
+	<reserves BookID="2" UserID="1" DatetimeReserved="2011-07-27 09:09:09" />
+	<reserves BookID="3" UserID="1" DatetimeReserved="2011-07-27 09:09:09" />
+	<reserves BookID="3" UserID="2" DatetimeReserved="2011-07-27 09:09:09" />
+	<reserves BookID="3" UserID="3" DatetimeReserved="2011-07-27 09:09:09" />
 </dataset>
