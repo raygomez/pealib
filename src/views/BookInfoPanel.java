@@ -41,7 +41,7 @@ public class BookInfoPanel extends JPanel {
 	private JButton reserveButton;
 	private User currentUser;
 	private Book currentBook;
-	private JLabel errorMessageLabel;
+	private ErrorLabel errorMessageLabel = new ErrorLabel();
 	private JLabel lblCopies;
 	private JLabel lblEdition;
 
@@ -59,7 +59,6 @@ public class BookInfoPanel extends JPanel {
 
 		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[40][][][][][][][grow][48.00][34.00][][13.00][]"));
 
-		errorMessageLabel = new ErrorLabel("");
 		add(errorMessageLabel, "cell 3 0 2 1,alignx center,aligny center");
 
 		JLabel lblTitle = new JLabel("Title:");
@@ -233,7 +232,7 @@ public class BookInfoPanel extends JPanel {
 		editionTextField.setText(book.getEdition());
 	}
 
-	public JLabel getLblErrorMsg() {
+	public ErrorLabel getLblErrorMsg() {
 		return errorMessageLabel;
 	}
 
@@ -263,10 +262,6 @@ public class BookInfoPanel extends JPanel {
 
 	public MyTextField getTxtFldEdition() {
 		return editionTextField;
-	}
-
-	public void setLblErrorMsg(JLabel lblErrorMsg) {
-		this.errorMessageLabel = lblErrorMsg;
 	}
 
 	public MyJSpinner getSpinCopyVal() {

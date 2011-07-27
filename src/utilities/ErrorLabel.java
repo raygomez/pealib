@@ -22,5 +22,15 @@ public class ErrorLabel extends JLabel {
 	public void clear(){
 		setText("");
 	}
+	
+	public void makeSuccess(String text){
+		setForeground(Color.GREEN);
+		this.setText(text);
+	}
+	
+	public void makeError(String text){
+		setForeground(Color.RED);
+		this.setText(text);
+	}
 
 }
