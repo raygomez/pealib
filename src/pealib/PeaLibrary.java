@@ -115,13 +115,13 @@ public class PeaLibrary {
 		try {
 			bookControl = new BookController(getCurrentUser());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 
 		}
 		try {
 			userControl = new UserController(getCurrentUser());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 		}
 
 		userControl.getUserInfoPanel().addSaveListener(updateCurrentUser);
@@ -138,7 +138,7 @@ public class PeaLibrary {
 		try {
 			setTransactionControl(new TransactionController());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 		}
 
 		librarianSidebarPanel = new LibrarianSidebarPanel();
@@ -160,7 +160,7 @@ public class PeaLibrary {
 		try {
 			getFrame().setContentPanel(bookControl.getBookLayoutPanel());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 
 		}
 		getFrame().validate();
@@ -196,7 +196,7 @@ public class PeaLibrary {
 			try {
 				getFrame().setContentPanel(bookControl.getBookLayoutPanel());
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 
 			}
 		}

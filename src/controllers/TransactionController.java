@@ -112,7 +112,7 @@ public class TransactionController {
 			try {
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
@@ -127,7 +127,7 @@ public class TransactionController {
 				grantBorrowRequest();
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
@@ -139,7 +139,7 @@ public class TransactionController {
 				denyBorrowRequest();
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
@@ -196,7 +196,7 @@ public class TransactionController {
 				returnBook();
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
@@ -247,7 +247,7 @@ public class TransactionController {
 			try {
 				searchBookTransaction();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 			if (isIncoming) {
 				inPanel.getBtnReturn().setEnabled(false);
@@ -268,7 +268,7 @@ public class TransactionController {
 				try {
 					searchBookTransaction();
 				} catch (Exception e) {
-					CrashHandler.handle();
+					CrashHandler.handle(e);
 				}
 				if (isIncoming) {
 					inPanel.getBtnReturn().setEnabled(false);
@@ -299,7 +299,7 @@ public class TransactionController {
 			try {
 				setSelectedItem();
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 			}
 		}
 	}
