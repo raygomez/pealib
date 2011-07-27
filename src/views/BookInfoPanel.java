@@ -129,8 +129,8 @@ public class BookInfoPanel extends JPanel {
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(descriptionTextArea);		
-        //scrollPane.setViewportView(descriptionTextArea);
-        //add(descriptionTextArea, "cell 3 7 2 3,grow");
+        scrollPane.setViewportView(descriptionTextArea);
+        add(descriptionTextArea, "cell 3 7 2 3,grow");
 
 		saveButton = new JButton("Save", new ImageIcon("resources/images/save32x32.png"));
 		deleteButton = new JButton("Delete", new ImageIcon("resources/images/delete.png"));
