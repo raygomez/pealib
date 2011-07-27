@@ -557,7 +557,7 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				String strSearch = bookSearch.getTextFieldSearch();
+				String strSearch = bookSearch.getTextFieldSearch().getText();
 				currSearchString = strSearch;
 				if (currentUser.getType().equals("Librarian")) {
 					bookList = BookDAO.searchBook(strSearch);
@@ -593,7 +593,7 @@ public class BookController {
 	class ClearButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			bookSearch.setTextFieldSearch("");
+			bookSearch.getTextFieldSearch().setText("");
 		}
 
 	}
@@ -615,7 +615,7 @@ public class BookController {
 
 				timer.stop();
 				try {
-					String strSearch = bookSearch.getTextFieldSearch();
+					String strSearch = bookSearch.getTextFieldSearch().getText();
 					currSearchString = strSearch;
 					if (currentUser.getType().equals("Librarian")) {
 						bookList = BookDAO.searchBook(strSearch);
