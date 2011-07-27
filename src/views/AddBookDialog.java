@@ -61,6 +61,7 @@ public class AddBookDialog extends JDialog {
 		lblEdition = new JLabel("Edition:");
 		contentPanel.add(lblEdition, "cell 0 1,alignx left");
 		
+		editionTextField.setName("editionTextField");
 		contentPanel.add(editionTextField, "cell 1 1,growx");
 		editionTextField.setColumns(10);
 
