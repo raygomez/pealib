@@ -32,7 +32,7 @@ public class ELibControllerTest extends UISpecTestCase {
 	public void setUp() throws Exception {
 		new Connector(Constants.TEST_CONFIG);
 		User user = UserDAO.getUserById(1);
-		panel = new Panel(new ELibController(user).getTabpane());
+		panel = new Panel(new ELibController(user).getView());
 	}
 
 	@Test
@@ -132,5 +132,39 @@ public class ELibControllerTest extends UISpecTestCase {
 			}
 		}).run();
 	}
+	
+	@Test
+	@DataSet({"../models/emptyBorrows.xml","../models/emptyReserves.xml"})
+	public void testEmptyState() {
+		TabGroup tabGroup = panel.getTabGroup();
+		Table request = tabGroup.getSelectedTab().getTable();
+		assertTrue(request.getHeader().contentEquals(
+				new String[] { "ISBN", "Title", "Author", "Date Requested",
+						"Cancel" }));
+		assertEquals(0, request.getRowCount());
+
+		tabGroup.selectTab("Reservations");
+		Table reservation = tabGroup.getSelectedTab().getTable();
+		assertTrue(reservation.getHeader().contentEquals(
+				new String[] { "ISBN", "Title", "Author", "Date Reserved",
+						"Queue Number", "Cancel" }));
+		assertEquals(0, reservation.getRowCount());
+
+		tabGroup.selectTab("On Loan");
+		Table onLoan = tabGroup.getSelectedTab().getTable();
+		assertTrue(onLoan.getHeader().contentEquals(
+				new String[] { "ISBN", "Title", "Author", "Date Borrowed",
+						"Due Date" }));
+		assertEquals(0, onLoan.getRowCount());
+
+		tabGroup.selectTab("History");
+		Table history = tabGroup.getSelectedTab().getTable();
+		assertTrue(history.getHeader().contentEquals(
+				new String[] { "ISBN", "Title", "Author", "Date Borrowed",
+						"Date Returned" }));
+		assertEquals(0, history.getRowCount());
+
+	}
+
 
 }
