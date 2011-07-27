@@ -15,14 +15,12 @@ public class TransactionDAO {
 
 	public static void returnBook(BorrowTransaction borrow) throws Exception {
 
-		String sql = "UPDATE Borrows SET DateReturned = ? "
+		String sql = "UPDATE Borrows SET DateReturned = CURRENT_DATE() "
 				+ "where BorrowID = ? and DateBorrowed is not NULL and "
 				+ "DateRequested is not NULL";
-		Calendar today = Calendar.getInstance();
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
-		ps.setDate(1, new Date(today.getTime().getTime()));
-		ps.setInt(2, borrow.getId());
+		ps.setInt(1, borrow.getId());
 		ps.executeUpdate();
 		Connector.close();
 
