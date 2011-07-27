@@ -11,6 +11,7 @@ public class Constants {
 	public static final int LAST_NAME_FORMAT_ERROR = 6;
 	public static final int CONTACT_NUMBER_FORMAT_ERROR = 7;
 	public static final int EMAIL_FORMAT_ERROR = 8;
+	public static final int ADDRESS_FORMAT_ERROR = 9;
 
 	public static final String USERNAME_FORMAT = "[A-Za-z0-9_\\.]{4,20}";
 	public static final String PASSWORD_FORMAT = "[^\\s]{6,20}";
@@ -29,6 +30,7 @@ public class Constants {
 	public static final String PASSWORD_FORMAT_ERROR_MESSAGE = "Invalid password. Passwords should be 6-20 characters long.";
 	public static final String PASSWORD_NOT_MATCH_ERROR_MESSAGE = "Incorrect Password";
 	public static final String EMAIL_FORMAT_ERROR_MESSAGE = "Invalid email format.";
+	public static final String ADDRESS_ERROR_MESSAGE = "Invalid address format. Maximum of 100 characters only.";
 	public static final String CONTACT_NUMBER_FORMAT_ERROR_MESSAGE = "Invalid contact number.";
 
 	public static final String APP_CONFIG = "app.config";
