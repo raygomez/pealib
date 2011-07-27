@@ -368,7 +368,7 @@ public class ELibController {
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int response = JOptionPane.showConfirmDialog(null,
-							"Do you really want to cancel the reservation",
+							"Do you really want to cancel the reservation?",
 							"Confirm", JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE);
 					if (response == JOptionPane.YES_OPTION) {

@@ -71,8 +71,8 @@ public class TransactionDAOTest {
 	@Test
 	@ExpectedDataSet({ "expected/cancelReserves.xml" })
 	public void testCancelReservation() throws Exception {
-		User user = UserDAO.getUserById(3);
-		Book book = BookDAO.getBookById(6);
+		User user = UserDAO.getUserById(1);
+		Book book = BookDAO.getBookById(2);
 		ReserveTransaction rtTransaction = TransactionDAO
 				.getReserveTransaction(user, book);
 		assertNotNull(rtTransaction);
