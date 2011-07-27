@@ -93,10 +93,11 @@ public class ELibController {
 		return tabpane;
 	}
 
-	public ELibTabbedPanel getView(){
+	public ELibTabbedPanel getView() {
 		update();
 		return tabpane;
 	}
+
 	/**
 	 * @param tabpane
 	 *            the tabpane to set
@@ -201,10 +202,13 @@ public class ELibController {
 				if (getBookDataReserve().size() != 0) {
 					for (ReserveTransaction i : getBookDataReserve()) {
 						ArrayList<Object> rowData = new ArrayList<Object>(5);
+						DateTime reservedDate = new DateTime(i.getDateReserved()
+								.getTime());
+
 						rowData.add(i.getBook().getIsbn());
 						rowData.add(i.getBook().getTitle());
 						rowData.add(i.getBook().getAuthor());
-						rowData.add(i.getDateReserved().toString());
+						rowData.add(reservedDate.toString("y-MM-dd h:mm a"));
 						rowData.add(""
 								+ TransactionDAO.getQueueInReservation(
 										i.getBook(), i.getUser()));
@@ -329,8 +333,11 @@ public class ELibController {
 
 						try {
 							TransactionDAO.denyBookRequest(selectedBook);
-							if (TransactionDAO.isBookReservedByOtherUsers(selectedBook.getBook())){
-								TransactionDAO.passToNextUser(selectedBook.getBook());
+							if (TransactionDAO
+									.isBookReservedByOtherUsers(selectedBook
+											.getBook())) {
+								TransactionDAO.passToNextUser(selectedBook
+										.getBook());
 							}
 							update();
 						} catch (Exception e1) {

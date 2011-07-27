@@ -11,7 +11,9 @@ public class BookDAO{
 	public static boolean isIsbnExisting(String Isbn) throws Exception {
 		boolean validate = false;
 		PreparedStatement searchIsbn = null;
-		searchIsbn = Connector.getConnection().prepareStatement("SELECT ISBN From Books WHERE Isbn LIKE ?");
+		String sql = "SELECT ISBN From Books WHERE Isbn LIKE ?";
+		
+		searchIsbn = Connector.getConnection().prepareStatement(sql);
 		searchIsbn.setString(1, Isbn);
 		ResultSet rs = searchIsbn.executeQuery();
 		if (rs.next()) {
@@ -24,8 +26,12 @@ public class BookDAO{
 	public static int addBook(Book book) throws Exception {
 		int intStat = 0;
 		PreparedStatement insertBook = null;
+		String sql = "INSERT INTO Books (ISBN, Title, Author, " +
+				"Edition, Publisher, Description, YearPublish, " +
+				"Copies) VALUES (?,?,?,?,?,?,?,?)";
+		
 		insertBook = Connector.getConnection()
-				.prepareStatement("INSERT INTO Books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES (?,?,?,?,?,?,?,?)");
+				.prepareStatement(sql);
 		insertBook.setString(1, book.getIsbn());
 		insertBook.setString(2, book.getTitle());
 		insertBook.setString(3, book.getAuthor());
@@ -45,8 +51,13 @@ public class BookDAO{
 	public static int editBook(Book book) throws Exception {
 		int intStat = 0;
 		PreparedStatement updateBook = null;
+		String sql = "UPDATE Books SET ISBN = ?, Title = ?, " +
+				"Author = ?, Edition = ?, Publisher = ?, " +
+				"Description = ?, YearPublish = ?, Copies = ? " +
+				"WHERE ID = ?";
+		
 		updateBook = Connector.getConnection()
-				.prepareStatement("UPDATE Books SET ISBN = ?, Title = ?, Author = ?, Edition = ?, Publisher = ?, Description = ?, YearPublish = ?, Copies = ? WHERE ID = ?");
+				.prepareStatement(sql);
 
 		updateBook.setString(1, book.getIsbn());
 		updateBook.setString(2, book.getTitle());
@@ -68,8 +79,10 @@ public class BookDAO{
 	public static int deleteBook(Book book) throws Exception {
 		int intStat = 0;
 		PreparedStatement deleteBook = null;
+		String sql = "UPDATE Books SET Copies = 0 WHERE ID = ?";
+		
 		deleteBook = Connector.getConnection()
-				.prepareStatement("UPDATE Books SET Copies = 0 WHERE ID = ?");
+				.prepareStatement(sql);
 		deleteBook.setInt(1, book.getBookId());
 		intStat = deleteBook.executeUpdate();
 		
@@ -109,9 +122,11 @@ public class BookDAO{
 	public static ArrayList<Book> searchBook(String search) throws Exception {
 		ArrayList<Book> bookCollection = new ArrayList<Book>();
 		PreparedStatement bookQuery = null;
+		String sql = "SELECT * FROM Books WHERE CONCAT(ISBN, Title, " +
+				"Author, Publisher) LIKE ?";
 
 		bookQuery = Connector.getConnection()
-					.prepareStatement("SELECT * FROM Books WHERE CONCAT(ISBN, Title, Author, Publisher) LIKE ?");
+					.prepareStatement(sql);
 		bookQuery.setString(1, "%" + search + "%");
 		
 
@@ -139,9 +154,11 @@ public class BookDAO{
 	public static ArrayList<Book> searchBookForUser(String search) throws Exception {
 		ArrayList<Book> bookCollection = new ArrayList<Book>();
 		PreparedStatement bookQuery = null;
+		String sql = "SELECT * FROM Books WHERE Copies > 0 AND CONCAT(ISBN, " +
+				"Title, Author, Publisher) LIKE ?";
 
 		bookQuery = Connector.getConnection()
-					.prepareStatement("SELECT * FROM Books WHERE Copies > 0 AND CONCAT(ISBN, Title, Author, Publisher) LIKE ?");
+					.prepareStatement(sql);
 		bookQuery.setString(1, "%" + search + "%");
 		
 
