@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
@@ -27,10 +28,8 @@ public class UserSidebarPanel extends JPanel {
 	private ButtonGroup buttonGroup;
 	
 	public UserSidebarPanel() {
-
-		buttonGroup = new ButtonGroup();
-		
-		setLayout(new MigLayout("wrap 1", "[grow]", "[]5[]"));
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();				
+		setLayout(new MigLayout("wrap 1", "[grow]", "10px[]10px[]10px[]"+screenSize.height/1.9+"[]"));
 
 		viewBooksButton = new MyButton("Search Books", new ImageIcon(
 				"resources/images/Book.png"));
@@ -41,6 +40,7 @@ public class UserSidebarPanel extends JPanel {
 		transactionHistoryButton = new MyButton("View E-Library Card",
 				new ImageIcon("resources/images/elib32x32.png"));
 
+		buttonGroup = new ButtonGroup();
 		buttonGroup.add(viewBooksButton);
 		buttonGroup.add(editProfileButton);
 		buttonGroup.add(logoutButton);
