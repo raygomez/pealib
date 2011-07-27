@@ -1,7 +1,6 @@
 package utilities;
 
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
