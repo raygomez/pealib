@@ -106,7 +106,12 @@ public class PeaLibrary {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		userControl = new UserController(getCurrentUser());
+		try {
+			userControl = new UserController(getCurrentUser());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		userControl.getUserInfoPanel().addSaveListener(updateCurrentUser);
 		
