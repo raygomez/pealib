@@ -88,8 +88,12 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblYearPublished = new JLabel("Year Published:");
 		add(lblYearPublished, "cell 1 4");
 
-		yearPublishTextField.setText(Integer.toString(currentBook
+		if(currentBook.getYearPublish() == 0){
+			yearPublishTextField.setText("");
+		}else 
+			yearPublishTextField.setText(Integer.toString(currentBook
 				.getYearPublish()));
+		
 		yearPublishTextField.setName("yearPublishTextField");
 		yearPublishTextField.setEditable(false);
 		add(yearPublishTextField, "cell 3 4 2 1,growx");
@@ -211,14 +215,18 @@ public class BookInfoPanel extends JPanel {
 	public Book getCurrBook() {
 		currentBook.setTitle(titleTextField.getText());
 		currentBook.setAuthor(authorTextField.getText());
-		currentBook.setYearPublish(Integer.parseInt(yearPublishTextField
-				.getText()));
 		currentBook.setPublisher(publisherTextField.getText());
 		currentBook.setIsbn(isbnTextField.getText());
 		currentBook.setDescription(descriptionTextArea.getText());
 		currentBook.setCopies(Integer.parseInt(copiesValSpinner.getModel()
 				.getValue().toString()));
 		currentBook.setEdition(editionTextField.getText());
+		if(yearPublishTextField.getText().length() > 0){
+			currentBook.setYearPublish(Integer.parseInt(yearPublishTextField
+					.getText()));
+		}else{
+			currentBook.setYearPublish(0);
+		}
 		return currentBook;
 	}
 
@@ -226,12 +234,17 @@ public class BookInfoPanel extends JPanel {
 		currentBook = book;
 		titleTextField.setText(book.getTitle());
 		authorTextField.setText(book.getAuthor());
-		yearPublishTextField.setText(Integer.toString(book.getYearPublish()));
 		publisherTextField.setText(book.getPublisher());
 		isbnTextField.setText(book.getIsbn());
 		descriptionTextArea.setText(book.getDescription());
 		copiesValSpinner.getModel().setValue(book.getCopies());
 		editionTextField.setText(book.getEdition());
+		
+		if(book.getYearPublish() == 0){
+			yearPublishTextField.setText("");
+		}else{
+			yearPublishTextField.setText(Integer.toString(book.getYearPublish()));
+		}
 	}
 
 	public ErrorLabel getLblErrorMsg() {
