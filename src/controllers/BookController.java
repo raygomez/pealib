@@ -1,6 +1,5 @@
 package controllers;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -13,12 +12,10 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 import utilities.Connector;
@@ -487,15 +484,6 @@ public class BookController {
 			}
 			
 			try {
-//				if (currentUser.getType().equals("Librarian")) {
-//					bookInfo.getBtnSave().setEnabled(true);
-//					int availableCopy = TransactionDAO.getAvailableCopies(bookList.get(tableRow));
-//					if (bookList.get(tableRow).getCopies() == 0 
-//							|| bookList.get(tableRow).getCopies() != availableCopy) {
-//						bookInfo.getBtnDelete().setEnabled(false);
-//					} else
-//						bookInfo.getBtnDelete().setEnabled(true);
-//				}
 				setButtons();
 
 			} catch (Exception ex) {
