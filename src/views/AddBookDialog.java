@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import java.awt.Color;
 import java.awt.event.ActionListener;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
