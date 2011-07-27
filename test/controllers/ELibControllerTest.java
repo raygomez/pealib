@@ -43,13 +43,18 @@ public class ELibControllerTest extends UISpecTestCase {
 				new String[] { "ISBN", "Title", "Author", "Date Requested",
 						"Cancel" }));
 		assertEquals(1, request.getRowCount());
-
+		assertThat(request.isEditable(new boolean[][] {
+				{ false, false, false, false, true } }));
+		
 		tabGroup.selectTab("Reservations");
 		Table reservation = tabGroup.getSelectedTab().getTable();
 		assertTrue(reservation.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Reserved",
 						"Queue Number", "Cancel" }));
 		assertEquals(2, reservation.getRowCount());
+		assertThat(reservation.isEditable(new boolean[][] {
+				{ false, false, false, false, false, true },
+				{ false, false, false, false, false, true }}));		
 
 		tabGroup.selectTab("On Loan");
 		Table onLoan = tabGroup.getSelectedTab().getTable();
@@ -64,6 +69,10 @@ public class ELibControllerTest extends UISpecTestCase {
 						"2011-06-29" },
 				{ "1234567890124", "title2", "author1", "2011-06-15",
 						"2011-06-29" } }));
+		assertThat(onLoan.isEditable(new boolean[][] {
+				{ false, false, false, false, false },
+				{ false, false, false, false, false },
+				{ false, false, false, false, false } }));
 
 		tabGroup.selectTab("History");
 		Table history = tabGroup.getSelectedTab().getTable();
@@ -76,7 +85,9 @@ public class ELibControllerTest extends UISpecTestCase {
 						"2011-06-15" },
 				{ "1234567890123", "title1", "author1", "2011-06-15",
 						"2011-06-15" } }));
-
+		assertThat(history.isEditable(new boolean[][] {
+				{ false, false, false, false, false },
+				{ false, false, false, false, false } }));
 	}
 
 	@Test
@@ -132,9 +143,9 @@ public class ELibControllerTest extends UISpecTestCase {
 			}
 		}).run();
 	}
-	
+
 	@Test
-	@DataSet({"../models/emptyBorrows.xml","../models/emptyReserves.xml"})
+	@DataSet({ "../models/emptyBorrows.xml", "../models/emptyReserves.xml" })
 	public void testEmptyState() {
 		TabGroup tabGroup = panel.getTabGroup();
 		Table request = tabGroup.getSelectedTab().getTable();
@@ -164,7 +175,8 @@ public class ELibControllerTest extends UISpecTestCase {
 						"Date Returned" }));
 		assertEquals(0, history.getRowCount());
 
-	}
+		tabGroup.selectTab("Requests");
 
+	}
 
 }
