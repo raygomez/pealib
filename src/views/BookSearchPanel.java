@@ -15,7 +15,9 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 public class BookSearchPanel extends JPanel {
@@ -61,7 +63,7 @@ public class BookSearchPanel extends JPanel {
 		
 		add(new JScrollPane(tableBookList), "cell 0 4 3 1,grow");
 		tableBookList.getTableHeader().setReorderingAllowed(false);
-		tableBookList.getTableHeader().setResizingAllowed(false);		
+		tableBookList.getTableHeader().setResizingAllowed(false);						
 	}
 	
 	public void setSearchButtonListener(ActionListener search) {
@@ -94,6 +96,17 @@ public class BookSearchPanel extends JPanel {
 
 	public JTable getTableBookList() {
 		return tableBookList;
+	}
+	
+	public void setColumnRender(JTable table){
+		//TODO
+		DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
+		trender.setHorizontalAlignment(SwingConstants.CENTER);
+				
+	
+		table.getColumn(table.getColumnName(0)).setCellRenderer(trender);
+		table.getColumn(table.getColumnName(1)).setCellRenderer(trender);
+		table.getColumn(table.getColumnName(2)).setCellRenderer(trender);		
 	}
 	
 	public void addBookSelectionListener(ListSelectionListener listener){
