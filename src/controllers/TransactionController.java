@@ -99,15 +99,8 @@ public class TransactionController {
 	class TabChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent arg0) {
-			if (tabbedPane.getSelectedIndex() == 0) {
-				isIncoming = true;
-				inPanel.getBtnReturn().setEnabled(false);
-				inPanel.getLblDaysOverdue().setText("");
-			} else if (tabbedPane.getSelectedIndex() == 1) {
-				isIncoming = false;
-				outPanel.getGrantButton().setEnabled(false);
-				outPanel.getDenyButton().setEnabled(false);
-			}
+			isIncoming = (tabbedPane.getSelectedIndex() == 0);
+			setButtonsStatus(false);
 			try {
 				searchBookTransaction();
 			} catch (Exception e) {
@@ -150,8 +143,7 @@ public class TransactionController {
 		JOptionPane.showMessageDialog(tabbedPane,
 			"Successfully lent " + selectedRows.length + " book(s).",
 			"Borrow Request Granted", JOptionPane.INFORMATION_MESSAGE);
-		outPanel.getGrantButton().setEnabled(false);
-		outPanel.getDenyButton().setEnabled(false);
+		setButtonsStatus(false);
 	}
 
 	private void denyBorrowRequest() throws Exception {
@@ -177,8 +169,7 @@ public class TransactionController {
 				+ "See Outgoing tab for details.",
 				"Borrow Request Denied", JOptionPane.INFORMATION_MESSAGE);
 		}
-		outPanel.getGrantButton().setEnabled(false);
-		outPanel.getDenyButton().setEnabled(false);
+		setButtonsStatus(false);
 	}
 
 	/*
@@ -220,8 +211,7 @@ public class TransactionController {
 				+ "See Outgoing tab for details.",
 				"Borrowed Book Returned", JOptionPane.INFORMATION_MESSAGE);
 		}
-		inPanel.getBtnReturn().setEnabled(false);
-		inPanel.getLblDaysOverdue().setText("");
+		setButtonsStatus(false);
 	}
 
 	private void getBookTransactionDetails() {
@@ -242,14 +232,7 @@ public class TransactionController {
 			} catch (Exception e) {
 				CrashHandler.handle(e);
 			}
-			if (isIncoming) {
-				inPanel.getBtnReturn().setEnabled(false);
-				inPanel.getLblDaysOverdue().setText("");
-				inPanel.getLblDaysOverdue().setText("");
-			} else {
-				outPanel.getGrantButton().setEnabled(false);
-				outPanel.getDenyButton().setEnabled(false);
-			}
+			setButtonsStatus(false);
 		}
 	}
 
@@ -263,14 +246,7 @@ public class TransactionController {
 				} catch (Exception e) {
 					CrashHandler.handle(e);
 				}
-				if (isIncoming) {
-					inPanel.getBtnReturn().setEnabled(false);
-					inPanel.getLblDaysOverdue().setText("");
-					inPanel.getLblDaysOverdue().setText("");
-				} else {
-					outPanel.getGrantButton().setEnabled(false);
-					outPanel.getDenyButton().setEnabled(false);
-				}
+				setButtonsStatus(false);
 			}
 		});
 
@@ -383,28 +359,19 @@ public class TransactionController {
 			bookResultsModel = new DefaultTableModel(emptyTable,
 					tableHeader) {
 				private static final long serialVersionUID = 1L;
-
-				public boolean isCellEditable(int row, int column) {
-					return false;
-				}
 			};
 		}
+		int[] columnSizes = {20, 200, 70, 30, 20};
 		if (isIncoming) {
 			inPanel.getSearchPanel().getTblResults()
 					.setModel(bookResultsModel);
 			inPanel.getSearchPanel()
 					.getLblTotal()
 					.setText("Total Matches: " + bookResultsModel.getRowCount());
-			inPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(0).setPreferredWidth(20);
-			inPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(1).setPreferredWidth(200);
-			inPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(2).setPreferredWidth(70);
-			inPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(3).setPreferredWidth(30);
-			inPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(4).setPreferredWidth(20);
+			for (int i = 0; i < columnSizes.length; i++) {
+				inPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(i).setPreferredWidth(columnSizes[i]);
+			}
 			inPanel.getSearchPanel().setColumnRender();
 			inPanel.getSearchPanel().repaint();
 		} else {
@@ -413,16 +380,10 @@ public class TransactionController {
 			outPanel.getSearchPanel()
 					.getLblTotal()
 					.setText("Total Matches: " + bookResultsModel.getRowCount());
-			outPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(0).setPreferredWidth(20);
-			outPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(1).setPreferredWidth(200);
-			outPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(2).setPreferredWidth(70);
-			outPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(3).setPreferredWidth(30);
-			outPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(4).setPreferredWidth(20);
+			for (int i = 0; i < columnSizes.length; i++) {
+				outPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(i).setPreferredWidth(columnSizes[i]);
+			}
 			outPanel.getSearchPanel().setColumnRender();
 			outPanel.getSearchPanel().repaint();
 		}
@@ -434,7 +395,6 @@ public class TransactionController {
 			selectedRows = inPanel.getSearchPanel().getTblResults().getSelectedRows();
 			
 			if (selectedRows.length != 0) {
-				inPanel.getBtnReturn().setEnabled(true);
 				getBookTransactionDetails();
 				int daysOverdue = TransactionDAO.getDaysOverdue(
 						selectedBookTransactions.get(selectedRows.length - 1));
@@ -449,11 +409,19 @@ public class TransactionController {
 		} else {
 			selectedRows = outPanel.getSearchPanel().getTblResults().getSelectedRows();
 			getBookTransactionDetails();
-
-			if (selectedRows.length != 0) {
-				outPanel.getGrantButton().setEnabled(true);
-				outPanel.getDenyButton().setEnabled(true);
+		}
+		setButtonsStatus(true);
+	}
+	
+	private void setButtonsStatus(boolean status) {
+		if (isIncoming) {
+			inPanel.getBtnReturn().setEnabled(status);
+			if (!status) {
+				inPanel.getLblDaysOverdue().setText("");		
 			}
+		} else {
+			outPanel.getGrantButton().setEnabled(status);
+			outPanel.getDenyButton().setEnabled(status);
 		}
 	}
 }
