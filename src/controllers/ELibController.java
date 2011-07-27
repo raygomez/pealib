@@ -28,6 +28,7 @@ import org.joda.time.DateTime;
 
 import utilities.Connector;
 import utilities.Constants;
+import utilities.CrashHandler;
 import views.ELibTabbedPanel;
 
 public class ELibController {
@@ -59,7 +60,7 @@ public class ELibController {
 		frame.setResizable(false);
 	}
 
-	public ELibController(User user) {
+	public ELibController(User user) throws Exception {
 		setUser(user);
 
 		setTabpane(new ELibTabbedPanel());
@@ -93,7 +94,7 @@ public class ELibController {
 		return tabpane;
 	}
 
-	public ELibTabbedPanel getView() {
+	public ELibTabbedPanel getView() throws Exception {
 		update();
 		return tabpane;
 	}
@@ -124,11 +125,15 @@ public class ELibController {
 	class TabChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			update();
+			try {
+				update();
+			} catch (Exception e1) {
+				CrashHandler.handle(e1);
+			}
 		}
 	}
 
-	private void update() {
+	private void update() throws Exception {
 		int tab = getTabpane().getSelectedTab();
 		ELibTableModel model = new ELibTableModel(tab);
 		getTabpane().setTableModel(tab, model);
@@ -150,7 +155,7 @@ public class ELibController {
 		private String[] columns;
 		private ArrayList<ArrayList<Object>> tableData;
 
-		public ELibTableModel(int tab) {
+		public ELibTableModel(int tab) throws Exception {
 			tableData = new ArrayList<ArrayList<Object>>();
 
 			switch (tab) {
@@ -169,15 +174,11 @@ public class ELibController {
 			}
 		}
 
-		private void requestData() {
+		private void requestData() throws Exception {
 			columns = new String[] { "ISBN", "Title", "Author",
 					"Date Requested", "Cancel" };
 
-			try {
-				bookData = TransactionDAO.getRequestedBooks(getUser());
-			} catch (Exception e) {
-				System.out.println("ELibController: requestData: " + e);
-			}
+			bookData = TransactionDAO.getRequestedBooks(getUser());
 
 			if (bookData.size() != 0) {
 				for (BorrowTransaction i : bookData) {
@@ -202,8 +203,8 @@ public class ELibController {
 				if (getBookDataReserve().size() != 0) {
 					for (ReserveTransaction i : getBookDataReserve()) {
 						ArrayList<Object> rowData = new ArrayList<Object>(5);
-						DateTime reservedDate = new DateTime(i.getDateReserved()
-								.getTime());
+						DateTime reservedDate = new DateTime(i
+								.getDateReserved().getTime());
 
 						rowData.add(i.getBook().getIsbn());
 						rowData.add(i.getBook().getTitle());
