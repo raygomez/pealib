@@ -3,12 +3,17 @@ package pealib;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.SwingWorker;
 
 import models.User;
 import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
 import views.LibrarianSidebarPanel;
+import views.LoadingDialog;
 import views.MainFrame;
 import views.UserSidebarPanel;
 import controllers.AuthenticationController;
@@ -30,6 +35,7 @@ public class PeaLibrary {
 	private LibrarianSidebarPanel librarianSidebarPanel;
 
 	private User currentUser;
+	private LoadingDialog loadingDialog;
 
 	public PeaLibrary() {
 		new Connector();
@@ -88,7 +94,45 @@ public class PeaLibrary {
 		authControl = new AuthenticationController();
 		AuthenticationController.getLogin().setVisible(true);
 		setCurrentUser(authControl.getUser());
-		initialize();
+		
+		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>(){
+		
+
+			@Override
+			protected Void doInBackground() {
+				try{
+					initialize();
+				}catch (Exception e) {
+					cancel(true);
+					CrashHandler.handle(e);
+				}
+				return null;
+			}
+			
+			@Override
+			protected void done() {
+				getFrame().setVisible(true);
+				getFrame().toFront();
+			}
+		};
+		
+		sw.addPropertyChangeListener(new PropertyChangeListener() {
+						
+			@Override
+			public void propertyChange(PropertyChangeEvent arg0) {
+				
+				if(arg0.getPropertyName().equalsIgnoreCase("state")){
+					if(arg0.getNewValue().toString().equals("STARTED")){
+						loadingDialog = new LoadingDialog();
+						loadingDialog.setVisible(true);
+					}
+					else if(arg0.getNewValue().toString().equals("DONE")){
+						loadingDialog.dispose();
+					}
+				}
+			}
+		});
+		sw.execute();
 	}
 
 	public void initialize() {
@@ -154,8 +198,10 @@ public class PeaLibrary {
 
 		try {
 			elibControl = new ELibController(getCurrentUser());
-		} catch (Exception e1) {
-			CrashHandler.handle(e1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			CrashHandler.handle(e);
 		}
 		userSidebarPanel = new UserSidebarPanel();
 		initializeSidebarPanel(userSidebarPanel);
@@ -235,7 +281,7 @@ public class PeaLibrary {
 			getFrame().dispose();
 			setCurrentUser(null);
 			authenticate();
-			getFrame().setVisible(true);
+			//getFrame().setVisible(true);
 		}
 	};
 
@@ -249,6 +295,8 @@ public class PeaLibrary {
 				try {
 					getFrame().setContentPanel(elibControl.getView());
 				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 					CrashHandler.handle(e);
 				}
 			}
@@ -268,13 +316,21 @@ public class PeaLibrary {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PeaLibrary app = new PeaLibrary();
+					PeaLibrary app = new PeaLibrary(Constants.TEST_CONFIG);
 					app.authenticate();
-					app.getFrame().setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+
+	public void setLoadingDialog(LoadingDialog loadingDialog) {
+		this.loadingDialog = loadingDialog;
+	}
+
+	public LoadingDialog getLoadingDialog() {
+		return loadingDialog;
 	}
 }
