@@ -8,7 +8,7 @@ public class CrashHandler {
 		JOptionPane.showMessageDialog(null, "Something really went wrong!\n"
 				+ "We have to terminate this application.", "Connecton Error",
 				JOptionPane.ERROR_MESSAGE);
-		System.exit(-1);
 		e.printStackTrace();
+		System.exit(-1);		
 	}
 }
