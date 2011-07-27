@@ -66,12 +66,12 @@ public class UserControllerTest extends UISpecTestCase {
 		assertReflectionEquals(userSearchPanel.getTable("tablePending"), tabGroup
 				.getSelectedTab().getTable());
 		
-		assertFalse(userSearchPanel.getButton("acceptButton").isEnabled());
-		assertFalse(userSearchPanel.getButton("denyButton").isEnabled());
-		assertTrue(userSearchPanel.getCheckBox("allCheckBox").isEnabled());
+		assertFalse(userSearchPanel.getButton("Accept").isEnabled());
+		assertFalse(userSearchPanel.getButton("Deny").isEnabled());
+		assertTrue(userSearchPanel.getCheckBox().isEnabled());
 		
-		assertTrue(userSearchPanel.getButton("searchButton").isEnabled());
-		assertTrue(userSearchPanel.getTextBox("searchField").isEnabled());						
+		assertTrue(userSearchPanel.getButton("Search").isEnabled());
+		assertTrue(userSearchPanel.getTextBox().isEnabled());						
 	}
 
 }
