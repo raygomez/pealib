@@ -74,4 +74,3 @@ INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPub
 INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007251866','The Witch of Portobello','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','2');
 INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007204310','The Zahir : A Novel of Love, Longing and Obsession','Paulo Coelho','1st','HarperCollins Publishers Limited','','1992','3');
 INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0060534184','Manual del Guerrero de la Luz','Paulo Coelho','1st','HarperCollins Publishers','','1992','9');
-INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0060534184','Harry Potter and the Chamber of Secrets','J.K Rowling','1st','HarperCollins Publishers','','1998','9');
