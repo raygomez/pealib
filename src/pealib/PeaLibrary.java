@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import models.User;
 import utilities.Connector;
+import utilities.Constants;
 import utilities.CrashHandler;
 import views.LibrarianSidebarPanel;
 import views.MainFrame;
@@ -31,7 +32,7 @@ public class PeaLibrary {
 	private User currentUser;
 
 	public PeaLibrary() {
-		new Connector("test.config");
+		new Connector();
 	}
 
 	/**
@@ -110,13 +111,13 @@ public class PeaLibrary {
 		try {
 			bookControl = new BookController(getCurrentUser());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 
 		}
 		try {
 			userControl = new UserController(getCurrentUser());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 		}
 
 		userControl.getUserInfoPanel().addSaveListener(updateCurrentUser);
@@ -133,7 +134,7 @@ public class PeaLibrary {
 		try {
 			setTransactionControl(new TransactionController());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 		}
 
 		librarianSidebarPanel = new LibrarianSidebarPanel();
@@ -155,7 +156,7 @@ public class PeaLibrary {
 		try {
 			getFrame().setContentPanel(bookControl.getBookLayoutPanel());
 		} catch (Exception e) {
-			CrashHandler.handle();
+			CrashHandler.handle(e);
 
 		}
 		getFrame().validate();
@@ -191,7 +192,7 @@ public class PeaLibrary {
 			try {
 				getFrame().setContentPanel(bookControl.getBookLayoutPanel());
 			} catch (Exception e) {
-				CrashHandler.handle();
+				CrashHandler.handle(e);
 
 			}
 		}
