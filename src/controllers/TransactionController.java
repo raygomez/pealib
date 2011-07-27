@@ -29,6 +29,7 @@ import views.OutgoingPanel;
 //# remove these
 import utilities.Connector;
 import utilities.Constants;
+import utilities.CrashHandler;
 
 public class TransactionController {
 	private boolean isIncoming = true; // isOutgoing = false
@@ -46,7 +47,7 @@ public class TransactionController {
 	private OutgoingPanel outPanel;
 
 	// # remove this
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		new Connector(Constants.TEST_CONFIG);
 
 		TransactionController librarianTransactions = new TransactionController();
@@ -66,7 +67,7 @@ public class TransactionController {
 	/*
 	 * LIBRARIAN Book Transactions
 	 */
-	public TransactionController() {
+	public TransactionController() throws Exception {
 		/* Create UI */
 		tabbedPane = new InOutTabbedPane();
 
@@ -110,7 +111,11 @@ public class TransactionController {
 				outPanel.getGrantButton().setEnabled(false);
 				outPanel.getDenyButton().setEnabled(false);
 			}
-			searchBookTransaction();
+			try {
+				searchBookTransaction();
+			} catch (Exception e) {
+				CrashHandler.handle();
+			}
 		}
 	}
 
@@ -120,27 +125,30 @@ public class TransactionController {
 	class OutgoingBooksGrantListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			grantBorrowRequest();
-			searchBookTransaction();
+			try {
+				grantBorrowRequest();
+				searchBookTransaction();
+			} catch (Exception e) {
+				CrashHandler.handle();
+			}
 		}
 	}
 
 	class OutgoingBooksDenyListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			denyBorrowRequest();
-			searchBookTransaction();
+			try {
+				denyBorrowRequest();
+				searchBookTransaction();
+			} catch (Exception e) {
+				CrashHandler.handle();
+			}
 		}
 	}
 
-	private void grantBorrowRequest() {
+	private void grantBorrowRequest() throws Exception {
 		int affectedRows = 0;
-		try {
-			affectedRows = TransactionDAO
-					.borrowBook(getBookTransactionDetails());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		affectedRows = TransactionDAO.borrowBook(getBookTransactionDetails());
 		if (affectedRows != 1) {
 			// # error! do something
 		}
@@ -148,17 +156,13 @@ public class TransactionController {
 		outPanel.getDenyButton().setEnabled(false);
 	}
 
-	private void denyBorrowRequest() {
-		try {
-			TransactionDAO.denyBookRequest(getBookTransactionDetails());
+	private void denyBorrowRequest() throws Exception {
+		TransactionDAO.denyBookRequest(getBookTransactionDetails());
 
-			/* check if the book to be denied is reserved by other users */
-			Book deniedBook = getBookTransactionDetails().getBook();
-			if (TransactionDAO.isBookReservedByOtherUsers(deniedBook)) {
-				TransactionDAO.passToNextUser(deniedBook);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		/* check if the book to be denied is reserved by other users */
+		Book deniedBook = getBookTransactionDetails().getBook();
+		if (TransactionDAO.isBookReservedByOtherUsers(deniedBook)) {
+			TransactionDAO.passToNextUser(deniedBook);
 		}
 		outPanel.getGrantButton().setEnabled(false);
 		outPanel.getDenyButton().setEnabled(false);
@@ -171,7 +175,11 @@ public class TransactionController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			returnBook();
-			searchBookTransaction();
+			try {
+				searchBookTransaction();
+			} catch (Exception e) {
+				CrashHandler.handle();
+			}
 		}
 	}
 
@@ -201,7 +209,11 @@ public class TransactionController {
 	class BookTransactionSearchSubmitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			searchBookTransaction();
+			try {
+				searchBookTransaction();
+			} catch (Exception e) {
+				CrashHandler.handle();
+			}
 			if (isIncoming) {
 				inPanel.getBtnReturn().setEnabled(false);
 				inPanel.getLblDaysOverdue().setText("");
@@ -218,7 +230,11 @@ public class TransactionController {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				timer.stop();
-				searchBookTransaction();
+				try {
+					searchBookTransaction();
+				} catch (Exception e) {
+					CrashHandler.handle();
+				}
 				if (isIncoming) {
 					inPanel.getBtnReturn().setEnabled(false);
 					inPanel.getLblDaysOverdue().setText("");
@@ -253,7 +269,11 @@ public class TransactionController {
 	class BookTransactionResultsMouseListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			setSelectedItem();
+			try {
+				setSelectedItem();
+			} catch (Exception e) {
+				CrashHandler.handle();
+			}
 		}
 
 		@Override
@@ -273,145 +293,134 @@ public class TransactionController {
 		}
 	}
 
-	private void searchBookTransaction() {
-		try {
-			String keyword;
-			if (isIncoming) {
-				keyword = inPanel.getSearchPanel().getTxtfldSearch().getText();
-				if (keyword.isEmpty()) {
-					keyword = "*";
-				}
-				searchResults = TransactionDAO.searchIncomingBook(keyword);
-				tableHeader = incomingTableHeader;
-			} else {
-				keyword = outPanel.getSearchPanel().getTxtfldSearch().getText();
-				if (keyword.isEmpty()) {
-					keyword = "*";
-				}
-				searchResults = TransactionDAO.searchOutgoingBook(keyword);
-				tableHeader = outgoingTableHeader;
+	private void searchBookTransaction() throws Exception {
+		String keyword;
+		if (isIncoming) {
+			keyword = inPanel.getSearchPanel().getTxtfldSearch().getText();
+			if (keyword.isEmpty()) {
+				keyword = "*";
 			}
+			searchResults = TransactionDAO.searchIncomingBook(keyword);
+			tableHeader = incomingTableHeader;
+		} else {
+			keyword = outPanel.getSearchPanel().getTxtfldSearch().getText();
+			if (keyword.isEmpty()) {
+				keyword = "*";
+			}
+			searchResults = TransactionDAO.searchOutgoingBook(keyword);
+			tableHeader = outgoingTableHeader;
+		}
 
-			if (searchResults.size() != 0) {
-				bookResultsModel = new AbstractTableModel() {
-					private static final long serialVersionUID = 1L;
+		if (searchResults.size() != 0) {
+			bookResultsModel = new AbstractTableModel() {
+				private static final long serialVersionUID = 1L;
 
-					@Override
-					public int getColumnCount() {
-						return tableHeader.length;
-					}
+				@Override
+				public int getColumnCount() {
+					return tableHeader.length;
+				}
 
-					public String getColumnName(int column) {
-						return tableHeader[column];
-					}
+				public String getColumnName(int column) {
+					return tableHeader[column];
+				}
 
-					@Override
-					public int getRowCount() {
-						return searchResults.size();
-					}
+				@Override
+				public int getRowCount() {
+					return searchResults.size();
+				}
 
-					public boolean isCellEditable(int row, int column) {
-						return false;
-					}
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
 
-					@Override
-					public Object getValueAt(int row, int column) {
-						Object objData = null;
-						switch (column) {
-						case 0:
-							objData = searchResults.get(row).getBook()
-									.getIsbn();
-							break;
-						case 1:
-							objData = searchResults.get(row).getBook()
-									.getTitle();
-							break;
-						case 2:
-							objData = searchResults.get(row).getBook()
-									.getAuthor();
-							break;
-						case 3:
-							String user = searchResults.get(row).getUser()
-							.getUserName() + " (" + searchResults.get(row)
-							.getUser().getFirstName() + " " + searchResults
-							.get(row).getUser().getLastName() + ")";
-							objData = user;
-							break;
-						case 4:
-							if (isIncoming) {
-								objData = searchResults.get(row)
-										.getDateBorrowed();
-							} else {
-								objData = searchResults.get(row)
-										.getDateRequested();
-							}
-							break;
-						default:
-							break;
+				@Override
+				public Object getValueAt(int row, int column) {
+					Object objData = null;
+					switch (column) {
+					case 0:
+						objData = searchResults.get(row).getBook().getIsbn();
+						break;
+					case 1:
+						objData = searchResults.get(row).getBook().getTitle();
+						break;
+					case 2:
+						objData = searchResults.get(row).getBook().getAuthor();
+						break;
+					case 3:
+						String user = searchResults.get(row).getUser()
+								.getUserName()
+								+ " ("
+								+ searchResults.get(row).getUser()
+										.getFirstName()
+								+ " "
+								+ searchResults.get(row).getUser()
+										.getLastName() + ")";
+						objData = user;
+						break;
+					case 4:
+						if (isIncoming) {
+							objData = searchResults.get(row).getDateBorrowed();
+						} else {
+							objData = searchResults.get(row).getDateRequested();
 						}
-						return objData;
+						break;
+					default:
+						break;
 					}
-				};
-			} else {
-				String[][] emptyTable = {};
-				bookResultsModel = new DefaultTableModel(emptyTable,
-						tableHeader) {
-					private static final long serialVersionUID = 1L;
+					return objData;
+				}
+			};
+		} else {
+			String[][] emptyTable = {};
+			bookResultsModel = new DefaultTableModel(emptyTable, tableHeader) {
+				private static final long serialVersionUID = 1L;
 
-					public boolean isCellEditable(int row, int column) {
-						return false;
-					}
-				};
-			}
-			if (isIncoming) {
-				inPanel.getSearchPanel().getTblResults()
-						.setModel(bookResultsModel);
-				inPanel.getSearchPanel()
-						.getLblTotal()
-						.setText(
-								"Total Matches: "
-										+ bookResultsModel.getRowCount());
-				inPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(0).setPreferredWidth(20);
-				inPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(1).setPreferredWidth(200);
-				inPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(2).setPreferredWidth(70);
-				inPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(3).setPreferredWidth(30);
-				inPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(4).setPreferredWidth(20);
-				inPanel.getSearchPanel().getTblResults()
-						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				inPanel.getSearchPanel().repaint();
-			} else {
-				outPanel.getSearchPanel().getTblResults()
-						.setModel(bookResultsModel);
-				outPanel.getSearchPanel()
-						.getLblTotal()
-						.setText(
-								"Total Matches: "
-										+ bookResultsModel.getRowCount());
-				outPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(0).setPreferredWidth(20);
-				outPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(1).setPreferredWidth(200);
-				outPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(2).setPreferredWidth(70);
-				outPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(3).setPreferredWidth(30);
-				outPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(4).setPreferredWidth(20);
-				outPanel.getSearchPanel().getTblResults()
-						.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				outPanel.getSearchPanel().repaint();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
+			};
+		}
+		if (isIncoming) {
+			inPanel.getSearchPanel().getTblResults().setModel(bookResultsModel);
+			inPanel.getSearchPanel()
+					.getLblTotal()
+					.setText("Total Matches: " + bookResultsModel.getRowCount());
+			inPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(0).setPreferredWidth(20);
+			inPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(1).setPreferredWidth(200);
+			inPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(2).setPreferredWidth(70);
+			inPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(3).setPreferredWidth(30);
+			inPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(4).setPreferredWidth(20);
+			inPanel.getSearchPanel().getTblResults()
+					.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			inPanel.getSearchPanel().repaint();
+		} else {
+			outPanel.getSearchPanel().getTblResults()
+					.setModel(bookResultsModel);
+			outPanel.getSearchPanel()
+					.getLblTotal()
+					.setText("Total Matches: " + bookResultsModel.getRowCount());
+			outPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(0).setPreferredWidth(20);
+			outPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(1).setPreferredWidth(200);
+			outPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(2).setPreferredWidth(70);
+			outPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(3).setPreferredWidth(30);
+			outPanel.getSearchPanel().getTblResults().getColumnModel()
+					.getColumn(4).setPreferredWidth(20);
+			outPanel.getSearchPanel().getTblResults()
+					.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			outPanel.getSearchPanel().repaint();
 		}
 	}
 
-	private void setSelectedItem() {
+	private void setSelectedItem() throws Exception {
 		if (isIncoming) {
 			selectedRow = inPanel.getSearchPanel().getTblResults()
 					.getSelectedRow();
@@ -419,19 +428,15 @@ public class TransactionController {
 			if (selectedRow >= 0) {
 				inPanel.getBtnReturn().setEnabled(true);
 				getBookTransactionDetails();
-				try {
-					int daysOverdue = TransactionDAO.getDaysOverdue(
-							getBookTransactionDetails().getBook(),
-							getBookTransactionDetails().getUser());
-					inPanel.getLblDaysOverdue().setText(
-							"Days Overdue: " + daysOverdue);
-					if (daysOverdue > 0) {
-						inPanel.getLblDaysOverdue().setForeground(Color.RED);
-					} else {
-						inPanel.getLblDaysOverdue().setForeground(Color.BLACK);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
+				int daysOverdue = TransactionDAO.getDaysOverdue(
+						getBookTransactionDetails().getBook(),
+						getBookTransactionDetails().getUser());
+				inPanel.getLblDaysOverdue().setText(
+						"Days Overdue: " + daysOverdue);
+				if (daysOverdue > 0) {
+					inPanel.getLblDaysOverdue().setForeground(Color.RED);
+				} else {
+					inPanel.getLblDaysOverdue().setForeground(Color.BLACK);
 				}
 			}
 		} else {
