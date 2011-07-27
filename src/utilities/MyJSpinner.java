@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import javax.swing.BorderFactory;
 import javax.swing.JSpinner;
-import javax.swing.SpinnerModel;
 
 public class MyJSpinner extends JSpinner {
 
