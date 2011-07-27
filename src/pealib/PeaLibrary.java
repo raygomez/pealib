@@ -152,7 +152,11 @@ public class PeaLibrary {
 
 	private void initializeUser() {
 
-		elibControl = new ELibController(getCurrentUser());
+		try {
+			elibControl = new ELibController(getCurrentUser());
+		} catch (Exception e1) {
+			CrashHandler.handle(e1);
+		}
 		userSidebarPanel = new UserSidebarPanel();
 		initializeSidebarPanel(userSidebarPanel);
 
@@ -242,7 +246,11 @@ public class PeaLibrary {
 			if (getCurrentUser().getType().equals("Librarian")) {
 				frame.setContentPanel(transactionControl.getTabbedPane());
 			} else if (getCurrentUser().getType().equals("User")) {
-				getFrame().setContentPanel(elibControl.getView());
+				try {
+					getFrame().setContentPanel(elibControl.getView());
+				} catch (Exception e) {
+					CrashHandler.handle(e);
+				}
 			}
 		}
 	};
