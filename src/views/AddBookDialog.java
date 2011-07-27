@@ -10,11 +10,8 @@ import javax.swing.border.EmptyBorder;
 import models.Book;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
-import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import utilities.ErrorLabel;
