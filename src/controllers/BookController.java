@@ -13,10 +13,12 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 import utilities.Connector;
@@ -75,6 +77,11 @@ public class BookController {
 		currTableRowSelection = 0;
 		bookLayoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]", "[grow]"));
 		bookSearch = new BookSearchPanel(currentUser);
+		
+		//TODO
+		bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+		bookSearch.setColumnRender(bookSearch.getTableBookList());
+		
 		if (bookList.size() == 0) {
 			bookInfo = new BookInfoPanel(new Book(), currentUser);
 			bookInfo.getBtnDelete().setEnabled(false);
@@ -94,7 +101,7 @@ public class BookController {
 		bookSearch.setClearButtonListener(new ClearButtonListener());
 		bookSearch.setSearchButtonListener(new SearchButtonListener());
 		bookSearch.setAddBookButtonListener(new AddBookButtonListener());
-		bookSearch.getTableBookList().setModel(new BookListModel(bookList));
+		
 		
 		//TODO added conditions in case empty table
 		if(bookList != null && !bookList.isEmpty()) { 
@@ -207,7 +214,8 @@ public class BookController {
 							}
 							bookSearch.getTableBookList().setModel(
 									new BookListModel(bookList));
-							
+							//TODO 
+							bookSearch.setColumnRender(bookSearch.getTableBookList());
 							if(bookList != null && !bookList.isEmpty()) 
 								bookSearch.getTableBookList().addRowSelectionInterval(
 										currTableRowSelection, currTableRowSelection);
@@ -319,7 +327,8 @@ public class BookController {
 					}
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
-					
+					//TODO 
+					bookSearch.setColumnRender(bookSearch.getTableBookList());
 					if(bookList != null && !bookList.isEmpty()) 
 						bookSearch.getTableBookList().addRowSelectionInterval(
 								currRow, currRow);
@@ -367,7 +376,8 @@ public class BookController {
 							.get(currRow));
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
-					
+					//TODO 
+					bookSearch.setColumnRender(bookSearch.getTableBookList());
 					if(bookList != null && !bookList.isEmpty()) 
 						bookSearch.getTableBookList().addRowSelectionInterval(
 								currRow, currRow);
@@ -402,7 +412,8 @@ public class BookController {
 				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
-				
+				//TODO 
+				bookSearch.setColumnRender(bookSearch.getTableBookList());
 				if(bookList != null && !bookList.isEmpty()) 
 					bookSearch.getTableBookList().addRowSelectionInterval(
 							currRow, currRow);
@@ -437,7 +448,8 @@ public class BookController {
 				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
-				
+				//TODO 
+				bookSearch.setColumnRender(bookSearch.getTableBookList());
 				if(bookList != null && !bookList.isEmpty()) 
 					bookSearch.getTableBookList().addRowSelectionInterval(
 							currRow, currRow);
@@ -454,23 +466,27 @@ public class BookController {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			reset();
-			DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
-			.getSource();
+			DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e.getSource();
 			int tableRow = dlSelectionModel.getLeadSelectionIndex();
 			currTableRowSelection = tableRow;
 			if(tableRow < 0){
 				return;
+			}		
+			
+			//TODO check in order to avoid exception index outofbounds
+			if(tableRow < bookList.size()){
+				currTableRowSelection = tableRow;
+				Book displayBook = bookList.get(tableRow);
+				currISBN = displayBook.getIsbn();
+				bookInfo.setBookInfoData(displayBook);
 			}
 			
-			currTableRowSelection = tableRow;
-			Book displayBook = bookList.get(tableRow);
-			currISBN = displayBook.getIsbn();
-			bookInfo.setBookInfoData(displayBook);
 			try {
 				if (currentUser.getType().equals("Librarian")) {
 					bookInfo.getBtnSave().setEnabled(true);
 					int availableCopy = TransactionDAO.getAvailableCopies(bookList.get(tableRow));
-					if (bookList.get(tableRow).getCopies() == 0 || bookList.get(tableRow).getCopies() != availableCopy) {
+					if (bookList.get(tableRow).getCopies() == 0 
+							|| bookList.get(tableRow).getCopies() != availableCopy) {
 						bookInfo.getBtnDelete().setEnabled(false);
 					} else
 						bookInfo.getBtnDelete().setEnabled(true);
@@ -565,11 +581,14 @@ public class BookController {
 				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
+				//TODO 
+				bookSearch.setColumnRender(bookSearch.getTableBookList());
 				if (bookList.size() == 0) {
 					bookInfo.setBookInfoData(new Book());
 					bookInfo.getBtnDelete().setEnabled(false);
 					bookInfo.getBtnSave().setEnabled(false);
 				} else {
+					
 					bookSearch.getTableBookList().addRowSelectionInterval(0, 0);
 					bookInfo.getBtnDelete().setEnabled(true);
 					bookInfo.getBtnSave().setEnabled(true);
@@ -621,10 +640,12 @@ public class BookController {
 					}
 					bookSearch.getTableBookList().setModel(
 								new BookListModel(bookList));
+					//TODO 
+					bookSearch.setColumnRender(bookSearch.getTableBookList());
 					if (bookList.size() == 0) {
 						bookInfo.getBtnDelete().setEnabled(false);
 						bookInfo.getBtnSave().setEnabled(false);
-					} else {
+					} else {					
 						bookSearch.getTableBookList().addRowSelectionInterval(0, 0);
 						bookInfo.getBtnDelete().setEnabled(true);
 						bookInfo.getBtnSave().setEnabled(true);
@@ -663,7 +684,9 @@ public class BookController {
 	}
 	private void setButtons() throws Exception{
 		if (currentUser.getType().equals("User")) {
-			if (!TransactionDAO.isBorrowedByUser(
+			if (bookList != null
+					&& !bookList.isEmpty()
+					&& !TransactionDAO.isBorrowedByUser(
 					bookList.get(currTableRowSelection), currentUser)
 					&& !TransactionDAO.isReservedByUser(
 							bookList.get(currTableRowSelection),
@@ -678,7 +701,7 @@ public class BookController {
 					bookInfo.getLblErrorMsg().setForeground(
 							Color.RED);
 				}
-			} else {
+			} else if (bookList != null && !bookList.isEmpty()) {
 				bookInfo.getLblErrorMsg()
 						.setText(
 								"You already have a pending transaction for the following book: ");
