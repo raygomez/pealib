@@ -1,5 +1,6 @@
 package views;
 
+import java.awt.Insets;
 import java.awt.event.*;
 import java.util.ArrayList;
 
@@ -91,9 +92,15 @@ public class UserInfoPanel extends JPanel {
 
 		tempLabel = new JLabel("Address");
 		address = new JTextArea(15, 20);
+		address.setMargin(new Insets(5,5,5,5));
+		address.setLineWrap(true);
+		address.setWrapStyleWord(true);		
 
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(address);
+		
 		add(tempLabel);
-		add(address, "wrap");
+		add(scrollPane, "wrap");
 
 		tempLabel = new JLabel("Contact Number");
 		contactNumber = new MyTextField(20);

@@ -1,5 +1,6 @@
 package views;
 
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
@@ -54,7 +55,7 @@ public class BookInfoPanel extends JPanel {
 
 	private void displayBookInfo() {
 
-		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][144]", "[40][][][][][][][grow][48.00][34.00][][13.00][]"));
+		setLayout(new MigLayout("", "[14.00][38.00][13.00][grow][][]", "[40][][][][][][][grow][48.00][34.00][][13.00][]"));
 
 		errorMessageLabel = new ErrorLabel("");
 		add(errorMessageLabel, "cell 3 0 2 1,alignx center,aligny center");
@@ -115,10 +116,16 @@ public class BookInfoPanel extends JPanel {
 
 		JLabel lblDescription = new JLabel("Description:");
 		add(lblDescription, "cell 1 7");
-
+		
 		descriptionTextArea = new JTextArea(currentBook.getDescription());
 		descriptionTextArea.setName("descriptionTextArea");
 		descriptionTextArea.setEditable(false);
+		
+		descriptionTextArea.setMargin(new Insets(8,8,8,8));
+		descriptionTextArea.setLineWrap(true);
+		descriptionTextArea.setWrapStyleWord(true);
+		JScrollPane scrollPane = new JScrollPane(descriptionTextArea);		
+		scrollPane.setViewportView(descriptionTextArea);
 		add(descriptionTextArea, "cell 3 7 2 3,grow");
 
 		saveButton = new JButton("Save", new ImageIcon("resources/images/save32x32.png"));

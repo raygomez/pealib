@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.BorderLayout;
+import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -13,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import java.awt.Color;
 import java.awt.event.ActionListener;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -104,7 +104,10 @@ public class AddBookDialog extends JDialog {
 		contentPanel.add(scrollPane, "cell 1 6,grow");
 
 		descriptionTextArea = new JTextArea();
-		descriptionTextArea.setName("descriptionTextArea");
+		descriptionTextArea.setName("descriptionTextArea");		
+		descriptionTextArea.setMargin(new Insets(5,5,5,5));
+		descriptionTextArea.setLineWrap(true);
+		descriptionTextArea.setWrapStyleWord(true);		
 		scrollPane.setViewportView(descriptionTextArea);
 
 		JLabel lblCopies = new JLabel("Copies:");
