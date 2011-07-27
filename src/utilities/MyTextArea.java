@@ -1,6 +1,7 @@
 package utilities;
 
 import java.awt.Color;
+import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
@@ -8,11 +9,16 @@ import javax.swing.JTextArea;
 public class MyTextArea extends JTextArea {
 
 	public MyTextArea() {
-		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
+		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));		
 	}
 
 	public MyTextArea(String arg) {
 		super(arg);
+		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
+	}
+	
+	public MyTextArea(String arg, int col, int row) {
+		super(arg, row, col);		
 		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
 	}
 
