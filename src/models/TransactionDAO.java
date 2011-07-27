@@ -3,6 +3,7 @@ package models;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -109,7 +110,7 @@ public class TransactionDAO {
 
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
-			Date datetimeReserved = rs.getDate("DatetimeReserved");
+			Timestamp datetimeReserved = rs.getTimestamp("DatetimeReserved");
 			rTransaction = new ReserveTransaction(user, book, datetimeReserved);
 
 		}
