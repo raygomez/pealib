@@ -1,0 +1,190 @@
+<?eclipse.ant.import?>
+<project basedir="." default="all">
+	<property name="src.dir" location="src" />
+	<property name="tests.dir" location="test" />
+	<property name="dist.dir" location="dist" />
+	<property name="docs.dir" location="docs" />
+	<property name="bin.dir" location="bin" />
+	<property name="reports.dir" location="reports" />
+	<property name="coverage.xml.dir" location="coverage" />
+	<property name="instrumented.dir" location="instrumented" />
+	<property name="cobertura.dir" location="lib\cobertura-1.9.4.1" />
+	<property name="junit.output.dir" value="junit" />
+	<property name="resources.dir" value="resources" />
+
+	<path id="pealib.classpath">
+		<pathelement location="bin" />
+		<pathelement location="lib/miglayout15-swing.jar" />
+		<pathelement location="lib/mysql-connector-java-5.1.16-bin.jar" />
+		<pathelement location="lib/commons-pool-1.5.6.jar" />
+		<pathelement location="lib/dbunit-2.4.3.jar" />
+		<pathelement location="lib/slf4j-api-1.6.1.jar" />
+		<pathelement location="lib/slf4j-nop-1.6.1.jar" />
+		<pathelement location="lib/spring-2.5.4.jar" />
+		<pathelement location="lib/uispec4j-2.4-jdk16.jar" />
+		<pathelement location="lib/unitils-3.1/unitils-core-3.1.jar" />
+		<pathelement location="lib/unitils-3.1/unitils-database-3.1.jar" />
+		<pathelement location="lib/unitils-3.1/unitils-dbunit-3.1.jar" />
+		<pathelement location="lib/org.junit_4.8.2/junit.jar" />
+		<pathelement location="lib/org.junit_4.8.2/org.hamcrest.core_1.1.0.v20090501071000.jar" />
+		<pathelement location="lib/emma/emma_ant.jar" />
+		<pathelement location="lib/emma/emma.jar" />
+		<pathelement location="lib/commons/commons-collections-3.2.jar" />
+		<pathelement location="lib/commons/commons-dbcp-1.4.jar" />
+		<pathelement location="lib/commons/commons-io-2.0.1.jar" />
+		<pathelement location="lib/commons/commons-lang-2.3.jar" />
+		<pathelement location="lib/commons/commons-logging-1.1.jar" />
+		<pathelement location="lib/joda-time-1.6.2.jar" />
+		<pathelement location="lib/ognl-2.6.9.jar" />
+	</path>
+
+	<path id="cobertura_classpath">
+		<fileset dir="${cobertura.dir}">
+			<include name="cobertura.jar" />
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<taskdef classpathref="cobertura_classpath" resource="tasks.properties" />
+
+	<path id="emma.lib">
+		<pathelement location="lib/emma/emma.jar" />
+		<pathelement location="lib/emma/emma_ant.jar" />
+	</path>
+	<taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+
+	<target name="build" />
+	<target name="clean" />
+	<target name="init">
+	</target>
+	<target name="junitreport">
+	</target>
+	<!--<target name="all" depends='build,instrument,tests,coverage-report,summary-coverage-report,alternate-coverage-report,junitreport,docs,jar' />-->
+	<target name="emma-all" depends='init,build,inst-emma,test-emma,report-emma' />
+	<target name="cobertura-all" depends='init,build,instrument,tests,coverage-report,summary-coverage-report,alternate-coverage-report' />
+	<target name="all" depends='zip,cobertura-all,emma-all,junitreport,docs' />
+
+	<target name="jar" depends='build'>
+		<delete dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<copy file="app.config" todir="${dist.dir}" />
+		<copy todir="${dist.dir}/${resources.dir}">
+			<fileset dir="${resources.dir}">
+			</fileset>
+		</copy>
+		<mkdir dir="${dist.dir}\lib" />
+		<copy file="lib\miglayout15-swing.jar" todir="${dist.dir}\lib" />
+		<copy file="lib\mysql-connector-java-5.1.16-bin.jar" todir="${dist.dir}\lib" />
+		<copy file="lib\joda-time-1.6.2.jar" todir="${dist.dir}\lib" />
+		<jar destfile="${dist.dir}\PeaLibrary.jar" basedir="${bin.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="pealib.PeaLibrary" />
+				<attribute name="Class-Path" value="lib\miglayout15-swing.jar lib\mysql-connector-java-5.1.16-bin.jar lib\joda-time-1.6.2.jar" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="zip" depends="clean,init,build,jar">
+		<delete file="pealib.zip" />
+		<zip destfile="pealib.zip" basedir="${dist.dir}">
+		</zip>
+	</target>
+	<target name="docs" depends="build">
+		<delete dir="${docs.dir}" />
+		<mkdir dir="${docs.dir}" />
+		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}" classpathref="pealib.classpath">
+			<fileset dir="${src.dir}">
+				<include name="**" />
+				<exclude name="unitils*" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<target name="tests" depends="instrument">
+		<delete dir="${junit.output.dir}" />
+		<mkdir dir="${junit.output.dir}" />
+		<junit fork="yes" printsummary="withOutAndErr">
+			<classpath location="${instrumented.dir}" />
+			<classpath location="${bin.dir}" />
+			<classpath refid="cobertura_classpath" />
+			<formatter type="xml" />
+			<batchtest todir="${junit.output.dir}">
+				<fileset dir="${tests.dir}" includes="**/*Test.java">
+				</fileset>
+			</batchtest>
+			<classpath refid="pealib.classpath" />
+		</junit>
+	</target>
+
+	<target name="test-emma" depends="inst-emma">
+		<delete dir="${junit.output.dir}" />
+		<mkdir dir="${junit.output.dir}" />
+		<junit fork="yes" printsummary="withOutAndErr">
+			<classpath refid="emma.lib" />
+			<jvmarg value="-Demma.coverage.out.file=${reports.dir}/coverage.ec" />
+			<jvmarg value="-Demma.coverage.out.merge=true" />
+
+			<formatter type="xml" />
+			<batchtest todir="${junit.output.dir}">
+				<fileset dir="${tests.dir}" includes="**/*Test.java">
+				</fileset>
+			</batchtest>
+			<classpath refid="pealib.classpath" />
+		</junit>
+	</target>
+
+	<target name="report-emma">
+		<emma>
+			<report>
+				<sourcepath>
+					<pathelement path="${src.dir}" />
+				</sourcepath>
+				<infileset dir="${reports.dir}" includes="*.em, *.ec" />
+				<xml outfile="${reports.dir}/coverage.xml" />
+				<txt outfile="${reports.dir}/coverage.txt" />
+				<html outfile="${reports.dir}/coverage.html" />
+			</report>
+		</emma>
+	</target>
+
+	<target name="instrument" depends="build">
+		<delete file="cobertura.ser" />
+		<delete dir="${instrumented.dir}" />
+		<cobertura-instrument todir="${instrumented.dir}">
+			<fileset dir="${bin.dir}">
+				<include name="**/*.class" />
+<!--				<exclude name="**/*$*.class" />-->
+				<exclude name="**/*Test.class" />
+			</fileset>
+		</cobertura-instrument>
+	</target>
+
+	<target name="inst-emma">
+		<delete dir="${reports.dir}" />
+		<mkdir dir="${reports.dir}" />
+		<emma>
+			<instr instrpath="${bin.dir}" metadatafile="${reports.dir}/coverage.em" mode="overwrite" merge="true">
+				<filter excludes="**/*$*.class" />
+				<filter excludes="*Test*,../*Test*" />
+			</instr>
+		</emma>
+	</target>
+
+	<target name="coverage-report">
+		<cobertura-report srcdir="${src.dir}" destdir="${coverage.xml.dir}" format="xml" />
+		<cobertura-report srcdir="${src.dir}" destdir="${coverage.xml.dir}" />
+	</target>
+
+	<target name="summary-coverage-report">
+		<!-- Generate an summary XML file containing the coverage data using the 
+			"srcdir" attribute. -->
+		<cobertura-report srcdir="${src.dir}" destdir="${coverage.xml.dir}" format="summaryXml" />
+	</target>
+
+	<target name="alternate-coverage-report">
+		<cobertura-report destdir="${coverage.xml.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+		</cobertura-report>
+	</target>
+</project>
