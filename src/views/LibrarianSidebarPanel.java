@@ -40,22 +40,21 @@ public class LibrarianSidebarPanel extends JPanel {
 		logoutButton = new MyButton("Logout", new ImageIcon(
 				"resources/images/logout32x32.png"));
 		bookTransactionsButton = new MyButton("Book Transactions",
-				new ImageIcon("resources/images/checkInOut32x32.png"));
-
+				new ImageIcon("resources/images/checkInOut32x32.png"));		
+		
 		buttonGroup.add(viewBooksButton);
 		buttonGroup.add(viewUsersButton);
 		buttonGroup.add(editProfileButton);
 		buttonGroup.add(logoutButton);
 		buttonGroup.add(bookTransactionsButton);
 		
+		bookTransactionsButton.setSelected(true);
+		
 		add(viewBooksButton, "growx");
 		add(viewUsersButton, "growx");
 		add(editProfileButton, "growx");
 		add(bookTransactionsButton, "growx");
-		add(logoutButton, "growx, wrap push");
-
-		bookTransactionsButton.getModel().setPressed(true);
-		bookTransactionsButton.setSelected(true);
+		add(logoutButton, "growx, wrap push");		
 	}
 
 	public void addViewBooksListener(ActionListener viewBooks) {
