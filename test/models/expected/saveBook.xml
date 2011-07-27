@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
 	<books 
 		   ID="1" 
 		   ISBN="1234567890120"
@@ -59,10 +61,20 @@
 		   Publisher="publisher1"
 		   Description="wizard book"
 		   YearPublish="1905"
-		   Copies="1" />	
+		   Copies="1" />
+	<books 
+		   ID="7" 
+		   ISBN="1234567890126"
+		   Title="title3Pantaleon"
+		   Author="author2"
+		   Edition="edition3"
+		   Publisher="publisher1"
+		   Description="wizard book"
+		   YearPublish="1905"
+		   Copies="1" />			   		   		   		   
 	<books  
 	       ID="0"
-		   ISBN="1234567890126"
+		   ISBN="1234567890127"
 		   Title="Harry Poter 4"
 		   Author="Ewan ko"
 		   Edition="1st"
