@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 
 public class BookSearchPanel extends JPanel {
@@ -79,10 +80,6 @@ public class BookSearchPanel extends JPanel {
 		textFieldSearch.addKeyListener(textfield);
 	}
 	
-	public void setMouseListener(MouseListener table) {
-		tableBookList.addMouseListener(table);
-	}
-	
 	public void setTextFieldSearch(String textFieldSearch) {
 		this.textFieldSearch.setText(textFieldSearch);
 	}
@@ -97,6 +94,10 @@ public class BookSearchPanel extends JPanel {
 
 	public JTable getTableBookList() {
 		return tableBookList;
+	}
+	
+	public void addBookSelectionListener(ListSelectionListener listener){
+		tableBookList.getSelectionModel().addListSelectionListener(listener);
 	}
 	
 }

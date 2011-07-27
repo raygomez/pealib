@@ -7,20 +7,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.Timer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import net.miginfocom.swing.MigLayout;
 import utilities.Connector;
 import utilities.Constants;
+import utilities.IsbnChecker;
 import views.AddBookDialog;
 import views.BookInfoPanel;
 import views.BookSearchPanel;
@@ -102,7 +103,7 @@ public class BookController {
 		}		
 		else{ setButtons(false);}
 
-		bookSearch.setMouseListener(new BookListMouseListener());
+		bookSearch.addBookSelectionListener(new BookListSelectionListener());
 		bookInfo.addSaveListener(new SaveButtonListener());
 		bookInfo.addDeleteListener(new DeleteButtonListener());
 		bookInfo.addBorrowListener(new BorrowButtonListener());
@@ -159,10 +160,7 @@ public class BookController {
 				} else
 					addBook.getTxtFldYearPublish().hasError(false);
 
-				if (!addBook.getTxtFldIsbn().getText()
-						.matches(Constants.ISBN_FORMAT_1)
-						&& !addBook.getTxtFldIsbn().getText()
-								.matches(Constants.ISBN_FORMAT_2)) {
+				if (!IsbnChecker.isIsbnValid(addBook.getTxtFldIsbn().getText())) {
 					addBook.getTxtFldIsbn().hasError(true);
 					validate = false;
 				} else
@@ -237,6 +235,7 @@ public class BookController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			int currRow = currTableRowSelection;
 			try {
 				boolean validate = true;
 
@@ -270,10 +269,7 @@ public class BookController {
 				} else
 					bookInfo.getTxtFldPublisher().hasError(false);
 
-				if (!bookInfo.getTxtFldISBN().getText()
-						.matches(Constants.ISBN_FORMAT_1)
-						&& !bookInfo.getTxtFldISBN().getText()
-								.matches(Constants.ISBN_FORMAT_2)) {
+				if (!IsbnChecker.isIsbnValid(bookInfo.getTxtFldISBN().getText())) {
 					validate = false;
 					bookInfo.getTxtFldISBN().hasError(true);
 				} else bookInfo.getTxtFldISBN().hasError(false);
@@ -322,16 +318,16 @@ public class BookController {
 					
 					if(bookList != null && !bookList.isEmpty()) 
 						bookSearch.getTableBookList().addRowSelectionInterval(
-								currTableRowSelection, currTableRowSelection);
+								currRow, currRow);
 					
 					bookInfo.setBookInfoData(bookList
-							.get(currTableRowSelection));
+							.get(currRow));
 					JOptionPane.showMessageDialog(bookInfo,
 						    "Book updated.",
 						    "Information",
 						    JOptionPane.INFORMATION_MESSAGE);
 					bookInfo.getLblErrorMsg().clear();
-					if (bookList.get(currTableRowSelection).getCopies() == 0 || bookList.get(currTableRowSelection).getCopies() != availableCopy) {
+					if (bookList.get(currRow).getCopies() == 0 || bookList.get(currRow).getCopies() != availableCopy) {
 						bookInfo.getBtnDelete().setEnabled(false);
 					} else
 						bookInfo.getBtnDelete().setEnabled(true);
@@ -349,6 +345,7 @@ public class BookController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			int currRow = currTableRowSelection;
 			try {
 				int optConfirm = JOptionPane.showConfirmDialog(
 						bookInfo,
@@ -362,14 +359,14 @@ public class BookController {
 					} else {
 						bookList = BookDAO.searchBookForUser(currSearchString);			
 					}
+					bookInfo.setBookInfoData(bookList
+							.get(currRow));
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
 					
 					if(bookList != null && !bookList.isEmpty()) 
 						bookSearch.getTableBookList().addRowSelectionInterval(
-								currTableRowSelection, currTableRowSelection);
-					bookInfo.setBookInfoData(bookList
-							.get(currTableRowSelection));
+								currRow, currRow);
 					bookInfo.getBtnDelete().setEnabled(false);
 					
 				}
@@ -384,10 +381,11 @@ public class BookController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			int currRow = currTableRowSelection;
 			try {
 				reset();
 				int request = TransactionDAO.requestBook(
-						bookList.get(currTableRowSelection), currentUser);
+						bookList.get(currRow), currentUser);
 				if (request == 1) {
 					JOptionPane
 							.showMessageDialog(bookLayoutPanel,
@@ -403,9 +401,9 @@ public class BookController {
 				
 				if(bookList != null && !bookList.isEmpty()) 
 					bookSearch.getTableBookList().addRowSelectionInterval(
-							currTableRowSelection, currTableRowSelection);
+							currRow, currRow);
 				
-				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
+				bookInfo.setBookInfoData(bookList.get(currRow));
 
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -418,10 +416,11 @@ public class BookController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			int currRow = currTableRowSelection;
 			try {
 				reset();
 				int reserve = TransactionDAO.reserveBook(
-						bookList.get(currTableRowSelection), currentUser);
+						bookList.get(currRow), currentUser);
 				if (reserve == 1) {
 					JOptionPane
 							.showMessageDialog(bookLayoutPanel,
@@ -437,22 +436,28 @@ public class BookController {
 				
 				if(bookList != null && !bookList.isEmpty()) 
 					bookSearch.getTableBookList().addRowSelectionInterval(
-							currTableRowSelection, currTableRowSelection);
-				bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
+							currRow, currRow);
+				bookInfo.setBookInfoData(bookList.get(currRow));
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 		}
 
 	}
-
-	class BookListMouseListener implements MouseListener {
+	
+	class BookListSelectionListener implements ListSelectionListener{
 
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			reset();
-			JTable table = (JTable) e.getSource();
-			int tableRow = table.getSelectedRow();
+		public void valueChanged(ListSelectionEvent e) {
+			DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
+			.getSource();
+			int tableRow = dlSelectionModel.getLeadSelectionIndex();
+			System.out.println(tableRow);
+			currTableRowSelection = tableRow;
+			if(tableRow < 0){
+				return;
+			}
+			
 			currTableRowSelection = tableRow;
 			Book displayBook = bookList.get(tableRow);
 			currISBN = displayBook.getIsbn();
@@ -494,23 +499,10 @@ public class BookController {
 
 			}
 
+			
+			
 		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
+		
 	}
 
 	class BookListModel extends AbstractTableModel {
