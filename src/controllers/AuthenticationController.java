@@ -4,19 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.concurrent.Callable;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
 import models.User;
 import models.UserDAO;
 import utilities.Connector;
 import utilities.Constants;
-import utilities.CrashHandler;
+import utilities.Task;
+import utilities.TaskUpdateListener;
 import views.LoadingDialog;
 import views.LogInDialog;
 import views.SignUpDialog;
@@ -38,8 +37,6 @@ public class AuthenticationController {
 	private String sUpContactNumber;
 	private String sUpAddress;
 	
-	private LoadingDialog loadingDialog;
-
 	public static void main(String[] args) {
 		try {
 			new Connector(Constants.TEST_CONFIG);
@@ -89,7 +86,7 @@ public class AuthenticationController {
 	// SignUp Listener
 	class SignUpListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			signUp = new SignUpDialog();
+			setSignUp(new SignUpDialog());
 			signUp.setActionListeners(new SignUpSubmitListener(),
 					new SignUpCancelListener(), new SignUpEnterAdapter(),
 					new SignUpUsernameKeyAdapter());
@@ -143,56 +140,36 @@ public class AuthenticationController {
 		login_pass = new String(getLogin().getFieldPassword().getPassword());
 	}
 
+	private void retrieveUser() throws Exception{
+		setUser(UserDAO.getUser(login_user, login_pass));
+		
+		if (user == null) {
+			getLogin().setLabelError("Username/Password Mismatch");
+			getLogin().getFieldPassword().setText("");
+		} else if (user.getType().equals("Pending")) {
+			getLogin()
+					.setLabelError(
+							"<html><center>Account still being processed.<br/>"
+									+ "Ask Librarian for further inquiries.</center></html>");
+			getLogin().getFieldPassword().setText("");
+		} else {
+			getLogin().dispose();
+		}
+	}
+	
 	private void submit() {
 		
-		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>(){
+		Callable<Void> toDo = new Callable<Void>() {
 			
 			@Override
-			protected Void doInBackground() {
-				try {
-					setUser(UserDAO.getUser(login_user, login_pass));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					cancel(true);
-					firePropertyChange("state", "STARTED", "DONE");
-					CrashHandler.handle(e);
-				}
-				return null;				
-			}
-			@Override
-			protected void done() {
-				if (user == null) {
-					getLogin().setLabelError("Username/Password Mismatch");
-					getLogin().getFieldPassword().setText("");
-				} else if (user.getType().equals("Pending")) {
-					getLogin()
-							.setLabelError(
-									"<html><center>Account still being processed.<br/>"
-											+ "Ask Librarian for further inquiries.</center></html>");
-					getLogin().getFieldPassword().setText("");
-				} else {
-					getLogin().dispose();
-				}
+			public Void call() throws Exception {
+				retrieveUser();
+				return null;
 			}
 		};
 		
-		sw.addPropertyChangeListener(new PropertyChangeListener() {
-			
-			@Override
-			public void propertyChange(PropertyChangeEvent arg0) {
-				// TODO Auto-generated method stub
-				if(arg0.getPropertyName().equalsIgnoreCase("state")){
-					System.out.println(arg0.getNewValue());
-					if(arg0.getNewValue().toString().equals("STARTED")){
-						setLoadingDialog(new LoadingDialog(getLogin()));
-						getLoadingDialog().setVisible(true);
-					}
-					else if(arg0.getNewValue().toString().equals("DONE")){
-						getLoadingDialog().dispose();
-					}
-				}
-			}
-		});
+		Task<Void, Void> task = new Task<Void, Void>(toDo);
+		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(getLogin())));
 		
 		setUsernamePassword();
 		if (login_user.equals("") || login_pass.equals("")) {
@@ -210,7 +187,7 @@ public class AuthenticationController {
 
 		else {
 			try {
-				sw.execute();
+				task.execute();
 			} catch (Exception e) {
 				System.out.println("AuthenticationController getUser: " + e);
 				getLogin().setLabelError("Connection Error!");
@@ -269,68 +246,55 @@ public class AuthenticationController {
 		}
 	}
 
+	private void submitRegistration(){
+		int maskedLabel = 0;
+		signUp.setFieldBorderColor(maskedLabel);
+		signUp.setLblErrorMessage("");
+		
+		getSignUpData();
+		if (!isSignUpFieldComplete(maskedLabel)) {
+			signUp.setLblErrorMessage("Cannot leave mandatory fields empty.");
+		} else if (!isUserNameValid()) {
+			/* action is handled by isUserNameValid() */
+		} else if (!isSignUpInputValid(maskedLabel)) {
+			signUp.setLblErrorMessage("Invalid Input.");
+		} else if (!sUpConfirmPassword.equals(sUpPassword)) {
+			signUp.setLblErrorMessage("Mismatch in Confirm Password.");
+			signUp.setFieldBorderColor(SignUpDialog.PASSWORD_FLAG
+					| SignUpDialog.CONFIRM_PASSWORD_FLAG);
+			signUp.getTxtfldPassword().setText("");
+			signUp.getTxtfldConfirmPassword().setText("");
+		} else {
+			User newUser = new User(-1, sUpUserName, sUpPassword, sUpFirstName,
+					sUpLastName, sUpEmailAddress, sUpAddress, sUpContactNumber,
+					"Pending");
+			try {
+				UserDAO.saveUser(newUser);
+				JOptionPane.showMessageDialog(signUp.getContentPane(),
+						"Your account has been created. " +
+						"Please wait for the Librarian to activate your account.",
+						"Sign-up Successful", JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
+				signUpFailed();
+				e.printStackTrace();
+			}
+			signUpCancel();
+		}
+	}
+	
 	private void signUpSubmit() {
-		SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>(){
-
+		Callable<Void> toDo = new Callable<Void>() {
+			
 			@Override
-			protected Void doInBackground() {
-				int maskedLabel = 0;
-				signUp.setFieldBorderColor(maskedLabel);
-				signUp.setLblErrorMessage("");
-				
-				getSignUpData();
-				if (!isSignUpFieldComplete(maskedLabel)) {
-					signUp.setLblErrorMessage("Cannot leave mandatory fields empty.");
-				} else if (!isUserNameValid()) {
-					/* action is handled by isUserNameValid() */
-				} else if (!isSignUpInputValid(maskedLabel)) {
-					signUp.setLblErrorMessage("Invalid Input.");
-				} else if (!sUpConfirmPassword.equals(sUpPassword)) {
-					signUp.setLblErrorMessage("Mismatch in Confirm Password.");
-					signUp.setFieldBorderColor(SignUpDialog.PASSWORD_FLAG
-							| SignUpDialog.CONFIRM_PASSWORD_FLAG);
-					signUp.getTxtfldPassword().setText("");
-					signUp.getTxtfldConfirmPassword().setText("");
-				} else {
-					User newUser = new User(-1, sUpUserName, sUpPassword, sUpFirstName,
-							sUpLastName, sUpEmailAddress, sUpAddress, sUpContactNumber,
-							"Pending");
-					try {
-						UserDAO.saveUser(newUser);
-						JOptionPane.showMessageDialog(signUp.getContentPane(),
-								"Your account has been created. " +
-								"Please wait for the Librarian to activate your account.",
-								"Sign-up Successful", JOptionPane.INFORMATION_MESSAGE);
-					} catch (Exception e) {
-						signUpFailed();
-						e.printStackTrace();
-						cancel(true);
-					}
-					signUpCancel();
-				}
+			public Void call() throws Exception {
+				submitRegistration();
 				return null;
 			}
-			
 		};
 		
-		sw.addPropertyChangeListener(new PropertyChangeListener() {
-			
-			@Override
-			public void propertyChange(PropertyChangeEvent arg0) {
-				// TODO Auto-generated method stub
-				if(arg0.getPropertyName().equalsIgnoreCase("state")){
-					if(arg0.getNewValue().toString().equals("STARTED")){
-						setLoadingDialog(new LoadingDialog(getLogin()));
-						getLoadingDialog().setVisible(true);
-					}
-					else if(arg0.getNewValue().toString().equals("DONE")){
-						getLoadingDialog().dispose();
-					}
-				}
-			}
-		});
-		sw.execute();
-		
+		Task<Void, Void> task = new Task<Void, Void>(toDo);
+		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(getSignUp())));
+		task.execute();
 	}
 
 	private void getSignUpData() {
@@ -471,11 +435,11 @@ public class AuthenticationController {
 				"Sign-up Failed", JOptionPane.ERROR_MESSAGE);
 	}
 
-	public void setLoadingDialog(LoadingDialog loadingDialog) {
-		this.loadingDialog = loadingDialog;
+	public static void setSignUp(SignUpDialog signUp) {
+		AuthenticationController.signUp = signUp;
 	}
 
-	public LoadingDialog getLoadingDialog() {
-		return loadingDialog;
+	public static SignUpDialog getSignUp() {
+		return signUp;
 	}
 }
