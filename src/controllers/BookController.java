@@ -333,9 +333,10 @@ public class BookController {
 						    "Information",
 						    JOptionPane.INFORMATION_MESSAGE);
 					bookInfo.getLblErrorMsg().clear();
-					if (bookList.get(currTableRowSelection).getCopies() > 0) {
+					if (bookList.get(currTableRowSelection).getCopies() == 0 || bookList.get(currTableRowSelection).getCopies() != availableCopy) {
+						bookInfo.getBtnDelete().setEnabled(false);
+					} else
 						bookInfo.getBtnDelete().setEnabled(true);
-					}
 				} else {
 					bookInfo.getLblErrorMsg().makeError("Invalid Input");
 				}
@@ -461,7 +462,7 @@ public class BookController {
 			try {
 				if (currentUser.getType().equals("Librarian")) {
 					bookInfo.getBtnSave().setEnabled(true);
-					int availableCopy = TransactionDAO.getAvailableCopies(bookList.get(0));
+					int availableCopy = TransactionDAO.getAvailableCopies(bookList.get(tableRow));
 					if (bookList.get(tableRow).getCopies() == 0 || bookList.get(tableRow).getCopies() != availableCopy) {
 						bookInfo.getBtnDelete().setEnabled(false);
 					} else
