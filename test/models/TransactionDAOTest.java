@@ -71,10 +71,11 @@ public class TransactionDAOTest {
 	@Test
 	@ExpectedDataSet({ "expected/cancelReserves.xml" })
 	public void testCancelReservation() throws Exception {
-		User user = UserDAO.getUserById(1);
-		Book book = BookDAO.getBookById(1);
+		User user = UserDAO.getUserById(3);
+		Book book = BookDAO.getBookById(6);
 		ReserveTransaction rtTransaction = TransactionDAO
 				.getReserveTransaction(user, book);
+		assertNotNull(rtTransaction);
 		TransactionDAO.cancelReservation(rtTransaction);
 	}
 
@@ -88,8 +89,10 @@ public class TransactionDAOTest {
 
 	@Test
 	public void testIsReserved() throws Exception {
-		User user = UserDAO.getUserById(1);
-		Book book = BookDAO.getBookById(1);
+		User user = UserDAO.getUserById(2);
+		assertNotNull(user);
+		Book book = BookDAO.getBookById(2);
+		assertNotNull(book);
 		assertTrue(TransactionDAO.isReservedByUser(book, user));
 	}
 
@@ -103,25 +106,22 @@ public class TransactionDAOTest {
 	@Test
 	public void testGetReservedBooksMany() throws Exception {
 		User user = UserDAO.getUserById(1);
-		Book book1 = BookDAO.getBookById(1);
-		Book book2 = BookDAO.getBookById(2);
-		Book book3 = BookDAO.getBookById(3);
+		Book book1 = BookDAO.getBookById(2);
+		Book book2 = BookDAO.getBookById(6);
 		
 		ArrayList<ReserveTransaction> transactions = TransactionDAO
 				.getReservedBooks(user);
 		ReserveTransaction r1 = TransactionDAO.getReserveTransaction(user, book1);
 		ReserveTransaction r2 = TransactionDAO.getReserveTransaction(user, book2);
-		ReserveTransaction r3 = TransactionDAO.getReserveTransaction(user, book3);
 		assertReflectionEquals(r1, transactions.get(0));
 		assertReflectionEquals(r2, transactions.get(1));
-		assertReflectionEquals(r3, transactions.get(2));
-		assertEquals(3, transactions.size());
+		assertEquals(2, transactions.size());
 	}
 
 	@Test
 	public void testGetReservedBooksOne() throws Exception {
 		User user = UserDAO.getUserById(3);
-		Book book = BookDAO.getBookById(3);
+		Book book = BookDAO.getBookById(6);
 		ArrayList<ReserveTransaction> transactions = TransactionDAO
 				.getReservedBooks(user);
 		ReserveTransaction r1 = TransactionDAO.getReserveTransaction(user, book);
@@ -196,7 +196,7 @@ public class TransactionDAOTest {
 	@Test
 	public void testGetQueueInReservationNotFirst() throws Exception {
 		User user = UserDAO.getUserById(3);
-		Book book = BookDAO.getBookById(3);
+		Book book = BookDAO.getBookById(6);
 		assertEquals(3, TransactionDAO.getQueueInReservation(book, user));
 	}
 
@@ -329,8 +329,8 @@ public class TransactionDAOTest {
 
 	@Test
 	public void testGetReserveTransaction() throws Exception {
-		User user = UserDAO.getUserById(1);
-		Book book = BookDAO.getBookById(1);
+		User user = UserDAO.getUserById(2);
+		Book book = BookDAO.getBookById(2);
 		ReserveTransaction transaction = TransactionDAO.getReserveTransaction(
 				user, book);
 		assertReflectionEquals(user, transaction.getUser());
