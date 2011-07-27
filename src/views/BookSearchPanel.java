@@ -93,7 +93,6 @@ public class BookSearchPanel extends JPanel {
 		DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
 		trender.setHorizontalAlignment(SwingConstants.CENTER);
 				
-	
 		table.getColumn(table.getColumnName(0)).setCellRenderer(trender);
 		table.getColumn(table.getColumnName(1)).setCellRenderer(trender);
 		table.getColumn(table.getColumnName(2)).setCellRenderer(trender);		
