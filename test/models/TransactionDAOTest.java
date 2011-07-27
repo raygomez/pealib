@@ -335,7 +335,7 @@ public class TransactionDAOTest {
 				user, book);
 		assertReflectionEquals(user, transaction.getUser());
 		assertReflectionEquals(book, transaction.getBook());
-		assertEquals("2011-07-27", transaction.getDateReserved().toString());
+		assertEquals("2011-07-27 09:09:09.0", transaction.getDateReserved().toString());
 	}
 
 	@Test

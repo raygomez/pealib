@@ -1,12 +1,16 @@
 package utilities;
 
 import java.awt.Color;
-import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 
 public class MyTextArea extends JTextArea {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public MyTextArea() {
 		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));		
