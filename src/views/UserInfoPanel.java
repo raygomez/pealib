@@ -92,7 +92,7 @@ public class UserInfoPanel extends JPanel {
 		add(lastNameError, "wrap");
 
 		tempLabel = new JLabel("Address");
-		address = new MyTextArea("",15, 20);
+		address = new MyTextArea("",20, 20);
 		address.setMargin(new Insets(5,5,5,5));
 		address.setLineWrap(true);
 		address.setWrapStyleWord(true);		
