@@ -452,7 +452,6 @@ public class BookController {
 			DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
 			.getSource();
 			int tableRow = dlSelectionModel.getLeadSelectionIndex();
-			System.out.println(tableRow);
 			currTableRowSelection = tableRow;
 			if(tableRow < 0){
 				return;
