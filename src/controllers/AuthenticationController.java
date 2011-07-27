@@ -16,6 +16,7 @@ import models.User;
 import models.UserDAO;
 import utilities.Connector;
 import utilities.Constants;
+import utilities.CrashHandler;
 import views.LoadingDialog;
 import views.LogInDialog;
 import views.SignUpDialog;
@@ -41,7 +42,7 @@ public class AuthenticationController {
 
 	public static void main(String[] args) {
 		try {
-			new Connector("test.config");
+			new Connector(Constants.TEST_CONFIG);
 			new AuthenticationController();
 			AuthenticationController.getLogin().setVisible(true);
 
@@ -148,46 +149,30 @@ public class AuthenticationController {
 			
 			@Override
 			protected Void doInBackground() {
-								
-				setUsernamePassword();
-				if (login_user.equals("") || login_pass.equals("")) {
-
-					getLogin().setLabelError("Incomplete fields");
-					getLogin().getFieldUsername().hasError(
-							login_user.equals("") || !validateUsername(login_user));
-					getLogin().getFieldPassword().hasError(
-							login_pass.equals("") || !validatePassword(login_pass));
-
-				} else if (!validateUsername(login_user)
-						|| !validatePassword(login_pass)) {
-					getLogin().setLabelError("Invalid input");
+				try {
+					setUser(UserDAO.getUser(login_user, login_pass));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					cancel(true);
+					firePropertyChange("state", "STARTED", "DONE");
+					CrashHandler.handle(e);
 				}
-
-				else {
-					try {
-
-						setUser(UserDAO.getUser(login_user, login_pass));
-
-						if (user == null) {
-							getLogin().setLabelError("Username/Password Mismatch");
-							getLogin().getFieldPassword().setText("");
-						} else if (user.getType().equals("Pending")) {
-							getLogin()
-									.setLabelError(
-											"<html><center>Account still being processed.<br/>"
-													+ "Ask Librarian for further inquiries.</center></html>");
-							getLogin().getFieldPassword().setText("");
-						} else {
-							getLogin().dispose();
-						}
-
-					} catch (Exception e) {
-						System.out.println("AuthenticationController getUser: " + e);
-						getLogin().setLabelError("Connection Error!");
-						cancel(true);
-					}
+				return null;				
+			}
+			@Override
+			protected void done() {
+				if (user == null) {
+					getLogin().setLabelError("Username/Password Mismatch");
+					getLogin().getFieldPassword().setText("");
+				} else if (user.getType().equals("Pending")) {
+					getLogin()
+							.setLabelError(
+									"<html><center>Account still being processed.<br/>"
+											+ "Ask Librarian for further inquiries.</center></html>");
+					getLogin().getFieldPassword().setText("");
+				} else {
+					getLogin().dispose();
 				}
-				return null;
 			}
 		};
 		
@@ -197,6 +182,7 @@ public class AuthenticationController {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				// TODO Auto-generated method stub
 				if(arg0.getPropertyName().equalsIgnoreCase("state")){
+					System.out.println(arg0.getNewValue());
 					if(arg0.getNewValue().toString().equals("STARTED")){
 						setLoadingDialog(new LoadingDialog(getLogin()));
 						getLoadingDialog().setVisible(true);
@@ -207,8 +193,29 @@ public class AuthenticationController {
 				}
 			}
 		});
-		sw.execute();
 		
+		setUsernamePassword();
+		if (login_user.equals("") || login_pass.equals("")) {
+
+			getLogin().setLabelError("Incomplete fields");
+			getLogin().getFieldUsername().hasError(
+					login_user.equals("") || !validateUsername(login_user));
+			getLogin().getFieldPassword().hasError(
+					login_pass.equals("") || !validatePassword(login_pass));
+
+		} else if (!validateUsername(login_user)
+				|| !validatePassword(login_pass)) {
+			getLogin().setLabelError("Invalid input");
+		}
+
+		else {
+			try {
+				sw.execute();
+			} catch (Exception e) {
+				System.out.println("AuthenticationController getUser: " + e);
+				getLogin().setLabelError("Connection Error!");
+			}
+		}
 	}
 
 	/*
