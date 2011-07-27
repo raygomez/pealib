@@ -27,7 +27,7 @@ public class UserInfoPanel extends JPanel {
 	private MyTextField username;
 	private MyTextField firstName;
 	private MyTextField lastName;
-	private JTextArea address;
+	private MyTextArea address;
 	private MyTextField contactNumber;
 	private MyTextField email;
 
@@ -35,6 +35,7 @@ public class UserInfoPanel extends JPanel {
 	private JLabel lastNameError;
 	private JLabel contactNumberError;
 	private JLabel emailError;
+	private JLabel addressError;
 
 	public UserInfoPanel() {
 
@@ -91,7 +92,7 @@ public class UserInfoPanel extends JPanel {
 		add(lastNameError, "wrap");
 
 		tempLabel = new JLabel("Address");
-		address = new JTextArea(15, 20);
+		address = new MyTextArea("",15, 20);
 		address.setMargin(new Insets(5,5,5,5));
 		address.setLineWrap(true);
 		address.setWrapStyleWord(true);		
@@ -99,8 +100,12 @@ public class UserInfoPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(address);
 		
+		addressError = new ErrorLabel();
+		addressError.setName("addressError");
+		
 		add(tempLabel);
-		add(scrollPane, "wrap");
+		add(scrollPane);
+		add(addressError, "wrap");
 
 		tempLabel = new JLabel("Contact Number");
 		contactNumber = new MyTextField(20);
@@ -119,6 +124,7 @@ public class UserInfoPanel extends JPanel {
 
 		emailError = new ErrorLabel();
 		emailError.setName("emailError");
+				
 
 		add(tempLabel);
 		add(email);
@@ -127,6 +133,8 @@ public class UserInfoPanel extends JPanel {
 		saveButton = new SaveButton("Save Changes", new ImageIcon(
 				"resources/images/save32x32.png"));
 		add(saveButton);
+		
+		resetErrorMessages();
 	}
 
 	public void addChangePasswordListener(ActionListener changePassword) {
@@ -161,6 +169,11 @@ public class UserInfoPanel extends JPanel {
 				emailError.setText(Constants.EMAIL_FORMAT_ERROR_MESSAGE);
 				email.hasError(true);
 				break;
+			
+			case Constants.ADDRESS_FORMAT_ERROR:
+				addressError.setText(Constants.ADDRESS_ERROR_MESSAGE);
+				address.hasError(true);
+				break;
 			}
 		}
 	}
@@ -178,7 +191,9 @@ public class UserInfoPanel extends JPanel {
 		
 		emailError.setText("");
 		email.hasError(false);
-
+		
+		addressError.setText("");
+		address.hasError(false);
 	}
 
 	public String getAccountType() {
