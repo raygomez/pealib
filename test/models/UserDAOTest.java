@@ -1,8 +1,10 @@
 package models;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -185,5 +187,44 @@ public class UserDAOTest {
 		User user = UserDAO.searchAllPending("").get(0);
 		assertNotNull(user);
 		UserDAO.denyPendingUser(user);
+	}
+	
+	@Test
+	public void testGetUserByEmailOrUsernameByEmail() throws Exception {
+		User user = UserDAO.getUserByEmailOrUsername("nlazada@gmail.com");
+		assertNotNull(user);
+		assertReflectionEquals(user, UserDAO.getUserById(3));
+		
+	}
+	
+	@Test
+	public void testGetUserByEmailOrUsernameByUsername() throws Exception {
+		User user = UserDAO.getUserByEmailOrUsername("jvillar");
+		assertNotNull(user);
+		assertReflectionEquals(user, UserDAO.getUserById(1));
+		
+	}
+	
+	@Test
+	public void testGetUserByEmailOrUsernamePending() throws Exception {
+		User user = UserDAO.getUserByEmailOrUsername("rdgomez");
+		assertNull(user);
+	}
+	
+	@Test
+	public void testGetUserByEmailOrUsernameNotExisting() throws Exception {
+		User user = UserDAO.getUserByEmailOrUsername("rdgomez1");
+		assertNull(user);
+	}
+	
+	@Test
+	public void testIsEmailExisting() throws Exception {
+		assertTrue(UserDAO.isEmailExisting("rdgomez@gmail.com"));
+	}
+	
+	
+	@Test
+	public void testIsEmailNotExisting() throws Exception {
+		assertFalse(UserDAO.isEmailExisting("raygomez@gmail.com"));
 	}
 }

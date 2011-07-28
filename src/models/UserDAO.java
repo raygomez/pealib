@@ -38,12 +38,13 @@ public class UserDAO {
 			throws Exception {
 		User user = null;
 
-		String sql = "select * from Users where Username = ? or Email = ?";
+		String sql = "select * from Users where (Username = ? or Email = ?) and"
+				+ " Type != 'Pending'";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, keyword);
 		ps.setString(2, keyword);
-		
+
 		ResultSet rs = ps.executeQuery();
 
 		if (rs.next()) {
