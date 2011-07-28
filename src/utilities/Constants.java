@@ -32,9 +32,11 @@ public class Constants {
 	public static final String EMAIL_FORMAT_ERROR_MESSAGE = "Invalid email format.";
 	public static final String ADDRESS_ERROR_MESSAGE = "Invalid address format. Maximum of 100 characters only.";
 	public static final String CONTACT_NUMBER_FORMAT_ERROR_MESSAGE = "Invalid contact number.";
+	public static final String CONFIRM_CANCEL_REQUEST = "Do you really want to cancel the request?";
+	public static final String CONFIRM_CANCEL_RESERVATION = "Do you really want to cancel the reservation?";
 
 	public static final String APP_CONFIG = "app.config";
 	public static final String TEST_CONFIG = "test.config";
-	
+
 	public static int TIMER_DELAY = 250;
 }
