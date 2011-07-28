@@ -41,24 +41,6 @@ public class BookController {
 	private User currentUser;
 	private ArrayList<Book> bookList;
 
-	public static void main(String args[]) throws Exception {
-		new Connector(Constants.TEST_CONFIG);
-		User user = UserDAO.getUserById(2);
-
-		BookController bookController = null;
-		bookController = new BookController(user);
-
-		JFrame testFrame = new JFrame();
-		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		testFrame.setBounds(0, 0, screenSize.width, screenSize.height);
-		testFrame.setContentPane(bookController.getBookLayoutPanel());
-
-		testFrame.setVisible(true);
-		testFrame.setResizable(false);
-	}
-
 	public BookController(User user) throws Exception {
 		currentUser = user;
 		generateBookLayoutPanel();
@@ -261,11 +243,7 @@ public class BookController {
 				
 				if (validate) {
 					BookDAO.editBook(bookInfo.getCurrBook());
-					if (currentUser.getType().equals("Librarian")) {
-						bookList = BookDAO.searchBook(currSearchString);
-					} else {
-						bookList = BookDAO.searchBookForUser(currSearchString);
-					}
+					bookList = BookDAO.searchBook(currSearchString);
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
 					//TODO 
@@ -382,11 +360,7 @@ public class BookController {
 						JOptionPane.YES_NO_OPTION);
 				if (optConfirm == 0) {
 					BookDAO.deleteBook(bookInfo.getCurrBook());
-					if (currentUser.getType().equals("Librarian")) {
-						bookList = BookDAO.searchBook(currSearchString);
-					} else {
-						bookList = BookDAO.searchBookForUser(currSearchString);
-					}
+					bookList = BookDAO.searchBook(currSearchString);
 					bookInfo.setBookInfoData(bookList.get(currRow));
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
@@ -419,11 +393,7 @@ public class BookController {
 							.showMessageDialog(bookLayoutPanel,
 									"The book has been successfully added to your Requests List!");
 				}
-				if (currentUser.getType().equals("Librarian")) {
-					bookList = BookDAO.searchBook(currSearchString);
-				} else {
-					bookList = BookDAO.searchBookForUser(currSearchString);			
-				}
+				bookList = BookDAO.searchBookForUser(currSearchString);			
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
 				//TODO 
@@ -455,11 +425,7 @@ public class BookController {
 							.showMessageDialog(bookLayoutPanel,
 									"The book has been successfully added to your Rervations List!");
 				}
-				if (currentUser.getType().equals("Librarian")){
-					bookList = BookDAO.searchBook(currSearchString);
-				} else {
-					bookList = BookDAO.searchBookForUser(currSearchString);			
-				}
+				bookList = BookDAO.searchBookForUser(currSearchString);			
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
 				//TODO 
@@ -718,4 +684,13 @@ public class BookController {
 			}
 		}
 	}
+
+	public BookSearchPanel getBookSearch() {
+		return bookSearch;
+	}
+
+	public BookInfoPanel getBookInfo() {
+		return bookInfo;
+	}
+
 }
