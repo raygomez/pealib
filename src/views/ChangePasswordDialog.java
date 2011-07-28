@@ -179,6 +179,9 @@ import utilities.ErrorLabel;
 				case Constants.INCORRECT_PASSWORD_ERROR:
 					errorLabel.setText("Incorrect password");
 					break;
+				case Constants.PASSWORD_FORMAT_ERROR:
+					errorLabel.setText(Constants.PASSWORD_FORMAT_ERROR_MESSAGE);
+					break;
 				case Constants.PASSWORD_NOT_MATCH_ERROR:
 					errorLabel.setText("New passwords do not match");
 					break;

@@ -6,7 +6,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.concurrent.Callable;
 
 import javax.swing.JDialog;
@@ -254,6 +253,36 @@ public class AuthenticationController {
 	}
 
 	private void submitRegistration(){
+		
+			User newUser = new User(-1, sUpUserName, sUpPassword, sUpFirstName,
+					sUpLastName, sUpEmailAddress, sUpAddress, sUpContactNumber,
+					"Pending");
+			try {
+				UserDAO.saveUser(newUser);
+				JOptionPane.showMessageDialog(signUp.getContentPane(),
+						"Your account has been created. " +
+						"Please wait for the Librarian to activate your account.",
+						"Sign-up Successful", JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
+				signUpFailed();
+				e.printStackTrace();
+			}
+			signUpCancel();
+	}
+	
+	private void signUpSubmit() {
+		Callable<Void> toDo = new Callable<Void>() {
+			
+			@Override
+			public Void call() throws Exception {
+				submitRegistration();
+				return null;
+			}
+		};
+		
+		Task<Void, Void> task = new Task<Void, Void>(toDo);
+		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(getSignUp())));
+		
 		int maskedLabel = 0;
 		signUp.setFieldBorderColor(maskedLabel);
 		signUp.setLblErrorMessage("");
@@ -272,36 +301,8 @@ public class AuthenticationController {
 			signUp.getTxtfldPassword().setText("");
 			signUp.getTxtfldConfirmPassword().setText("");
 		} else {
-			User newUser = new User(-1, sUpUserName, sUpPassword, sUpFirstName,
-					sUpLastName, sUpEmailAddress, sUpAddress, sUpContactNumber,
-					"Pending");
-			try {
-				UserDAO.saveUser(newUser);
-				JOptionPane.showMessageDialog(signUp.getContentPane(),
-						"Your account has been created. " +
-						"Please wait for the Librarian to activate your account.",
-						"Sign-up Successful", JOptionPane.INFORMATION_MESSAGE);
-			} catch (Exception e) {
-				signUpFailed();
-				e.printStackTrace();
-			}
-			signUpCancel();
+			task.execute();
 		}
-	}
-	
-	private void signUpSubmit() {
-		Callable<Void> toDo = new Callable<Void>() {
-			
-			@Override
-			public Void call() throws Exception {
-				submitRegistration();
-				return null;
-			}
-		};
-		
-		Task<Void, Void> task = new Task<Void, Void>(toDo);
-		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(getSignUp())));
-		task.execute();
 	}
 
 	private void getSignUpData() {

@@ -560,6 +560,7 @@ public class UserController {
 	private ActionListener changePassword = new ActionListener() {
 		boolean correctPassword;
 		boolean isMatchingPassword;
+		boolean isPasswordFormatSatisfied;
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -584,11 +585,16 @@ public class UserController {
 					.getNewPasswordField().getPassword());
 			String newPassword2 = new String(changePasswordDialog
 					.getRepeatPasswordField().getPassword());
+			
+			isPasswordFormatSatisfied = newPassword1.matches(Constants.PASSWORD_FORMAT);
 			isMatchingPassword = newPassword1.equals(newPassword2);
 
 			if (!correctPassword)
 				changePasswordDialog
 						.displayError(Constants.INCORRECT_PASSWORD_ERROR);
+			else if (!isPasswordFormatSatisfied){
+				changePasswordDialog.displayError(Constants.PASSWORD_FORMAT_ERROR);
+			}
 			else if (!isMatchingPassword)
 				changePasswordDialog
 						.displayError(Constants.PASSWORD_NOT_MATCH_ERROR);
