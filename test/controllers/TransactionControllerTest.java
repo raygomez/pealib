@@ -193,7 +193,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		denyButton.click();
 		
 		assertThat(outgoingItems.contentEquals( new Object[][] {
-				{ "1234567890125", "title3Pantaleon", "author2", "jvillar (Jomel Pantaleon)",	"2011-07-27" },
+				{ "1234567890125", "title3Pantaleon", "author2", "jvillar (Jomel Pantaleon)",	"2011-07-28" },
 				/* this should have been appended as the last entry. however test db allows null and is non-incrementing */
 				
 				{ "1234567890121", "Harry Poter 2", "Niel",	"apantaleon (Annuary Pantaleon)", "2011-06-15" },
