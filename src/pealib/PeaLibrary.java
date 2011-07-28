@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 import models.User;
 import utilities.Connector;
 import utilities.CrashHandler;
+import utilities.Emailer;
 import utilities.Task;
 import utilities.TaskUpdateListener;
 import views.LibrarianSidebarPanel;
@@ -40,6 +41,7 @@ public class PeaLibrary {
 
 	public PeaLibrary(String config){
 		new Connector(config);
+		Emailer.setOn(true);
 	}
 	
 	/**
