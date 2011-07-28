@@ -10,6 +10,7 @@ import net.miginfocom.swing.MigLayout;
 import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
+import utilities.Emailer;
 import views.ChangePasswordDialog;
 import views.UserInfoPanel;
 import views.UserSearchPanel;
@@ -154,6 +155,7 @@ public class UserController {
 						UserDAO.updateUser(temp);
 						info = "Successfully accepted ("
 								+ checkList.size() + ") application/s.";
+						Emailer.sendAcceptedEmail(temp);
 					} else {
 						UserDAO.denyPendingUser(temp);
 						info = "Successfully denied (" + checkList.size()
