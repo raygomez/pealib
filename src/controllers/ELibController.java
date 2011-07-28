@@ -22,6 +22,7 @@ import models.User;
 
 import org.joda.time.DateTime;
 
+import utilities.Constants;
 import utilities.CrashHandler;
 import views.ELibTabbedPanel;
 
@@ -37,39 +38,39 @@ public class ELibController {
 	private ArrayList<BorrowTransaction> bookData;
 	private ArrayList<ReserveTransaction> bookDataReserve;
 
-//	public static void main(String[] args) throws Exception {
-//		new Connector(Constants.TEST_CONFIG);
-//
-//		JFrame frame = new JFrame();
-//		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//
-//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//		frame.setBounds(0, 0, screenSize.width, screenSize.height);
-//
-//		User user = UserDAO.getUserById(1);
-//		frame.setContentPane(new ELibController(user).getTabpane());
-//
-//		frame.setUndecorated(true);
-//		frame.setVisible(true);
-//		frame.setResizable(false);
-//	}
+	// public static void main(String[] args) throws Exception {
+	// new Connector(Constants.TEST_CONFIG);
+	//
+	// JFrame frame = new JFrame();
+	// frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	//
+	// Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	// frame.setBounds(0, 0, screenSize.width, screenSize.height);
+	//
+	// User user = UserDAO.getUserById(1);
+	// frame.setContentPane(new ELibController(user).getTabpane());
+	//
+	// frame.setUndecorated(true);
+	// frame.setVisible(true);
+	// frame.setResizable(false);
+	// }
 
 	public ELibController(User user) throws Exception {
 		setUser(user);
 
-		setTabpane(new ELibTabbedPanel());
-		getTabpane().addChangeTabListener(new TabChangeListener());
+		tabpane = new ELibTabbedPanel();
+		tabpane.addChangeTabListener(new TabChangeListener());
 
 		ELibTableModel model = new ELibTableModel(0);
-		getTabpane().setTableModel(0, model);
-		getTabpane().setCellRenderer(0, new CancelButtonRenderer());
-		getTabpane().setCellEditor(0, new CancelRequestButtonEditor());
+		tabpane.setTableModel(0, model);
+		tabpane.setCellRenderer(0, new CancelButtonRenderer());
+		tabpane.setCellEditor(0, new CancelRequestButtonEditor());
 	}
 
 	/**
 	 * @return the bookDataReserve
 	 */
-	public ArrayList<ReserveTransaction> getBookDataReserve() {
+	private ArrayList<ReserveTransaction> getBookDataReserve() {
 		return bookDataReserve;
 	}
 
@@ -81,24 +82,9 @@ public class ELibController {
 		this.bookDataReserve = bookDataReserve;
 	}
 
-	/**
-	 * @return the tabpane
-	 */
-	public ELibTabbedPanel getTabpane() {
-		return tabpane;
-	}
-
 	public ELibTabbedPanel getView() throws Exception {
 		update();
 		return tabpane;
-	}
-
-	/**
-	 * @param tabpane
-	 *            the tabpane to set
-	 */
-	public void setTabpane(ELibTabbedPanel tabpane) {
-		this.tabpane = tabpane;
 	}
 
 	/**
@@ -128,16 +114,15 @@ public class ELibController {
 	}
 
 	private void update() throws Exception {
-		int tab = getTabpane().getSelectedTab();
+		int tab = tabpane.getSelectedTab();
 		ELibTableModel model = new ELibTableModel(tab);
-		getTabpane().setTableModel(tab, model);
+		tabpane.setTableModel(tab, model);
 
-		getTabpane().setCellRenderer(tab, new CancelButtonRenderer());
+		tabpane.setCellRenderer(tab, new CancelButtonRenderer());
 		if (tab == REQUEST) {
-			getTabpane().setCellEditor(tab, new CancelRequestButtonEditor());
+			tabpane.setCellEditor(tab, new CancelRequestButtonEditor());
 		} else if (tab == RESERVE) {
-			getTabpane()
-					.setCellEditor(tab, new CancelReservationButtonEditor());
+			tabpane.setCellEditor(tab, new CancelReservationButtonEditor());
 		}
 	}
 
@@ -176,7 +161,8 @@ public class ELibController {
 
 			if (bookData.size() != 0) {
 				for (BorrowTransaction i : bookData) {
-					ArrayList<Object> rowData = new ArrayList<Object>();
+					ArrayList<Object> rowData = new ArrayList<Object>(
+							columns.length);
 					rowData.add(i.getBook().getIsbn());
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
@@ -195,7 +181,8 @@ public class ELibController {
 
 			if (getBookDataReserve().size() != 0) {
 				for (ReserveTransaction i : getBookDataReserve()) {
-					ArrayList<Object> rowData = new ArrayList<Object>(5);
+					ArrayList<Object> rowData = new ArrayList<Object>(
+							columns.length);
 					DateTime reservedDate = new DateTime(i.getDateReserved()
 							.getTime());
 
@@ -203,9 +190,9 @@ public class ELibController {
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
 					rowData.add(reservedDate.toString("y-MM-dd h:mm a"));
-					rowData.add(""
-							+ TransactionDAO.getQueueInReservation(i.getBook(),
-									i.getUser()));
+					rowData.add(TransactionDAO.getQueueInReservation(
+							i.getBook(), i.getUser())
+							+ "");
 					rowData.add(new JButton("Cancel"));
 					tableData.add(rowData);
 				}
@@ -222,7 +209,8 @@ public class ELibController {
 				for (BorrowTransaction i : bookData) {
 					DateTime dueDate = new DateTime(i.getDateBorrowed()
 							.getTime()).plusDays(14);
-					ArrayList<Object> rowData = new ArrayList<Object>();
+					ArrayList<Object> rowData = new ArrayList<Object>(
+							columns.length);
 					rowData.add(i.getBook().getIsbn());
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
@@ -241,7 +229,8 @@ public class ELibController {
 
 			if (bookData.size() != 0) {
 				for (BorrowTransaction i : bookData) {
-					ArrayList<Object> rowData = new ArrayList<Object>();
+					ArrayList<Object> rowData = new ArrayList<Object>(
+							columns.length);
 					rowData.add(i.getBook().getIsbn());
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
@@ -252,6 +241,7 @@ public class ELibController {
 			}
 		}
 
+		@Override
 		public String getColumnName(int col) {
 			return columns[col];
 		}
@@ -266,7 +256,6 @@ public class ELibController {
 			return tableData.size();
 		}
 
-
 		@Override
 		public Object getValueAt(int row, int col) {
 
@@ -275,10 +264,9 @@ public class ELibController {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			if (columnIndex == 4 && getTabpane().getSelectedTab() == REQUEST)
+			if (columnIndex == 4 && tabpane.getSelectedTab() == REQUEST)
 				return true;
-			else if (columnIndex == 5
-					&& getTabpane().getSelectedTab() == RESERVE)
+			else if (columnIndex == 5 && tabpane.getSelectedTab() == RESERVE)
 				return true;
 
 			return false;
@@ -286,6 +274,7 @@ public class ELibController {
 	}
 
 	public class CancelButtonRenderer implements TableCellRenderer {
+		@Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
@@ -303,10 +292,11 @@ public class ELibController {
 			button = new JButton("Cancel");
 			button.setOpaque(true);
 			button.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					int response = JOptionPane.showConfirmDialog(null,
-							"Do you really want to cancel the request",
-							"Confirm", JOptionPane.YES_NO_OPTION,
+							Constants.CONFIRM_CANCEL_REQUEST, "Confirm",
+							JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE);
 					if (response == JOptionPane.YES_OPTION) {
 
@@ -329,6 +319,7 @@ public class ELibController {
 			});
 		}
 
+		@Override
 		public Component getTableCellEditorComponent(JTable table,
 				Object value, boolean isSelected, int row, int column) {
 
@@ -356,10 +347,11 @@ public class ELibController {
 			button = new JButton("Cancel");
 			button.setOpaque(true);
 			button.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					int response = JOptionPane.showConfirmDialog(null,
-							"Do you really want to cancel the reservation?",
-							"Confirm", JOptionPane.YES_NO_OPTION,
+							Constants.CONFIRM_CANCEL_RESERVATION, "Confirm",
+							JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE);
 					if (response == JOptionPane.YES_OPTION) {
 
@@ -375,6 +367,7 @@ public class ELibController {
 			});
 		}
 
+		@Override
 		public Component getTableCellEditorComponent(JTable table,
 				Object value, boolean isSelected, int row, int column) {
 
