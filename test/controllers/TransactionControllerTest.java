@@ -1,9 +1,11 @@
 package controllers;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
+import org.uispec4j.Key;
 import org.uispec4j.TabGroup;
 import org.uispec4j.Table;
 import org.uispec4j.TextBox;
@@ -262,21 +264,23 @@ public class TransactionControllerTest extends UISpecTestCase {
 		searchButton.click();
 		
 		Table incomingItems = tabGroup.getSelectedTab().getTable();
-		incomingItems.columnIsEditable(0, false);
-		
 		assertEquals(0, incomingItems.getRowCount());
 		assertThat(incomingItems.contentEquals( new Object[][] {} ));
 	}
 	
-	/* timer wait ? */
-//	@Test
-//	public void testEmptyIncomingSearchThruText () throws Exception {
-//		tabGroup.selectTab("Incoming");
-//		TextBox searchBox = tabGroup.getSelectedTab().getInputTextBox();
-//		searchBox.setText("search");
-//		
-//		Table incomingItems = tabGroup.getSelectedTab().getTable();
-//		assertEquals(0, incomingItems.getRowCount());
-//		assertThat(incomingItems.contentEquals( new Object[][] {} ));
-//	}
+	@Ignore
+	@Test
+	public void testEmptyIncomingSearchThruText () throws Exception {
+		tabGroup.selectTab("Incoming");
+		TextBox searchBox = tabGroup.getSelectedTab().getInputTextBox();
+		searchBox.setText("search");
+		
+		searchBox.releaseKey(Key.ENTER);
+		Thread.sleep(8000);
+		/* timer wait ? */
+		
+		Table incomingItems = tabGroup.getSelectedTab().getTable();
+		assertEquals(0, incomingItems.getRowCount());
+		assertThat(incomingItems.contentEquals( new Object[][] {} ));
+	}
 }

@@ -1,8 +1,8 @@
 package controllers;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+//import java.awt.Dimension;
+//import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -11,7 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
+//import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
@@ -26,10 +26,10 @@ import models.TransactionDAO;
 import views.InOutTabbedPane;
 import views.IncomingPanel;
 import views.OutgoingPanel;
-//# remove these
-import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
+//# remove these
+//import utilities.Connector;
 
 public class TransactionController {
 	private boolean isIncoming = true; // isOutgoing = false
@@ -43,23 +43,22 @@ public class TransactionController {
 	private IncomingPanel inPanel;
 	private OutgoingPanel outPanel;
 
-	// # remove this
-	public static void main(String[] args) throws Exception {
-		new Connector(Constants.TEST_CONFIG);
-
-		TransactionController librarianTransactions = new TransactionController();
-
-		JFrame testFrame = new JFrame();
-		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		testFrame.setVisible(true);
-		testFrame.setResizable(false);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		testFrame.setBounds(0, 0, screenSize.width * 3 / 4,
-				screenSize.height * 3 / 4);
-		testFrame.setContentPane(librarianTransactions.getTabbedPane());
-
-		new TransactionController();
-	}
+//	public static void main(String[] args) throws Exception {
+//		new Connector(Constants.TEST_CONFIG);
+//
+//		TransactionController librarianTransactions = new TransactionController();
+//
+//		JFrame testFrame = new JFrame();
+//		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//		testFrame.setVisible(true);
+//		testFrame.setResizable(false);
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//		testFrame.setBounds(0, 0, screenSize.width * 3 / 4,
+//				screenSize.height * 3 / 4);
+//		testFrame.setContentPane(librarianTransactions.getTabbedPane());
+//
+//		new TransactionController();
+//	}
 
 	/*
 	 * LIBRARIAN Book Transactions
@@ -286,9 +285,6 @@ public class TransactionController {
 			searchResults = TransactionDAO.searchIncomingBook(keyword);
 		} else {
 			keyword = outPanel.getSearchPanel().getTxtfldSearch().getText();
-			if (keyword.isEmpty()) {
-				keyword = "*";
-			}
 			tableHeader = outgoingTableHeader;
 			searchResults = TransactionDAO.searchOutgoingBook(keyword);
 		}
