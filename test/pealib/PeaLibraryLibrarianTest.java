@@ -27,7 +27,7 @@ public class PeaLibraryLibrarianTest extends UISpecTestCase {
 		User user = UserDAO.getUserById(2);
 		peaLibrary.setCurrentUser(user);
 		peaLibrary.initialize();
-		window = new Window(peaLibrary.getFrame());
+		window = new Window(peaLibrary.getMainFrame());
 
 	}
 
