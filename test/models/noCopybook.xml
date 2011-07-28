@@ -9,7 +9,7 @@
 		   Publisher="HarryPublisher"
 		   Description="wizard book"
 		   YearPublish="1900"
-		   Copies="1" />
+		   Copies="0" />
 	<books 
 		   ID="2" 
 		   ISBN="1234567890121"
@@ -60,4 +60,14 @@
 		   Description="wizard book"
 		   YearPublish="1905"
 		   Copies="1" />		   		   		   
+	<books 
+		   ID="7" 
+		   ISBN="0007222556"
+		   Title="title3Pantaleon"
+		   Author="author2"
+		   Edition="edition3"
+		   Publisher="publisher1"
+		   Description="wizard book"
+		   YearPublish="1905"
+		   Copies="1" />			   		   		   		   
 </dataset>
