@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Books
 	Author VARCHAR(100) NOT NULL,
 	Edition VARCHAR(30),
 	Publisher VARCHAR(100),
-	Description VARCHAR(300),
+	Description VARCHAR(1000),
 	YearPublish INT,
 	Copies INT,
 	PRIMARY KEY (ID));
