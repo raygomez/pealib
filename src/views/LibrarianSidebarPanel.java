@@ -49,10 +49,10 @@ public class LibrarianSidebarPanel extends JPanel {
 		
 		bookTransactionsButton.setSelected(true);
 		
+		add(bookTransactionsButton, "growx");
 		add(viewBooksButton, "growx");
 		add(viewUsersButton, "growx");
 		add(editProfileButton, "growx");
-		add(bookTransactionsButton, "growx");
 		add(logoutButton, "growx, wrap push");		
 	}
 
