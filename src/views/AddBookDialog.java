@@ -53,6 +53,7 @@ public class AddBookDialog extends JDialog {
 
 		JLabel lblTitle = new JLabel("Title:");
 		contentPanel.add(lblTitle, "cell 0 0,alignx left");
+		titleTextField.setToolTipText("*Maximum of 100 characters.");
 
 		titleTextField.setName("titleTextField");
 		contentPanel.add(titleTextField, "cell 1 0,growx");
@@ -67,6 +68,7 @@ public class AddBookDialog extends JDialog {
 
 		JLabel lblAuthor = new JLabel("Author:");
 		contentPanel.add(lblAuthor, "cell 0 2,alignx left");
+		authorTextField.setToolTipText("*Maximum of 100 characters.");
 
 		authorTextField.setName("authorTextField");
 		contentPanel.add(authorTextField, "cell 1 2,growx");
@@ -88,6 +90,7 @@ public class AddBookDialog extends JDialog {
 
 		JLabel lblIsbn = new JLabel("ISBN:");
 		contentPanel.add(lblIsbn, "cell 0 5,alignx left");
+		isbnTextField.setToolTipText("*Must be a valid ISBN");
 
 		
 		isbnTextField.setName("isbnTextField");

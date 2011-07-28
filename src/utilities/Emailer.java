@@ -49,7 +49,7 @@ public class Emailer {
 
 	}
 
-	public void sendSSLMessage(String recipients, String subject,
+	private void sendSSLMessage(String recipients, String subject,
 			String message, String from) throws MessagingException {
 
 		Properties props = new Properties();
@@ -97,7 +97,7 @@ public class Emailer {
 				emailFromAddress);
 	}
 
-	public void sendForgetPasswordEmail(User user) throws MessagingException {
+	public static void sendForgetPasswordEmail(User user) throws MessagingException {
 		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
 		String sendTo = user.getEmail();
