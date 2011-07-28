@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="pealib">
+	<property environment="env"/>
+	<property name="ECLIPSE_HOME" value="../../Documents/eclipse-complete"/>
+	<property name="junit.output.dir" value="junit"/>
+	<property name="debuglevel" value="source,lines,vars"/>
+	<property name="target" value="1.6"/>
+	<property name="source" value="1.6"/>
+	<import file="pealibbuild.xml"/>
+	<path id="pealib.classpath">
+		<pathelement location="bin"/>
+		<pathelement location="lib/miglayout15-swing.jar"/>
+		<pathelement location="lib/mysql-connector-java-5.1.16-bin.jar"/>
+		<pathelement location="lib/commons-pool-1.5.6.jar"/>
+		<pathelement location="lib/dbunit-2.4.3.jar"/>
+		<pathelement location="lib/slf4j-api-1.6.1.jar"/>
+		<pathelement location="lib/slf4j-nop-1.6.1.jar"/>
+		<pathelement location="lib/spring-2.5.4.jar"/>
+		<pathelement location="lib/uispec4j-2.4-jdk16.jar"/>
+		<pathelement location="lib/unitils-3.1/unitils-core-3.1.jar"/>
+		<pathelement location="lib/unitils-3.1/unitils-database-3.1.jar"/>
+		<pathelement location="lib/unitils-3.1/unitils-dbunit-3.1.jar"/>
+		<pathelement location="lib/org.junit_4.8.2/junit.jar"/>
+		<pathelement location="lib/org.junit_4.8.2/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+		<pathelement location="lib/emma/emma_ant.jar"/>
+		<pathelement location="lib/emma/emma.jar"/>
+		<pathelement location="lib/commons/commons-collections-3.2.jar"/>
+		<pathelement location="lib/commons/commons-dbcp-1.4.jar"/>
+		<pathelement location="lib/commons/commons-io-2.0.1.jar"/>
+		<pathelement location="lib/commons/commons-lang-2.3.jar"/>
+		<pathelement location="lib/commons/commons-logging-1.1.jar"/>
+		<pathelement location="lib/joda-time-1.6.2.jar"/>
+		<pathelement location="lib/ognl-2.6.9.jar"/>
+        <pathelement location="lib/email/dsn.jar"/>
+        <pathelement location="lib/email/imap.jar"/>
+        <pathelement location="lib/email/mailapi.jar"/>
+        <pathelement location="lib/email/pop3.jar"/>
+        <pathelement location="lib/email/smtp.jar"/>		
+	</path>
+	<target name="init">
+		<mkdir dir="bin"/>
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="test">
+				<exclude name="**/*.java"/>
+				<exclude name="expected/"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="bin"/>
+	</target>
+	<target depends="clean" name="cleanall"/>
+	<target depends="build-subprojects,build-project" name="build"/>
+	<target name="build-subprojects"/>
+	<target depends="init" name="build-project">
+		<echo message="${ant.project.name}: ${ant.file}"/>
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+			<src path="src"/>
+			<classpath refid="pealib.classpath"/>
+		</javac>
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+			<src path="test"/>
+			<exclude name="expected/"/>
+			<classpath refid="pealib.classpath"/>
+		</javac>
+	</target>
+	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+	<target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+		<copy todir="${ant.library.dir}">
+			<fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+		</copy>
+		<unzip dest="${ant.library.dir}">
+			<patternset includes="jdtCompilerAdapter.jar"/>
+			<fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+		</unzip>
+	</target>
+	<target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+		<antcall target="build"/>
+	</target>
+	<target name="LogInDialog">
+		<java classname="views.LogInDialog" failonerror="true" fork="yes">
+			<classpath refid="pealib.classpath"/>
+		</java>
+	</target>
+	<target name="pealib">
+		<mkdir dir="${junit.output.dir}"/>
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml"/>
+			<test name="models.BookDAOTest" todir="${junit.output.dir}"/>
+			<test name="models.TransactionDAOTest" todir="${junit.output.dir}"/>
+			<test name="models.UserDAOTest" todir="${junit.output.dir}"/>
+			<test name="utilities.MyConnectionTest" todir="${junit.output.dir}"/>
+			<test name="views.ChangePasswordDialogTest" todir="${junit.output.dir}"/>
+			<test name="views.LibrarianSidebarPanelTest" todir="${junit.output.dir}"/>
+			<test name="views.LogInDialogTest" todir="${junit.output.dir}"/>
+			<test name="views.UserSidebarPanelTest" todir="${junit.output.dir}"/>
+			<classpath refid="pealib.classpath"/>
+		</junit>
+	</target>
+	<target name="UserDAOTest">
+		<mkdir dir="${junit.output.dir}"/>
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml"/>
+			<test name="models.UserDAOTest" todir="${junit.output.dir}"/>
+			<classpath refid="pealib.classpath"/>
+		</junit>
+	</target>
+	<target name="UserSidebarPanelTest">
+		<mkdir dir="${junit.output.dir}"/>
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml"/>
+			<test name="UserSidebarPanelTest" todir="${junit.output.dir}"/>
+			<classpath refid="pealib.classpath"/>
+		</junit>
+	</target>
+	<target name="UserDAOTest.testSaveUser">
+		<mkdir dir="${junit.output.dir}"/>
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml"/>
+			<test name="models.UserDAOTest" todir="${junit.output.dir}"/>
+			<classpath refid="pealib.classpath"/>
+		</junit>
+	</target>
+	<target name="LibrarianSidebarPanelTest">
+		<mkdir dir="${junit.output.dir}"/>
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml"/>
+			<test name="LibrarianSidebarPanelTest" todir="${junit.output.dir}"/>
+			<classpath refid="pealib.classpath"/>
+		</junit>
+	</target>
+	<target name="AuthenticationController">
+		<java classname="controllers.AuthenticationController" failonerror="true" fork="yes">
+			<classpath refid="pealib.classpath"/>
+		</java>
+	</target>
+	<target name="UserDAOTest.testGetUserInDatabase">
+		<mkdir dir="${junit.output.dir}"/>
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml"/>
+			<test name="models.UserDAOTest" todir="${junit.output.dir}"/>
+			<classpath refid="pealib.classpath"/>
+		</junit>
+	</target>
+	<target name="ChangePasswordDialogTest">
+		<mkdir dir="${junit.output.dir}"/>
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml"/>
+			<test name="views.ChangePasswordDialogTest" todir="${junit.output.dir}"/>
+			<classpath refid="pealib.classpath"/>
+		</junit>
+	</target>
+	<target name="junitreport">
+		<junitreport todir="${junit.output.dir}">
+			<fileset dir="${junit.output.dir}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report format="frames" todir="${junit.output.dir}"/>
+		</junitreport>
+	</target>
+</project>
