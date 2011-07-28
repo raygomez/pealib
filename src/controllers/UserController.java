@@ -29,14 +29,12 @@ public class UserController {
 	private UserInfoPanel userInfoPanel;
 	private ChangePasswordDialog changePasswordDialog;
 	private User currentUser;
-	private User selectedUser;
-
 	private JPanel layoutPanel;
 
 	private String searchText = "";
 	private ArrayList<User> searchedUsers;
 	private ArrayList<User> searchedPending;
-	private ArrayList<Integer> checkList = new ArrayList<Integer>();;
+	private ArrayList<Integer> checkList;
 
 	/*
 	 * ..TODO For visual testing purposes only
@@ -67,20 +65,23 @@ public class UserController {
 	 * Constructor
 	 */
 	public UserController(User user) throws Exception {
-		this.setCurrentUser(user);
-		setLayoutPanel(new JPanel(new MigLayout("wrap 2", "[grow][grow]",
-				"[grow]")));
-
-		setUserSearch(new UserSearchPanel(new UserSearchTableModel(USER, ""),
-				new UserSearchTableModel(PENDING, "")));
-		getUserSearch().addListeners(new SearchListener(),
+		this.currentUser = user;
+		
+		searchedUsers = new ArrayList<User>();
+		searchedPending = new ArrayList<User>();
+		checkList = new ArrayList<Integer>();
+		
+		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]","[grow]"));
+		userSearch = new UserSearchPanel(new UserSearchTableModel(USER, ""), new UserSearchTableModel(PENDING, ""));
+		
+		userSearch.addListeners(new SearchListener(),
 				new SearchKeyListener(), new TabChangeListener(),
 				new UserSelectionListener(), new CheckBoxListener(),
 				new AcceptListener(), new DenyListener());
-		setUserInfoPanel(new UserInfoPanel());
-
-		getUserInfoPanel().addSaveListener(save);
-		getUserInfoPanel().addChangePasswordListener(showChangePassword);
+		
+		userInfoPanel = new UserInfoPanel();
+		userInfoPanel.addSaveListener(save);
+		userInfoPanel.addChangePasswordListener(showChangePassword);
 
 		generateLayoutPanel();
 	}
@@ -89,82 +90,16 @@ public class UserController {
 	 * Getters - Setters
 	 */
 
-	public User getSelectedUser() {
-		return selectedUser;
-	}
-
-	public void setSelectedUser(User selectedUser) {
-		this.selectedUser = selectedUser;
-	}
-
-	public User getCurrentUser() {
-		return currentUser;
-	}
-
-	public void setCurrentUser(User currentUser) {
-		this.currentUser = currentUser;
-	}
-
-	public String getSearchText() {
-		return searchText;
-	}
-
-	public void setSearchText(String searchText) {
-		this.searchText = searchText;
-	}
+	public User getCurrentUser() { return currentUser; }
 
 	public JPanel getLayoutPanel() {
 		generateLayoutPanel();
 		return layoutPanel;
 	}
 
-	public void setLayoutPanel(JPanel layoutPanel) {
-		this.layoutPanel = layoutPanel;
-	}
-
-	public UserInfoPanel getUserInfoPanel() {
-		return userInfoPanel;
-	}
-
-	public void setUserInfoPanel(UserInfoPanel userInfoPanel) {
-		this.userInfoPanel = userInfoPanel;
-	}
-
-	public UserSearchPanel getUserSearch() {
-		return userSearch;
-	}
-
-	public void setUserSearch(UserSearchPanel userSearch) {
-		this.userSearch = userSearch;
-	}
-
-	public ArrayList<User> getSearchedPending() {
-		return searchedPending;
-	}
-
-	public void setSearchedPending(ArrayList<User> searchedPend) {
-		if (searchedPend != null && searchedPend.size() > 0) {
-			this.searchedPending = searchedPend;
-		} else {
-			this.searchedPending = null;
-		}
-	}
-
-	public ArrayList<User> getSearchedUsers() {
-		return searchedUsers;
-	}
-
-	public void setSearchedUsers(ArrayList<User> searchedUsers) {
-		this.searchedUsers = searchedUsers;
-	}
-
-	public ArrayList<Integer> getCheckList() {
-		return checkList;
-	}
-
-	public void setCheckList(ArrayList<Integer> checkList) {
-		this.checkList = checkList;
-	}
+	public UserSearchPanel getUserSearch() { return userSearch; }
+	
+	public UserInfoPanel getUserInfoPanel() { return userInfoPanel;};
 
 	/*
 	 * Listeners : Search
@@ -173,68 +108,21 @@ public class UserController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			UserSearchTableModel model = null;
+			
 			try {
-				model = new UserSearchTableModel(1, getSearchText());
-			} catch (Exception e1) {
-				CrashHandler.handle(e1);
-			}
+				model = new UserSearchTableModel(1, searchText);
+			} catch (Exception e1) { CrashHandler.handle(e1); }
 
-			if (getUserSearch().getCbAll().isSelected())
+			if (userSearch.getCbAll().isSelected())
 				model.toggleAllCheckBox(true);
 			else
 				model.toggleAllCheckBox(false);
 
-			getUserSearch().setTableModel(1, model);
+			userSearch.setTableModel(1, model);
 		}
 	}
 
-	// TODO the annoying pending
-	private void processPend(boolean process) {
-		String info = "";
-		for (int i = 0; i < getSearchedPending().size(); i++) {
-			if (getCheckList().contains(i)) {
-				User temp = getSearchedPending().get(i);
-				temp.setType("User");
-
-				try {
-					if (process) {
-						UserDAO.updateUser(temp);
-						info = "Successfully accepted ("
-								+ getCheckList().size() + ") application/s.";
-					} else {
-						UserDAO.denyPendingUser(temp);
-						info = "Successfully denied (" + getCheckList().size()
-								+ ") application/s.";
-					}
-				} catch (Exception e1) {
-					CrashHandler.handle(e1);
-				}
-			}
-		}
-
-		JOptionPane.showMessageDialog(getUserSearch(), info);
-
-		getUserSearch().getCbAll().setSelected(false);
-
-		if (getSearchedPending().size() == getCheckList().size()) {
-			getUserInfoPanel().toggleButton(false);
-			getUserInfoPanel().clearFields();
-		}
-
-		getCheckList().clear();
-		setInitSelectPending();
-		searchUsers();
-
-		getUserSearch().resetTable();
-
-		if (getSearchedPending() == null)
-			getUserSearch().togglePending(false);
-		else if (!getSearchedPending().isEmpty()) {
-			getUserSearch().togglePendingButtons(false);
-		}
-
-	}
-
+	// TODO pending process
 	class AcceptListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -248,40 +136,78 @@ public class UserController {
 			processPend(false);
 		}
 	}
+	
+	private void processPend(boolean process) {
+		if (searchedPending.size() == checkList.size()) {
+			userInfoPanel.toggleButton(false);
+			userInfoPanel.clearFields();
+		}
+		
+		String info = "";
+		for (int i = 0; i < searchedPending.size(); i++) {
+			if (checkList.contains(i)) {
+				User temp = searchedPending.get(i);
+				temp.setType("User");
+
+				try {
+					if (process) {
+						UserDAO.updateUser(temp);
+						info = "Successfully accepted ("
+								+ checkList.size() + ") application/s.";
+					} else {
+						UserDAO.denyPendingUser(temp);
+						info = "Successfully denied (" + checkList.size()
+								+ ") application/s.";
+					}
+				} catch (Exception e1) {
+					CrashHandler.handle(e1);
+				}
+			}
+		}
+
+		JOptionPane.showMessageDialog(userSearch, info);
+		userSearch.getCbAll().setSelected(false);
+		checkList.clear();	
+		searchUsers();
+
+		if (searchedPending.isEmpty())
+			userSearch.toggleAllPendingComp(false);
+		else {
+			setInitSelectPending();
+			userSearch.togglePendingButtons(false);
+		}
+		
+		userSearch.resetTabPane();
+	}
+
 
 	private void searchUsers() {
-		int tab = getUserSearch().getSelectedTab();
-		setSearchText(getUserSearch().getFieldSearch().getText());
+		int tab = userSearch.getSelectedTab();
+		searchText = userSearch.getFieldSearch().getText();
 
-		UserSearchTableModel model = null;
 		try {
-			model = new UserSearchTableModel(tab, getSearchText());
-		} catch (Exception e) {
-			CrashHandler.handle(e);
-		}
-		getUserSearch().setTableModel(tab, model);
+			UserSearchTableModel model = new UserSearchTableModel(tab, searchText);
+			userSearch.setTableModel(tab, model);	
 
-		if (tab == USER) {
-			setInitSelectUser();
-		} else
-			setInitSelectPending();
+			if (tab == USER ) {
+				setInitSelectUser();
+			} else if (tab == PENDING)
+				setInitSelectPending();
+
+		} catch (Exception e) {  CrashHandler.handle(e); }
 	}
 
 	private void setInitSelectUser() {
-		getUserSearch().getUsersTable().getSelectionModel()
-				.setSelectionInterval(0, 0);
-		getUserSearch().getUsersTable().addRowSelectionInterval(0, 0);
-
-		setSelectedUser(getSearchedUsers().get(0));
+		if (!searchedUsers.isEmpty()) {
+			userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
+			userSearch.getUsersTable().addRowSelectionInterval(0, 0);
+		}
 	}
 
 	private void setInitSelectPending() {
-		if (getSearchedPending() != null && (!getSearchedPending().isEmpty())) {
-			getUserSearch().getPendingTable().getSelectionModel()
-					.setSelectionInterval(0, 0);
-			getUserSearch().getPendingTable().addRowSelectionInterval(0, 0);
-
-			setSelectedUser(getSearchedPending().get(0));
+		if (!searchedPending.isEmpty()) {
+			userSearch.getPendingTable().getSelectionModel().setSelectionInterval(0, 0);
+			userSearch.getPendingTable().addRowSelectionInterval(0, 0);
 		}
 	}
 
@@ -293,22 +219,22 @@ public class UserController {
 			searchUsers();
 
 			if (index == 0) {
-				setInitSelectUser();
+				setInitSelectUser();	
+				userInfoPanel.setEnableFields(true);
+				
 			} else if (index == 1) {
-				getUserSearch().getCbAll().setSelected(false);
-
-				if (getSearchedPending() != null
-						&& getSearchedPending().size() > 0) {
-					setInitSelectPending();
-
-					if (getCheckList() != null && getCheckList().size() > 0)
-						getUserSearch().togglePendingButtons(true);
-					else
-						getUserSearch().togglePendingButtons(false);
+				userSearch.getCbAll().setSelected(false);
+				checkList.clear();
+				
+				//TODO
+				setInitSelectPending();
+				if (!searchedPending.isEmpty()) {														
+					userSearch.togglePendingButtons(false);					
 				} else {
-					getUserSearch().togglePending(false);
-					getUserInfoPanel().toggleButton(false);
-					getUserInfoPanel().clearFields();
+					userSearch.toggleAllPendingComp(false);
+					userInfoPanel.toggleButton(false);
+					userInfoPanel.clearFields();
+					userInfoPanel.setEnableFields(false);
 				}
 			}
 		}
@@ -327,9 +253,9 @@ public class UserController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				timer.stop();
-				setSearchText(getUserSearch().getFieldSearch().getText());
-				if (getSearchText().length() > 0
-						|| getSearchText().length() == 0)
+				searchText = userSearch.getFieldSearch().getText();
+				//TODO 
+				if (searchText.length() >= 0)
 					searchUsers();
 			}
 		});
@@ -349,6 +275,7 @@ public class UserController {
 		}
 	}
 
+	//TODO Table Model
 	/**
 	 * Table Model for User Search (Pending & Active User Accounts)
 	 */
@@ -376,10 +303,11 @@ public class UserController {
 			columns = new String[] { "Username", "Name", "Accept" };
 
 			try {
-				setSearchedPending(UserDAO.searchAllPending(searchStr));
+				searchedPending = UserDAO.searchAllPending(searchStr);
 
-				if (getSearchedPending() != null) {
-					for (User i : getSearchedPending()) {
+				//TODO
+				if (!searchedPending.isEmpty()) {
+					for (User i : searchedPending) {
 						ArrayList<Object> rowData = new ArrayList<Object>();
 						rowData.add(i.getUserName());
 						rowData.add(i.getFirstName() + " " + i.getLastName());
@@ -402,14 +330,17 @@ public class UserController {
 		private void userAcct() throws Exception {
 			columns = new String[] { "Username", "Name" };
 
-			setSearchedUsers(UserDAO.searchActiveUsers(searchStr));
+			searchedUsers  = UserDAO.searchActiveUsers(searchStr);
 
-			for (User i : getSearchedUsers()) {
-
-				ArrayList<Object> rowData = new ArrayList<Object>();
-				rowData.add(i.getUserName());
-				rowData.add(i.getFirstName() + " " + i.getLastName());
-				tableData.add(rowData);
+			//TODO
+			if (!searchedUsers.isEmpty()) {
+				for (User i : searchedUsers) {
+	
+					ArrayList<Object> rowData = new ArrayList<Object>();
+					rowData.add(i.getUserName());
+					rowData.add(i.getFirstName() + " " + i.getLastName());
+					tableData.add(rowData);
+				}
 			}
 		}
 
@@ -423,21 +354,27 @@ public class UserController {
 			tableData.get(row).set(col, value);
 
 			if (!(Boolean) value) {
-				getUserSearch().getCbAll().setSelected(false);
+				userSearch.getCbAll().setSelected(false);
 
-				if (getCheckList() != null && getCheckList().contains(row)) {
-					getCheckList().remove((Object) row);
+				//TODO
+				if (checkList.contains(row)) {
+					checkList.remove((Object) row);
 				}
 			} else {
-				if (getCheckList() != null && !getCheckList().contains(row)) {
-					getCheckList().add(row);
+				//TODO
+				if (!checkList.contains(row)) {
+					checkList.add(row);
 				}
 			}
 
-			if (getCheckList().size() > 0)
-				getUserSearch().togglePendingButtons(true);
+			if (checkList.size() > 0){
+				userSearch.togglePendingButtons(true);
+			 
+				if (checkList.size() == searchedPending.size())
+					userSearch.getCbAll().setSelected(true);
+			}
 			else
-				getUserSearch().togglePendingButtons(false);
+				userSearch.togglePendingButtons(false);
 			fireTableCellUpdated(row, col);
 		}
 
@@ -472,10 +409,10 @@ public class UserController {
 
 	// Generate Layout
 	private void generateLayoutPanel() {
-		layoutPanel.add(getUserSearch(), "grow");
-		layoutPanel.add(getUserInfoPanel(), "grow");
+		layoutPanel.add(userSearch, "grow");
+		layoutPanel.add(userInfoPanel, "grow");
 
-		getUserSearch().getUsersTable().getSelectionModel()
+		userSearch.getUsersTable().getSelectionModel()
 				.setSelectionInterval(0, 0);
 	}
 
@@ -519,41 +456,47 @@ public class UserController {
 			errors[i] = tempErrors.get(i);
 		}
 
-		getUserInfoPanel().displayErrors(errors);
-		getUserInfoPanel().revalidate();
+		userInfoPanel.displayErrors(errors);
+		userInfoPanel.revalidate();
 
 		return pass;
 
 	}
 
+	//TODO UserSelectionList
 	private class UserSelectionListener implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
-					.getSource();
-			int row = dlSelectionModel.getAnchorSelectionIndex();
-			int tab = getUserSearch().getSelectedTab();
-
-			User user = null;
-
-			// This is a simple check to see if row is negative.
-			if (row < 0)
-				return;
-
-			if (tab == USER) {
-				if (getSearchedUsers() != null)
-					user = getSearchedUsers().get(row);
-			} else {
-				if (getSearchedPending() != null)
-					user = getSearchedPending().get(row);
-			}
-
-			if (user != null) {
-				setSelectedUser(user);
-				getUserInfoPanel().toggleButton(true);
-				getUserInfoPanel().setFields(user);
-				getUserInfoPanel().setFirstNameEnabled(true);
-				getUserInfoPanel().setLastNameEnabled(true);
+			if (! e.getValueIsAdjusting()) {
+				DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
+						.getSource();
+				int row = dlSelectionModel.getAnchorSelectionIndex();
+				int tab = userSearch.getSelectedTab();
+	
+				User user = null;
+	
+				System.out.println("listener: SELECT ROW: "+row);
+				// This is a simple check to see if row is negative.
+				if (row < 0)
+					return;
+	
+				if (tab == USER) {
+					if (!searchedUsers.isEmpty()){
+						System.out.println("Setting row to "+ row);
+						user = searchedUsers.get(row);
+					}
+				} else {
+					if (!searchedPending.isEmpty()){
+						user = searchedPending.get(row);
+					}
+				}
+	
+				if (user != null) {
+					userInfoPanel.toggleButton(true);
+					userInfoPanel.setFields(user);
+					userInfoPanel.setFirstNameEnabled(true);
+					userInfoPanel.setLastNameEnabled(true);
+				}
 			}
 		}
 	}
@@ -565,14 +508,14 @@ public class UserController {
 
 			userInfoPanel.resetErrorMessages();
 
-			int userId = Integer.parseInt(getUserInfoPanel().getIdNumber());
-			String userName = getUserInfoPanel().getUsername();
-			String firstName = getUserInfoPanel().getFirstName();
-			String lastName = getUserInfoPanel().getLastName();
-			String email = getUserInfoPanel().getEmail();
-			String address = getUserInfoPanel().getAddress();
-			String contactNo = getUserInfoPanel().getContactNumber();
-			String type = getUserInfoPanel().getAccountType();
+			int userId = Integer.parseInt(userInfoPanel.getIdNumber());
+			String userName = userInfoPanel.getUsername();
+			String firstName = userInfoPanel.getFirstName();
+			String lastName = userInfoPanel.getLastName();
+			String email = userInfoPanel.getEmail();
+			String address = userInfoPanel.getAddress();
+			String contactNo = userInfoPanel.getContactNumber();
+			String type = userInfoPanel.getAccountType();
 
 			if (validateUpdateProfile(firstName, lastName, email, address,
 					contactNo)) {

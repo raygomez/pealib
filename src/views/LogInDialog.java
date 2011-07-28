@@ -3,6 +3,7 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,6 +30,7 @@ public class LogInDialog extends JDialog {
 	
 	private JButton buttonSignUp = new JButton("Sign Up",new ImageIcon("resources/images/signin.png"));
 	private JButton buttonLogIn = new JButton("Log In",new ImageIcon("resources/images/login32x32.png"));
+	private final JLabel lblForgotPassword = new JLabel("Forgot password?");
 
 	/**
 	 * Create the dialog.
@@ -40,7 +42,7 @@ public class LogInDialog extends JDialog {
 		setBounds((screenSize.width/3), (screenSize.height/3), 400, 230);	
 		getContentPane().add(contentPanel);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPanel.setLayout(new MigLayout("", "20px[100px]10px[200px][]", "20px[20px]15px[]10px[]15px[]"));
+		contentPanel.setLayout(new MigLayout("", "[100px]10px[200px][]", "[20px]15px[]10px[]15px[][]"));
 			
 		labelError.setName("labelError");
 		contentPanel.add(labelError,"cell 0 0 2 0, alignx center");
@@ -57,6 +59,11 @@ public class LogInDialog extends JDialog {
 	    
 	    contentPanel.add(buttonLogIn, "cell 1 3, alignx center");
 		contentPanel.add(buttonSignUp, "cell 1 3, alignx center");
+		lblForgotPassword.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblForgotPassword.setForeground(Color.BLUE);
+		lblForgotPassword.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		contentPanel.add(lblForgotPassword, "cell 0 4 3 1,alignx right,aligny center");
 	}
 	
 	protected JLabel getLabelError() {
@@ -77,12 +84,12 @@ public class LogInDialog extends JDialog {
 		return fieldPassword;
 	}
 	
-	public void setActionListeners(ActionListener signUp, ActionListener logIn, KeyListener enter){
+	public void setActionListeners(ActionListener signUp, ActionListener logIn, KeyListener enter, MouseListener click){
 		buttonSignUp.addActionListener(signUp);
 		buttonLogIn.addActionListener(logIn);
 		fieldUsername.addKeyListener(enter);
 		fieldPassword.addKeyListener(enter);
+		lblForgotPassword.addMouseListener(click);
 	}
-	
 
 }

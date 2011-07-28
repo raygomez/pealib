@@ -15,31 +15,54 @@ import org.unitils.UnitilsJUnit4TestClassRunner;
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class BookSearchPanelTest extends UISpecTestCase {
 
-	private Panel panel;
+	private Panel panelLibrarian;
+	private Panel panelUser;
 
 	@Before
 	public void setUp() throws Exception {
-		User user = new User(19, "niel", "121111", "Reiniel Adam", "Lozada",
+		User userLibrarian = new User(19, "niel", "121111", "Reiniel Adam", "Lozada",
 				"reiniel_lozada@yahoo.com", "secret", "8194000", "Librarian");
-		panel = new Panel(new BookSearchPanel(user));
+		User userOrdinary = new User(20, "niel", "121111", "Reiniel Adam", "Lozada",
+				"reiniel_lozada@yahoo.com", "secret", "8194000", "User");
+		panelLibrarian = new Panel(new BookSearchPanel(userLibrarian));
+		panelUser = new Panel(new BookSearchPanel(userOrdinary));
 	}
 
 	@Test
-	public void initialStateTest() {
+	public void initialStateTestLibrarian() {
 		Button button;
-		String[] buttonArray = new String[] { "Search", "Clear" };
+		String[] buttonArray = new String[] { "Search", "Clear", "Add Book" };
 
 		for (String s : buttonArray) {
-			button = panel.getButton(s);
+			button = panelLibrarian.getButton(s);
 			assertNotNull(button);
 			assertThat(button.isEnabled());
 			assertThat(button.isVisible());
 		}
 
-		TextBox searchField = panel.getTextBox("textSearch");
+		TextBox searchField = panelLibrarian.getTextBox("textSearch");
 		assertNotNull(searchField);
 
-		Table table = panel.getTable("tableList");
+		Table table = panelLibrarian.getTable("tableList");
+		assertThat(table.isVisible());
+	}
+	
+	@Test
+	public void initialStateTestUser(){
+		Button button;
+		String[] buttonArray = new String[] { "Search", "Clear" };
+
+		for (String s : buttonArray) {
+			button = panelUser.getButton(s);
+			assertNotNull(button);
+			assertThat(button.isEnabled());
+			assertThat(button.isVisible());
+		}
+
+		TextBox searchField = panelUser.getTextBox("textSearch");
+		assertNotNull(searchField);
+
+		Table table = panelUser.getTable("tableList");
 		assertThat(table.isVisible());
 	}
 

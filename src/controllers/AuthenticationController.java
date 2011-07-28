@@ -4,16 +4,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.concurrent.Callable;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import models.User;
 import models.UserDAO;
 import utilities.Connector;
 import utilities.Constants;
+import utilities.Emailer;
 import utilities.Task;
 import utilities.TaskUpdateListener;
 import views.LoadingDialog;
@@ -51,7 +56,8 @@ public class AuthenticationController {
 	public AuthenticationController() {
 		setLogin(new LogInDialog());
 		getLogin().setActionListeners(new SignUpListener(),
-				new SubmitListener(), new SubmitKeyAdapter());
+				new SubmitListener(), new SubmitKeyAdapter(),
+				new ForgotPasswordListener());
 		getLogin().setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 	}
@@ -443,5 +449,33 @@ public class AuthenticationController {
 
 	public static SignUpDialog getSignUp() {
 		return signUp;
+	}
+	
+	class ForgotPasswordListener extends MouseAdapter{
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			String userOrEmail = (String)JOptionPane.showInputDialog(
+					getLogin(),
+                    "Please enter your usernamer or email",
+                    "Forgot Password",
+                    JOptionPane.PLAIN_MESSAGE);
+			if(userOrEmail != null && userOrEmail.length() > 0){
+				try {
+					User user = UserDAO.getUserByEmailOrUsername(userOrEmail);
+					if(user != null){
+						user.setPassword(RandomStringUtils.randomAlphanumeric(8));
+						UserDAO.changePassword(user.getUserId(),user.getPassword());
+						Emailer.sendForgetPasswordEmail(user);
+						JOptionPane.showMessageDialog(getLogin(), "Check your email for your new password.", "Forgot Password", JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(getLogin(), "Username or email is invalid.", "Forget Password", JOptionPane.ERROR_MESSAGE);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			} else {
+				JOptionPane.showMessageDialog(getLogin(), "Please specify your username or email.", "Forget Password", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 }

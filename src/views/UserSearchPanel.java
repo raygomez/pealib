@@ -18,14 +18,13 @@ public class UserSearchPanel extends JPanel {
 	
 	private final static int USER = 0;
 	private final static int PENDING = 1;
-	
-	private JTextField searchTextField = new JTextField(30);
-	private JButton searchButton = new JButton("Search", new ImageIcon("resources/images/search32x32.png"));
-	
+		
 	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JPanel pendingPane = new JPanel();
 	private JPanel usersPane = new JPanel();
-	
+
+	private JTextField searchTextField = new JTextField(30);
+	private JButton searchButton = new JButton("Search", new ImageIcon("resources/images/search32x32.png"));
 	private JButton acceptButton = new JButton("Accept", new ImageIcon("resources/images/Apply.png"));
 	private JButton denyButton = new JButton("Deny", new ImageIcon("resources/images/Delete.png"));
 	private JCheckBox allCheckBox = new JCheckBox("Select All");
@@ -37,56 +36,84 @@ public class UserSearchPanel extends JPanel {
 	 * Getters - Setters
 	 */	
 	public JTextField getFieldSearch() { return searchTextField; }
-	
-	public JButton getBtnSearch(){ return searchButton; }
-	
-	public JTabbedPane getTabbedPane(){ return tabbedPane; }
 
 	public int getSelectedTab() { return tabbedPane.getSelectedIndex(); }
 	
-	//USERS
-	public JPanel getUsersPane() { return usersPane; }
-	
 	public JTable getUsersTable() { return usersTable; }
 
-	public void setUsersTable(JTable usersTable) { this.usersTable = usersTable; }
-	
-	public TableModel getUsersTableModel(){ return modelUsers;}
-	
-	public void setUsersTableModel(TableModel model) { this.modelUsers = model; }
-	
-	//PENDING
-	public JPanel getPendingPane() { return pendingPane; }
-
-	public void setPendingPane(JPanel pendingPane) { this.pendingPane = pendingPane; }
-
 	public JTable getPendingTable() { return pendingTable; }
-
-	public void setPendingTable(JTable pendingTable) { this.pendingTable = pendingTable; }
-	
-	public TableModel getPendingTableModel(){ return modelPending;}
-	
-	public void setPendingTableModel(TableModel model) { this.modelPending = model; }
 		
 	public JCheckBox getCbAll() { return allCheckBox; }
 	
-	public JButton getBtnAccept(){ return acceptButton; }
-	
-	public JButton getBtnDeny(){ return denyButton; }
-	
-	/*
-	 * Methods
+	/**
+	 * Create the panel.
 	 */
-	public void togglePendingButtons(boolean toggle){
-		acceptButton.setEnabled(toggle);
-		denyButton.setEnabled(toggle);	
+	public UserSearchPanel(AbstractTableModel model1, AbstractTableModel model2) {
+		modelUsers = model1;
+		modelPending = model2;
+
+		setBorder(new EmptyBorder(5, 5, 5, 5));
+		setLayout(new MigLayout("", "[60px][300px]10px[][grow]", "[]20px[][grow]"));
+
+		add(searchTextField, "cell 1 0");
+		add(searchButton, "cell 2 0");
+
+		tabbedPane.addTab("User Accounts", new ImageIcon("resources/images/useraccounts.png"), usersPane);
+		tabbedPane.addTab("Pending Applications", new ImageIcon("resources/images/pending.png"), pendingPane);
+
+		add(tabbedPane, "cell 0 1, span 4 3,grow");
+				
+		usersPanel();
+		pendingAppPanel();
 	}
 	
-	public void togglePending(boolean toggle){
-		togglePendingButtons(toggle);
-		allCheckBox.setEnabled(toggle);
+	private void usersPanel() {
+		usersPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		usersPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
+
+		usersTable = new JTable(modelUsers);
+		getUsersTable().setName("tableUsers");
+		setTableSettings(getUsersTable(),0);
+
+		JScrollPane scrollPane = new JScrollPane(getUsersTable());
+		scrollPane.setName("scrollPane");
+		scrollPane.setSize(10, 10);
+		usersPane.add(scrollPane, "grow");
 	}
 
+	private void pendingAppPanel() {
+		pendingPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		pendingPane.setLayout(new MigLayout("", "[grow]10px[40px]", "[40px]5px[40px]20px[10px][grow]"));
+
+		pendingTable = new JTable(modelPending);
+		getPendingTable().setName("tablePending");
+		setTableSettings(getPendingTable(),PENDING);
+
+		JScrollPane scrollPane = new JScrollPane(getPendingTable());
+		scrollPane.setName("scrollPane");
+		scrollPane.setSize(10, 10);
+		pendingPane.add(scrollPane, "grow,cell 0 0, span 1 4");
+		
+		pendingPane.add(acceptButton, "cell 1 0, growx");
+		pendingPane.add(denyButton, "cell 1 1, growx");
+		pendingPane.add(allCheckBox, "cell 1 2, growx");						
+	}
+
+	/*
+	 * Table-related 
+	 */
+	public void setTableModel(int tab, AbstractTableModel model) {
+		if (tab == USER) {
+			getUsersTable().setModel(model);
+			setTableSettings(getUsersTable(), tab);
+
+		} else if (tab == PENDING) {
+			getPendingTable().setModel(model);
+			setTableSettings(getPendingTable(),tab);
+		}
+		resetTabPane();
+	}
+	
 	private void setTableSettings(JTable table, int tab) {
 		DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
 		trender.setHorizontalAlignment(SwingConstants.CENTER);
@@ -104,80 +131,25 @@ public class UserSearchPanel extends JPanel {
 		table.getTableHeader().setResizingAllowed(false);
 	}
 	
-	/**
-	 * Create the panel.
+	public void resetTabPane(){
+		tabbedPane.revalidate();
+		tabbedPane.repaint();
+	}
+	
+	/*
+	 * Methods
 	 */
-	public UserSearchPanel(AbstractTableModel model1, AbstractTableModel model2) {
-		setUsersTableModel(model1);
-		setPendingTableModel(model2);
-
-		setBorder(new EmptyBorder(5, 5, 5, 5));
-		setLayout(new MigLayout("", "[60px][300px]10px[][grow]",
-				"[]20px[][grow]"));
-
-		add(searchTextField, "cell 1 0");
-		add(searchButton, "cell 2 0");
-
-		getTabbedPane().addTab("User Accounts", new ImageIcon(
-				"resources/images/useraccounts.png"), getUsersPane());
-		getTabbedPane().addTab("Pending Applications", new ImageIcon(
-				"resources/images/pending.png"), getPendingPane());
-
-		add(tabbedPane, "cell 0 1, span 4 3,grow");
-				
-		usersPanel();
-		pendingAppPanel();
+	
+	public void togglePendingButtons(boolean toggle){
+		acceptButton.setEnabled(toggle);
+		denyButton.setEnabled(toggle);	
 	}
 	
-	private void usersPanel() {
-		getUsersPane().setBorder(new EmptyBorder(5, 5, 5, 5));
-		getUsersPane().setLayout(new MigLayout("", "[grow]", "[grow]"));
-
-		setUsersTable(new JTable(getUsersTableModel()));
-		getUsersTable().setName("tableUsers");
-		setTableSettings(getUsersTable(),0);
-
-		JScrollPane scrollPane = new JScrollPane(getUsersTable());
-		scrollPane.setName("scrollPane");
-		scrollPane.setSize(10, 10);
-		getUsersPane().add(scrollPane, "grow");
-	}
-
-	private void pendingAppPanel() {
-		getPendingPane().setBorder(new EmptyBorder(5, 5, 5, 5));
-		getPendingPane().setLayout(new MigLayout("", "[grow]10px[40px]", "[40px]5px[40px]20px[10px][grow]"));
-
-		setPendingTable(new JTable(getPendingTableModel()));
-		getPendingTable().setName("tablePending");
-		setTableSettings(getPendingTable(),PENDING);
-
-		JScrollPane scrollPane = new JScrollPane(getPendingTable());
-		scrollPane.setName("scrollPane");
-		scrollPane.setSize(10, 10);
-		getPendingPane().add(scrollPane, "grow,cell 0 0, span 1 4");
-		
-		getPendingPane().add(acceptButton, "cell 1 0, growx");
-		getPendingPane().add(denyButton, "cell 1 1, growx");
-		getPendingPane().add(allCheckBox, "cell 1 2, growx");						
-	}
-
-	public void setTableModel(int tab, AbstractTableModel model) {
-		if (tab == USER) {
-			getUsersTable().setModel(model);
-			setTableSettings(getUsersTable(), tab);
-
-		} else if (tab == PENDING) {
-			getPendingTable().setModel(model);
-			setTableSettings(getPendingTable(),tab);
-		}
-		resetTable();
+	public void toggleAllPendingComp(boolean toggle){
+		togglePendingButtons(toggle);
+		allCheckBox.setEnabled(toggle);
 	}
 	
-	public void resetTable(){
-		getTabbedPane().revalidate();
-		getTabbedPane().repaint();
-	}
-
 	public void addUserSelectionLister(ListSelectionListener listener) {
 		getUsersTable().getSelectionModel().addListSelectionListener(listener);
 	}
@@ -186,13 +158,13 @@ public class UserSearchPanel extends JPanel {
 			ChangeListener tab, ListSelectionListener table, ActionListener cbox, 
 			ActionListener accept, ActionListener deny) {
 		
-		getBtnSearch().addActionListener(button);
-		getFieldSearch().addKeyListener(text);
-		getTabbedPane().addChangeListener(tab);
-		getUsersTable().getSelectionModel().addListSelectionListener(table);
-		getPendingTable().getSelectionModel().addListSelectionListener(table);
-		getCbAll().addActionListener(cbox);
-		getBtnAccept().addActionListener(accept);
-		getBtnDeny().addActionListener(deny);
+		searchButton.addActionListener(button);
+		searchTextField.addKeyListener(text);
+		tabbedPane.addChangeListener(tab);
+		usersTable.getSelectionModel().addListSelectionListener(table);
+		pendingTable.getSelectionModel().addListSelectionListener(table);
+		allCheckBox.addActionListener(cbox);
+		acceptButton.addActionListener(accept);
+		denyButton.addActionListener(deny);
 	}
 }

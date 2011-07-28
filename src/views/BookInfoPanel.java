@@ -174,28 +174,12 @@ public class BookInfoPanel extends JPanel {
 		return saveButton;
 	}
 
-	public void setBtnSave(JButton btnSave) {
-		this.saveButton = btnSave;
-	}
-
 	public JButton getBtnDelete() {
 		return deleteButton;
 	}
 
-	public void setBtnDelete(JButton btnDelete) {
-		this.deleteButton = btnDelete;
-	}
-
-	public void setBtnBorrow(JButton btnBorrow) {
-		this.borrowButton = btnBorrow;
-	}
-
 	public JButton getBtnReserve() {
 		return reserveButton;
-	}
-
-	public void setBtnReserve(JButton btnReserve) {
-		this.reserveButton = btnReserve;
 	}
 
 	public void addSaveListener(ActionListener saveInfo) {

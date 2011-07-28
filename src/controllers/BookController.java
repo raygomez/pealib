@@ -141,56 +141,8 @@ public class BookController {
 		class AddBookListener implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				boolean validate = true;
-
-				if (addBook.getTxtFldTitle().getText().trim().isEmpty()
-						|| addBook.getTxtFldTitle().getText().length() > 100) {
-					addBook.getTxtFldTitle().hasError(true);
-					validate = false;
-				} else
-					addBook.getTxtFldTitle().hasError(false);
-
-				if (addBook.getTxtFldAuthor().getText().trim().isEmpty()
-						|| addBook.getTxtFldAuthor().getText().length() > 100) {
-					addBook.getTxtFldAuthor().hasError(true);
-					validate = false;
-				} else
-					addBook.getTxtFldAuthor().hasError(false);
-
-				if (!addBook.getTxtFldYearPublish().getText().trim().isEmpty()) {
-					if (!addBook.getTxtFldYearPublish().getText()
-							.matches(Constants.YEAR_PUBLISH_FORMAT)) {
-						addBook.getTxtFldYearPublish().hasError(true);
-						validate = false;
-					} else
-						addBook.getTxtFldYearPublish().hasError(false);
-				} else
-					addBook.getTxtFldYearPublish().hasError(false);
-
-				if (!IsbnChecker.isIsbnValid(addBook.getTxtFldIsbn().getText())) {
-					addBook.getTxtFldIsbn().hasError(true);
-					validate = false;
-				} else
-					addBook.getTxtFldIsbn().hasError(false);
-
-				if (addBook.getTxtFldPublisher().getText().length() > 100) {
-					addBook.getTxtFldPublisher().hasError(true);
-					validate = false;
-				} else
-					addBook.getTxtFldPublisher().hasError(false);
-
-				if (addBook.getTxtAreaDescription().getText().length() > 300) {
-					addBook.getTxtAreaDescription().hasError(true);
-					validate = false;
-				} else
-					addBook.getTxtAreaDescription().hasError(false);
-
-				if (addBook.getTxtFldEdition().getText().length() > 30) {
-					addBook.getTxtFldEdition().hasError(true);
-					validate = false;
-				} else
-					addBook.getTxtFldEdition().hasError(false);
-
+				int currRow = currTableRowSelection;
+				boolean validate = validateAddBook();
 				if (validate) {
 					try {
 						if (!BookDAO.isIsbnExisting(addBook.getBookInfo()
@@ -200,14 +152,7 @@ public class BookController {
 									"ISBN: "
 											+ addBook.getTxtFldIsbn().getText()
 											+ " was added");
-							addBook.getTxtAreaDescription().setText("");
-							addBook.getTxtFldAuthor().setText("");
-							addBook.getTxtFldEdition().setText("");
-							addBook.getTxtFldIsbn().setText("");
-							addBook.getTxtFldPublisher().setText("");
-							addBook.getTxtFldTitle().setText("");
-							addBook.getTxtFldYearPublish().setText("");
-							addBook.getCopyValSpinner().getModel().setValue(1);
+							clearBookFields();
 							bookList = BookDAO.searchBook(currSearchString);
 							bookSearch.getTableBookList().setModel(
 									new BookListModel(bookList));
@@ -215,9 +160,9 @@ public class BookController {
 							bookSearch.setColumnRender(bookSearch.getTableBookList());
 							if(bookList != null && !bookList.isEmpty()) 
 								bookSearch.getTableBookList().addRowSelectionInterval(
-										currTableRowSelection, currTableRowSelection);
+										currRow, currRow);
 							
-							bookInfo.setBookInfoData(bookList.get(currTableRowSelection));
+							bookInfo.setBookInfoData(bookList.get(currRow));
 						} else {
 							addBook.getLblErrorMsg().makeError(
 									"ISBN already exist");
@@ -230,7 +175,72 @@ public class BookController {
 				}
 			}
 		}
+		
+		private void clearBookFields(){
+			addBook.getTxtAreaDescription().setText("");
+			addBook.getTxtFldAuthor().setText("");
+			addBook.getTxtFldEdition().setText("");
+			addBook.getTxtFldIsbn().setText("");
+			addBook.getTxtFldPublisher().setText("");
+			addBook.getTxtFldTitle().setText("");
+			addBook.getTxtFldYearPublish().setText("");
+			addBook.getCopyValSpinner().getModel().setValue(1);
+		}
 
+		private boolean validateAddBook(){
+			boolean validate = true;
+			
+			if (addBook.getTxtFldTitle().getText().trim().isEmpty()
+					|| addBook.getTxtFldTitle().getText().length() > 100) {
+				addBook.getTxtFldTitle().hasError(true);
+				validate = false;
+			} else
+				addBook.getTxtFldTitle().hasError(false);
+
+			if (addBook.getTxtFldAuthor().getText().trim().isEmpty()
+					|| addBook.getTxtFldAuthor().getText().length() > 100) {
+				addBook.getTxtFldAuthor().hasError(true);
+				validate = false;
+			} else
+				addBook.getTxtFldAuthor().hasError(false);
+
+			if (!addBook.getTxtFldYearPublish().getText().trim().isEmpty()) {
+				if (!addBook.getTxtFldYearPublish().getText()
+						.matches(Constants.YEAR_PUBLISH_FORMAT)) {
+					addBook.getTxtFldYearPublish().hasError(true);
+					validate = false;
+				} else
+					addBook.getTxtFldYearPublish().hasError(false);
+			} else
+				addBook.getTxtFldYearPublish().hasError(false);
+
+			if (!IsbnChecker.isIsbnValid(addBook.getTxtFldIsbn().getText())) {
+				addBook.getTxtFldIsbn().hasError(true);
+				validate = false;
+			} else
+				addBook.getTxtFldIsbn().hasError(false);
+
+			if (addBook.getTxtFldPublisher().getText().length() > 100) {
+				addBook.getTxtFldPublisher().hasError(true);
+				validate = false;
+			} else
+				addBook.getTxtFldPublisher().hasError(false);
+
+			if (addBook.getTxtAreaDescription().getText().length() > 300) {
+				addBook.getTxtAreaDescription().hasError(true);
+				validate = false;
+			} else
+				addBook.getTxtAreaDescription().hasError(false);
+
+			if (addBook.getTxtFldEdition().getText().length() > 30) {
+				addBook.getTxtFldEdition().hasError(true);
+				validate = false;
+			} else
+				addBook.getTxtFldEdition().hasError(false);
+			
+			return validate;
+		}
+		
 		class CancelListener implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -244,82 +254,11 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int currRow = currTableRowSelection;
-			int flag = 0;
 			try {
-				boolean validate = true;
-
-				if (bookInfo.getTxtFldTitle().getText().trim().isEmpty()
-						|| bookInfo.getTxtFldTitle().getText().length() > 100) {
-					bookInfo.getTxtFldTitle().hasError(true);
-					validate = false;
-				} else
-					bookInfo.getTxtFldTitle().hasError(false);
-
-				if (bookInfo.getTxtFldAuthor().getText().trim().isEmpty()
-						|| bookInfo.getTxtFldAuthor().getText().length() > 100) {
-					bookInfo.getTxtFldAuthor().hasError(true);
-					validate = false;
-				} else
-					bookInfo.getTxtFldAuthor().hasError(false);
-
-				if (!bookInfo.getTxtFldYrPublished().getText().trim().isEmpty()) {
-					if (!bookInfo.getTxtFldYrPublished().getText()
-							.matches(Constants.YEAR_PUBLISH_FORMAT)) {
-						bookInfo.getTxtFldYrPublished().hasError(true);
-						validate = false;
-					} else
-						bookInfo.getTxtFldYrPublished().hasError(false);
-				} else
-					bookInfo.getTxtFldYrPublished().hasError(false);
-
-				if (bookInfo.getTxtFldPublisher().getText().length() > 100) {
-					bookInfo.getTxtFldPublisher().hasError(true);
-					validate = false;
-				} else
-					bookInfo.getTxtFldPublisher().hasError(false);
-
-				if (!IsbnChecker
-						.isIsbnValid(bookInfo.getTxtFldISBN().getText())) {
-					bookInfo.getTxtFldISBN().hasError(true);
-					validate = false;
-					flag = 1;
-				} else
-					bookInfo.getTxtFldISBN().hasError(false);
-
-				if (bookInfo.getTxtFldDescription().getText().length() > 300) {
-					bookInfo.getTxtFldDescription().hasError(true);
-					validate = false;
-				} else
-					bookInfo.getTxtFldDescription().hasError(false);
-
-				int spinCopy = Integer.parseInt(bookInfo.getSpinCopyVal()
-						.getModel().getValue().toString());
+				boolean validate = validateEditBook();
 				int availableCopy = TransactionDAO.getAvailableCopies(bookInfo
 						.getCurrBook());
-				int validCopy = bookInfo.getCurrBook().getCopies()
-						- availableCopy;
-				if (spinCopy < validCopy) {
-					bookInfo.getSpinCopyVal().hasError(true);
-					validate = false;
-				} else
-					bookInfo.getSpinCopyVal().hasError(false);
-
-				if (bookInfo.getTxtFldEdition().getText().length() > 30) {
-					validate = false;
-					bookInfo.getTxtFldEdition().hasError(true);
-				} else
-					bookInfo.getTxtFldEdition().hasError(false);
-
-				if (!currISBN.equals(bookInfo.getTxtFldISBN().getText())
-						&& flag == 0) {
-					if (BookDAO.isIsbnExisting(bookInfo.getTxtFldISBN()
-							.getText())) {
-						bookInfo.getTxtFldISBN().hasError(true);
-						validate = false;
-					} else
-						bookInfo.getTxtFldISBN().hasError(false);
-				}
-
+				
 				if (validate) {
 					BookDAO.editBook(bookInfo.getCurrBook());
 					if (currentUser.getType().equals("Librarian")) {
@@ -350,6 +289,84 @@ public class BookController {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+		}
+		
+		private boolean validateEditBook() throws Exception{
+			boolean validate = true;
+			int flag = 0;
+			if (bookInfo.getTxtFldTitle().getText().trim().isEmpty()
+					|| bookInfo.getTxtFldTitle().getText().length() > 100) {
+				bookInfo.getTxtFldTitle().hasError(true);
+				validate = false;
+			} else
+				bookInfo.getTxtFldTitle().hasError(false);
+
+			if (bookInfo.getTxtFldAuthor().getText().trim().isEmpty()
+					|| bookInfo.getTxtFldAuthor().getText().length() > 100) {
+				bookInfo.getTxtFldAuthor().hasError(true);
+				validate = false;
+			} else
+				bookInfo.getTxtFldAuthor().hasError(false);
+
+			if (!bookInfo.getTxtFldYrPublished().getText().trim().isEmpty()) {
+				if (!bookInfo.getTxtFldYrPublished().getText()
+						.matches(Constants.YEAR_PUBLISH_FORMAT)) {
+					bookInfo.getTxtFldYrPublished().hasError(true);
+					validate = false;
+				} else
+					bookInfo.getTxtFldYrPublished().hasError(false);
+			} else
+				bookInfo.getTxtFldYrPublished().hasError(false);
+
+			if (bookInfo.getTxtFldPublisher().getText().length() > 100) {
+				bookInfo.getTxtFldPublisher().hasError(true);
+				validate = false;
+			} else
+				bookInfo.getTxtFldPublisher().hasError(false);
+
+			if (!IsbnChecker
+					.isIsbnValid(bookInfo.getTxtFldISBN().getText())) {
+				bookInfo.getTxtFldISBN().hasError(true);
+				validate = false;
+				flag = 1;
+			} else
+				bookInfo.getTxtFldISBN().hasError(false);
+
+			if (bookInfo.getTxtFldDescription().getText().length() > 300) {
+				bookInfo.getTxtFldDescription().hasError(true);
+				validate = false;
+			} else
+				bookInfo.getTxtFldDescription().hasError(false);
+
+			int spinCopy = Integer.parseInt(bookInfo.getSpinCopyVal()
+					.getModel().getValue().toString());
+			int availableCopy = TransactionDAO.getAvailableCopies(bookInfo
+					.getCurrBook());
+			int validCopy = bookInfo.getCurrBook().getCopies()
+					- availableCopy;
+			if (spinCopy < validCopy) {
+				bookInfo.getSpinCopyVal().hasError(true);
+				validate = false;
+			} else
+				bookInfo.getSpinCopyVal().hasError(false);
+
+			if (bookInfo.getTxtFldEdition().getText().length() > 30) {
+				validate = false;
+				bookInfo.getTxtFldEdition().hasError(true);
+			} else
+				bookInfo.getTxtFldEdition().hasError(false);
+
+			if (!currISBN.equals(bookInfo.getTxtFldISBN().getText())
+					&& flag == 0) {
+				if (BookDAO.isIsbnExisting(bookInfo.getTxtFldISBN()
+						.getText())) {
+					bookInfo.getTxtFldISBN().hasError(true);
+					validate = false;
+				} else
+					bookInfo.getTxtFldISBN().hasError(false);
+			}
+			
+			return validate;
 		}
 
 	}

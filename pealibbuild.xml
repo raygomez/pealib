@@ -36,6 +36,11 @@
 		<pathelement location="lib/commons/commons-logging-1.1.jar" />
 		<pathelement location="lib/joda-time-1.6.2.jar" />
 		<pathelement location="lib/ognl-2.6.9.jar" />
+        <pathelement location="lib/email/dsn.jar"/>
+        <pathelement location="lib/email/imap.jar"/>
+        <pathelement location="lib/email/mailapi.jar"/>
+        <pathelement location="lib/email/pop3.jar"/>
+        <pathelement location="lib/email/smtp.jar"/>
 	</path>
 
 	<path id="cobertura_classpath">
