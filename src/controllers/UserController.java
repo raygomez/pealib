@@ -160,6 +160,7 @@ public class UserController {
 						UserDAO.denyPendingUser(temp);
 						info = "Successfully denied (" + checkList.size()
 								+ ") application/s.";
+						Emailer.sendRejectEmail(temp);
 					}
 				} catch (Exception e1) {
 					CrashHandler.handle(e1);
