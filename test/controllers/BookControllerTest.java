@@ -56,8 +56,6 @@ public class BookControllerTest extends UISpecTestCase {
 	public void testEmptyBookTable() throws Exception {
 		userPanel = new Panel(
 				new BookController(user).getBookLayoutPanel());
-		Panel bookSearch = new Panel(bookControllerUser.getBookSearch());
-		bookSearch.getButton("Clear").click();
 	}
 
 	@Test
@@ -66,6 +64,8 @@ public class BookControllerTest extends UISpecTestCase {
 				new BookController(user).getBookLayoutPanel());
 		Panel bookSearch = new Panel(bookControllerUser.getBookSearch());
 		bookSearch.getButton("Search").click();
+		bookSearch.getButton("Clear").click();
+		bookSearch.getInputTextBox("textSearch").setText("a");
 	}
 
 	@Test
