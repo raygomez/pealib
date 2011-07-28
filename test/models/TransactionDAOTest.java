@@ -236,9 +236,9 @@ public class TransactionDAOTest {
 	}
 
 	@Test
-	public void testSearchOutgoingBookAll() throws Exception {
+	public void testSearchOutgoingBookAllBlank() throws Exception {
 		ArrayList<BorrowTransaction> list = TransactionDAO
-				.searchOutgoingBook("*");
+				.searchOutgoingBook("");
 		assertEquals(4, list.size());
 	}
 
@@ -264,12 +264,13 @@ public class TransactionDAOTest {
 	}
 
 	@Test
-	public void testSearchIncomingBookAll() throws Exception {
+	public void testSearchIncomingBookAllBlank() throws Exception {
 		ArrayList<BorrowTransaction> list = TransactionDAO
-				.searchIncomingBook("*");
+				.searchIncomingBook("");
 		assertEquals(5, list.size());
 	}
 
+	
 	@Test
 	public void testSearchIncomingBookNone() throws Exception {
 		ArrayList<BorrowTransaction> list = TransactionDAO

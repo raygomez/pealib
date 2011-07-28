@@ -16,7 +16,7 @@ import org.apache.commons.lang.RandomStringUtils;
 
 import models.User;
 import models.UserDAO;
-import utilities.Connector;
+//import utilities.Connector;
 import utilities.Constants;
 import utilities.Emailer;
 import utilities.Task;
@@ -42,16 +42,16 @@ public class AuthenticationController {
 	private String sUpContactNumber;
 	private String sUpAddress;
 	
-	public static void main(String[] args) {
-		try {
-			new Connector(Constants.TEST_CONFIG);
-			new AuthenticationController();
-			AuthenticationController.getLogin().setVisible(true);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			new Connector(Constants.APP_CONFIG);
+//			new AuthenticationController();
+//			AuthenticationController.getLogin().setVisible(true);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	public AuthenticationController() {
 		setLogin(new LogInDialog());
@@ -153,10 +153,9 @@ public class AuthenticationController {
 			getLogin().setLabelError("Username/Password Mismatch");
 			getLogin().getFieldPassword().setText("");
 		} else if (user.getType().equals("Pending")) {
-			getLogin()
-					.setLabelError(
-							"<html><center>Account still being processed.<br/>"
-									+ "Ask Librarian for further inquiries.</center></html>");
+			getLogin().setLabelError(
+				"<html><center>Account still being processed.<br/>"
+				+ "Ask Librarian for further inquiries.</center></html>");
 			getLogin().getFieldPassword().setText("");
 		} else {
 			getLogin().dispose();
@@ -164,7 +163,6 @@ public class AuthenticationController {
 	}
 	
 	private void submit() {
-		
 		Callable<Void> toDo = new Callable<Void>() {
 			
 			@Override
@@ -175,7 +173,8 @@ public class AuthenticationController {
 		};
 		
 		Task<Void, Void> task = new Task<Void, Void>(toDo);
-		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(getLogin())));
+		task.addPropertyChangeListener(new TaskUpdateListener(
+			new LoadingDialog(getLogin())));
 		
 		setUsernamePassword();
 		if (login_user.equals("") || login_pass.equals("")) {
@@ -252,7 +251,36 @@ public class AuthenticationController {
 		}
 	}
 
-	private void submitRegistration(){
+	private void submitRegistration() {
+		User newUser = new User(-1, sUpUserName, sUpPassword, sUpFirstName,
+				sUpLastName, sUpEmailAddress, sUpAddress, sUpContactNumber,
+				"Pending");
+		try {
+			UserDAO.saveUser(newUser);
+			JOptionPane.showMessageDialog(signUp.getContentPane(),
+				"<html>Your account has been created.<br>" +
+				"Please wait for the Librarian to activate your account.",
+				"Sign-up Successful", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			signUpFailed();
+			e.printStackTrace();
+		}
+		signUpCancel();
+	}
+	
+	private void signUpSubmit() {
+		Callable<Void> toDo = new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				submitRegistration();
+				return null;
+			}
+		};
+		
+		Task<Void, Void> task = new Task<Void, Void>(toDo);
+		task.addPropertyChangeListener(new TaskUpdateListener(
+			new LoadingDialog(getSignUp())));
+		
 		int maskedLabel = 0;
 		signUp.setFieldBorderColor(maskedLabel);
 		signUp.setLblErrorMessage("");
@@ -262,45 +290,19 @@ public class AuthenticationController {
 			signUp.setLblErrorMessage("Cannot leave mandatory fields empty.");
 		} else if (!isUserNameValid()) {
 			/* action is handled by isUserNameValid() */
+		} else if (!isEmailAddressValid()) {
+			/* action is handled by isEmailValid() */
 		} else if (!isSignUpInputValid(maskedLabel)) {
 			signUp.setLblErrorMessage("Invalid Input.");
 		} else if (!sUpConfirmPassword.equals(sUpPassword)) {
 			signUp.setLblErrorMessage("Mismatch in Confirm Password.");
 			signUp.setFieldBorderColor(SignUpDialog.PASSWORD_FLAG
-					| SignUpDialog.CONFIRM_PASSWORD_FLAG);
+				| SignUpDialog.CONFIRM_PASSWORD_FLAG);
 			signUp.getTxtfldPassword().setText("");
 			signUp.getTxtfldConfirmPassword().setText("");
 		} else {
-			User newUser = new User(-1, sUpUserName, sUpPassword, sUpFirstName,
-					sUpLastName, sUpEmailAddress, sUpAddress, sUpContactNumber,
-					"Pending");
-			try {
-				UserDAO.saveUser(newUser);
-				JOptionPane.showMessageDialog(signUp.getContentPane(),
-						"Your account has been created. " +
-						"Please wait for the Librarian to activate your account.",
-						"Sign-up Successful", JOptionPane.INFORMATION_MESSAGE);
-			} catch (Exception e) {
-				signUpFailed();
-				e.printStackTrace();
-			}
-			signUpCancel();
+			task.execute();
 		}
-	}
-	
-	private void signUpSubmit() {
-		Callable<Void> toDo = new Callable<Void>() {
-			
-			@Override
-			public Void call() throws Exception {
-				submitRegistration();
-				return null;
-			}
-		};
-		
-		Task<Void, Void> task = new Task<Void, Void>(toDo);
-		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(getSignUp())));
-		task.execute();
 	}
 
 	private void getSignUpData() {
@@ -309,7 +311,7 @@ public class AuthenticationController {
 		getUserName();
 		sUpPassword = new String(signUp.getTxtfldPassword().getPassword());
 		sUpConfirmPassword = new String(signUp.getTxtfldConfirmPassword()
-				.getPassword());
+			.getPassword());
 		sUpEmailAddress = signUp.getTxtfldEmailAddress().getText();
 		sUpContactNumber = signUp.getTxtfldContactNumber().getText();
 		sUpAddress = signUp.getTxtfldAddress().getText();
@@ -354,11 +356,9 @@ public class AuthenticationController {
 		boolean isFirstNameValid = sUpFirstName.matches(Constants.NAME_FORMAT);
 		boolean isLastNameValid = sUpLastName.matches(Constants.NAME_FORMAT);
 		boolean isPasswordValid = sUpPassword
-				.matches(Constants.PASSWORD_FORMAT);
-		boolean isEMailAddressValid = sUpEmailAddress
-				.matches(Constants.EMAIL_FORMAT);
+					.matches(Constants.PASSWORD_FORMAT);
 		boolean isContactNumberValid = sUpContactNumber
-				.matches(Constants.CONTACT_NUMBER_FORMAT);
+					.matches(Constants.CONTACT_NUMBER_FORMAT);
 		boolean isAddressValid = sUpAddress.matches(Constants.ADDRESS_FORMAT);
 
 		if (!isFirstNameValid) {
@@ -370,13 +370,10 @@ public class AuthenticationController {
 			signUp.getTxtfldLastName().setText("");
 		}
 		if (!isPasswordValid) {
-			maskedLabel |= (SignUpDialog.PASSWORD_FLAG | SignUpDialog.CONFIRM_PASSWORD_FLAG);
+			maskedLabel |= (SignUpDialog.PASSWORD_FLAG
+				| SignUpDialog.CONFIRM_PASSWORD_FLAG);
 			signUp.getTxtfldPassword().setText("");
 			signUp.getTxtfldConfirmPassword().setText("");
-		}
-		if (!isEMailAddressValid) {
-			maskedLabel |= SignUpDialog.EMAIL_ADDRESS_FLAG;
-			signUp.getTxtfldEmailAddress().setText("");
 		}
 		if (!isContactNumberValid) {
 			maskedLabel |= SignUpDialog.CONTACT_NUMBER_FLAG;
@@ -396,7 +393,7 @@ public class AuthenticationController {
 
 	private boolean isUserNameValid() {
 		signUp.setLblErrorMessage("");
-		signUp.setFieldBorderColor(0);
+		signUp.setFieldBorderColor(SignUpDialog.EMPTY_FLAG);
 
 		boolean isValid = sUpUserName.matches(Constants.USERNAME_FORMAT);
 		if (!isValid) {
@@ -405,20 +402,42 @@ public class AuthenticationController {
 			return false;
 		}
 
-		boolean isNotUnique = true;
 		try {
-			isNotUnique = UserDAO.isUsernameExisting(sUpUserName);
+			if (UserDAO.isUsernameExisting(sUpUserName)) {
+				signUp.setLblErrorMessage("User name is already in use.");
+				signUp.setFieldBorderColor(SignUpDialog.USERNAME_FLAG);
+				return false;
+			}
 		} catch (Exception e) {
 			signUpFailed();
 			signUpCancel();
 			e.printStackTrace();
 		}
 
-		if (isNotUnique) {
-			signUp.setLblErrorMessage("User name is already in use.");
-			signUp.setFieldBorderColor(SignUpDialog.USERNAME_FLAG);
+		return true;
+	}
+	
+	private boolean isEmailAddressValid() {
+		boolean isValid = sUpEmailAddress
+			.matches(Constants.EMAIL_FORMAT);
+		if (!isValid || (sUpEmailAddress.length() > 30)) {
+			signUp.setLblErrorMessage("Invalid Input.");
+			signUp.setFieldBorderColor(SignUpDialog.EMAIL_ADDRESS_FLAG);
 			return false;
 		}
+		
+		try {
+			if (UserDAO.isEmailExisting(sUpEmailAddress)) {
+				signUp.setLblErrorMessage("E-mail address is already in use.");
+				signUp.setFieldBorderColor(SignUpDialog.EMAIL_ADDRESS_FLAG);
+				return false;
+			}
+		} catch (Exception e) {
+			signUpFailed();
+			signUpCancel();
+			e.printStackTrace();
+		}
+
 		return true;
 	}
 
@@ -436,9 +455,9 @@ public class AuthenticationController {
 	
 	private void signUpFailed() {
 		JOptionPane.showMessageDialog(signUp.getContentPane(),
-				"An error was encountered while creating your account. " +
-				"Please try again later.",
-				"Sign-up Failed", JOptionPane.ERROR_MESSAGE);
+			"<html>An error was encountered while creating your account.<br>" +
+			"Please try again later.",
+			"Sign-up Failed", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void setSignUp(SignUpDialog signUp) {
@@ -461,18 +480,29 @@ public class AuthenticationController {
 				try {
 					User user = UserDAO.getUserByEmailOrUsername(userOrEmail);
 					if(user != null){
-						user.setPassword(RandomStringUtils.randomAlphanumeric(8));
-						UserDAO.changePassword(user.getUserId(),user.getPassword());
+						user.setPassword(RandomStringUtils
+							.randomAlphanumeric(8));
+						UserDAO.changePassword(user.getUserId(),
+							user.getPassword());
 						Emailer.sendForgetPasswordEmail(user);
-						JOptionPane.showMessageDialog(getLogin(), "Check your email for your new password.", "Forgot Password", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(getLogin(),
+							"Check your email for your new password.",
+							"Forgot Password",
+							JOptionPane.INFORMATION_MESSAGE);
 					} else {
-						JOptionPane.showMessageDialog(getLogin(), "Username or email is invalid.", "Forget Password", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(getLogin(),
+							"Username or email is invalid.", 
+							"Forget Password",
+							JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			} else if(userOrEmail != null){
-				JOptionPane.showMessageDialog(getLogin(), "Please specify your username or email.", "Forget Password", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(getLogin(),
+					"Please specify your username or email.",
+					"Forget Password",
+					JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
