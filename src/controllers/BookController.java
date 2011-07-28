@@ -58,7 +58,6 @@ public class BookController {
 				"[grow]"));
 		bookSearch = new BookSearchPanel(currentUser);
 		
-		//TODO
 		bookSearch.getTableBookList().setModel(new BookListModel(bookList));
 		bookSearch.setColumnRender(bookSearch.getTableBookList());
 		
@@ -138,7 +137,7 @@ public class BookController {
 							bookList = BookDAO.searchBook(currSearchString);
 							bookSearch.getTableBookList().setModel(
 									new BookListModel(bookList));
-							//TODO 
+						
 							bookSearch.setColumnRender(bookSearch.getTableBookList());
 							if(bookList != null && !bookList.isEmpty()) 
 								bookSearch.getTableBookList().addRowSelectionInterval(
@@ -208,7 +207,7 @@ public class BookController {
 			} else
 				addBook.getTxtFldPublisher().hasError(false);
 
-			if (addBook.getTxtAreaDescription().getText().length() > 300) {
+			if (addBook.getTxtAreaDescription().getText().length() > 1000) {
 				addBook.getTxtAreaDescription().hasError(true);
 				validate = false;
 			} else
@@ -246,7 +245,7 @@ public class BookController {
 					bookList = BookDAO.searchBook(currSearchString);
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
-					//TODO 
+		
 					bookSearch.setColumnRender(bookSearch.getTableBookList());
 					if(bookList != null && !bookList.isEmpty()) 
 						bookSearch.getTableBookList().addRowSelectionInterval(
@@ -310,7 +309,7 @@ public class BookController {
 			} else
 				bookInfo.getTxtFldISBN().hasError(false);
 
-			if (bookInfo.getTxtFldDescription().getText().length() > 300) {
+			if (bookInfo.getTxtFldDescription().getText().length() > 1000) {
 				bookInfo.getTxtFldDescription().hasError(true);
 				validate = false;
 			} else
@@ -364,7 +363,7 @@ public class BookController {
 					bookInfo.setBookInfoData(bookList.get(currRow));
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
-					//TODO 
+			
 					bookSearch.setColumnRender(bookSearch.getTableBookList());
 					if(bookList != null && !bookList.isEmpty()) 
 						bookSearch.getTableBookList().addRowSelectionInterval(
@@ -396,7 +395,7 @@ public class BookController {
 				bookList = BookDAO.searchBookForUser(currSearchString);			
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
-				//TODO 
+		
 				bookSearch.setColumnRender(bookSearch.getTableBookList());
 				if(bookList != null && !bookList.isEmpty()) 
 					bookSearch.getTableBookList().addRowSelectionInterval(
@@ -428,7 +427,7 @@ public class BookController {
 				bookList = BookDAO.searchBookForUser(currSearchString);			
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
-				//TODO 
+		
 				bookSearch.setColumnRender(bookSearch.getTableBookList());
 				if(bookList != null && !bookList.isEmpty()) 
 					bookSearch.getTableBookList().addRowSelectionInterval(
@@ -553,7 +552,7 @@ public class BookController {
 				}
 				bookSearch.getTableBookList().setModel(
 						new BookListModel(bookList));
-				//TODO 
+		
 				bookSearch.setColumnRender(bookSearch.getTableBookList());
 				if (bookList.size() == 0) {
 					bookInfo.setBookInfoData(new Book());
@@ -613,7 +612,7 @@ public class BookController {
 					}
 					bookSearch.getTableBookList().setModel(
 							new BookListModel(bookList));
-					//TODO 
+			
 					bookSearch.setColumnRender(bookSearch.getTableBookList());
 					if (bookList.size() == 0) {
 						bookInfo.getBtnDelete().setEnabled(false);
