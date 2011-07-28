@@ -3,11 +3,7 @@ package pealib;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.concurrent.Callable;
-
-import javax.swing.SwingWorker;
 
 import models.User;
 import utilities.Connector;
@@ -48,21 +44,6 @@ public class PeaLibrary {
 	}
 	
 	/**
-	 * @return the frame
-	 */
-	public MainFrame getFrame() {
-		return frame;
-	}
-
-	/**
-	 * @param frame
-	 *            the frame to set
-	 */
-	public void setFrame(MainFrame frame) {
-		this.frame = frame;
-	}
-
-	/**
 	 * @return the currentUser
 	 */
 	public User getCurrentUser() {
@@ -77,19 +58,8 @@ public class PeaLibrary {
 		this.currentUser = currentUser;
 	}
 
-	/**
-	 * @return the transactionControl
-	 */
-	public TransactionController getTransactionControl() {
-		return transactionControl;
-	}
-
-	/**
-	 * @param transactionControl
-	 *            the transactionControl to set
-	 */
-	public void setTransactionControl(TransactionController transactionControl) {
-		this.transactionControl = transactionControl;
+	public MainFrame getMainFrame() {
+		return frame;
 	}
 
 	public void authenticate() {
@@ -101,7 +71,6 @@ public class PeaLibrary {
 			
 			@Override
 			public Void call() throws Exception {
-				// TODO Auto-generated method stub
 				initialize();
 				return null;
 			}
@@ -111,21 +80,21 @@ public class PeaLibrary {
 			
 			@Override
 			public Void call() throws Exception {
-				getFrame().toFront();
-				getFrame().setVisible(true);
+				frame.toFront();
+				frame.setVisible(true);
 				return null;
 			}
 		};
 		
 		Task<Void, Void> task = new Task<Void, Void>(toDo, toDoAfter);
-		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(getFrame())));
+		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(frame)));
 		
 		task.execute();
 	}
 
 	public void initialize() {
 
-		setFrame(new MainFrame());
+		frame = new MainFrame();
 
 		if (getCurrentUser() == null) {
 			System.exit(0);
@@ -135,22 +104,13 @@ public class PeaLibrary {
 	}
 
 	private void initializedLoggedUser() {
-		// currentUser = user;
-		// currentUser = new
-		// User(101123,"jajalim","1234567","Jaja","Lim","jjlim@gmail.com","UP Ayala Technohub",
-		// "09171234567",1,"Librarian");
 
-		getFrame().setWelcomeLabel(
+		frame.setWelcomeLabel(
 				getCurrentUser().getFirstName() + " "
 						+ getCurrentUser().getLastName());
 
 		try {
 			bookControl = new BookController(getCurrentUser());
-		} catch (Exception e) {
-			CrashHandler.handle(e);
-
-		}
-		try {
 			userControl = new UserController(getCurrentUser());
 		} catch (Exception e) {
 			CrashHandler.handle(e);
@@ -168,7 +128,7 @@ public class PeaLibrary {
 	private void initializeLibrarian() {
 
 		try {
-			setTransactionControl(new TransactionController());
+			transactionControl = new TransactionController();
 		} catch (Exception e) {
 			CrashHandler.handle(e);
 		}
@@ -176,10 +136,10 @@ public class PeaLibrary {
 		librarianSidebarPanel = new LibrarianSidebarPanel();
 		initializeSidebarPanel(librarianSidebarPanel);
 
-		getFrame().setSidebarPanel(librarianSidebarPanel);
+		frame.setSidebarPanel(librarianSidebarPanel);
 		frame.setContentPanel(transactionControl.getTabbedPane());
-		getFrame().validate();
-		getFrame().repaint();
+		frame.validate();
+		frame.repaint();
 	}
 
 	private void initializeUser() {
@@ -187,22 +147,20 @@ public class PeaLibrary {
 		try {
 			elibControl = new ELibController(getCurrentUser());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			CrashHandler.handle(e);
 		}
 		userSidebarPanel = new UserSidebarPanel();
 		initializeSidebarPanel(userSidebarPanel);
 
-		getFrame().setSidebarPanel(userSidebarPanel);
+		frame.setSidebarPanel(userSidebarPanel);
 		try {
-			getFrame().setContentPanel(bookControl.getBookLayoutPanel());
+			frame.setContentPanel(bookControl.getBookLayoutPanel());
 		} catch (Exception e) {
 			CrashHandler.handle(e);
 
 		}
-		getFrame().validate();
-		getFrame().repaint();
+		frame.validate();
+		frame.repaint();
 
 	}
 
@@ -223,16 +181,12 @@ public class PeaLibrary {
 		librarianSidebarPanel.addLogoutListener(logout);
 	}
 
-	public MainFrame getMainFrame() {
-		return getFrame();
-	}
-
 	private ActionListener viewBooks = new ActionListener() {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			try {
-				getFrame().setContentPanel(bookControl.getBookLayoutPanel());
+				frame.setContentPanel(bookControl.getBookLayoutPanel());
 			} catch (Exception e) {
 				CrashHandler.handle(e);
 
@@ -244,7 +198,7 @@ public class PeaLibrary {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			getFrame().setContentPanel(userControl.getLayoutPanel());
+			frame.setContentPanel(userControl.getLayoutPanel());
 		}
 	};
 	private ActionListener showEditProfile = new ActionListener() {
@@ -257,7 +211,7 @@ public class PeaLibrary {
 			userControl.getUserInfoPanel().setFirstNameEnabled(false);
 			userControl.getUserInfoPanel().setLastNameEnabled(false);
 
-			getFrame().setContentPanel(userControl.getUserInfoPanel());
+			frame.setContentPanel(userControl.getUserInfoPanel());
 		}
 	};
 
@@ -265,11 +219,10 @@ public class PeaLibrary {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			getFrame().setVisible(false);
-			getFrame().dispose();
+			frame.setVisible(false);
+			frame.dispose();
 			setCurrentUser(null);
 			authenticate();
-			//getFrame().setVisible(true);
 		}
 	};
 
@@ -281,10 +234,8 @@ public class PeaLibrary {
 				frame.setContentPanel(transactionControl.getTabbedPane());
 			} else if (getCurrentUser().getType().equals("User")) {
 				try {
-					getFrame().setContentPanel(elibControl.getView());
+					frame.setContentPanel(elibControl.getView());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 					CrashHandler.handle(e);
 				}
 			}
@@ -308,7 +259,7 @@ public class PeaLibrary {
 					app.authenticate();
 					
 				} catch (Exception e) {
-					e.printStackTrace();
+					CrashHandler.handle(e);
 				}
 			}
 		});
