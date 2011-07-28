@@ -263,6 +263,14 @@ public class UserInfoPanel extends JPanel {
 		this.contactNumber.setText("");
 		this.email.setText("");
 	}
+	
+	public void setEnableFields(boolean set){
+		this.firstName.setEnabled(set);
+		this.lastName.setEnabled(set);
+		this.address.setEnabled(set);
+		this.contactNumber.setEnabled(set);
+		this.email.setEnabled(set);
+	}
 
 	public void setFirstNameEnabled(boolean enabled) {
 		firstName.setEnabled(enabled);
