@@ -34,10 +34,39 @@ public class UserDAO {
 
 	}
 
+	public static User getUserByEmailOrUsername(String keyword)
+			throws Exception {
+		User user = null;
+
+		String sql = "select * from Users where Username = ? or Email = ?";
+
+		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
+		ps.setString(1, keyword);
+		ps.setString(2, keyword);
+		
+		ResultSet rs = ps.executeQuery();
+
+		if (rs.next()) {
+			user = new User();
+			user.setUserId(rs.getInt("ID"));
+			user.setFirstName(rs.getString("FirstName"));
+			user.setLastName(rs.getString("LastName"));
+			user.setType(rs.getString("Type"));
+			user.setUserName(rs.getString("UserName"));
+			user.setAddress(rs.getString("Address"));
+			user.setContactNo(rs.getString("ContactNo"));
+			user.setEmail(rs.getString("Email"));
+		}
+
+		Connector.close();
+		return user;
+
+	}
+
 	public static boolean isUsernameExisting(String username) throws Exception {
-		
-		boolean isExisting = true; 
-		
+
+		boolean isExisting = true;
+
 		String query = "SELECT count(*) from Users where Username=?";
 		PreparedStatement ps = Connector.getConnection()
 				.prepareStatement(query);
@@ -45,7 +74,24 @@ public class UserDAO {
 		ResultSet rs = ps.executeQuery();
 		rs.next();
 		isExisting = rs.getInt(1) != 0;
-		
+
+		Connector.close();
+		return isExisting;
+
+	}
+
+	public static boolean isEmailExisting(String email) throws Exception {
+
+		boolean isExisting = true;
+
+		String query = "SELECT count(*) from Users where Email=?";
+		PreparedStatement ps = Connector.getConnection()
+				.prepareStatement(query);
+		ps.setString(1, email);
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		isExisting = rs.getInt(1) != 0;
+
 		Connector.close();
 		return isExisting;
 
@@ -108,7 +154,7 @@ public class UserDAO {
 	}
 
 	public static void saveUser(User user) throws Exception {
-		
+
 		String sql = "INSERT INTO Users "
 				+ "(FirstName,LastName,UserName,Password,Type,"
 				+ "Address, ContactNo, Email)"
