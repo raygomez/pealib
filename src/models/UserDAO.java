@@ -35,15 +35,19 @@ public class UserDAO {
 	}
 
 	public static boolean isUsernameExisting(String username) throws Exception {
+		
+		boolean isExisting = true; 
+		
 		String query = "SELECT count(*) from Users where Username=?";
 		PreparedStatement ps = Connector.getConnection()
 				.prepareStatement(query);
 		ps.setString(1, username);
 		ResultSet rs = ps.executeQuery();
 		rs.next();
-
+		isExisting = rs.getInt(1) != 0;
+		
 		Connector.close();
-		return (rs.getInt(1) != 0);
+		return isExisting;
 
 	}
 
