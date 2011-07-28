@@ -7,7 +7,6 @@ import java.util.concurrent.Callable;
 
 import models.User;
 import utilities.Connector;
-import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Task;
 import utilities.TaskUpdateListener;
@@ -255,7 +254,7 @@ public class PeaLibrary {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PeaLibrary app = new PeaLibrary(Constants.TEST_CONFIG);
+					PeaLibrary app = new PeaLibrary();
 					app.authenticate();
 					
 				} catch (Exception e) {
