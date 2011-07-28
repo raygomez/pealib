@@ -43,9 +43,9 @@ public class ELibControllerTest extends UISpecTestCase {
 				new String[] { "ISBN", "Title", "Author", "Date Requested",
 						"Cancel" }));
 		assertEquals(1, request.getRowCount());
-		assertThat(request.isEditable(new boolean[][] {
-				{ false, false, false, false, true } }));
-		
+		assertThat(request.isEditable(new boolean[][] { { false, false, false,
+				false, true } }));
+
 		tabGroup.selectTab("Reservations");
 		Table reservation = tabGroup.getSelectedTab().getTable();
 		assertTrue(reservation.getHeader().contentEquals(
@@ -54,7 +54,7 @@ public class ELibControllerTest extends UISpecTestCase {
 		assertEquals(2, reservation.getRowCount());
 		assertThat(reservation.isEditable(new boolean[][] {
 				{ false, false, false, false, false, true },
-				{ false, false, false, false, false, true }}));		
+				{ false, false, false, false, false, true } }));
 
 		tabGroup.selectTab("On Loan");
 		Table onLoan = tabGroup.getSelectedTab().getTable();
@@ -111,7 +111,7 @@ public class ELibControllerTest extends UISpecTestCase {
 		}).process(new WindowHandler() {
 			public Trigger process(Window dialog) {
 				assertEquals("Confirm", dialog.getTitle());
-				dialog.containsLabel("Do you really want to cancel the request?");
+				dialog.containsLabel(Constants.CONFIRM_CANCEL_REQUEST);
 				return dialog.getButton("Yes").triggerClick();
 			}
 		}).run();
@@ -138,7 +138,7 @@ public class ELibControllerTest extends UISpecTestCase {
 		}).process(new WindowHandler() {
 			public Trigger process(Window dialog) {
 				assertEquals("Confirm", dialog.getTitle());
-				dialog.containsLabel("Do you really want to cancel the reservation?");
+				dialog.containsLabel(Constants.CONFIRM_CANCEL_RESERVATION);
 				return dialog.getButton("Yes").triggerClick();
 			}
 		}).run();
