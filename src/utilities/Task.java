@@ -7,14 +7,14 @@ import javax.swing.SwingWorker;
 public class Task<T, V> extends SwingWorker<T, V> {
 
 	private Callable<T> toDo;
-	private Callable<T> toDoAfter;
+	private Callable<?> toDoAfter;
 	
 	public Task(Callable<T> toDo){
 		this.toDo = toDo;
 		this.toDoAfter = null;
 	}
 	
-	public Task(Callable<T> toDo, Callable<T> toDoAfter){
+	public Task(Callable<T> toDo, Callable<?> toDoAfter){
 		this.toDo = toDo;
 		this.toDoAfter = toDoAfter;		
 	}

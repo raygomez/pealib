@@ -3,11 +3,7 @@ package pealib;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.concurrent.Callable;
-
-import javax.swing.SwingWorker;
 
 import models.User;
 import utilities.Connector;
@@ -304,7 +300,7 @@ public class PeaLibrary {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PeaLibrary app = new PeaLibrary(Constants.TEST_CONFIG);
+					PeaLibrary app = new PeaLibrary();
 					app.authenticate();
 					
 				} catch (Exception e) {

@@ -201,7 +201,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		assertEquals("", labelError.getText());
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void testSignUpEmptyFields() {
 		Button signUp = window.getButton("Sign Up");
@@ -220,9 +220,9 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
-	@ExpectedDataSet({ "../models/expected/saveUser.xml" })
+	//@ExpectedDataSet({ "../models/expected/saveUser.xml" })
 	public void testSignUpSuccessful() {
 		Button signUp = window.getButton("Sign Up");
 
