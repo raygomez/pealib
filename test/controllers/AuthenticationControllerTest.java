@@ -3,17 +3,17 @@ package controllers;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import java.awt.Color;
-
 import javax.swing.BorderFactory;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
+import org.uispec4j.Key;
 import org.uispec4j.PasswordField;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
+import org.uispec4j.UISpec4J;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowHandler;
@@ -183,7 +183,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	}
 
 	@Test
-	public void testLoginSuccessful() {
+	public void testLoginSuccessful() throws Exception {
 		TextBox username = window.getInputTextBox("username");
 		PasswordField password = window.getPasswordField("password");
 		TextBox labelError = window.getTextBox("labelError");
@@ -201,54 +201,351 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		assertEquals("", labelError.getText());
 	}
 
-	//@Ignore
 	@Test
-	public void testSignUpEmptyFields() {
-		Button signUp = window.getButton("Sign Up");
-
-		WindowInterceptor.init(signUp.triggerClick())
-				.process(new WindowHandler() {
-					public Trigger process(Window dialog) {
-						dialog.getButton("submit").click();
-						System.out.println(":"
-								+ dialog.getTextBox("errorMessageLabel")
-										.getText());
-						// dialog.getTextBox("Cannot leave mandatory fields empty.");
-						return dialog.getButton("Cancel").triggerClick();
-					}
-				}).run();
-
+	public void testSignUpEmptyFields() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("userNameTextField").releaseKey(
+						Key.ENTER);
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("Cannot leave mandatory fields empty."));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
 	}
 
-	//@Ignore
 	@Test
-	//@ExpectedDataSet({ "../models/expected/saveUser.xml" })
-	public void testSignUpSuccessful() {
-		Button signUp = window.getButton("Sign Up");
+	public void testSignUpInvalidUsername() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText("1");
+				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"12345");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("12345");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"####@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"123456");
+				dialog.getInputTextBox("addressTextField").setText("USA");
 
-		WindowInterceptor.init(signUp.triggerClick())
-				.process(new WindowHandler() {
-					public Trigger process(Window dialog) {
-						dialog.getInputTextBox("firstNameTextField").setText(
-								"Janine June");
-						dialog.getInputTextBox("lastNameTextField").setText(
-								"Lim");
-						dialog.getInputTextBox("userNameTextField").setText(
-								"jlim");
-						dialog.getPasswordField("passwordTextField")
-								.setPassword("1234567");
-						dialog.getPasswordField("confirmPasswordTextField")
-								.setPassword("1234567");
-						dialog.getInputTextBox("emailAddressTextField")
-								.setText("jlim@gmail.com");
-						dialog.getInputTextBox("contactNumberTextField")
-								.setText("1234567890");
-						dialog.getInputTextBox("addressTextField").setText(
-								"USA");
-						return dialog.getButton("Submit").triggerClick();
-					}
-				}).run();
-
+				dialog.getInputTextBox("userNameTextField").setText("ab");
+				dialog.getInputTextBox("userNameTextField").releaseKey(
+						Key.C);
+				dialog.getInputTextBox("userNameTextField").releaseKey(
+						Key.ENTER);
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("Invalid Input."));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
 	}
 
+	@Test
+	public void testSignUpNotUniqueUsername() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText("1");
+				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"12345");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("12345");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"####@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"123456");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+
+				dialog.getInputTextBox("userNameTextField").setText(
+						"apantaleon");
+				dialog.getButton("Submit").click();
+
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("User name is already in use."));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
+	}
+
+	@Test
+	public void testSignUpErrorWhileCheckingUsername() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText("1");
+				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"12345");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("12345");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"####@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"123456");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+
+				dialog.getInputTextBox("userNameTextField").setText(
+						"apantaleon");
+				/* invoke error in connection */
+				new Connector("error");
+				dialog.getButton("Submit").click();
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "<html>An error was encountered while"
+						+ " creating your account.<br>"
+						+ "Please try again later.";
+				assertTrue(actual.equals(expected));
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();
+	}
+
+	@Test
+	public void testSignUpInvalidEmailCharacters() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText("1");
+				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getInputTextBox("userNameTextField").setText("abcd");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"12345");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("12345");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"123456");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"####@gmail.com");
+				dialog.getButton("Submit").click();
+
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("Invalid Input."));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
+	}
+
+	@Test
+	public void testSignUpInvalidEmailLength() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText("1");
+				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getInputTextBox("userNameTextField").setText("abcd");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"12345");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("12345");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"123456");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"aaaaaaaaaaaaaaaaaaaaa@gmail.com");
+				dialog.getButton("Submit").click();
+
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("Invalid Input."));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
+	}
+
+	@Test
+	public void testSignUpNotUniqueEmail() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText("1");
+				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getInputTextBox("userNameTextField").setText("abcd");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"12345");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("12345");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"123456");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"apantaleon@gmail.com");
+				dialog.getInputTextBox("emailAddressTextField").releaseKey(
+						Key.ENTER);
+
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("E-mail address is already in use."));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
+	}
+
+	@Test
+	public void testSignUpInvalidFields() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				TextBox firstNameTextField = dialog
+						.getInputTextBox("firstNameTextField");
+				TextBox lastNameTextField = dialog
+						.getInputTextBox("lastNameTextField");
+				TextBox userNameTextField = dialog
+						.getInputTextBox("userNameTextField");
+				PasswordField passwordTextField = dialog
+						.getPasswordField("passwordTextField");
+				PasswordField confirmPasswordTextField = dialog
+						.getPasswordField("confirmPasswordTextField");
+				TextBox emailAddressTextField = dialog
+						.getInputTextBox("emailAddressTextField");
+				TextBox contactNumberTextField = dialog
+						.getInputTextBox("contactNumberTextField");
+				TextBox addressTextField = dialog
+						.getInputTextBox("addressTextField");
+
+				firstNameTextField.setText("1");
+				lastNameTextField.setText("2");
+				userNameTextField.setText("abcd");
+				passwordTextField.setPassword("12345");
+				confirmPasswordTextField.setPassword("12345");
+				emailAddressTextField.setText("jlim@gmail.com");
+				contactNumberTextField.setText("123456");
+				addressTextField.setText("A");
+
+				dialog.getButton("Submit").click();
+
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("Invalid Input."));
+
+				assertTrue(firstNameTextField.getText().isEmpty());
+				assertTrue(lastNameTextField.getText().isEmpty());
+				assertTrue(passwordTextField.passwordEquals(""));
+				assertTrue(confirmPasswordTextField.passwordEquals(""));
+				assertTrue(contactNumberTextField.getText().isEmpty());
+				assertTrue(addressTextField.getText().isEmpty());
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
+	}
+
+	@Test
+	public void testSignUpPasswordMismatch() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText(
+						"Janine June");
+				dialog.getInputTextBox("lastNameTextField").setText("Lim");
+				dialog.getInputTextBox("userNameTextField").setText("jlim");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"1234567");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("123456789");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"jlim@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"1234567890");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+
+				dialog.getButton("Submit").click();
+
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("Mismatch in Confirm Password."));
+
+				assertTrue(dialog.getPasswordField("passwordTextField")
+						.passwordEquals(""));
+				assertTrue(dialog.getPasswordField("confirmPasswordTextField")
+						.passwordEquals(""));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
+	}
+
+	@Test
+	@ExpectedDataSet({ "../models/expected/saveUser.xml" })
+	public void testSignUpSuccessful() throws Exception {
+		UISpec4J.setAssertionTimeLimit(2000);
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+				
+			}
+		})
+		.process(new WindowHandler() {
+			public Trigger process(final Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText(
+						"Janine June");
+				dialog.getInputTextBox("lastNameTextField").setText("Lim");
+				dialog.getInputTextBox("userNameTextField").setText("jlim");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"1234567");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("1234567");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"jlim@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"1234567890");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+				return new Trigger() {
+					@Override
+					public void run() throws Exception {
+						dialog.getInputTextBox("addressTextField").releaseKey(
+								Key.ENTER);
+					}
+
+				};
+			}
+		})
+		.process( new WindowHandler() {
+			public Trigger process(Window dialog) throws Exception {
+				return Trigger.DO_NOTHING;
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label")
+						.getText();
+				String expected = "<html>Your account has been created."
+						+ "<br>Please wait for the Librarian to activate "
+						+ "your account.";
+				assertTrue(actual.equals(expected));
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();
+	}
 }
