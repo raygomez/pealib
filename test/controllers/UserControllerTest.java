@@ -5,7 +5,6 @@ import models.User;
 import models.UserDAO;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
@@ -24,6 +23,7 @@ import org.unitils.dbunit.annotation.ExpectedDataSet;
 
 import utilities.Connector;
 import utilities.Constants;
+import utilities.Emailer;
 
 @DataSet({ "../models/user.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
@@ -37,6 +37,7 @@ public class UserControllerTest extends UISpecTestCase {
 	@Before
 	public void setUp() throws Exception {
 		new Connector(Constants.TEST_CONFIG);
+		Emailer.setOn(false);
 
 		User user = UserDAO.getUserById(2);
 		userControl = new UserController(user);
@@ -199,6 +200,7 @@ public class UserControllerTest extends UISpecTestCase {
 
 	}
 
+	@ExpectedDataSet({ "../models/expected/changePassword.xml" })
 	@Test
 	public void testChangePassword() {
 		Button changePasswordButton = userInfoPanel
@@ -207,6 +209,8 @@ public class UserControllerTest extends UISpecTestCase {
 		WindowInterceptor.init(changePasswordButton.triggerClick())
 				.process(new WindowHandler() {
 					public Trigger process(Window dialog) {
+						dialog.getPasswordField("newpassword").setPassword("1234567");
+						dialog.getPasswordField("repeatpassword").setPassword("1234567");
 						return dialog.getButton("Change Password")
 								.triggerClick();
 					}
@@ -222,7 +226,6 @@ public class UserControllerTest extends UISpecTestCase {
 	}
 
 	@Test
-	@Ignore
 	public void testSelectAllPendingThroughCheckbox() {
 		tabGroup.selectTab("Pending Applications");
 
