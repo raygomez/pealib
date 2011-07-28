@@ -473,7 +473,7 @@ public class AuthenticationController {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-			} else {
+			} else if(userOrEmail != null){
 				JOptionPane.showMessageDialog(getLogin(), "Please specify your username or email.", "Forget Password", JOptionPane.ERROR_MESSAGE);
 			}
 		}
