@@ -444,7 +444,7 @@ public class TransactionDAO {
 				+ "NULL AND DateReturned is NULL) AND "
 				+ "(CONCAT(Books.ISBN, Books.Title, Books.Author, "
 				+ "Users.UserName, Users.FirstName, Users.LastName) "
-				+ "LIKE ?) ORDER BY Borrows.DateBorrowed";
+				+ "LIKE ?) ORDER BY Borrows.DateBorrowed, Borrows.BorrowID";
 
 		ArrayList<BorrowTransaction> bookCollection = new ArrayList<BorrowTransaction>();
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
