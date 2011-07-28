@@ -151,7 +151,7 @@ public class UserDAOTest {
 	@Test
 	@ExpectedDataSet({ "expected/changePassword.xml" })
 	public void testChangePassword() throws Exception {
-		User user = UserDAO.getUserById(4);
+		User user = UserDAO.getUserById(1);
 		assertNotNull(user);
 		UserDAO.changePassword(user.getUserId(), "1234567");
 	}
