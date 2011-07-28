@@ -1,18 +1,12 @@
 package controllers;
 
-import java.lang.reflect.Modifier;
-
-import javax.swing.JTable;
-
 import models.User;
 import models.UserDAO;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.uispec4j.AbstractUIComponent;
 import org.uispec4j.Button;
-import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
 import org.uispec4j.Trigger;
