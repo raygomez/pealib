@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<reserves BookID="2" UserID="2" DatetimeReserved="2011-07-27 09:09:09" />
+	<reserves BookID="6" UserID="1" DatetimeReserved="2011-07-27 09:09:11" />
+	<reserves BookID="6" UserID="2" DatetimeReserved="2011-07-27 09:09:12" />
+	<reserves BookID="6" UserID="3" DatetimeReserved="2011-07-27 09:09:13" />
+</dataset>
