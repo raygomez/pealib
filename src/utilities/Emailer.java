@@ -27,26 +27,26 @@ public class Emailer {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-//		new Connector(Constants.TEST_CONFIG);
-//		User user = null;
-//		try {
-//			user = UserDAO.getUserById(1);
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
-//		user.setEmail("rayvincent.gomez@gmail.com");
-//		user.setPassword("1234");
-//		try {
-//			new Emailer().sendForgetPasswordEmail(user);
-//		} catch (MessagingException e) {
-//			e.printStackTrace();
-//		}
-		
-//		System.out.println(RandomStringUtils.randomAlphanumeric(8));
+		// new Connector(Constants.TEST_CONFIG);
+		// User user = null;
+		// try {
+		// user = UserDAO.getUserById(1);
+		// } catch (Exception e1) {
+		// e1.printStackTrace();
+		// }
+		// user.setEmail("rayvincent.gomez@gmail.com");
+		// user.setPassword("1234");
+		// try {
+		// new Emailer().sendForgetPasswordEmail(user);
+		// } catch (MessagingException e) {
+		// e.printStackTrace();
+		// }
+
+		// System.out.println(RandomStringUtils.randomAlphanumeric(8));
 
 	}
 
-	public void sendSSLMessage(String recipients, String subject,
+	private void sendSSLMessage(String recipients, String subject,
 			String message, String from) throws MessagingException {
 
 		Properties props = new Properties();
@@ -107,8 +107,9 @@ public class Emailer {
 		new Emailer().sendSSLMessage(sendTo, emailSubjectTxt, emailMsgTxt,
 				emailFromAddress);
 	}
-
-	public static void sendForgetPasswordEmail(User user) throws MessagingException {
+	
+	public static void sendForgetPasswordEmail(User user)
+			throws MessagingException {
 		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
 		String sendTo = user.getEmail();
