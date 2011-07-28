@@ -1,18 +1,12 @@
 package controllers;
 
-import java.lang.reflect.Modifier;
-
-import javax.swing.JTable;
-
 import models.User;
 import models.UserDAO;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.uispec4j.AbstractUIComponent;
 import org.uispec4j.Button;
-import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
 import org.uispec4j.Trigger;
@@ -177,6 +171,8 @@ public class BookControllerTest extends UISpecTestCase {
 		WindowInterceptor.init(addBook.triggerClick())
 				.process(new WindowHandler() {
 					public Trigger process(Window dialog) {
+						dialog.getInputTextBox("isbnTextField").setText(
+						"8888888888");
 						dialog.getInputTextBox("titleTextField").setText(
 						"test");
 						dialog.getInputTextBox("publisherTextField").setText(
@@ -187,10 +183,8 @@ public class BookControllerTest extends UISpecTestCase {
 								"test");
 						dialog.getInputTextBox("yearPublishTextField").setText(
 								"1992");
-						dialog.getInputTextBox("isbnTextField").setText(
-								"8888888888");
 						dialog.getInputTextBox("descriptionTextArea").setText(
-								"12345678901");
+								"0007222556");
 						dialog.getButton("Add").click();
 						dialog.getTextBox("ISBN already exist");
 						return dialog.getButton("Cancel").triggerClick();
@@ -277,9 +271,9 @@ public class BookControllerTest extends UISpecTestCase {
 						"901234567890123456789012345678901234567890123456" +
 						"78901234567890");
 				bookInfo.getInputTextBox("yearPublishTextField").setText(
-						"aaaa");
+						"1234567");
 				bookInfo.getInputTextBox("isbnTextField").setText(
-						"1234567890");
+						"8888888888");
 				bookInfo.getInputTextBox("descriptionTextArea").setText(
 						"123456789012345678901234567890123456789012345678" +
 						"901234567890123456789012345678901234567890123456" +
@@ -321,6 +315,21 @@ public class BookControllerTest extends UISpecTestCase {
 		"1234567890120");
 		bookInfo.getButton("Save").click();
 	}
+
+	@Test
+	@DataSet({ "../models/noCopybook.xml" })
+	public void testCopy0Save() throws Exception{
+		librarian = UserDAO.getUserById(2);
+		bookControllerLib = new BookController(librarian);
+		librarianPanel = new Panel(
+				bookControllerLib.getBookLayoutPanel());
+		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
+		Panel bookInfo = new Panel(bookControllerLib.getBookInfo());
+		Table bookTable = bookSearch.getTable();
+		bookTable.click(6,2);
+		bookInfo.getButton("Save").click();
+	}
+
 	@Test
 	public void testYesDelete() throws Exception{
 		librarian = UserDAO.getUserById(2);
@@ -359,4 +368,16 @@ public class BookControllerTest extends UISpecTestCase {
 			}
 		}).run();
 	}
+	@Test
+	@DataSet({ "../models/noCopybook.xml" })
+	public void testNoCopyBookTable() throws Exception {
+		librarianPanel = new Panel(
+				new BookController(librarian).getBookLayoutPanel());
+		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
+		bookSearch.getButton("Search").click();
+		bookSearch.getButton("Clear").click();
+		bookSearch.getInputTextBox("textSearch").setText("zzzzzzzzzzzzzz");
+		bookSearch.getButton("Search").click();
+	}
+
 }
