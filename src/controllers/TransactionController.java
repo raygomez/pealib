@@ -140,9 +140,9 @@ public class TransactionController {
 		for (int i = 0; i < selectedRows.length; i++) {
 			TransactionDAO.borrowBook(selectedBookTransactions.get(i));
 		}
-		JOptionPane.showMessageDialog(tabbedPane,
-			"Successfully lent " + selectedRows.length + " book(s).",
-			"Borrow Request Granted", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(tabbedPane, "Successfully lent "
+				+ selectedRows.length + " book(s).", "Borrow Request Granted",
+				JOptionPane.INFORMATION_MESSAGE);
 		setButtonsStatus(false);
 	}
 
@@ -159,15 +159,15 @@ public class TransactionController {
 			}
 		}
 		if (passCounter == 0) {
-			JOptionPane.showMessageDialog(tabbedPane,
-				"Refused to lend " + selectedRows.length + " book(s).",
-				"Borrow Request Denied", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(tabbedPane, "Refused to lend "
+					+ selectedRows.length + " book(s).",
+					"Borrow Request Denied", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			JOptionPane.showMessageDialog(tabbedPane,
-				"<html>Refused to lend " + selectedRows.length + " book(s).<br>"
-				+ passCounter + " book(s) have pending reservations.<br>"
-				+ "See Outgoing tab for details.",
-				"Borrow Request Denied", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(tabbedPane, "<html>Refused to lend "
+					+ selectedRows.length + " book(s).<br>" + passCounter
+					+ " book(s) have pending reservations.<br>"
+					+ "See Outgoing tab for details.", "Borrow Request Denied",
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 		setButtonsStatus(false);
 	}
@@ -200,16 +200,16 @@ public class TransactionController {
 			}
 		}
 		if (passCounter == 0) {
-			JOptionPane.showMessageDialog(tabbedPane,
-				"Successfully returned " + selectedRows.length + " book(s).",
-				"Borrowed Book Returned",
-				JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(tabbedPane, "Successfully returned "
+					+ selectedRows.length + " book(s).",
+					"Borrowed Book Returned", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(tabbedPane,
-				"<html>Successfully returned " + selectedRows.length + " book(s).<br>"
-				+ passCounter + " book(s) have pending reservations.<br>"
-				+ "See Outgoing tab for details.",
-				"Borrowed Book Returned", JOptionPane.INFORMATION_MESSAGE);
+					"<html>Successfully returned " + selectedRows.length
+							+ " book(s).<br>" + passCounter
+							+ " book(s) have pending reservations.<br>"
+							+ "See Outgoing tab for details.",
+					"Borrowed Book Returned", JOptionPane.INFORMATION_MESSAGE);
 		}
 		setButtonsStatus(false);
 	}
@@ -217,7 +217,7 @@ public class TransactionController {
 	private void getBookTransactionDetails() {
 		selectedBookTransactions = new ArrayList<BorrowTransaction>();
 		for (int i = 0; i < selectedRows.length; i++) {
-			selectedBookTransactions.add(searchResults.get(selectedRows[i])); 
+			selectedBookTransactions.add(searchResults.get(selectedRows[i]));
 		}
 	}
 
@@ -274,17 +274,14 @@ public class TransactionController {
 	}
 
 	private void searchBookTransaction() throws Exception {
-		String[] incomingTableHeader = { "ISBN", "Title", "Author",
-				"Username", "Date Borrowed" };
-		String[] outgoingTableHeader = { "ISBN", "Title", "Author",
-				"Username", "Date Requested" };
+		String[] incomingTableHeader = { "ISBN", "Title", "Author", "Username",
+				"Date Borrowed" };
+		String[] outgoingTableHeader = { "ISBN", "Title", "Author", "Username",
+				"Date Requested" };
 
 		String keyword;
 		if (isIncoming) {
 			keyword = inPanel.getSearchPanel().getTxtfldSearch().getText();
-			if (keyword.isEmpty()) {
-				keyword = "*";
-			}
 			tableHeader = incomingTableHeader;
 			searchResults = TransactionDAO.searchIncomingBook(keyword);
 		} else {
@@ -323,31 +320,30 @@ public class TransactionController {
 					Object objData = null;
 					switch (column) {
 					case 0:
-						objData = searchResults.get(row).getBook()
-								.getIsbn();
+						objData = searchResults.get(row).getBook().getIsbn();
 						break;
 					case 1:
-						objData = searchResults.get(row).getBook()
-								.getTitle();
+						objData = searchResults.get(row).getBook().getTitle();
 						break;
 					case 2:
-						objData = searchResults.get(row).getBook()
-								.getAuthor();
+						objData = searchResults.get(row).getBook().getAuthor();
 						break;
 					case 3:
 						String user = searchResults.get(row).getUser()
-						.getUserName() + " (" + searchResults.get(row)
-						.getUser().getFirstName() + " " + searchResults
-						.get(row).getUser().getLastName() + ")";
+								.getUserName()
+								+ " ("
+								+ searchResults.get(row).getUser()
+										.getFirstName()
+								+ " "
+								+ searchResults.get(row).getUser()
+										.getLastName() + ")";
 						objData = user;
 						break;
 					case 4:
 						if (isIncoming) {
-							objData = searchResults.get(row)
-									.getDateBorrowed();
+							objData = searchResults.get(row).getDateBorrowed();
 						} else {
-							objData = searchResults.get(row)
-									.getDateRequested();
+							objData = searchResults.get(row).getDateRequested();
 						}
 						break;
 					}
@@ -356,21 +352,19 @@ public class TransactionController {
 			};
 		} else {
 			String[][] emptyTable = {};
-			bookResultsModel = new DefaultTableModel(emptyTable,
-					tableHeader) {
+			bookResultsModel = new DefaultTableModel(emptyTable, tableHeader) {
 				private static final long serialVersionUID = 1L;
 			};
 		}
-		int[] columnSizes = {20, 200, 70, 30, 20};
+		int[] columnSizes = { 20, 200, 70, 30, 20 };
 		if (isIncoming) {
-			inPanel.getSearchPanel().getTblResults()
-					.setModel(bookResultsModel);
+			inPanel.getSearchPanel().getTblResults().setModel(bookResultsModel);
 			inPanel.getSearchPanel()
 					.getLblTotal()
 					.setText("Total Matches: " + bookResultsModel.getRowCount());
 			for (int i = 0; i < columnSizes.length; i++) {
 				inPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(i).setPreferredWidth(columnSizes[i]);
+						.getColumn(i).setPreferredWidth(columnSizes[i]);
 			}
 			inPanel.getSearchPanel().setColumnRender();
 			inPanel.getSearchPanel().repaint();
@@ -382,7 +376,7 @@ public class TransactionController {
 					.setText("Total Matches: " + bookResultsModel.getRowCount());
 			for (int i = 0; i < columnSizes.length; i++) {
 				outPanel.getSearchPanel().getTblResults().getColumnModel()
-					.getColumn(i).setPreferredWidth(columnSizes[i]);
+						.getColumn(i).setPreferredWidth(columnSizes[i]);
 			}
 			outPanel.getSearchPanel().setColumnRender();
 			outPanel.getSearchPanel().repaint();
@@ -392,12 +386,14 @@ public class TransactionController {
 	private void setSelectedItem() throws Exception {
 		selectedRows = null;
 		if (isIncoming) {
-			selectedRows = inPanel.getSearchPanel().getTblResults().getSelectedRows();
-			
+			selectedRows = inPanel.getSearchPanel().getTblResults()
+					.getSelectedRows();
+
 			if (selectedRows.length != 0) {
 				getBookTransactionDetails();
-				int daysOverdue = TransactionDAO.getDaysOverdue(
-						selectedBookTransactions.get(selectedRows.length - 1));
+				int daysOverdue = TransactionDAO
+						.getDaysOverdue(selectedBookTransactions
+								.get(selectedRows.length - 1));
 				inPanel.getLblDaysOverdue().setText(
 						"Days Overdue: " + daysOverdue);
 				if (daysOverdue > 0) {
@@ -407,17 +403,18 @@ public class TransactionController {
 				}
 			}
 		} else {
-			selectedRows = outPanel.getSearchPanel().getTblResults().getSelectedRows();
+			selectedRows = outPanel.getSearchPanel().getTblResults()
+					.getSelectedRows();
 			getBookTransactionDetails();
 		}
 		setButtonsStatus(true);
 	}
-	
+
 	private void setButtonsStatus(boolean status) {
 		if (isIncoming) {
 			inPanel.getBtnReturn().setEnabled(status);
 			if (!status) {
-				inPanel.getLblDaysOverdue().setText("");		
+				inPanel.getLblDaysOverdue().setText("");
 			}
 		} else {
 			outPanel.getGrantButton().setEnabled(status);
