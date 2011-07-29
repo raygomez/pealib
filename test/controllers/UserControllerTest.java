@@ -96,6 +96,7 @@ public class UserControllerTest extends UISpecTestCase {
 		tabGroup.selectTab("Pending Applications");
 	}
 
+	@Ignore
 	@Test
 	public void testInitialPendingTab() {
 		tabGroup.selectTab("Pending Applications");
@@ -123,6 +124,7 @@ public class UserControllerTest extends UISpecTestCase {
 
 	}
 
+	@Ignore
 	@Test
 	public void testShowUserProfile() {
 		tabGroup.selectTab("User Accounts");
