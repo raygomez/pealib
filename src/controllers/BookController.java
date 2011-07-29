@@ -1,26 +1,28 @@
 package controllers;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import javax.swing.DefaultListSelectionModel;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+
+import pealib.PeaLibrary;
 
 import net.miginfocom.swing.MigLayout;
-import utilities.Connector;
 import utilities.Constants;
 import utilities.IsbnChecker;
+import utilities.Task;
 import views.AddBookDialog;
 import views.BookInfoPanel;
 import views.BookSearchPanel;
@@ -28,7 +30,6 @@ import models.Book;
 import models.BookDAO;
 import models.TransactionDAO;
 import models.User;
-import models.UserDAO;
 
 public class BookController {
 
@@ -43,44 +44,59 @@ public class BookController {
 
 	public BookController(User user) throws Exception {
 		currentUser = user;
-		generateBookLayoutPanel();
+		initialize();
+		initializePanelContent();
 	}
 
-	private void generateBookLayoutPanel() throws Exception {
+	private void initialize() throws Exception{
+		
+		bookLayoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]",
+		"[grow]"));
+		bookSearch = new BookSearchPanel(currentUser);
+				
+		bookSearch.setTextFieldListener(new TextFieldListener());
+		bookSearch.setClearButtonListener(new ClearButtonListener());
+		bookSearch.setSearchButtonListener(new SearchButtonListener());
+		bookSearch.setAddBookButtonListener(new AddBookButtonListener());
+		bookSearch.addBookSelectionListener(new BookListSelectionListener());
+		
+		bookInfo = new BookInfoPanel(new Book(), currentUser);
+		bookInfo.getBtnDelete().setEnabled(false);
+		bookInfo.getBtnSave().setEnabled(false);
+		
+		bookInfo.addSaveListener(new SaveButtonListener());
+		bookInfo.addDeleteListener(new DeleteButtonListener());
+		bookInfo.addBorrowListener(new BorrowButtonListener());
+		bookInfo.addReserveListener(new ReserveButtonListener());
+		
+		bookLayoutPanel.add(bookSearch, "grow");
+		bookLayoutPanel.add(bookInfo, "grow");
+
+	}
+	
+	public void initializePanelContent() throws Exception {
+		
 		if (currentUser.getType().equals("Librarian")) {
 			bookList = BookDAO.searchBook("");
 		} else {
 			bookList = BookDAO.searchBookForUser("");
 		}
+		
 		currSearchString = "";
 		currTableRowSelection = 0;
-		bookLayoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]",
-				"[grow]"));
-		bookSearch = new BookSearchPanel(currentUser);
-		
 		bookSearch.getTableBookList().setModel(new BookListModel(bookList));
 		bookSearch.setColumnRender(bookSearch.getTableBookList());
 		
-		if (bookList.size() == 0) {
-			bookInfo = new BookInfoPanel(new Book(), currentUser);
-			bookInfo.getBtnDelete().setEnabled(false);
-			bookInfo.getBtnSave().setEnabled(false);
-		} else {
+		if (bookList.size() > 0) {
 			currISBN = bookList.get(0).getIsbn();
-			bookInfo = new BookInfoPanel(bookList.get(0), currentUser);
+			bookInfo.setBookInfoData(bookList.get(0));
+			
 			if (bookList.get(0).getCopies() == 0) {
 				bookInfo.getBtnDelete().setEnabled(false);
 			}
 		}
-		currTableRowSelection = 0;
-		bookLayoutPanel.add(bookSearch, "grow");
-		bookLayoutPanel.add(bookInfo, "grow");
-
-		bookSearch.setTextFieldListener(new TextFieldListener());
-		bookSearch.setClearButtonListener(new ClearButtonListener());
-		bookSearch.setSearchButtonListener(new SearchButtonListener());
-		bookSearch.setAddBookButtonListener(new AddBookButtonListener());
 		
+		currTableRowSelection = 0;
 		
 		//TODO added conditions in case empty table
 		if(bookList != null && !bookList.isEmpty()) { 
@@ -88,16 +104,66 @@ public class BookController {
 			setButtons(true);
 		}		
 		else{ setButtons(false);}
-
-		bookSearch.addBookSelectionListener(new BookListSelectionListener());
-		bookInfo.addSaveListener(new SaveButtonListener());
-		bookInfo.addDeleteListener(new DeleteButtonListener());
-		bookInfo.addBorrowListener(new BorrowButtonListener());
-		bookInfo.addReserveListener(new ReserveButtonListener());
+		
 		reset();
 		setButtons();
 	}
 
+	private void searchBooks() throws Exception{
+
+		Callable<Void> toDo = new Callable<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				
+				String strSearch = bookSearch.getTextFieldSearch().getText();
+				currSearchString = strSearch;
+				if (currentUser.getType().equals("Librarian")) {
+					bookList = BookDAO.searchBook(strSearch);
+				} else {
+					bookList = BookDAO.searchBookForUser(strSearch);
+				}
+				
+				return null;
+			}
+		};
+		
+		Callable<Void> toDoAfter = new Callable<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				
+				bookSearch.getTableBookList().setModel(
+						new BookListModel(bookList));
+
+				bookSearch.setColumnRender(bookSearch.getTableBookList());
+				if (bookList.size() == 0) {
+					bookInfo.getBtnDelete().setEnabled(false);
+					bookInfo.getBtnSave().setEnabled(false);
+				} else {
+					bookSearch.getTableBookList().addRowSelectionInterval(
+							0, 0);
+					bookInfo.getBtnDelete().setEnabled(true);
+					bookInfo.getBtnSave().setEnabled(true);
+					currISBN = bookList.get(0).getIsbn();
+					bookInfo.setBookInfoData(bookList.get(0));
+					int availableCopy = TransactionDAO
+							.getAvailableCopies(bookList.get(0));
+					if (bookList.get(0).getCopies() == 0
+							|| bookList.get(0).getCopies() != availableCopy) {
+						bookInfo.getBtnDelete().setEnabled(false);
+					}
+				}
+				
+				return null;
+			}
+		};
+		
+		Task<Void, Object> task = new Task<Void, Object>(toDo, toDoAfter);
+		LoadingControl.init(task, PeaLibrary.getMainFrame()).executeLoading();	
+		
+	}
+	
 	public void setButtons(boolean value) {
 		bookInfo.getBtnBorrow().setEnabled(value);
 		bookInfo.getBtnReserve().setEnabled(value);
@@ -105,7 +171,8 @@ public class BookController {
 	}
 
 	public JPanel getBookLayoutPanel() throws Exception {
-		generateBookLayoutPanel();
+		
+		initialize();		
 		return bookLayoutPanel;
 	}
 
@@ -538,39 +605,12 @@ public class BookController {
 		}
 
 	}
-
+	
 	class SearchButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				String strSearch = bookSearch.getTextFieldSearch().getText();
-				currSearchString = strSearch;
-				if (currentUser.getType().equals("Librarian")) {
-					bookList = BookDAO.searchBook(strSearch);
-				} else {
-					bookList = BookDAO.searchBookForUser(strSearch);
-				}
-				bookSearch.getTableBookList().setModel(
-						new BookListModel(bookList));
-		
-				bookSearch.setColumnRender(bookSearch.getTableBookList());
-				if (bookList.size() == 0) {
-					bookInfo.setBookInfoData(new Book());
-					bookInfo.getBtnDelete().setEnabled(false);
-					bookInfo.getBtnSave().setEnabled(false);
-				} else {
-					bookSearch.getTableBookList().addRowSelectionInterval(0, 0);
-					bookInfo.getBtnDelete().setEnabled(true);
-					bookInfo.getBtnSave().setEnabled(true);
-					currISBN = bookList.get(0).getIsbn();
-					bookInfo.setBookInfoData(bookList.get(0));
-					int availableCopy = TransactionDAO
-							.getAvailableCopies(bookList.get(0));
-					if (bookList.get(0).getCopies() == 0
-							|| bookList.get(0).getCopies() != availableCopy) {
-						bookInfo.getBtnDelete().setEnabled(false);
-					}
-				}
+				searchBooks();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -603,34 +643,7 @@ public class BookController {
 
 				timer.stop();
 				try {
-					String strSearch = bookSearch.getTextFieldSearch().getText();
-					currSearchString = strSearch;
-					if (currentUser.getType().equals("Librarian")) {
-						bookList = BookDAO.searchBook(strSearch);
-					} else {
-						bookList = BookDAO.searchBookForUser(strSearch);
-					}
-					bookSearch.getTableBookList().setModel(
-							new BookListModel(bookList));
-			
-					bookSearch.setColumnRender(bookSearch.getTableBookList());
-					if (bookList.size() == 0) {
-						bookInfo.getBtnDelete().setEnabled(false);
-						bookInfo.getBtnSave().setEnabled(false);
-					} else {
-						bookSearch.getTableBookList().addRowSelectionInterval(
-								0, 0);
-						bookInfo.getBtnDelete().setEnabled(true);
-						bookInfo.getBtnSave().setEnabled(true);
-						currISBN = bookList.get(0).getIsbn();
-						bookInfo.setBookInfoData(bookList.get(0));
-						int availableCopy = TransactionDAO
-								.getAvailableCopies(bookList.get(0));
-						if (bookList.get(0).getCopies() == 0
-								|| bookList.get(0).getCopies() != availableCopy) {
-							bookInfo.getBtnDelete().setEnabled(false);
-						}
-					}
+					searchBooks();
 				} catch (Exception f) {
 					f.printStackTrace();
 				}
@@ -648,7 +661,7 @@ public class BookController {
 
 		}
 	}
-
+	
 	private void setButtons() throws Exception {
 		int tableRow = currTableRowSelection;
 		if (bookList.size() != 0){
