@@ -42,7 +42,7 @@ public class UserController {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 		// new Connector();
 
 		User user = new User(1011, "jjlim", "1234567", "Janine June", "Lim",

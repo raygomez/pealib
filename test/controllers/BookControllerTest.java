@@ -34,7 +34,7 @@ public class BookControllerTest extends UISpecTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 		librarian = UserDAO.getUserById(2);
 		bookControllerLib = new BookController(librarian);
 		librarianPanel = new Panel(
