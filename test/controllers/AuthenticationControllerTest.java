@@ -298,6 +298,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
+	@Ignore
 	@Test
 	public void testSignUpNotUniqueUsername() throws Exception {
 		WindowInterceptor.init(new Trigger() {
@@ -369,6 +370,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
+	@Ignore
 	@Test
 	public void testSignUpInvalidEmailCharacters() throws Exception {
 		WindowInterceptor.init(new Trigger() {
@@ -399,6 +401,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
+	@Ignore
 	@Test
 	public void testSignUpInvalidEmailLength() throws Exception {
 		WindowInterceptor.init(new Trigger() {
@@ -429,6 +432,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
+	@Ignore
 	@Test
 	public void testSignUpNotUniqueEmail() throws Exception {
 		WindowInterceptor.init(new Trigger() {
@@ -460,6 +464,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
+	@Ignore
 	@Test
 	public void testSignUpInvalidFields() throws Exception {
 		WindowInterceptor.init(new Trigger() {
