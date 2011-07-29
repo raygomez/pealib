@@ -36,11 +36,19 @@
 		<pathelement location="lib/commons/commons-logging-1.1.jar" />
 		<pathelement location="lib/joda-time-1.6.2.jar" />
 		<pathelement location="lib/ognl-2.6.9.jar" />
-        <pathelement location="lib/email/dsn.jar"/>
-        <pathelement location="lib/email/imap.jar"/>
-        <pathelement location="lib/email/mailapi.jar"/>
-        <pathelement location="lib/email/pop3.jar"/>
-        <pathelement location="lib/email/smtp.jar"/>
+		<pathelement location="lib/email/dsn.jar" />
+		<pathelement location="lib/email/imap.jar" />
+		<pathelement location="lib/email/mailapi.jar" />
+		<pathelement location="lib/email/pop3.jar" />
+		<pathelement location="lib/email/smtp.jar" />
+		<pathelement location="lib/unitils-3.1/unitils-easymock-3.1.jar" />
+		<pathelement location="lib/unitils-3.1/unitils-inject-3.1.jar" />
+		<pathelement location="lib/unitils-3.1/unitils-mock-3.1.jar" />
+		<pathelement location="lib/powermock/cglib-nodep-2.2.jar" />
+		<pathelement location="lib/powermock/easymock-3.0.jar" />
+		<pathelement location="lib/powermock/javassist-3.14.0-GA.jar" />
+		<pathelement location="lib/powermock/objenesis-1.2.jar" />
+		<pathelement location="lib/powermock/powermock-easymock-1.4.9-full.jar" />
 	</path>
 
 	<path id="cobertura_classpath">
@@ -157,7 +165,7 @@
 		<cobertura-instrument todir="${instrumented.dir}">
 			<fileset dir="${bin.dir}">
 				<include name="**/*.class" />
-<!--				<exclude name="**/*$*.class" />-->
+				<!--				<exclude name="**/*$*.class" />-->
 				<exclude name="**/*Test.class" />
 			</fileset>
 		</cobertura-instrument>
