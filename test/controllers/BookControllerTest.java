@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
+import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
 import org.uispec4j.Trigger;
@@ -59,7 +60,8 @@ public class BookControllerTest extends UISpecTestCase {
 		Panel bookSearch = new Panel(bookControllerUser.getBookSearch());
 		bookSearch.getButton("Search").click();
 		bookSearch.getButton("Clear").click();
-		bookSearch.getInputTextBox("textSearch").setText("a");
+		bookSearch.getInputTextBox("textSearch").typeKey(Key.A);
+		bookSearch.getInputTextBox("textSearch").releaseKey(Key.ENTER);	
 	}
 
 	@Test
