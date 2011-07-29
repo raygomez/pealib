@@ -64,6 +64,7 @@ import utilities.ErrorLabel;
 			getContentPanel().add(getRepeatPasswordField(), "cell 1 2,growx");
 
 			setErrorLabel(new ErrorLabel(" "));
+			errorLabel.setName("errorLabel");
 			getContentPanel().add(getErrorLabel(), "cell 0 3 2 1");
 
 			JPanel buttonPane = new JPanel();
