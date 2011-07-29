@@ -16,41 +16,45 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 
-public class InOutBookSearchPanel extends JPanel {
 
+public class InOutBookSearchPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField searchTextField;
 	private JButton submitButton;
 	private JTable resultsTable;
 	private JLabel totalLabel;
 
-	/**
-	 * Create the panel.
-	 */
 	public InOutBookSearchPanel() {
-		setLayout(new MigLayout("",
-				"[grow][grow][10:n:10,grow 10][120:n:120,grow][grow 50]",
-				"[][][][][grow]"));
+		setLayout(new MigLayout("", "[grow]", "[grow][grow]"));
 
+		JPanel searchPanel = new JPanel();
+		searchPanel.setLayout(new MigLayout("", "[grow][grow][grow][grow]", "[grow]"));
+		add(searchPanel, "cell 0 0, grow");
+		
 		searchTextField = new JTextField();
 		searchTextField.setName("searchTextField");
-		add(searchTextField, "cell 1 1,growx");
 		searchTextField.setColumns(10);
-
+		searchPanel.add(searchTextField, "cell 1 0 2 1, growx, aligny center");
+		
 		submitButton = new JButton("Search", new ImageIcon(
 				"resources/images/search32x32.png"));
-		add(submitButton, "cell 3 1,grow");
+		searchPanel.add(submitButton, "cell 3 0, alignx left, aligny center");
+
+		
+		JPanel resultsPanel = new JPanel();
+		resultsPanel.setLayout(new MigLayout("", "[grow]", "[grow][grow]"));
+		add(resultsPanel, "cell 0 1, grow");
 
 		totalLabel = new JLabel("");
 		totalLabel.setName("totalLabel");
-		add(totalLabel, "cell 0 2 2 1");
+		resultsPanel.add(totalLabel, "cell 0 0, alignx left, aligny top");
 
 		resultsTable = new JTable();
 		resultsTable.getTableHeader().setReorderingAllowed(false);
 		resultsTable.getTableHeader().setResizingAllowed(false);
 		resultsTable.setRowHeight(28);
 		JScrollPane sclpnResults = new JScrollPane(resultsTable);
-		add(sclpnResults, "cell 0 3 5 2,grow");
+		resultsPanel.add(sclpnResults, "cell 0 1, grow");
 	}
 
 	/* Event Listeners */
@@ -76,7 +80,6 @@ public class InOutBookSearchPanel extends JPanel {
 	
 	/* Setter */
 	public void setColumnRender(){
-		//TODO
 		DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
 		trender.setHorizontalAlignment(SwingConstants.CENTER);
 					
