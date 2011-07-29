@@ -53,6 +53,15 @@ public class UserSearchPanel extends JPanel {
 		this.modelUsers = modelUsers;
 	}
 	
+	public JPanel getPendingPane() {
+		return pendingPane;
+	}
+
+	public JPanel getUsersPane() {
+		return usersPane;
+	}
+
+	
 	/**
 	 * Create the panel.
 	 */
@@ -72,6 +81,7 @@ public class UserSearchPanel extends JPanel {
 	public void usersPanel() {
 		usersPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		usersPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		usersPane.setName("usersPane");
 
 		usersTable = new JTable(modelUsers);
 		getUsersTable().setName("tableUsers");
@@ -86,10 +96,12 @@ public class UserSearchPanel extends JPanel {
 	public void pendingAppPanel() {
 		pendingPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pendingPane.setLayout(new MigLayout("", "[grow]10px[40px]", "[40px]5px[40px]20px[10px][grow]"));
-
-		pendingTable = new JTable(modelPending);
+		pendingPane.setName("pendingPane");
+		
+		pendingTable = new JTable();
 		getPendingTable().setName("tablePending");
-		setTableSettings(getPendingTable(),PENDING);
+		
+		toggleAllPendingComp(false);
 
 		JScrollPane scrollPane = new JScrollPane(getPendingTable());
 		scrollPane.setName("scrollPane");
@@ -150,10 +162,6 @@ public class UserSearchPanel extends JPanel {
 	public void toggleAllPendingComp(boolean toggle){
 		togglePendingButtons(toggle);
 		allCheckBox.setEnabled(toggle);
-	}
-	
-	public void addUserSelectionLister(ListSelectionListener listener) {
-		getUsersTable().getSelectionModel().addListSelectionListener(listener);
 	}
 
 	public void addListeners(ActionListener button, KeyListener text,
