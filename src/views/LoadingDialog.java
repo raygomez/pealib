@@ -59,7 +59,7 @@ public class LoadingDialog extends JDialog implements PropertyChangeListener {
 		// TODO Auto-generated method stub
 		if(evt.getPropertyName().equalsIgnoreCase("state")){
 			if(evt.getNewValue().equals(SwingWorker.StateValue.STARTED)){
-				setVisible(true);
+				//setVisible(true);
 			}
 			else if(evt.getNewValue().equals(SwingWorker.StateValue.DONE)){
 				setVisible(false);

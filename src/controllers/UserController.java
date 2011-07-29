@@ -254,6 +254,9 @@ public class UserController {
 					}
 
 				} catch (Exception e) {  CrashHandler.handle(e); }
+				
+				System.out.println("DONE!");
+				
 				return null;
 			}
 		};
@@ -261,6 +264,9 @@ public class UserController {
 		Task<Void, Object> task = new Task<Void, Object>(toDo);
 		
 		LoadingControl.init(task, PeaLibrary.getMainFrame()).executeLoading();
+		
+		System.out.println("TAPOS!");
+		
 	}
 	/**
 	 * Method: Listener when changing tabs - refresh table
