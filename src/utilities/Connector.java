@@ -12,7 +12,7 @@ public class Connector {
 	static private Connection con_;
 	static private String db_;
 
-	public Connector(String filename) {
+	public static void init(String filename) {
 		Properties properties = new PropertyLoader(filename).getProperties();
 		hostname_ = properties.getProperty("app.hostname");
 		db_ = properties.getProperty("app.db");
@@ -20,7 +20,7 @@ public class Connector {
 		password_ = properties.getProperty("app.password");
 	}
 
-	public Connector() {
+	public static void init() {
 		Properties properties = new PropertyLoader(Constants.APP_CONFIG)
 				.getProperties();
 		hostname_ = properties.getProperty("app.hostname");

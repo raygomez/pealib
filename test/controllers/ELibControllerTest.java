@@ -30,7 +30,7 @@ public class ELibControllerTest extends UISpecTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 		User user = UserDAO.getUserById(1);
 		panel = new Panel(new ELibController(user).getView());
 	}

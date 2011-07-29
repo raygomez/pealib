@@ -24,7 +24,7 @@ public class UserDAOTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 	}
 
 	@Test
