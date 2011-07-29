@@ -1,6 +1,7 @@
 package controllers;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.*;
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class UserController {
 	private ArrayList<Integer> checkList;
 
 	/*
-	 * ..TODO For visual testing purposes only
+	  ..TODO For visual testing purposes only
 	 */
 	public static void main(String[] args) throws Exception {
 
@@ -58,11 +59,12 @@ public class UserController {
 		frame.setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setBounds(0, 0, screenSize.width, screenSize.height);
-		frame.setContentPane(userController.getUserPanel());
+		frame.setContentPane(userController.getLayoutPanel());
 
 	}
+	
 
-	/*
+	/**
 	 * Constructor
 	 */
 	public UserController(User user) throws Exception {
@@ -76,7 +78,7 @@ public class UserController {
 		userSearch = new UserSearchPanel();
 		userSearch.setModelUsers(new UserSearchTableModel(USER, ""));
 		userSearch.setModelPending(new UserSearchTableModel(PENDING, ""));
-		//(new UserSearchTableModel(USER, ""), new UserSearchTableModel(PENDING, ""));
+
 		userSearch.usersPanel();
 		userSearch.pendingAppPanel();
 		userSearch.addListeners(new SearchListener(),
@@ -91,7 +93,7 @@ public class UserController {
 		generateLayoutPanel();
 	}
 
-	/*
+	/**
 	 * Getters - Setters
 	 */
 
@@ -101,13 +103,14 @@ public class UserController {
 		generateLayoutPanel();
 		return layoutPanel;
 	}
+	
 
 	public UserSearchPanel getUserSearch() { return userSearch; }
 	
 	public UserInfoPanel getUserInfoPanel() { return userInfoPanel;};
 
-	/*
-	 * Listeners : Search
+	/**
+	 * Listener: Select All checkbox
 	 */
 	class CheckBoxListener implements ActionListener {
 		@Override
@@ -126,28 +129,29 @@ public class UserController {
 			userSearch.setTableModel(1, model);
 		}
 	}
-
-	// TODO pending process
+	/**
+	 * Listener: Accept button
+	 */
 	class AcceptListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			processPend(true);
 		}
 	}
-
+	/**
+	 * Listener: Deny button
+	 */
 	class DenyListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			processPend(false);
 		}
 	}
-	
-	private void processPend(boolean process) {
-		if (searchedPending.size() == checkList.size()) {
-			userInfoPanel.toggleButton(false);
-			userInfoPanel.clearFields();
-		}
-		
+	/**
+	 * Method: Process pending applications (ie, accept or deny)
+	 * Used by Accept & Deny Listener
+	 */	
+	private void processPend(boolean process) {		
 		String info = "";
 		for (int i = 0; i < searchedPending.size(); i++) {
 			if (checkList.contains(i)) {
@@ -176,18 +180,47 @@ public class UserController {
 		userSearch.getCbAll().setSelected(false);
 		checkList.clear();	
 		searchUsers();
-
-		if (searchedPending.isEmpty())
-			userSearch.toggleAllPendingComp(false);
-		else {
-			setInitSelectPending();
-			userSearch.togglePendingButtons(false);
-		}
-		
+		configurePendingUI();		
 		userSearch.resetTabPane();
 	}
+	/**
+	 * Method: Enabling/Disabling buttons in Pending - Search & Info
+	 */	
+	private void configurePendingUI(){
+		if (!searchedPending.isEmpty()) {														
+			userSearch.togglePendingButtons(false);					
+		} else {
+			userSearch.toggleAllPendingComp(false);
+			userInfoPanel.toggleButton(false);
+			userInfoPanel.clearFields();
+			userInfoPanel.setEnableFields(false);
+		}
+	}
+	/**
+	 * Method: Select the first row in table under the Users Tab
+	 * note: to avoid exceptions from list selection listener
+	 */	
+	private void setInitSelectUser() {
+		if (!searchedUsers.isEmpty()) {
+			userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
+			userSearch.getUsersTable().addRowSelectionInterval(0, 0);
+		}
+	}
+	/**
+	 * Method: Select the first row in table under the Pending Tab
+	 * note: to avoid exceptions from list selection listener
+	 */	
 
+	private void setInitSelectPending() {
+		if (!searchedPending.isEmpty()) {
+			userSearch.getPendingTable().getSelectionModel().setSelectionInterval(0, 0);
+			userSearch.getPendingTable().addRowSelectionInterval(0, 0);
+		}
+	}
 
+	/**
+	 * Method: search for users & generating a new table model
+	 */
 	private void searchUsers() {
 		int tab = userSearch.getSelectedTab();
 		searchText = userSearch.getFieldSearch().getText();
@@ -203,26 +236,15 @@ public class UserController {
 
 		} catch (Exception e) {  CrashHandler.handle(e); }
 	}
-
-	private void setInitSelectUser() {
-		if (!searchedUsers.isEmpty()) {
-			userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
-			userSearch.getUsersTable().addRowSelectionInterval(0, 0);
-		}
-	}
-
-	private void setInitSelectPending() {
-		if (!searchedPending.isEmpty()) {
-			userSearch.getPendingTable().getSelectionModel().setSelectionInterval(0, 0);
-			userSearch.getPendingTable().addRowSelectionInterval(0, 0);
-		}
-	}
-
+	/**
+	 * Method: Listener when changing tabs - refresh table
+	 */
 	class TabChangeListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			JTabbedPane temp = (JTabbedPane) e.getSource();
 			int index = temp.getSelectedIndex();
+			//TODO
 			searchUsers();
 
 			if (index == 0) {
@@ -234,24 +256,21 @@ public class UserController {
 				checkList.clear();
 				
 				setInitSelectPending();
-				if (!searchedPending.isEmpty()) {														
-					userSearch.togglePendingButtons(false);					
-				} else {
-					userSearch.toggleAllPendingComp(false);
-					userInfoPanel.toggleButton(false);
-					userInfoPanel.clearFields();
-					userInfoPanel.setEnableFields(false);
-				}
+				configurePendingUI();
 			}
 		}
 	}
-
+	/**
+	 * Method: Listener for Search Button 
+	 */
 	class SearchListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			searchUsers();
 		}
 	}
-
+	/**
+	 * Method: Listener for auto-complete search : searches every key pressed
+	 */
 	class SearchKeyListener extends KeyAdapter {
 
 		Timer timer = new Timer(Constants.TIMER_DELAY, new ActionListener() {
@@ -290,7 +309,11 @@ public class UserController {
 		private ArrayList<ArrayList<Object>> tableData;
 		private int mode;
 		private String searchStr = "";
-
+		
+		/*
+		 * Figures out what tab is currently selected, to determine what table model
+		 * to make : users table or pending table 
+		 */
 		public UserSearchTableModel(int tab, String str) throws Exception {
 			this.mode = tab;
 			this.searchStr = str;
@@ -304,6 +327,9 @@ public class UserController {
 			}
 		}
 
+		/*
+		 * Filling up table data for Pending
+		 */
 		private void pending() {
 			columns = new String[] { "Username", "Name", "Accept" };
 
@@ -324,13 +350,17 @@ public class UserController {
 				CrashHandler.handle(e);
 			}
 		}
-
+		/*
+		 * For SelectAll Check Box in Pending: Make every checkbox true/false
+		 */		
 		public void toggleAllCheckBox(boolean value) {
 			for (int i = 0; i < getRowCount(); i++) {
 				setValueAt(new Boolean(value), i, 2);
 			}
 		}
-
+		/*
+		 * Filling up table data for Users
+		 */
 		private void userAcct() throws Exception {
 			columns = new String[] { "Username", "Name" };
 
@@ -346,12 +376,16 @@ public class UserController {
 				}
 			}
 		}
-
+		/*
+		 * Renderer for checkbox column
+		 */
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Class getColumnClass(int c) {
 			return getValueAt(0, c).getClass();
 		}
-
+		/*
+		 * Setting value for checkbox
+		 */
 		public void setValueAt(Object value, int row, int col) {
 
 			tableData.get(row).set(col, value);
@@ -398,7 +432,9 @@ public class UserController {
 		public Object getValueAt(int row, int col) {
 			return tableData.get(row).get(col);
 		}
-
+		/*
+		 * Make only checkbox column editable
+		 */
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			if (columnIndex < 2)
@@ -417,9 +453,9 @@ public class UserController {
 				.setSelectionInterval(0, 0);
 	}
 
-	public JPanel getUserPanel() {
-		return getLayoutPanel();
-	}
+//	public JPanel getUserPanel() {
+//		return getLayoutPanel();
+//	}
 
 	private boolean validateUpdateProfile(String firstName, String lastName,
 			String email, String address, String contactNo) {
@@ -476,20 +512,16 @@ public class UserController {
 	
 				User user = null;
 	
-				System.out.println("listener: SELECT ROW: "+row);
 				// This is a simple check to see if row is negative.
 				if (row < 0)
 					return;
 	
-				if (tab == USER) {
-					if (!searchedUsers.isEmpty()){
-						System.out.println("Setting row to "+ row);
-						user = searchedUsers.get(row);
-					}
+				if (tab == USER) {				
+					user = searchedUsers.get(row);
+			
 				} else {
-					if (!searchedPending.isEmpty()){
-						user = searchedPending.get(row);
-					}
+					user = searchedPending.get(row);
+
 				}
 	
 				if (user != null) {
