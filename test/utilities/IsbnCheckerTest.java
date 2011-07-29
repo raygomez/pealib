@@ -36,4 +36,9 @@ public class IsbnCheckerTest {
 	public void testIsIsbninvalid10Digit() {
 		assertFalse(IsbnChecker.isIsbnValid("0306406153"));
 	}
+	
+	@Test
+	public void testIsIsbnValid() {
+		assertFalse(IsbnChecker.isIsbnValid(""));
+	}
 }
