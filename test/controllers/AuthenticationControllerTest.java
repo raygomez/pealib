@@ -500,14 +500,11 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	@Test
 	@ExpectedDataSet({ "../models/expected/saveUser.xml" })
 	public void testSignUpSuccessful() throws Exception {
-		UISpec4J.setAssertionTimeLimit(2000);
 		WindowInterceptor.init(new Trigger() {
 			public void run() {
 				window.getButton("Sign Up").click();
-				
 			}
-		})
-		.process(new WindowHandler() {
+		}).process(new WindowHandler() {
 			public Trigger process(final Window dialog) {
 				dialog.getInputTextBox("firstNameTextField").setText(
 						"Janine June");
@@ -531,12 +528,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 
 				};
 			}
-		})
-		.process( new WindowHandler() {
-			public Trigger process(Window dialog) throws Exception {
-				return Trigger.DO_NOTHING;
-			}
-		}).process(new WindowHandler() {
+		}).processTransientWindow().process(new WindowHandler() {
 			public Trigger process(Window dialog) {
 				String actual = dialog.getTextBox("OptionPane.label")
 						.getText();

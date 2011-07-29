@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.Days;
@@ -23,7 +22,7 @@ public class TransactionDAO {
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setInt(1, borrow.getId());
 		ps.executeUpdate();
-		
+
 		Connector.close();
 	}
 
@@ -36,7 +35,7 @@ public class TransactionDAO {
 		ps.setLong(1, user.getUserId());
 		ps.setLong(2, book.getBookId());
 		intStat = ps.executeUpdate();
-		
+
 		Connector.close();
 		return intStat;
 	}
@@ -51,7 +50,7 @@ public class TransactionDAO {
 		ps.setLong(1, user.getUserId());
 		ps.setLong(2, book.getBookId());
 		intStat = ps.executeUpdate();
-		
+
 		Connector.close();
 		return intStat;
 	}
@@ -65,7 +64,7 @@ public class TransactionDAO {
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, borrowedBook.getId());
 		intStat = ps.executeUpdate();
-		
+
 		Connector.close();
 		return intStat;
 	}
@@ -92,7 +91,7 @@ public class TransactionDAO {
 					dateRequested, dateBorrowed, dateReturned);
 
 		}
-		
+
 		Connector.close();
 		return borTransaction;
 
@@ -114,7 +113,7 @@ public class TransactionDAO {
 			rTransaction = new ReserveTransaction(user, book, datetimeReserved);
 
 		}
-		
+
 		Connector.close();
 		return rTransaction;
 
@@ -131,7 +130,7 @@ public class TransactionDAO {
 		ps.setInt(1, user.getUserId());
 		ps.setInt(2, book.getBookId());
 		intStat = ps.executeUpdate();
-		
+
 		Connector.close();
 		return intStat;
 	}
@@ -146,7 +145,7 @@ public class TransactionDAO {
 		ps.setLong(1, rTransaction.getUser().getUserId());
 		ps.setLong(2, rTransaction.getBook().getBookId());
 		intStat = ps.executeUpdate();
-		
+
 		Connector.close();
 		return intStat;
 	}
@@ -159,7 +158,7 @@ public class TransactionDAO {
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setInt(1, borrow.getId());
 		ps.executeUpdate();
-		
+
 		Connector.close();
 	}
 
@@ -331,12 +330,12 @@ public class TransactionDAO {
 		int available = 0;
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, book.getBookId());
-		
+
 		ResultSet rs = ps.executeQuery();
 		rs.first();
 		count = rs.getInt(1);
 		available = book.getCopies() - count;
-		
+
 		Connector.close();
 		return available;
 	}
@@ -347,16 +346,16 @@ public class TransactionDAO {
 				+ "WHERE BookID = ? AND UserID = ? AND DateReturned is NULL";
 
 		int days = 0;
-		Calendar today = Calendar.getInstance();
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, book.getBookId());
 		ps.setLong(2, user.getUserId());
-		
+
 		ResultSet rs = ps.executeQuery();
 		if (rs.first()) {
 			Date borrowedDate = rs.getDate(1);
-			Days d = Days.daysBetween(new DateMidnight(borrowedDate.getTime()),
-					new DateMidnight(today.getTime().getTime()));
+			Days d = Days.daysBetween(
+					new DateMidnight(borrowedDate.getTime()).plusWeeks(2),
+					new DateMidnight());
 			days = d.getDays();
 		}
 
@@ -371,16 +370,16 @@ public class TransactionDAO {
 				+ "WHERE BookID = ? AND UserID = ? AND DateReturned is NULL";
 
 		int days = 0;
-		Calendar today = Calendar.getInstance();
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, transaction.getBook().getBookId());
 		ps.setLong(2, transaction.getUser().getUserId());
-		
+
 		ResultSet rs = ps.executeQuery();
 		if (rs.first()) {
 			Date borrowedDate = rs.getDate(1);
-			Days d = Days.daysBetween(new DateMidnight(borrowedDate.getTime()),
-					new DateMidnight(today.getTime().getTime()));
+			Days d = Days.daysBetween(
+					new DateMidnight(borrowedDate.getTime()).plusWeeks(2),
+					new DateMidnight());
 			days = d.getDays();
 		}
 
@@ -430,7 +429,7 @@ public class TransactionDAO {
 					rs.getDate("DateReturned"));
 			bookCollection.add(borrowed);
 		}
-		
+
 		Connector.close();
 		return bookCollection;
 	}
@@ -517,7 +516,7 @@ public class TransactionDAO {
 	}
 
 	public static void passToNextUser(Book returnedBook) throws Exception {
-		
+
 		/* get the first user in queue */
 		User nextUser = getNextUser(returnedBook);
 		/* create borrow transaction */

@@ -238,4 +238,41 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(tabGroup.getSelectedTab().getCheckBox().isSelected());
 	}
 
+	@Test
+	public void testSelectAllThenUnselectAllPending() {
+		tabGroup.selectTab("Pending Applications");
+
+		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
+		selectAll.click();
+		selectAll.click();
+
+		Table pendingTable = tabGroup.getSelectedTab().getTable();
+		assertThat(pendingTable.columnEquals(2, new Object[] { false, false }));
+	}
+	
+	@Test
+	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserEnd.xml" })
+	public void testAcceptOnePendingEnd() {
+		tabGroup.selectTab("Pending Applications");
+		Table pendingTable = tabGroup.getSelectedTab().getTable();
+		pendingTable.click(1, 2);
+
+		Button acceptButton = tabGroup.getSelectedTab().getButton("Accept");
+		acceptButton.click();
+
+		assertThat(pendingTable.rowCountEquals(1));
+	}
+	
+	@Test
+	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserStart.xml" })
+	public void testAcceptOnePendingStart() {
+		tabGroup.selectTab("Pending Applications");
+		Table pendingTable = tabGroup.getSelectedTab().getTable();
+		pendingTable.click(0, 2);
+
+		Button acceptButton = tabGroup.getSelectedTab().getButton("Accept");
+		acceptButton.click();
+
+		assertThat(pendingTable.rowCountEquals(1));
+	}
 }

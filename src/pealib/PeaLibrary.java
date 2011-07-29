@@ -37,11 +37,12 @@ public class PeaLibrary {
 
 	public PeaLibrary() {
 		Connector.init();
+		Emailer.setOn(true);
 	}
 
 	public PeaLibrary(String config){
 		Connector.init(config);
-		Emailer.setOn(true);
+		Emailer.setOn(false);
 	}
 	
 	/**
