@@ -137,7 +137,9 @@ public class UserControllerTest extends UISpecTestCase {
 	@Test
 	public void testSelectAllPendingThroughSelectAll() {
 		tabGroup.selectTab("Pending Applications");
+		assertThat(tabGroup.selectedTabEquals("Pending Applications"));
 		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		selectAll.click();
 
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
@@ -149,7 +151,9 @@ public class UserControllerTest extends UISpecTestCase {
 	@ExpectedDataSet({ "../models/expected/acceptAllPendingUser.xml" })
 	public void testAcceptAllPendingThroughSelectAll() {
 		tabGroup.selectTab("Pending Applications");
+		assertThat(tabGroup.selectedTabEquals("Pending Applications"));
 		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		selectAll.click();
 
 		Button acceptButton = tabGroup.getSelectedTab().getButton("Accept");
@@ -164,6 +168,7 @@ public class UserControllerTest extends UISpecTestCase {
 	@ExpectedDataSet({ "../models/expected/acceptAllPendingUser.xml" })
 	public void testAcceptAllPendingThroughCheckBox() {
 		tabGroup.selectTab("Pending Applications");
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
 		pendingTable.click(0, 2);
 		pendingTable.click(1, 2);
@@ -179,6 +184,7 @@ public class UserControllerTest extends UISpecTestCase {
 	@ExpectedDataSet({ "../models/expected/denyAllPendingUser.xml" })
 	public void testDenyAllPendingThroughCheckBox() {
 		tabGroup.selectTab("Pending Applications");
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
 		pendingTable.click(0, 2);
 		pendingTable.click(1, 2);
@@ -195,6 +201,7 @@ public class UserControllerTest extends UISpecTestCase {
 	public void testDenyAllPendingThroughSelectAll() {
 		tabGroup.selectTab("Pending Applications");
 		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		selectAll.click();
 
 		Button acceptButton = tabGroup.getSelectedTab().getButton("Deny");
@@ -291,9 +298,10 @@ public class UserControllerTest extends UISpecTestCase {
 				assertThat(dialog.getPasswordField("oldpassword").isEnabled());
 				dialog.getPasswordField("oldpassword").setPassword("12345678");
 				dialog.getPasswordField("newpassword").setPassword("1234567");
-				dialog.getPasswordField("repeatpassword").setPassword("1234567");
-				dialog.getButton("Change Password").click();
-				assertTrue(dialog.containsLabel("Incorrect Password"));
+				dialog.getPasswordField("repeatpassword")
+						.setPassword("1234567");
+				dialog.getButton("Change Password").triggerClick();
+				assertTrue(dialog.containsLabel("Incorrect password"));
 				return dialog.getButton("Cancel").triggerClick();
 			}
 
@@ -304,7 +312,7 @@ public class UserControllerTest extends UISpecTestCase {
 	@Test
 	public void testSelectAllPendingThroughCheckbox() {
 		tabGroup.selectTab("Pending Applications");
-
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
 		pendingTable.click(0, 2);
 		pendingTable.click(1, 2);
@@ -318,7 +326,7 @@ public class UserControllerTest extends UISpecTestCase {
 	@Test
 	public void testSelectAllThenUnselectAllPending() {
 		tabGroup.selectTab("Pending Applications");
-
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
 		selectAll.click();
 		selectAll.click();
@@ -332,6 +340,7 @@ public class UserControllerTest extends UISpecTestCase {
 	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserEnd.xml" })
 	public void testAcceptOnePendingEnd() {
 		tabGroup.selectTab("Pending Applications");
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());		
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
 		pendingTable.click(1, 2);
 
@@ -346,6 +355,7 @@ public class UserControllerTest extends UISpecTestCase {
 	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserStart.xml" })
 	public void testAcceptOnePendingStart() {
 		tabGroup.selectTab("Pending Applications");
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
 		pendingTable.click(0, 2);
 

@@ -45,7 +45,7 @@ public class UserController {
 
 	/*
 	  ..TODO For visual testing purposes only
-	 */
+	
 	public static void main(String[] args) throws Exception {
 
 		Connector.init(Constants.TEST_CONFIG);
@@ -68,7 +68,7 @@ public class UserController {
 
 	}
 	
-
+ */
 	/**
 	 * Constructor
 	 */
@@ -217,7 +217,7 @@ public class UserController {
 	 * note: to avoid exceptions from list selection listener
 	 */	
 
-	private void setInitSelectPending() {
+	public void setInitSelectPending() {
 		if (!searchedPending.isEmpty()) {
 			userSearch.getPendingTable().getSelectionModel().setSelectionInterval(0, 0);
 			userSearch.getPendingTable().addRowSelectionInterval(0, 0);
@@ -250,6 +250,7 @@ public class UserController {
 					} else{
 						userSearch.getPendingTable().setVisible(true);
 						setInitSelectPending();
+						configurePendingUI();
 					}
 
 				} catch (Exception e) {  CrashHandler.handle(e); }
