@@ -25,7 +25,7 @@ public class TransactionDAOTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 	}
 
 	@Test
@@ -225,14 +225,14 @@ public class TransactionDAOTest {
 	public void testGetDaysOverdue() throws Exception {
 		User user = UserDAO.getUserById(3);
 		Book book = BookDAO.getBookById(2);
-		assertEquals(43, TransactionDAO.getDaysOverdue(book, user));
+		assertEquals(44, TransactionDAO.getDaysOverdue(book, user));
 	}
 
 	@Test
 	public void testGetDaysOverdueBorrowTransaction() throws Exception {
 		BorrowTransaction transaction = TransactionDAO
 				.getBorrowTransactionById(3);
-		assertEquals(43, TransactionDAO.getDaysOverdue(transaction));
+		assertEquals(44, TransactionDAO.getDaysOverdue(transaction));
 	}
 
 	@Test

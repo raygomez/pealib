@@ -25,7 +25,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 		tabGroup = new TabGroup(new TransactionController().getTabbedPane());
 	}
 
@@ -195,7 +195,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		denyButton.click();
 		
 		assertThat(outgoingItems.contentEquals( new Object[][] {
-				{ "1234567890125", "title3Pantaleon", "author2", "jvillar (Jomel Pantaleon)",	"2011-07-28" },
+				{ "1234567890125", "title3Pantaleon", "author2", "jvillar (Jomel Pantaleon)",	"2011-07-29" },
 				/* this should have been appended as the last entry. however test db allows null and is non-incrementing */
 				
 				{ "1234567890121", "Harry Poter 2", "Niel",	"apantaleon (Annuary Pantaleon)", "2011-06-15" },

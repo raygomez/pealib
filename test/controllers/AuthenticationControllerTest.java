@@ -33,7 +33,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 		new AuthenticationController();
 		window = new Window(AuthenticationController.getLogin());
 
@@ -304,7 +304,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				dialog.getInputTextBox("userNameTextField").setText(
 						"apantaleon");
 				/* invoke error in connection */
-				new Connector("error");
+				Connector.init("error");
 				dialog.getButton("Submit").click();
 				return dialog.getButton("Cancel").triggerClick();
 			}

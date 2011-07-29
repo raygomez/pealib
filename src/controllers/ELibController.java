@@ -39,7 +39,7 @@ public class ELibController {
 	private ArrayList<ReserveTransaction> bookDataReserve;
 
 	// public static void main(String[] args) throws Exception {
-	// new Connector(Constants.TEST_CONFIG);
+	// Connector.init(Constants.TEST_CONFIG);
 	//
 	// JFrame frame = new JFrame();
 	// frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

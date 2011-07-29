@@ -14,7 +14,7 @@ public class ConnectorTest {
 
 	@Test
 	public void testGetConnection() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 		Connection actual = Connector.getConnection();
 		Connection expected = null;
 

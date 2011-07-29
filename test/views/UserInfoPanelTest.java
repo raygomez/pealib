@@ -26,7 +26,7 @@ public class UserInfoPanelTest extends UISpecTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector("test.config");
+		Connector.init(Constants.TEST_CONFIG);
 		userInfoPanel = new UserInfoPanel();
 		panel = new Panel(userInfoPanel);
 		user = UserDAO.getUserById(2);

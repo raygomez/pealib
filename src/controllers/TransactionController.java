@@ -44,7 +44,7 @@ public class TransactionController {
 	private OutgoingPanel outPanel;
 
 //	public static void main(String[] args) throws Exception {
-//		new Connector(Constants.TEST_CONFIG);
+//		Connector.init(Constants.TEST_CONFIG);
 //
 //		TransactionController librarianTransactions = new TransactionController();
 //
