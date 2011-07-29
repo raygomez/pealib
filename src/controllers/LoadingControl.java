@@ -38,5 +38,6 @@ public class LoadingControl {
 	
 	public void executeLoading(){
 		task.execute();
+		loadingDialog.setVisible(true);
 	}
 }
