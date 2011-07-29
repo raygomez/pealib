@@ -155,6 +155,7 @@ public class PeaLibrary {
 		frame.setSidebarPanel(userSidebarPanel);
 		try {
 			frame.setContentPanel(bookControl.getBookLayoutPanel());
+			bookControl.initializePanelContent();
 		} catch (Exception e) {
 			CrashHandler.handle(e);
 
@@ -187,6 +188,18 @@ public class PeaLibrary {
 		public void actionPerformed(ActionEvent arg0) {
 			try {
 				frame.setContentPanel(bookControl.getBookLayoutPanel());
+				
+				Task<Void, Object> task = new Task<Void, Object>(new Callable<Void>() {
+
+					@Override
+					public Void call() throws Exception {
+						bookControl.initializePanelContent();
+						return null;
+					}
+				});
+				
+				LoadingControl.init(task, frame).executeLoading();
+				
 			} catch (Exception e) {
 				CrashHandler.handle(e);
 
