@@ -23,7 +23,7 @@ public class Emailer {
 	private static final String USERNAME = "telehealth.up@gmail.com";
 	private static final String PASSWORD = "telehealth";
 	private static boolean on_;
-	
+
 	/**
 	 * @param args
 	 */
@@ -80,7 +80,9 @@ public class Emailer {
 		Transport.send(msg);
 	}
 
-	public static void sendAcceptedEmail(User user) throws MessagingException {
+	public static boolean sendAcceptedEmail(User user) {
+		boolean isSuccess = true;
+
 		if (on_) {
 			Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 			String sendTo = user.getEmail();
@@ -91,12 +93,21 @@ public class Emailer {
 					+ "Do not reply to this email.";
 			String emailSubjectTxt = "[Pealib] Application to Pealibrary Granted";
 			String emailFromAddress = "pealibrary@gmail.com";
-			new Emailer().sendSSLMessage(sendTo, emailSubjectTxt, emailMsgTxt,
-					emailFromAddress);
+			try {
+				new Emailer().sendSSLMessage(sendTo, emailSubjectTxt,
+						emailMsgTxt, emailFromAddress);
+			} catch (MessagingException e) {
+				isSuccess = false;
+				e.printStackTrace();
+			}
 		}
+
+		return isSuccess;
 	}
-	
-	public static void sendRejectEmail(User user) throws MessagingException {
+
+	public static boolean sendRejectEmail(User user) {
+		boolean isSuccess = true;
+
 		if (on_) {
 			Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 			String sendTo = user.getEmail();
@@ -106,15 +117,20 @@ public class Emailer {
 					+ "Do not reply to this email.";
 			String emailSubjectTxt = "[Pealib] Application to Pealibrary Rejected";
 			String emailFromAddress = "pealibrary@gmail.com";
-			new Emailer().sendSSLMessage(sendTo, emailSubjectTxt, emailMsgTxt,
-					emailFromAddress);
+			try {
+				new Emailer().sendSSLMessage(sendTo, emailSubjectTxt,
+						emailMsgTxt, emailFromAddress);
+			} catch (MessagingException e) {
+				isSuccess = false;
+				e.printStackTrace();
+			}
 		}
+		return isSuccess;
 	}
-	
-	public static void sendForgetPasswordEmail(User user)
-			throws MessagingException {
-		
-		
+
+	public static boolean sendForgetPasswordEmail(User user) {
+		boolean isSuccess = true;
+
 		if (on_) {
 			Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 			String sendTo = user.getEmail();
@@ -125,11 +141,18 @@ public class Emailer {
 					+ "Do not reply to this email.";
 			String emailSubjectTxt = "[Pealib] New Password";
 			String emailFromAddress = "pealibrary@gmail.com";
-			new Emailer().sendSSLMessage(sendTo, emailSubjectTxt, emailMsgTxt,
-					emailFromAddress);
+			try {
+				new Emailer().sendSSLMessage(sendTo, emailSubjectTxt, emailMsgTxt,
+						emailFromAddress);
+			} catch (MessagingException e) {
+				isSuccess =  false;
+				e.printStackTrace();
+				
+			}
 		}
 		
-		
+		return isSuccess;
+
 	}
 
 	/**
@@ -140,7 +163,8 @@ public class Emailer {
 	}
 
 	/**
-	 * @param on the on_ to set
+	 * @param on
+	 *            the on_ to set
 	 */
 	public static void setOn(boolean on) {
 		Emailer.on_ = on;
