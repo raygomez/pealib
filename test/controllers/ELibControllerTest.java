@@ -117,32 +117,7 @@ public class ELibControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
-	@Test
-	@ExpectedDataSet({ "../models/expected/cancelReserves.xml" })
-	public void testCancelReservation() {
-		TabGroup tabGroup = panel.getTabGroup();
 
-		tabGroup.selectTab("Reservations");
-		final Table reservation = tabGroup.getSelectedTab().getTable();
-		assertTrue(reservation.getHeader().contentEquals(
-				new String[] { "ISBN", "Title", "Author", "Date Reserved",
-						"Queue Number", "Cancel" }));
-		assertEquals(2, reservation.getRowCount());
-
-		WindowInterceptor.init(new Trigger() {
-
-			@Override
-			public void run() throws Exception {
-				reservation.click(0, 5);
-			}
-		}).process(new WindowHandler() {
-			public Trigger process(Window dialog) {
-				assertEquals("Confirm", dialog.getTitle());
-				dialog.containsLabel(Constants.CONFIRM_CANCEL_RESERVATION);
-				return dialog.getButton("Yes").triggerClick();
-			}
-		}).run();
-	}
 
 	@Test
 	@DataSet({ "../models/emptyBorrows.xml", "../models/emptyReserves.xml" })
@@ -177,6 +152,33 @@ public class ELibControllerTest extends UISpecTestCase {
 
 		tabGroup.selectTab("Requests");
 
+	}
+	
+	@Test
+	@ExpectedDataSet({ "../models/expected/cancelReserves.xml" })
+	public void testCancelReservation() {
+		TabGroup tabGroup = panel.getTabGroup();
+
+		tabGroup.selectTab("Reservations");
+		final Table reservation = tabGroup.getSelectedTab().getTable();
+		assertTrue(reservation.getHeader().contentEquals(
+				new String[] { "ISBN", "Title", "Author", "Date Reserved",
+						"Queue Number", "Cancel" }));
+		assertEquals(2, reservation.getRowCount());
+
+		WindowInterceptor.init(new Trigger() {
+
+			@Override
+			public void run() throws Exception {
+				reservation.click(0, 5);
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {
+				assertEquals("Confirm", dialog.getTitle());
+				dialog.containsLabel(Constants.CONFIRM_CANCEL_RESERVATION);
+				return dialog.getButton("Yes").triggerClick();
+			}
+		}).run();
 	}
 
 }

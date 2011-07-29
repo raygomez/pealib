@@ -268,38 +268,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	}
 
 	@Test
-	public void testSignUpInvalidUsername() throws Exception {
-		WindowInterceptor.init(new Trigger() {
-			public void run() {
-				window.getButton("Sign Up").click();
-			}
-		}).process(new WindowHandler("New User Account Application") {
-			public Trigger process(Window dialog) {
-				dialog.getInputTextBox("firstNameTextField").setText("1");
-				dialog.getInputTextBox("lastNameTextField").setText("2");
-				dialog.getPasswordField("passwordTextField").setPassword(
-						"12345");
-				dialog.getPasswordField("confirmPasswordTextField")
-						.setPassword("12345");
-				dialog.getInputTextBox("emailAddressTextField").setText(
-						"####@gmail.com");
-				dialog.getInputTextBox("contactNumberTextField").setText(
-						"123456");
-				dialog.getInputTextBox("addressTextField").setText("USA");
-
-				dialog.getInputTextBox("userNameTextField").setText("ab");
-				dialog.getInputTextBox("userNameTextField").releaseKey(Key.C);
-				dialog.getInputTextBox("userNameTextField").releaseKey(
-						Key.ENTER);
-				String error = dialog.getTextBox("errorMessageLabel").getText();
-				assertTrue(error.equals("Invalid Input."));
-				return dialog.getButton("Cancel").triggerClick();
-			}
-		}).run();
-	}
-
-	@Ignore
-	@Test
 	public void testSignUpNotUniqueUsername() throws Exception {
 		WindowInterceptor.init(new Trigger() {
 			public void run() {
@@ -327,11 +295,19 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				assertTrue(error.equals("User name is already in use."));
 				return dialog.getButton("Cancel").triggerClick();
 			}
-		}).run();
+//		}).process(new WindowHandler() {
+//			public Trigger process(Window dialog) {
+//				String actual = dialog.getTextBox("OptionPane.label").getText();
+//				String expected = "<html>An error was encountered while"
+//						+ " creating your account.<br>"
+//						+ "Please try again later.";
+//				assertTrue(actual.equals(expected));
+//				return dialog.getButton("OK").triggerClick();
+//			}
+		}).run();			
 	}
-
+	
 	@Test
-	@Ignore
 	public void testSignUpErrorWhileCheckingUsername() throws Exception {
 		WindowInterceptor.init(new Trigger() {
 			public void run() {
@@ -354,7 +330,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				dialog.getInputTextBox("userNameTextField").setText(
 						"apantaleon");
 				/* invoke error in connection */
-				Connector.init("error");
+				Connector.init("build.xml");
 				dialog.getButton("Submit").click();
 				return dialog.getButton("Cancel").triggerClick();
 			}
@@ -370,7 +346,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
-	@Ignore
 	@Test
 	public void testSignUpInvalidEmailCharacters() throws Exception {
 		WindowInterceptor.init(new Trigger() {
@@ -401,7 +376,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
-	@Ignore
 	@Test
 	public void testSignUpInvalidEmailLength() throws Exception {
 		WindowInterceptor.init(new Trigger() {
@@ -432,7 +406,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
-	@Ignore
 	@Test
 	public void testSignUpNotUniqueEmail() throws Exception {
 		WindowInterceptor.init(new Trigger() {
@@ -464,7 +437,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
-	@Ignore
 	@Test
 	public void testSignUpInvalidFields() throws Exception {
 		WindowInterceptor.init(new Trigger() {
@@ -550,4 +522,36 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 			}
 		}).run();
 	}
+
+	@Test
+	public void testSignUpInvalidUsername() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText("1");
+				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"12345");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("12345");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"####@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"123456");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+
+				dialog.getInputTextBox("userNameTextField").setText("ab");
+				dialog.getInputTextBox("userNameTextField").releaseKey(Key.C);
+				dialog.getInputTextBox("userNameTextField").releaseKey(
+						Key.ENTER);
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("Invalid Input."));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
+	}
+
 }
