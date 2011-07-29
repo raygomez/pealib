@@ -20,7 +20,6 @@ import models.UserDAO;
 import utilities.Constants;
 import utilities.Emailer;
 import utilities.Task;
-import utilities.TaskUpdateListener;
 import views.LoadingDialog;
 import views.LogInDialog;
 import views.SignUpDialog;
@@ -173,8 +172,6 @@ public class AuthenticationController {
 		};
 		
 		Task<Void, Void> task = new Task<Void, Void>(toDo);
-		task.addPropertyChangeListener(new TaskUpdateListener(
-			new LoadingDialog(getLogin())));
 		
 		setUsernamePassword();
 		if (login_user.equals("") || login_pass.equals("")) {
@@ -192,7 +189,7 @@ public class AuthenticationController {
 
 		else {
 			try {
-				task.execute();
+				LoadingControl.init(task, getLogin()).executeLoading();
 			} catch (Exception e) {
 				System.out.println("AuthenticationController getUser: " + e);
 				getLogin().setLabelError("Connection Error!");
@@ -278,8 +275,7 @@ public class AuthenticationController {
 		};
 		
 		Task<Void, Void> task = new Task<Void, Void>(toDo);
-		task.addPropertyChangeListener(new TaskUpdateListener(
-			new LoadingDialog(getSignUp())));
+		LoadingControl.init(task, getLogin()).executeLoading();
 		
 		int maskedLabel = 0;
 		signUp.setFieldBorderColor(maskedLabel);
@@ -482,11 +478,11 @@ public class AuthenticationController {
 					if(user != null){
 						user.setPassword(RandomStringUtils
 							.randomAlphanumeric(8));
-						UserDAO.changePassword(user.getUserId(),
-							user.getPassword());
 						boolean boolConnect = Emailer.sendForgetPasswordEmail(user);
 						System.out.println(boolConnect);
 						if(boolConnect){
+							UserDAO.changePassword(user.getUserId(),
+									user.getPassword());
 							JOptionPane.showMessageDialog(getLogin(),
 								"Check your email for your new password.",
 								"Forgot Password",
