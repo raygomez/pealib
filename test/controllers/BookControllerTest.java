@@ -125,6 +125,8 @@ public class BookControllerTest extends UISpecTestCase {
 								"901234567890123456789012345678901234567890123456" +
 								"901234567890123456789012345678901234567890123456" +
 								"901234567890123456789012345678901234567890123456" +
+								"901234567890123456789012345678901234567890123456" +
+								"901234567890123456789012345678901234567890123456" +
 								"78901234567890");
 						dialog.getButton("Add").click();
 						dialog.getTextBox("Invalid Input");
@@ -218,6 +220,7 @@ public class BookControllerTest extends UISpecTestCase {
 
 
 	@Test
+	@DataSet({ "../models/noCopybook.xml" })
 	public void testValidSave() throws Exception{
 		librarian = UserDAO.getUserById(2);
 		bookControllerLib = new BookController(librarian);
@@ -238,9 +241,24 @@ public class BookControllerTest extends UISpecTestCase {
 		bookInfo.getInputTextBox("yearPublishTextField").setText(
 				"1992");
 		bookInfo.getInputTextBox("isbnTextField").setText(
-				"1209120976");
+				"0007222556");
 		bookInfo.getInputTextBox("descriptionTextArea").setText(
 				"12345678901");
+		bookInfo.getButton("Save").click();
+	}
+
+	@Test
+	public void testValid2Save() throws Exception{
+		librarian = UserDAO.getUserById(2);
+		bookControllerLib = new BookController(librarian);
+		librarianPanel = new Panel(
+				bookControllerLib.getBookLayoutPanel());
+		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
+		Panel bookInfo = new Panel(bookControllerLib.getBookInfo());
+		Table bookTable = bookSearch.getTable();
+		bookTable.click(3,0);
+		bookInfo.getInputTextBox("isbnTextField").setText(
+				"1209120976");
 		bookInfo.getButton("Save").click();
 	}
 
@@ -276,6 +294,9 @@ public class BookControllerTest extends UISpecTestCase {
 						"8888888888");
 				bookInfo.getInputTextBox("descriptionTextArea").setText(
 						"123456789012345678901234567890123456789012345678" +
+						"901234567890123456789012345678901234567890123456" +
+						"901234567890123456789012345678901234567890123456" +
+						"901234567890123456789012345678901234567890123456" +
 						"901234567890123456789012345678901234567890123456" +
 						"901234567890123456789012345678901234567890123456" +
 						"901234567890123456789012345678901234567890123456" +
