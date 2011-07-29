@@ -32,7 +32,7 @@ public class ELibControllerTest extends UISpecTestCase {
 	public void setUp() throws Exception {
 		Connector.init(Constants.TEST_CONFIG);
 		User user = UserDAO.getUserById(1);
-		panel = new Panel(new ELibController(user).getView());
+		panel = new Panel(new ELibController(user).getTabPane());
 	}
 
 	@Test

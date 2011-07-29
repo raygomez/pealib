@@ -103,7 +103,7 @@ public class UserControllerTest extends UISpecTestCase {
 
 		assertFalse(userSearchPanel.getButton("Accept").isEnabled());
 		assertFalse(userSearchPanel.getButton("Deny").isEnabled());
-		assertTrue(userSearchPanel.getCheckBox().isEnabled());
+		assertFalse(userSearchPanel.getCheckBox().isEnabled());
 
 		assertTrue(userSearchPanel.getButton("Search").isEnabled());
 		assertTrue(userSearchPanel.getTextBox().isEnabled());
