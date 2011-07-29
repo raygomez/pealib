@@ -26,7 +26,7 @@ public class IncomingPanel extends JPanel {
 
 		JPanel buttonPanel = new JPanel();
 		add(buttonPanel, "cell 0 1,alignx right,growy");
-		buttonPanel.setLayout(new MigLayout("", "[][]", "[]"));
+		buttonPanel.setLayout(new MigLayout("", "[120][]", "[]"));
 
 		daysOverdueLabel = new JLabel("");
 		daysOverdueLabel.setName("daysOverdueLabel");
@@ -35,7 +35,7 @@ public class IncomingPanel extends JPanel {
 
 		returnButton = new JButton("Return", new ImageIcon(
 				"resources/images/return32x32.png"));
-		buttonPanel.add(returnButton, "cell 1 0,alignx left,aligny top");
+		buttonPanel.add(returnButton, "cell 1 0,alignx left,aligny center");
 		returnButton.setEnabled(false);
 	}
 

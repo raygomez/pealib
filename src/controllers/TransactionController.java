@@ -390,6 +390,9 @@ public class TransactionController {
 				int daysOverdue = TransactionDAO
 						.getDaysOverdue(selectedBookTransactions
 								.get(selectedRows.length - 1));
+				if (daysOverdue < 0) {
+					daysOverdue = 0;
+				}
 				inPanel.getLblDaysOverdue().setText(
 						"Days Overdue: " + daysOverdue);
 				if (daysOverdue > 0) {

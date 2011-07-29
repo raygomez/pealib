@@ -31,7 +31,7 @@ public class OutgoingPanel extends JPanel {
 		grantButton.setEnabled(false);
 		
 		denyButton = new JButton("Deny", new ImageIcon("resources/images/Delete.png"));
-		buttonPanel.add(denyButton, "cell 1 0,alignx left,aligny top");
+		buttonPanel.add(denyButton, "cell 1 0,alignx left,aligny center");
 		denyButton.setEnabled(false);
 	}
 
