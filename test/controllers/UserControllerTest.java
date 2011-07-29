@@ -60,7 +60,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertNotNull(userControlOrdinary);
 	}
 
-	@Ignore
 	@Test
 	public void testInitialUserTab() {
 		assertNotNull(tabGroup);
@@ -96,7 +95,6 @@ public class UserControllerTest extends UISpecTestCase {
 		tabGroup.selectTab("Pending Applications");
 	}
 
-	@Ignore
 	@Test
 	public void testInitialPendingTab() {
 		tabGroup.selectTab("Pending Applications");
@@ -124,7 +122,6 @@ public class UserControllerTest extends UISpecTestCase {
 
 	}
 
-	@Ignore
 	@Test
 	public void testShowUserProfile() {
 		tabGroup.selectTab("User Accounts");
@@ -133,7 +130,6 @@ public class UserControllerTest extends UISpecTestCase {
 				userControl.getUserInfoPanel());
 	}
 
-	@Ignore
 	@Test
 	public void testSelectAllPendingThroughSelectAll() {
 		tabGroup.selectTab("Pending Applications");
@@ -146,7 +142,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(pendingTable.columnEquals(2, new Object[] { true, true }));
 	}
 
-	@Ignore
 	@Test
 	@ExpectedDataSet({ "../models/expected/acceptAllPendingUser.xml" })
 	public void testAcceptAllPendingThroughSelectAll() {
@@ -163,7 +158,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(pendingTable.rowCountEquals(0));
 	}
 
-	@Ignore
 	@Test
 	@ExpectedDataSet({ "../models/expected/acceptAllPendingUser.xml" })
 	public void testAcceptAllPendingThroughCheckBox() {
@@ -179,7 +173,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(pendingTable.rowCountEquals(0));
 	}
 
-	@Ignore
 	@Test
 	@ExpectedDataSet({ "../models/expected/denyAllPendingUser.xml" })
 	public void testDenyAllPendingThroughCheckBox() {
@@ -195,7 +188,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(pendingTable.rowCountEquals(0));
 	}
 
-	@Ignore
 	@Test
 	@ExpectedDataSet({ "../models/expected/denyAllPendingUser.xml" })
 	public void testDenyAllPendingThroughSelectAll() {
@@ -300,7 +292,7 @@ public class UserControllerTest extends UISpecTestCase {
 				dialog.getPasswordField("newpassword").setPassword("1234567");
 				dialog.getPasswordField("repeatpassword")
 						.setPassword("1234567");
-				dialog.getButton("Change Password").triggerClick();
+				dialog.getButton("Change Password").click();
 				assertTrue(dialog.containsLabel("Incorrect password"));
 				return dialog.getButton("Cancel").triggerClick();
 			}
@@ -308,7 +300,6 @@ public class UserControllerTest extends UISpecTestCase {
 		}).run();
 	}
 
-	@Ignore
 	@Test
 	public void testSelectAllPendingThroughCheckbox() {
 		tabGroup.selectTab("Pending Applications");
@@ -322,7 +313,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(tabGroup.getSelectedTab().getCheckBox().isSelected());
 	}
 
-	@Ignore
 	@Test
 	public void testSelectAllThenUnselectAllPending() {
 		tabGroup.selectTab("Pending Applications");
@@ -335,7 +325,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(pendingTable.columnEquals(2, new Object[] { false, false }));
 	}
 
-	@Ignore
 	@Test
 	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserEnd.xml" })
 	public void testAcceptOnePendingEnd() {
@@ -350,7 +339,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(pendingTable.rowCountEquals(1));
 	}
 
-	@Ignore
 	@Test
 	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserStart.xml" })
 	public void testAcceptOnePendingStart() {
@@ -364,4 +352,57 @@ public class UserControllerTest extends UISpecTestCase {
 
 		assertThat(pendingTable.rowCountEquals(1));
 	}
+	
+	
+	@Test
+	public void testChangePasswordNotMatch() {
+		final Button changePasswordButton = userInfoPanelOrdinary
+				.getButton("Change Password");
+		WindowInterceptor.init(new Trigger() {
+
+			@Override
+			public void run() throws Exception {
+				changePasswordButton.click();
+
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {
+				assertThat(dialog.getPasswordField("oldpassword").isEnabled());
+				dialog.getPasswordField("oldpassword").setPassword("123456");
+				dialog.getPasswordField("newpassword").setPassword("1234567");
+				dialog.getPasswordField("repeatpassword").setPassword("1234467");
+				dialog.getButton("Change Password").click();
+				assertTrue(dialog.containsLabel("New passwords do not match"));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+
+		}).run();
+	}
+	
+	@Test
+	public void testChangePasswordInvalidFormat() {
+		final Button changePasswordButton = userInfoPanelOrdinary
+				.getButton("Change Password");
+		WindowInterceptor.init(new Trigger() {
+
+			@Override
+			public void run() throws Exception {
+				changePasswordButton.click();
+
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {
+				assertThat(dialog.getPasswordField("oldpassword").isEnabled());
+				dialog.getPasswordField("oldpassword").setPassword("123456");
+				dialog.getPasswordField("newpassword").setPassword("1234");
+				dialog.getPasswordField("repeatpassword").setPassword("1234");
+				dialog.getButton("Change Password").click();
+				assertTrue(dialog.containsLabel("Invalid password. Passwords should be 6-20 characters long."));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+
+		}).run();
+	}
 }
+
+
