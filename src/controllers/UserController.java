@@ -73,8 +73,12 @@ public class UserController {
 		checkList = new ArrayList<Integer>();
 		
 		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]","[grow]"));
-		userSearch = new UserSearchPanel(new UserSearchTableModel(USER, ""), new UserSearchTableModel(PENDING, ""));
-		
+		userSearch = new UserSearchPanel();
+		userSearch.setModelUsers(new UserSearchTableModel(USER, ""));
+		userSearch.setModelPending(new UserSearchTableModel(PENDING, ""));
+		//(new UserSearchTableModel(USER, ""), new UserSearchTableModel(PENDING, ""));
+		userSearch.usersPanel();
+		userSearch.pendingAppPanel();
 		userSearch.addListeners(new SearchListener(),
 				new SearchKeyListener(), new TabChangeListener(),
 				new UserSelectionListener(), new CheckBoxListener(),
@@ -194,7 +198,7 @@ public class UserController {
 
 			if (tab == USER ) {
 				setInitSelectUser();
-			} else if (tab == PENDING)
+			} else
 				setInitSelectPending();
 
 		} catch (Exception e) {  CrashHandler.handle(e); }
@@ -225,11 +229,10 @@ public class UserController {
 				setInitSelectUser();	
 				userInfoPanel.setEnableFields(true);
 				
-			} else if (index == 1) {
+			} else {
 				userSearch.getCbAll().setSelected(false);
 				checkList.clear();
 				
-				//TODO
 				setInitSelectPending();
 				if (!searchedPending.isEmpty()) {														
 					userSearch.togglePendingButtons(false);					
@@ -257,7 +260,7 @@ public class UserController {
 			public void actionPerformed(ActionEvent e) {
 				timer.stop();
 				searchText = userSearch.getFieldSearch().getText();
-				//TODO 
+
 				if (searchText.length() >= 0)
 					searchUsers();
 			}
@@ -278,7 +281,6 @@ public class UserController {
 		}
 	}
 
-	//TODO Table Model
 	/**
 	 * Table Model for User Search (Pending & Active User Accounts)
 	 */
@@ -308,7 +310,6 @@ public class UserController {
 			try {
 				searchedPending = UserDAO.searchAllPending(searchStr);
 
-				//TODO
 				if (!searchedPending.isEmpty()) {
 					for (User i : searchedPending) {
 						ArrayList<Object> rowData = new ArrayList<Object>();
@@ -335,7 +336,6 @@ public class UserController {
 
 			searchedUsers  = UserDAO.searchActiveUsers(searchStr);
 
-			//TODO
 			if (!searchedUsers.isEmpty()) {
 				for (User i : searchedUsers) {
 	
@@ -359,12 +359,10 @@ public class UserController {
 			if (!(Boolean) value) {
 				userSearch.getCbAll().setSelected(false);
 
-				//TODO
 				if (checkList.contains(row)) {
 					checkList.remove((Object) row);
 				}
 			} else {
-				//TODO
 				if (!checkList.contains(row)) {
 					checkList.add(row);
 				}
