@@ -225,14 +225,14 @@ public class TransactionDAOTest {
 	public void testGetDaysOverdue() throws Exception {
 		User user = UserDAO.getUserById(3);
 		Book book = BookDAO.getBookById(2);
-		assertEquals(44, TransactionDAO.getDaysOverdue(book, user));
+		assertEquals(30, TransactionDAO.getDaysOverdue(book, user));
 	}
 
 	@Test
 	public void testGetDaysOverdueBorrowTransaction() throws Exception {
 		BorrowTransaction transaction = TransactionDAO
 				.getBorrowTransactionById(3);
-		assertEquals(44, TransactionDAO.getDaysOverdue(transaction));
+		assertEquals(30, TransactionDAO.getDaysOverdue(transaction));
 	}
 
 	@Test
