@@ -1,7 +1,5 @@
 package controllers;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -9,7 +7,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListSelectionModel;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -18,7 +15,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import net.miginfocom.swing.MigLayout;
-import utilities.Connector;
 import utilities.Constants;
 import utilities.IsbnChecker;
 import views.AddBookDialog;
@@ -28,7 +24,6 @@ import models.Book;
 import models.BookDAO;
 import models.TransactionDAO;
 import models.User;
-import models.UserDAO;
 
 public class BookController {
 
