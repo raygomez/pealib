@@ -4,6 +4,7 @@ import models.User;
 import models.UserDAO;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.ToggleButton;
@@ -31,6 +32,7 @@ public class PeaLibraryUserTest extends UISpecTestCase {
 		
 	}
 
+	@Ignore
 	@Test
 	public void testSidebar() {
 		ToggleButton searchBooksButton = window.getToggleButton("Search Books");
