@@ -247,7 +247,8 @@ public class PeaLibrary {
 				frame.setContentPanel(transactionControl.getTabbedPane());
 			} else if (getCurrentUser().getType().equals("User")) {
 				try {
-					frame.setContentPanel(elibControl.getView());
+					frame.setContentPanel(elibControl.getTabPane());
+					elibControl.update();
 				} catch (Exception e) {
 					CrashHandler.handle(e);
 				}

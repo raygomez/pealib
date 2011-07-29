@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
@@ -22,8 +23,11 @@ import models.User;
 
 import org.joda.time.DateTime;
 
+import pealib.PeaLibrary;
+
 import utilities.Constants;
 import utilities.CrashHandler;
+import utilities.Task;
 import views.ELibTabbedPanel;
 
 public class ELibController {
@@ -82,8 +86,7 @@ public class ELibController {
 		this.bookDataReserve = bookDataReserve;
 	}
 
-	public ELibTabbedPanel getView() throws Exception {
-		update();
+	public ELibTabbedPanel getTabPane() throws Exception {
 		return tabpane;
 	}
 
@@ -113,17 +116,42 @@ public class ELibController {
 		}
 	}
 
-	private void update() throws Exception {
-		int tab = tabpane.getSelectedTab();
-		ELibTableModel model = new ELibTableModel(tab);
-		tabpane.setTableModel(tab, model);
+	public void update() throws Exception {
+		
+		tabpane.getRequestTable().setVisible(false);
+		
+		Callable<Void> toDo = new Callable<Void>() {
 
-		tabpane.setCellRenderer(tab, new CancelButtonRenderer());
-		if (tab == REQUEST) {
-			tabpane.setCellEditor(tab, new CancelRequestButtonEditor());
-		} else if (tab == RESERVE) {
-			tabpane.setCellEditor(tab, new CancelReservationButtonEditor());
-		}
+			@Override
+			public Void call() throws Exception {
+
+				int tab = tabpane.getSelectedTab();
+				ELibTableModel model = new ELibTableModel(tab);
+				tabpane.setTableModel(tab, model);
+
+				tabpane.setCellRenderer(tab, new CancelButtonRenderer());
+				if (tab == REQUEST) {
+					tabpane.setCellEditor(tab, new CancelRequestButtonEditor());
+				} else if (tab == RESERVE) {
+					tabpane.setCellEditor(tab, new CancelReservationButtonEditor());
+				}
+				
+				return null;
+			}
+		};
+		
+		Callable<Void> toDoAfter = new Callable<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				tabpane.getRequestTable().setVisible(true);
+				return null;
+			}
+		};
+		
+		Task<Void, Object> task = new Task<Void, Object>(toDo, toDoAfter);
+		LoadingControl.init(task, PeaLibrary.getMainFrame()).executeLoading();
+		
 	}
 
 	class ELibTableModel extends AbstractTableModel {

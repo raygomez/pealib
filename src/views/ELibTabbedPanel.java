@@ -244,4 +244,19 @@ public class ELibTabbedPanel extends JPanel {
 		scrollPane.setSize(10, 10);
 		reservePanel.add(scrollPane);
 	}
+
+	public JTable getTableByTab(int tab) {
+		// TODO Auto-generated method stub
+		switch(tab){
+			case 0:
+				return requestTable;
+			case 1:
+				return reserveTable;
+			case 2:
+				return onloanTable;
+			case 3:
+				return historyTable;
+		}
+		return historyTable;
+	}
 }
