@@ -53,6 +53,15 @@ public class UserSearchPanel extends JPanel {
 		this.modelUsers = modelUsers;
 	}
 	
+	public JPanel getPendingPane() {
+		return pendingPane;
+	}
+
+	public JPanel getUsersPane() {
+		return usersPane;
+	}
+
+	
 	/**
 	 * Create the panel.
 	 */
@@ -74,6 +83,7 @@ public class UserSearchPanel extends JPanel {
 		usersPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
 
 		usersTable = new JTable(modelUsers);
+		//usersTable = new JTable();
 		getUsersTable().setName("tableUsers");
 		setTableSettings(getUsersTable(),0);
 
@@ -87,9 +97,11 @@ public class UserSearchPanel extends JPanel {
 		pendingPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pendingPane.setLayout(new MigLayout("", "[grow]10px[40px]", "[40px]5px[40px]20px[10px][grow]"));
 
-		pendingTable = new JTable(modelPending);
+		//pendingTable = new JTable(modelPending);
+		pendingTable = new JTable();
 		getPendingTable().setName("tablePending");
-		setTableSettings(getPendingTable(),PENDING);
+		//setTableSettings(getPendingTable(),PENDING);
+		toggleAllPendingComp(false);
 
 		JScrollPane scrollPane = new JScrollPane(getPendingTable());
 		scrollPane.setName("scrollPane");
