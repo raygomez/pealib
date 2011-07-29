@@ -20,7 +20,6 @@ import models.UserDAO;
 import utilities.Constants;
 import utilities.Emailer;
 import utilities.Task;
-import views.LoadingDialog;
 import views.LogInDialog;
 import views.SignUpDialog;
 
@@ -274,9 +273,6 @@ public class AuthenticationController {
 			}
 		};
 		
-		Task<Void, Void> task = new Task<Void, Void>(toDo);
-		LoadingControl.init(task, getLogin()).executeLoading();
-		
 		int maskedLabel = 0;
 		signUp.setFieldBorderColor(maskedLabel);
 		signUp.setLblErrorMessage("");
@@ -297,7 +293,8 @@ public class AuthenticationController {
 			signUp.getTxtfldPassword().setText("");
 			signUp.getTxtfldConfirmPassword().setText("");
 		} else {
-			task.execute();
+			Task<Void, Void> task = new Task<Void, Void>(toDo);
+			LoadingControl.init(task, getLogin()).executeLoading();
 		}
 	}
 
@@ -469,7 +466,7 @@ public class AuthenticationController {
 		public void mouseClicked(MouseEvent e) {
 			String userOrEmail = (String)JOptionPane.showInputDialog(
 					getLogin(),
-                    "Please enter your usernamer or email",
+                    "Please enter your username or email",
                     "Forgot Password",
                     JOptionPane.PLAIN_MESSAGE);
 			if(userOrEmail != null && userOrEmail.length() > 0){
