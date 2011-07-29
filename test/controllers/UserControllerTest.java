@@ -282,9 +282,8 @@ public class UserControllerTest extends UISpecTestCase {
 				assertThat(dialog.getPasswordField("oldpassword").isEnabled());
 				dialog.getPasswordField("oldpassword").setPassword("12345678");
 				dialog.getPasswordField("newpassword").setPassword("1234567");
-				dialog.getPasswordField("repeatpassword")
-						.setPassword("1234567");
-				dialog.getButton("Change Password").triggerClick();
+				dialog.getPasswordField("repeatpassword").setPassword("1234567");
+				dialog.getButton("Change Password").click();
 				assertTrue(dialog.containsLabel("Incorrect Password"));
 				return dialog.getButton("Cancel").triggerClick();
 			}
