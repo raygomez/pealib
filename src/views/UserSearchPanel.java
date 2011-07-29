@@ -45,13 +45,18 @@ public class UserSearchPanel extends JPanel {
 		
 	public JCheckBox getCbAll() { return allCheckBox; }
 	
+	public void setModelPending(TableModel modelPending) {
+		this.modelPending = modelPending;
+	}
+
+	public void setModelUsers(TableModel modelUsers) {
+		this.modelUsers = modelUsers;
+	}
+	
 	/**
 	 * Create the panel.
 	 */
-	public UserSearchPanel(AbstractTableModel model1, AbstractTableModel model2) {
-		modelUsers = model1;
-		modelPending = model2;
-
+	public UserSearchPanel() {
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new MigLayout("", "[60px][300px]10px[][grow]", "[]20px[][grow]"));
 
@@ -62,12 +67,9 @@ public class UserSearchPanel extends JPanel {
 		tabbedPane.addTab("Pending Applications", new ImageIcon("resources/images/pending.png"), pendingPane);
 
 		add(tabbedPane, "cell 0 1, span 4 3,grow");
-				
-		usersPanel();
-		pendingAppPanel();
 	}
 	
-	private void usersPanel() {
+	public void usersPanel() {
 		usersPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		usersPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
 
@@ -81,7 +83,7 @@ public class UserSearchPanel extends JPanel {
 		usersPane.add(scrollPane, "grow");
 	}
 
-	private void pendingAppPanel() {
+	public void pendingAppPanel() {
 		pendingPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pendingPane.setLayout(new MigLayout("", "[grow]10px[40px]", "[40px]5px[40px]20px[10px][grow]"));
 
