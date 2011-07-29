@@ -4,14 +4,17 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 
-public class LoadingDialog extends JDialog {
+public class LoadingDialog extends JDialog implements PropertyChangeListener {
 
 	/**
 	 * 
@@ -51,9 +54,25 @@ public class LoadingDialog extends JDialog {
 		pack();	
 	}
 	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		if(evt.getPropertyName().equalsIgnoreCase("state")){
+			if(evt.getNewValue().equals(SwingWorker.StateValue.STARTED)){
+				setVisible(true);
+			}
+			else if(evt.getNewValue().equals(SwingWorker.StateValue.DONE)){
+				setVisible(false);
+				dispose();
+			}
+		}
+	}
+	
 	public static void main(String[] args){
 		
 		new LoadingDialog().setVisible(true);
 		
 	}
+
+	
 }

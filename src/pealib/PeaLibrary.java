@@ -10,7 +10,6 @@ import utilities.Connector;
 import utilities.CrashHandler;
 import utilities.Emailer;
 import utilities.Task;
-import utilities.TaskUpdateListener;
 import views.LibrarianSidebarPanel;
 import views.LoadingDialog;
 import views.MainFrame;
@@ -18,12 +17,13 @@ import views.UserSidebarPanel;
 import controllers.AuthenticationController;
 import controllers.BookController;
 import controllers.ELibController;
+import controllers.LoadingControl;
 import controllers.TransactionController;
 import controllers.UserController;
 
 public class PeaLibrary {
 
-	private MainFrame frame;
+	private static MainFrame frame;
 	private AuthenticationController authControl;
 	private UserController userControl;
 	private BookController bookControl;
@@ -59,7 +59,7 @@ public class PeaLibrary {
 		this.currentUser = currentUser;
 	}
 
-	public MainFrame getMainFrame() {
+	public static MainFrame getMainFrame() {
 		return frame;
 	}
 
@@ -88,9 +88,7 @@ public class PeaLibrary {
 		};
 		
 		Task<Void, Void> task = new Task<Void, Void>(toDo, toDoAfter);
-		task.addPropertyChangeListener(new TaskUpdateListener(new LoadingDialog(frame)));
-		
-		task.execute();
+		LoadingControl.init(task, frame).executeLoading();
 	}
 
 	public void initialize() {
