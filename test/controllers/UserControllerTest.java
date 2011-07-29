@@ -59,7 +59,7 @@ public class UserControllerTest extends UISpecTestCase {
 		assertNotNull(userControlOrdinary);
 	}
 
-/*	@Test
+	@Test
 	public void testInitialUserTab() {
 		assertNotNull(tabGroup);
 		assertThat(tabGroup.isEnabled());
@@ -265,7 +265,7 @@ public class UserControllerTest extends UISpecTestCase {
 
 				}).run();
 	}
-*/
+
 	@Test
 	public void testChangePasswordIncorrectOld() {
 		final Button changePasswordButton = userInfoPanelOrdinary
