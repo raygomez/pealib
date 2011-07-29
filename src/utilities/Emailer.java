@@ -28,7 +28,7 @@ public class Emailer {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		// new Connector(Constants.TEST_CONFIG);
+		// Connector.init(Constants.TEST_CONFIG);
 		// User user = null;
 		// try {
 		// user = UserDAO.getUserById(1);

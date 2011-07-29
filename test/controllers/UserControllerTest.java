@@ -36,7 +36,7 @@ public class UserControllerTest extends UISpecTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 		Emailer.setOn(false);
 
 		User user = UserDAO.getUserById(2);

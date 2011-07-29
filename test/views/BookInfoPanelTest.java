@@ -30,7 +30,7 @@ public class BookInfoPanelTest extends UISpecTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		new Connector(Constants.TEST_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 
 		book = BookDAO.getBookById(1);
 		user = UserDAO.getUserById(1);
