@@ -54,14 +54,14 @@ public class BookSearchPanel extends JPanel {
 		
 		btnClear = new JButton("Clear", new ImageIcon("resources/images/edit_clear.png"));
 		add(btnClear, "cell 2 1,grow");
-		tableBookList = new JTable();
-		tableBookList.setName("tableList");
-		tableBookList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableBookList.setRowHeight(28);
+		setTableBookList(new JTable());
+		getTableBookList().setName("tableList");
+		getTableBookList().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		getTableBookList().setRowHeight(28);
 		
-		add(new JScrollPane(tableBookList), "cell 0 4 3 1,grow");
-		tableBookList.getTableHeader().setReorderingAllowed(false);
-		tableBookList.getTableHeader().setResizingAllowed(false);		
+		add(new JScrollPane(getTableBookList()), "cell 0 4 3 1,grow");
+		getTableBookList().getTableHeader().setReorderingAllowed(false);
+		getTableBookList().getTableHeader().setResizingAllowed(false);		
 	}
 	
 	public void setSearchButtonListener(ActionListener search) {
@@ -99,7 +99,11 @@ public class BookSearchPanel extends JPanel {
 	}
 	
 	public void addBookSelectionListener(ListSelectionListener listener){
-		tableBookList.getSelectionModel().addListSelectionListener(listener);
+		getTableBookList().getSelectionModel().addListSelectionListener(listener);
+	}
+
+	public void setTableBookList(JTable tableBookList) {
+		this.tableBookList = tableBookList;
 	}
 	
 }

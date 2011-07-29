@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import models.UserDAO;
 import models.User;
@@ -12,7 +13,9 @@ import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Emailer;
+import utilities.Task;
 import views.ChangePasswordDialog;
+import views.LoadingDialog;
 import views.UserInfoPanel;
 import views.UserSearchPanel;
 import javax.swing.*;
@@ -21,6 +24,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+
+import pealib.PeaLibrary;
 
 public class UserController {
 
@@ -77,7 +82,7 @@ public class UserController {
 		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]","[grow]"));
 		userSearch = new UserSearchPanel();
 		userSearch.setModelUsers(new UserSearchTableModel(USER, ""));
-		userSearch.setModelPending(new UserSearchTableModel(PENDING, ""));
+		//userSearch.setModelPending(new UserSearchTableModel(PENDING, ""));
 
 		userSearch.usersPanel();
 		userSearch.pendingAppPanel();
@@ -187,7 +192,8 @@ public class UserController {
 	 * Method: Enabling/Disabling buttons in Pending - Search & Info
 	 */	
 	private void configurePendingUI(){
-		if (!searchedPending.isEmpty()) {														
+		if (!searchedPending.isEmpty()) {
+			userSearch.getCbAll().setEnabled(true);
 			userSearch.togglePendingButtons(false);					
 		} else {
 			userSearch.toggleAllPendingComp(false);
@@ -222,19 +228,38 @@ public class UserController {
 	 * Method: search for users & generating a new table model
 	 */
 	private void searchUsers() {
-		int tab = userSearch.getSelectedTab();
-		searchText = userSearch.getFieldSearch().getText();
+		
+		Callable<Void> toDo = new Callable<Void>() {
 
-		try {
-			UserSearchTableModel model = new UserSearchTableModel(tab, searchText);
-			userSearch.setTableModel(tab, model);	
+			@Override
+			public Void call() throws Exception {
+				int tab = userSearch.getSelectedTab();
+				
+				if(tab == USER) userSearch.getUsersTable().setVisible(false);
+				else userSearch.getPendingTable().setVisible(false);
+						
+				searchText = userSearch.getFieldSearch().getText();
 
-			if (tab == USER ) {
-				setInitSelectUser();
-			} else
-				setInitSelectPending();
+				try {
+					UserSearchTableModel model = new UserSearchTableModel(tab, searchText);
+					userSearch.setTableModel(tab, model);	
+					
+					if (tab == USER ) {
+						userSearch.getUsersTable().setVisible(true);
+						setInitSelectUser();
+					} else{
+						userSearch.getPendingTable().setVisible(true);
+						setInitSelectPending();
+					}
 
-		} catch (Exception e) {  CrashHandler.handle(e); }
+				} catch (Exception e) {  CrashHandler.handle(e); }
+				return null;
+			}
+		};
+		
+		Task<Void, Object> task = new Task<Void, Object>(toDo);
+		
+		LoadingControl.init(task, PeaLibrary.getMainFrame()).executeLoading();
 	}
 	/**
 	 * Method: Listener when changing tabs - refresh table
@@ -246,17 +271,16 @@ public class UserController {
 			int index = temp.getSelectedIndex();
 			//TODO
 			searchUsers();
-
+			
 			if (index == 0) {
 				setInitSelectUser();	
 				userInfoPanel.setEnableFields(true);
 				
 			} else {
-				userSearch.getCbAll().setSelected(false);
-				checkList.clear();
-				
 				setInitSelectPending();
 				configurePendingUI();
+				userSearch.getCbAll().setSelected(false);
+				checkList.clear();								
 			}
 		}
 	}

@@ -53,6 +53,15 @@ public class UserSearchPanel extends JPanel {
 		this.modelUsers = modelUsers;
 	}
 	
+	public JPanel getPendingPane() {
+		return pendingPane;
+	}
+
+	public JPanel getUsersPane() {
+		return usersPane;
+	}
+
+	
 	/**
 	 * Create the panel.
 	 */
@@ -62,7 +71,7 @@ public class UserSearchPanel extends JPanel {
 
 		add(searchTextField, "cell 1 0");
 		add(searchButton, "cell 2 0");
-		
+
 		tabbedPane.addTab("User Accounts", new ImageIcon("resources/images/useraccounts.png"), usersPane);
 		tabbedPane.addTab("Pending Applications", new ImageIcon("resources/images/pending.png"), pendingPane);
 
@@ -89,9 +98,10 @@ public class UserSearchPanel extends JPanel {
 		pendingPane.setLayout(new MigLayout("", "[grow]10px[40px]", "[40px]5px[40px]20px[10px][grow]"));
 		pendingPane.setName("pendingPane");
 		
-		pendingTable = new JTable(modelPending);
+		pendingTable = new JTable();
 		getPendingTable().setName("tablePending");
-		setTableSettings(getPendingTable(),PENDING);
+		
+		toggleAllPendingComp(false);
 
 		JScrollPane scrollPane = new JScrollPane(getPendingTable());
 		scrollPane.setName("scrollPane");
