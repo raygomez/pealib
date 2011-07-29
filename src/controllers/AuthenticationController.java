@@ -466,7 +466,7 @@ public class AuthenticationController {
 		public void mouseClicked(MouseEvent e) {
 			String userOrEmail = (String)JOptionPane.showInputDialog(
 					getLogin(),
-                    "Please enter your usernamer or email",
+                    "Please enter your username or email",
                     "Forgot Password",
                     JOptionPane.PLAIN_MESSAGE);
 			if(userOrEmail != null && userOrEmail.length() > 0){
