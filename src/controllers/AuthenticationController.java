@@ -484,11 +484,20 @@ public class AuthenticationController {
 							.randomAlphanumeric(8));
 						UserDAO.changePassword(user.getUserId(),
 							user.getPassword());
-						Emailer.sendForgetPasswordEmail(user);
-						JOptionPane.showMessageDialog(getLogin(),
-							"Check your email for your new password.",
-							"Forgot Password",
-							JOptionPane.INFORMATION_MESSAGE);
+						boolean boolConnect = Emailer.sendForgetPasswordEmail(user);
+						System.out.println(boolConnect);
+						if(boolConnect){
+							JOptionPane.showMessageDialog(getLogin(),
+								"Check your email for your new password.",
+								"Forgot Password",
+								JOptionPane.INFORMATION_MESSAGE);
+						}else{
+							JOptionPane.showMessageDialog(getLogin(),
+								"Internet Connection Error:\n" +
+								"Please check if you have a internet connection.",
+								"Forgot Password",
+								JOptionPane.ERROR_MESSAGE);
+						}
 					} else {
 						JOptionPane.showMessageDialog(getLogin(),
 							"Username or email is invalid.", 
