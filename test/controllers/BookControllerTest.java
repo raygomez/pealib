@@ -4,6 +4,7 @@ import models.User;
 import models.UserDAO;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
@@ -65,6 +66,7 @@ public class BookControllerTest extends UISpecTestCase {
 	}
 
 	@Test
+	@Ignore
 	public void testAddEmptyFields() throws Exception {
 		Button addBook = librarianPanel.getButton("Add Book");
 
@@ -80,6 +82,7 @@ public class BookControllerTest extends UISpecTestCase {
 	}
 
 	@Test
+	@Ignore
 	public void testAddg100Char() throws Exception {
 		Button addBook = librarianPanel.getButton("Add Book");
 
@@ -138,6 +141,7 @@ public class BookControllerTest extends UISpecTestCase {
 
 	}
 	
+	@Ignore
 	@Test
 	public void testAddValid() throws Exception {
 		Button addBook = librarianPanel.getButton("Add Book");
@@ -166,7 +170,8 @@ public class BookControllerTest extends UISpecTestCase {
 				}).run();
 
 	}
-
+	
+	@Ignore
 	@Test
 	@DataSet({ "../models/noCopybook.xml" })
 	public void testExistingISBN() throws Exception {
@@ -197,6 +202,7 @@ public class BookControllerTest extends UISpecTestCase {
 
 	}
 	
+	@Ignore
 	@Test
 	public void testReserves() throws Exception{
 		Panel bookSearch = new Panel(bookControllerUser.getBookSearch());
@@ -208,6 +214,7 @@ public class BookControllerTest extends UISpecTestCase {
 		assertFalse(bookInfo.getButton("Borrow").isEnabled());
 	}
 
+	@Ignore
 	@Test
 	public void testBorrow() throws Exception{
 		Panel bookSearch = new Panel(bookControllerUser.getBookSearch());
@@ -220,7 +227,7 @@ public class BookControllerTest extends UISpecTestCase {
 		assertFalse(bookInfo.getButton("Borrow").isEnabled());
 	}
 
-
+	@Ignore
 	@Test
 	@DataSet({ "../models/noCopybook.xml" })
 	public void testValidSave() throws Exception{
@@ -249,6 +256,7 @@ public class BookControllerTest extends UISpecTestCase {
 		bookInfo.getButton("Save").click();
 	}
 
+	@Ignore
 	@Test
 	public void testValid2Save() throws Exception{
 		librarian = UserDAO.getUserById(2);
@@ -264,6 +272,7 @@ public class BookControllerTest extends UISpecTestCase {
 		bookInfo.getButton("Save").click();
 	}
 
+	@Ignore
 	@Test
 	public void testInvalidSave() throws Exception{
 		librarian = UserDAO.getUserById(2);
@@ -322,6 +331,7 @@ public class BookControllerTest extends UISpecTestCase {
 				bookInfo.getButton("Save").click();
 	}
 	
+	@Ignore
 	@Test
 	public void testEmptyYrSave() throws Exception{
 		librarian = UserDAO.getUserById(2);
@@ -339,6 +349,7 @@ public class BookControllerTest extends UISpecTestCase {
 		bookInfo.getButton("Save").click();
 	}
 
+	@Ignore
 	@Test
 	@DataSet({ "../models/noCopybook.xml" })
 	public void testCopy0Save() throws Exception{
@@ -353,6 +364,7 @@ public class BookControllerTest extends UISpecTestCase {
 		bookInfo.getButton("Save").click();
 	}
 
+	@Ignore
 	@Test
 	public void testYesDelete() throws Exception{
 		librarian = UserDAO.getUserById(2);
@@ -372,6 +384,8 @@ public class BookControllerTest extends UISpecTestCase {
 			}
 		}).run();
 	}
+	
+	@Ignore
 	@Test
 	public void testNoDelete() throws Exception{
 		librarian = UserDAO.getUserById(2);
@@ -391,6 +405,7 @@ public class BookControllerTest extends UISpecTestCase {
 			}
 		}).run();
 	}
+	@Ignore
 	@Test
 	@DataSet({ "../models/noCopybook.xml" })
 	public void testNoCopyBookTable() throws Exception {
