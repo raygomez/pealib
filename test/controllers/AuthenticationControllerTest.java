@@ -3,9 +3,11 @@ package controllers;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import java.awt.Color;
+
 import javax.swing.BorderFactory;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
@@ -13,7 +15,6 @@ import org.uispec4j.Key;
 import org.uispec4j.PasswordField;
 import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
-import org.uispec4j.UISpec4J;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
 import org.uispec4j.interception.WindowHandler;
@@ -37,6 +38,49 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		new AuthenticationController();
 		window = new Window(AuthenticationController.getLogin());
 
+	}
+
+	@Test
+	@ExpectedDataSet({ "../models/expected/saveUser.xml" })
+	public void testSignUpSuccessful() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(final Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText(
+						"Janine June");
+				dialog.getInputTextBox("lastNameTextField").setText("Lim");
+				dialog.getInputTextBox("userNameTextField").setText("jlim");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"1234567");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("1234567");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"jlim@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"1234567890");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+				return new Trigger() {
+					@Override
+					public void run() throws Exception {
+						dialog.getInputTextBox("addressTextField").releaseKey(
+								Key.ENTER);
+					}
+
+				};
+			}
+		}).processTransientWindow().process(new WindowHandler() {
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "<html>Your account has been created."
+						+ "<br>Please wait for the Librarian to activate "
+						+ "your account.";
+				assertTrue(actual.equals(expected));
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();
 	}
 
 	@Test
@@ -189,8 +233,13 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		TextBox labelError = window.getTextBox("labelError");
 		username.setText("jvillar");
 		password.setPassword("123456");
-		Button login = window.getButton("Log In");
-		login.click();
+		final Button login = window.getButton("Log In");
+
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				login.click();
+			}
+		}).processTransientWindow().run();
 
 		assertReflectionEquals(
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
@@ -239,8 +288,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				dialog.getInputTextBox("addressTextField").setText("USA");
 
 				dialog.getInputTextBox("userNameTextField").setText("ab");
-				dialog.getInputTextBox("userNameTextField").releaseKey(
-						Key.C);
+				dialog.getInputTextBox("userNameTextField").releaseKey(Key.C);
 				dialog.getInputTextBox("userNameTextField").releaseKey(
 						Key.ENTER);
 				String error = dialog.getTextBox("errorMessageLabel").getText();
@@ -282,6 +330,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	}
 
 	@Test
+	@Ignore
 	public void testSignUpErrorWhileCheckingUsername() throws Exception {
 		WindowInterceptor.init(new Trigger() {
 			public void run() {
@@ -493,50 +542,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				assertTrue(dialog.getPasswordField("confirmPasswordTextField")
 						.passwordEquals(""));
 				return dialog.getButton("Cancel").triggerClick();
-			}
-		}).run();
-	}
-
-	@Test
-	@ExpectedDataSet({ "../models/expected/saveUser.xml" })
-	public void testSignUpSuccessful() throws Exception {
-		WindowInterceptor.init(new Trigger() {
-			public void run() {
-				window.getButton("Sign Up").click();
-			}
-		}).process(new WindowHandler() {
-			public Trigger process(final Window dialog) {
-				dialog.getInputTextBox("firstNameTextField").setText(
-						"Janine June");
-				dialog.getInputTextBox("lastNameTextField").setText("Lim");
-				dialog.getInputTextBox("userNameTextField").setText("jlim");
-				dialog.getPasswordField("passwordTextField").setPassword(
-						"1234567");
-				dialog.getPasswordField("confirmPasswordTextField")
-						.setPassword("1234567");
-				dialog.getInputTextBox("emailAddressTextField").setText(
-						"jlim@gmail.com");
-				dialog.getInputTextBox("contactNumberTextField").setText(
-						"1234567890");
-				dialog.getInputTextBox("addressTextField").setText("USA");
-				return new Trigger() {
-					@Override
-					public void run() throws Exception {
-						dialog.getInputTextBox("addressTextField").releaseKey(
-								Key.ENTER);
-					}
-
-				};
-			}
-		}).processTransientWindow().process(new WindowHandler() {
-			public Trigger process(Window dialog) {
-				String actual = dialog.getTextBox("OptionPane.label")
-						.getText();
-				String expected = "<html>Your account has been created."
-						+ "<br>Please wait for the Librarian to activate "
-						+ "your account.";
-				assertTrue(actual.equals(expected));
-				return dialog.getButton("OK").triggerClick();
 			}
 		}).run();
 	}

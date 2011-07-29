@@ -30,7 +30,9 @@ import utilities.Emailer;
 public class UserControllerTest extends UISpecTestCase {
 
 	UserController userControl;
+	UserController userControlOrdinary;
 	Panel userInfoPanel;
+	Panel userInfoPanelOrdinary;
 	Panel userSearchPanel;
 	TabGroup tabGroup;
 
@@ -39,6 +41,7 @@ public class UserControllerTest extends UISpecTestCase {
 		Connector.init(Constants.TEST_CONFIG);
 		Emailer.setOn(false);
 
+		// librarian account
 		User user = UserDAO.getUserById(2);
 		userControl = new UserController(user);
 
@@ -47,6 +50,13 @@ public class UserControllerTest extends UISpecTestCase {
 		userSearchPanel = new Panel(userControl.getUserSearch());
 		assertNotNull(userSearchPanel);
 		tabGroup = userSearchPanel.getTabGroup();
+
+		// user account
+		User userOrdinary = UserDAO.getUserById(1);
+		userControlOrdinary = new UserController(userOrdinary);
+		userInfoPanelOrdinary = new Panel(
+				userControlOrdinary.getUserInfoPanel());
+		assertNotNull(userControlOrdinary);
 	}
 
 	@Test
@@ -202,15 +212,16 @@ public class UserControllerTest extends UISpecTestCase {
 
 	@ExpectedDataSet({ "../models/expected/changePassword.xml" })
 	@Test
-	public void testChangePassword() {
+	public void testChangePasswordLibrarian() {
 		Button changePasswordButton = userInfoPanel
 				.getButton("Change Password");
-
 		WindowInterceptor.init(changePasswordButton.triggerClick())
 				.process(new WindowHandler() {
 					public Trigger process(Window dialog) {
-						dialog.getPasswordField("newpassword").setPassword("1234567");
-						dialog.getPasswordField("repeatpassword").setPassword("1234567");
+						dialog.getPasswordField("newpassword").setPassword(
+								"1234567");
+						dialog.getPasswordField("repeatpassword").setPassword(
+								"1234567");
 						return dialog.getButton("Change Password")
 								.triggerClick();
 					}
@@ -223,6 +234,62 @@ public class UserControllerTest extends UISpecTestCase {
 					}
 
 				}).run();
+	}
+
+	@ExpectedDataSet({ "../models/expected/changePassword.xml" })
+	@Test
+	public void testChangePasswordUser() {
+		Button changePasswordButton = userInfoPanelOrdinary
+				.getButton("Change Password");
+		WindowInterceptor.init(changePasswordButton.triggerClick())
+				.process(new WindowHandler() {
+					public Trigger process(Window dialog) {
+						assertThat(dialog.getPasswordField("oldpassword")
+								.isEnabled());
+						dialog.getPasswordField("oldpassword").setPassword(
+								"123456");
+						dialog.getPasswordField("newpassword").setPassword(
+								"1234567");
+						dialog.getPasswordField("repeatpassword").setPassword(
+								"1234567");
+						return dialog.getButton("Change Password")
+								.triggerClick();
+					}
+
+				}).process(new WindowHandler() {
+					public Trigger process(Window dialog) {
+						assertThat(dialog
+								.containsLabel("Password successfully changed!"));
+						return dialog.getButton("OK").triggerClick();
+					}
+
+				}).run();
+	}
+
+	@Test
+	public void testChangePasswordIncorrectOld() {
+		final Button changePasswordButton = userInfoPanelOrdinary
+				.getButton("Change Password");
+		WindowInterceptor.init(new Trigger() {
+
+			@Override
+			public void run() throws Exception {
+				changePasswordButton.click();
+
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {
+				assertThat(dialog.getPasswordField("oldpassword").isEnabled());
+				dialog.getPasswordField("oldpassword").setPassword("12345678");
+				dialog.getPasswordField("newpassword").setPassword("1234567");
+				dialog.getPasswordField("repeatpassword")
+						.setPassword("1234567");
+				dialog.getButton("Change Password").triggerClick();
+				assertTrue(dialog.containsLabel("Incorrect Password"));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+
+		}).run();
 	}
 
 	@Test
@@ -249,7 +316,7 @@ public class UserControllerTest extends UISpecTestCase {
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
 		assertThat(pendingTable.columnEquals(2, new Object[] { false, false }));
 	}
-	
+
 	@Test
 	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserEnd.xml" })
 	public void testAcceptOnePendingEnd() {
@@ -262,7 +329,7 @@ public class UserControllerTest extends UISpecTestCase {
 
 		assertThat(pendingTable.rowCountEquals(1));
 	}
-	
+
 	@Test
 	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserStart.xml" })
 	public void testAcceptOnePendingStart() {

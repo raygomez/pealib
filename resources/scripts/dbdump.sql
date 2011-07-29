@@ -53,12 +53,13 @@ CREATE TABLE IF NOT EXISTS Reserves
 	FOREIGN KEY (BookID) REFERENCES Books (ID) ON DELETE CASCADE
 	);
 
-INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Ray Vincent','Gomez','ray',SHA2("rayvincent",0),'Librarian','USA','09876543210','rayvincent.gomez@gmail.com');
-INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Jomel','Villar','jvillar',SHA2("123456",0),'User','USA','1234567890','jomel.villar@gmail.com');
-INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Anmuary','Pantaleon','mutya',SHA2("anmuary",0),'User','Malabon City','09175839123','anmuary.pantaleon@gmail.com');
-INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Jonalyn','Valencia','olyn',SHA2("jonalyn",0),'User','Pasig City','09156784309','jonalyn.valencia@gmail.com');
-INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Ron Ivan','Lara','ron',SHA2("ronivan",0),'User','Quezon City','09173328750','ron.lara@gmail.com');
-INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Madelyn','Go','madz',SHA2("madelyn",0),'User','Quezon City','09173095104','madelyn.go@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Librarian','Librarian','librarian',SHA2("123456",0),'Librarian','library','1234567','librarian@library.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Ray Vincent','Gomez','rgomez',SHA2("123456",0),'User','Quezon City','09876543210','rayvincent.gomez@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Jomel Christopher','Villar','jvillar',SHA2("123456",0),'User','Quezon City','09062840750','jomel.villar@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Anmuary','Pantaleon','apantaleon',SHA2("123456",0),'User','Malabon City','09175839123','anmuarypantaleon@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Janine','Lim','jlim',SHA2("123456",0),'User','Manila City','09156784309','kanra.cpg@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Jeph','Dizon','jdizon',SHA2("123456",0),'User','Quezon City','09173328750','jjrdizon@gmail.com');
+INSERT INTO Users (FirstName, Lastname, Username, Password, Type, Address, ContactNo, Email) VALUES('Reiniel','Lozada','rlozada',SHA2("123456",0),'User','Quezon City','09173095104','nielorockz@gmail.com');
 
 INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007222556','The Alchemist','Paulo Coelho','1st','HarperCollins Publishers Limited','','1990','5');
 INSERT INTO books (ISBN, Title, Author, Edition, Publisher, Description, YearPublish, Copies) VALUES('0007155662','The Alchemist: A Fable about Following Your Dream','Paulo Coelho','1st','HarperCollins Publishers','','1991','1');
