@@ -56,5 +56,6 @@ public class UserSearchPanelTest extends UISpecTestCase {
 		assertThat(tabGroup.selectedTabEquals("User Accounts"));
 		
 		tabGroup.selectTab("Pending Applications");		
+		assertThat(tabGroup.selectedTabEquals("Pending Applications"));
 	}
 }
