@@ -1,5 +1,7 @@
 package controllers;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -20,6 +23,7 @@ import javax.swing.table.TableModel;
 import pealib.PeaLibrary;
 
 import net.miginfocom.swing.MigLayout;
+import utilities.Connector;
 import utilities.Constants;
 import utilities.IsbnChecker;
 import utilities.Task;
@@ -30,6 +34,7 @@ import models.Book;
 import models.BookDAO;
 import models.TransactionDAO;
 import models.User;
+import models.UserDAO;
 
 public class BookController {
 
@@ -46,6 +51,24 @@ public class BookController {
 		currentUser = user;
 		initialize();
 		initializePanelContent();
+	}
+	
+	public static void main(String args[]) throws Exception {
+		Connector.init(Constants.TEST_CONFIG);
+		User user = UserDAO.getUserById(2);
+
+		BookController bookController = null;
+		bookController = new BookController(user);
+
+		JFrame testFrame = new JFrame();
+		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		testFrame.setBounds(0, 0, screenSize.width, screenSize.height);
+		testFrame.setContentPane(bookController.getBookLayoutPanel());
+
+		testFrame.setVisible(true);
+		testFrame.setResizable(false);
 	}
 
 	private void initialize() throws Exception{
