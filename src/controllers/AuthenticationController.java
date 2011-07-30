@@ -176,23 +176,15 @@ public class AuthenticationController {
 		if (login_user.equals("") || login_pass.equals("")) {
 
 			getLogin().setLabelError("Incomplete fields");
-			getLogin().getFieldUsername().hasError(
-					login_user.equals("") || !validateUsername(login_user));
-			getLogin().getFieldPassword().hasError(
-					login_pass.equals("") || !validatePassword(login_pass));
+			getLogin().getFieldUsername().hasError(login_user.equals(""));
+			getLogin().getFieldPassword().hasError(login_pass.equals(""));
 
-		} else if (!validateUsername(login_user)
-				|| !validatePassword(login_pass)) {
+		} else if (!validateUsername(login_user) || !validatePassword(login_pass)) {
 			getLogin().setLabelError("Invalid input");
 		}
 
 		else {
-			try {
-				LoadingControl.init(task, getLogin()).executeLoading();
-			} catch (Exception e) {
-				System.out.println("AuthenticationController getUser: " + e);
-				getLogin().setLabelError("Connection Error!");
-			}
+			LoadingControl.init(task, getLogin()).executeLoading();
 		}
 	}
 
