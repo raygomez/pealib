@@ -30,7 +30,7 @@ public class UserSearchPanel extends JPanel {
 	private JCheckBox allCheckBox = new JCheckBox("Select All");
 
 	private JTable pendingTable, usersTable;
-	private TableModel modelPending, modelUsers;
+	private TableModel modelUsers; //, modelPending;
 
 	/*
 	 * Getters - Setters
@@ -45,22 +45,9 @@ public class UserSearchPanel extends JPanel {
 		
 	public JCheckBox getCbAll() { return allCheckBox; }
 	
-	public void setModelPending(TableModel modelPending) {
-		this.modelPending = modelPending;
-	}
+	//public void setModelPending(TableModel modelPending) { this.modelPending = modelPending; }
 
-	public void setModelUsers(TableModel modelUsers) {
-		this.modelUsers = modelUsers;
-	}
-	
-	public JPanel getPendingPane() {
-		return pendingPane;
-	}
-
-	public JPanel getUsersPane() {
-		return usersPane;
-	}
-
+	public void setModelUsers(TableModel modelUsers) { this.modelUsers = modelUsers; }
 	
 	/**
 	 * Create the panel.
