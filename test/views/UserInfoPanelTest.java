@@ -179,8 +179,9 @@ public class UserInfoPanelTest extends UISpecTestCase {
 		UserInfoPanel uip = new UserInfoPanel();
 		Panel p = new Panel(uip);
 
-		uip.setFields(user.getType(), user.getUserId()+"", user.getUserName(), user.getFirstName(), user.getLastName(),
-				user.getAddress(), user.getContactNo(), user.getEmail());
+		uip.setFields(user);
+//		uip.setFields(user.getType(), user.getUserId()+"", user.getUserName(), user.getFirstName(), user.getLastName(),
+//				user.getAddress(), user.getContactNo(), user.getEmail());
 
 		String[] fieldEntries = { user.getType(), user.getUserId()+"", user.getUserName(), user.getFirstName(), user.getLastName(),
 				user.getAddress(), user.getContactNo(), user.getEmail() };
