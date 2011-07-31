@@ -45,7 +45,7 @@ public class UserController {
 
 	/*
 	  ..TODO For visual testing purposes only
-	
+	*/
 	public static void main(String[] args) throws Exception {
 
 		Connector.init(Constants.TEST_CONFIG);
@@ -68,7 +68,7 @@ public class UserController {
 
 	}
 	
- */
+ 
 	/**
 	 * Constructor
 	 */
@@ -255,8 +255,6 @@ public class UserController {
 
 				} catch (Exception e) {  CrashHandler.handle(e); }
 				
-				System.out.println("DONE!");
-				
 				return null;
 			}
 		};
@@ -264,8 +262,6 @@ public class UserController {
 		Task<Void, Object> task = new Task<Void, Object>(toDo);
 		
 		LoadingControl.init(task, PeaLibrary.getMainFrame()).executeLoading();
-		
-		System.out.println("TAPOS!");
 		
 	}
 	/**
@@ -433,7 +429,7 @@ public class UserController {
 				}
 			}
 
-			if (checkList.size() > 0){
+			if (!checkList.isEmpty()){
 				userSearch.togglePendingButtons(true);
 			 
 				if (checkList.size() == searchedPending.size())
@@ -480,8 +476,8 @@ public class UserController {
 		layoutPanel.add(userSearch, "grow");
 		layoutPanel.add(userInfoPanel, "grow");
 
-		userSearch.getUsersTable().getSelectionModel()
-				.setSelectionInterval(0, 0);
+		if(!searchedUsers.isEmpty())
+			userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
 	}
 
 //	public JPanel getUserPanel() {
@@ -542,7 +538,7 @@ public class UserController {
 				int tab = userSearch.getSelectedTab();
 	
 				User user = null;
-	
+				System.out.println("ROW: "+row);
 				// This is a simple check to see if row is negative.
 				if (row < 0)
 					return;
