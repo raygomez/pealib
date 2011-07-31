@@ -66,7 +66,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				return new Trigger() {
 					@Override
 					public void run() throws Exception {
-						dialog.getInputTextBox("addressTextField").releaseKey(
+						dialog.getInputTextBox("addressTextField").pressKey(Key.ENTER).releaseKey(
 								Key.ENTER);
 					}
 
@@ -447,21 +447,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		assertEquals("", labelError.getText());
 	}
 	
-	@Test 
-	public void testGetUser() throws Exception{
-		TextBox username = window.getInputTextBox("username");
-		PasswordField password = window.getPasswordField("password");
-
-		username.setText("rdgomez");
-		password.setPassword("123456");
-		Button login = window.getButton("Log In");
-		login.click();
-
-		Thread.sleep(1000);
-		
-		assertEquals( auth.getUser().getUserName(),	username.getText());		
-	}
-
 	@Test
 	public void testSignUpEmptyFields() throws Exception {
 		WindowInterceptor.init(new Trigger() {
