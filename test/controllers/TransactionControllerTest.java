@@ -9,7 +9,9 @@ import org.uispec4j.Key;
 import org.uispec4j.TabGroup;
 import org.uispec4j.Table;
 import org.uispec4j.TextBox;
+import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
+import org.uispec4j.interception.WindowInterceptor;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
 
@@ -26,11 +28,23 @@ public class TransactionControllerTest extends UISpecTestCase {
 	@Before
 	public void setUp() throws Exception {
 		Connector.init(Constants.TEST_CONFIG);
-		tabGroup = new TabGroup(new TransactionController().getTabbedPane());
+		
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup = new TabGroup(new TransactionController().getTabbedPane());
+			}
+		}).processTransientWindow().run();
+		
+		
 	}
 
 	@Test
 	public void testInitialStateIncoming() {
+		
+		
 		tabGroup.selectTab("Incoming");
 		
 		TextBox searchBox = tabGroup.getSelectedTab().getInputTextBox();
@@ -60,9 +74,26 @@ public class TransactionControllerTest extends UISpecTestCase {
 	
 	@Test
 	public void testOutgoingTabSwitching() {
+		
 		tabGroup.selectTab("Incoming");
-		tabGroup.selectTab("Outgoing");
-		tabGroup.selectTab("Incoming");
+		
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Outgoing");
+			}
+		}).processTransientWindow().run();
+		
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Incoming");
+			}
+		}).processTransientWindow().run();
 		
 		/* Re-open Outgoing tab */
 		TextBox searchBox = tabGroup.getSelectedTab().getInputTextBox();
@@ -72,7 +103,15 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertNotNull(searchButton);
 		assertTrue(searchButton.isEnabled());
 		
-		tabGroup.selectTab("Outgoing");
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Outgoing");
+			}
+		}).processTransientWindow().run();
+
 		Table outgoing = tabGroup.getSelectedTab().getTable();
 		assertTrue(outgoing.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Username",
@@ -97,7 +136,15 @@ public class TransactionControllerTest extends UISpecTestCase {
 	@Test
 	public void testIncomingTabSwitching() {
 		tabGroup.selectTab("Incoming");
-		tabGroup.selectTab("Outgoing");
+
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Outgoing");
+			}
+		}).processTransientWindow().run();
 
 		/* Re-open Incoming Tab */
 		TextBox searchBox = tabGroup.getSelectedTab().getInputTextBox();
@@ -107,7 +154,15 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertNotNull(searchButton);
 		assertTrue(searchButton.isEnabled());
 		
-		tabGroup.selectTab("Incoming");
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Incoming");
+			}
+		}).processTransientWindow().run();
+
 		Table incoming = tabGroup.getSelectedTab().getTable();
 		assertTrue(incoming.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Username",
@@ -128,7 +183,16 @@ public class TransactionControllerTest extends UISpecTestCase {
 	
 	@Test
 	public void testGrant() {
-		tabGroup.selectTab("Outgoing");
+		
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Outgoing");
+			}
+		}).processTransientWindow().run();
+		
 		Table outgoingItems = tabGroup.getSelectedTab().getTable();
 
 		/* select first entry */
@@ -140,8 +204,8 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertTrue(grantButton.isEnabled());
 		assertTrue(denyButton.isEnabled());
 		
-		grantButton.click();
-		
+		WindowInterceptor.init(grantButton.triggerClick()).processTransientWindow().run();
+				
 		assertThat(outgoingItems.contentEquals( new Object[][] {
 			{ "1234567890124", "title2", "author1", "ndizon (Niel Dizon)","2011-06-15" },
 			{ "1234567890125", "title3Pantaleon", "author2", "ndizon (Niel Dizon)",	"2011-06-15" },
@@ -154,7 +218,16 @@ public class TransactionControllerTest extends UISpecTestCase {
 	
 	@Test
 	public void testDeny() {
-		tabGroup.selectTab("Outgoing");
+
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Outgoing");
+			}
+		}).processTransientWindow().run();
+		
 		Table outgoingItems = tabGroup.getSelectedTab().getTable();
 
 		/* select second entry */
@@ -180,7 +253,16 @@ public class TransactionControllerTest extends UISpecTestCase {
 	
 	@Test
 	public void testDenyWithReservation() {
-		tabGroup.selectTab("Outgoing");
+
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Outgoing");
+			}
+		}).processTransientWindow().run();
+		
 		Table outgoingItems = tabGroup.getSelectedTab().getTable();
 
 		/* select third entry */
