@@ -81,14 +81,15 @@ public class UserDAO {
 
 	}
 
-	public static boolean isEmailExisting(String email) throws Exception {
+	public static boolean isEmailExisting(String email, String username) throws Exception {
 
 		boolean isExisting = true;
 
-		String query = "SELECT count(*) from Users where Email=?";
+		String query = "SELECT count(*) from Users where Email=? and UserName!=?";
 		PreparedStatement ps = Connector.getConnection()
 				.prepareStatement(query);
 		ps.setString(1, email);
+		ps.setString(2, username);
 		ResultSet rs = ps.executeQuery();
 		rs.next();
 		isExisting = rs.getInt(1) != 0;

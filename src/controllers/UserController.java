@@ -82,8 +82,7 @@ public class UserController {
 		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]","[grow]"));
 		userSearch = new UserSearchPanel();
 		userSearch.setModelUsers(new UserSearchTableModel(USER, ""));
-		//userSearch.setModelPending(new UserSearchTableModel(PENDING, ""));
-
+ 
 		userSearch.usersPanel();
 		userSearch.pendingAppPanel();
 		userSearch.addListeners(new SearchListener(),
@@ -483,9 +482,22 @@ public class UserController {
 //	public JPanel getUserPanel() {
 //		return getLayoutPanel();
 //	}
+	
+	private boolean isEmailUnique(String email, String username){
+		
+		boolean temp = true;
+		
+		try {
+			temp = !UserDAO.isEmailExisting(email, username);
+		} catch (Exception e) {
+			CrashHandler.handle(e);
+		}
+						
+		return temp;
+	}
 
 	private boolean validateUpdateProfile(String firstName, String lastName,
-			String email, String address, String contactNo) {
+			String email, String address, String contactNo, String userName) {
 
 		boolean pass = true;
 		ArrayList<Integer> tempErrors = new ArrayList<Integer>();
@@ -504,12 +516,17 @@ public class UserController {
 			tempErrors.add(Constants.EMAIL_FORMAT_ERROR);
 			pass = false;
 		}
+		
+		if (!isEmailUnique(email, userName)) {
+			tempErrors.add(Constants.EMAIL_EXIST_ERROR);
+			pass = false;
+		}
 
 		if (!address.matches(Constants.ADDRESS_FORMAT)) {
 			tempErrors.add(Constants.ADDRESS_FORMAT_ERROR);
 			pass = false;
 		}
-
+ 
 		if (!contactNo.matches(Constants.CONTACT_NUMBER_FORMAT)) {
 			tempErrors.add(Constants.CONTACT_NUMBER_FORMAT_ERROR);
 			pass = false;
@@ -548,7 +565,6 @@ public class UserController {
 			
 				} else {
 					user = searchedPending.get(row);
-
 				}
 	
 				if (user != null) {
@@ -579,7 +595,7 @@ public class UserController {
 			String type = userInfoPanel.getAccountType();
 
 			if (validateUpdateProfile(firstName, lastName, email, address,
-					contactNo)) {
+					contactNo, userName)) {
 
 				User user = new User(userId, userName, firstName, lastName,
 						email, address, contactNo, type);
