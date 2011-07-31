@@ -116,8 +116,9 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		assertReflectionEquals(
 				BorderFactory.createMatteBorder(1, 1, 2, 1,
 						Color.getHSBColor((float) 0.0, (float) 0.6, (float) 1)),
-				password.getAwtComponent().getBorder());
+				password.getAwtComponent().getBorder());		
 		assertEquals("Incomplete fields", labelError.getText());
+		
 	}
 
 	@Test
