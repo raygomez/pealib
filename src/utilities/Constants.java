@@ -15,7 +15,7 @@ public class Constants {
 
 	public static final String USERNAME_FORMAT = "[A-Za-z0-9_\\.]{4,20}";
 	public static final String PASSWORD_FORMAT = "[^\\s]{6,20}";
-	public static final String NAME_FORMAT = "[A-Za-z\\s]{2,30}";
+	public static final String NAME_FORMAT = "[A-Za-z\\s-]{2,30}";
 	public static final String CONTACT_NUMBER_FORMAT = "(\\d{7,11})?";
 	public static final String EMAIL_FORMAT = "([a-z]+[a-z0-9_\\.]+@[\\w-]{2,}(\\.[a-z]{2,3})+)";
 	public static final String ADDRESS_FORMAT = ".{2,100}";
@@ -27,7 +27,7 @@ public class Constants {
 	public static final String NAME_FORMAT_ERROR_MESSAGE = "Incorrect name format, please alphabetical characters only";
 	public static final String USERNAME_FORMAT_ERROR_MESSAGE = "Invalid username, please use alphanumeric characters, underscores and periods only.\n"
 			+ "Usernames must be 4-20 characters long.";
-	public static final String PASSWORD_FORMAT_ERROR_MESSAGE = "Invalid password. Passwords should be 6-20 characters long.";
+	public static final String PASSWORD_FORMAT_ERROR_MESSAGE = "Invalid password.";
 	public static final String PASSWORD_NOT_MATCH_ERROR_MESSAGE = "Incorrect Password";
 	public static final String EMAIL_FORMAT_ERROR_MESSAGE = "Invalid email format.";
 	public static final String ADDRESS_ERROR_MESSAGE = "Invalid address format. Maximum of 100 characters only.";

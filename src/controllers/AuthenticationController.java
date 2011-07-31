@@ -154,6 +154,7 @@ public class AuthenticationController {
 			getLogin().setLabelError(
 				"<html><center>Account still being processed.<br/>"
 				+ "Ask Librarian for further inquiries.</center></html>");
+			setUser(null);
 			getLogin().getFieldPassword().setText("");
 		} else {
 			getLogin().dispose();
