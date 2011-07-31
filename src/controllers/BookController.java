@@ -391,6 +391,7 @@ public class BookController {
 			} else
 				bookInfo.getTxtFldPublisher().hasError(false);
 
+			//TODO ISBN CALCULATE VALIDATION
 			if (!IsbnChecker
 					.isIsbnValid(bookInfo.getTxtFldISBN().getText())) {
 				bookInfo.getTxtFldISBN().hasError(true);
@@ -423,6 +424,7 @@ public class BookController {
 			} else
 				bookInfo.getTxtFldEdition().hasError(false);
 
+			//TODO existing ISBN
 			if (!currISBN.equals(bookInfo.getTxtFldISBN().getText())
 					&& flag == 0) {
 				if (BookDAO.isIsbnExisting(bookInfo.getTxtFldISBN()
@@ -538,6 +540,7 @@ public class BookController {
 			DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e.getSource();
 			int tableRow = dlSelectionModel.getLeadSelectionIndex();
 			currTableRowSelection = tableRow;
+			
 			if(tableRow < 0){
 				return;
 			}		
@@ -547,6 +550,8 @@ public class BookController {
 				currTableRowSelection = tableRow;
 				Book displayBook = bookList.get(tableRow);
 				currISBN = displayBook.getIsbn();
+				//TODO 
+				bookInfo.resetErrors();
 				bookInfo.setBookInfoData(displayBook);
 			}
 			

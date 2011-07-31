@@ -232,6 +232,17 @@ public class BookInfoPanel extends JPanel {
 			yearPublishTextField.setText(Integer.toString(book.getYearPublish()));
 		}
 	}
+	
+	public void resetErrors(){
+		errorMessageLabel.setText("");
+		titleTextField.hasError(false);
+		authorTextField.hasError(false);
+		yearPublishTextField.hasError(false);
+		publisherTextField.hasError(false);
+		isbnTextField.hasError(false);
+		descriptionTextArea.hasError(false);
+		editionTextField.hasError(false);		
+	}
 
 	public ErrorLabel getLblErrorMsg() {
 		return errorMessageLabel;
