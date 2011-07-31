@@ -280,7 +280,7 @@ public class TransactionDAO {
 	public static int getQueueInReservation(Book book, User user)
 			throws Exception {
 
-		String sql = "SELECT * FROM Reserves where BookID = ?";
+		String sql = "SELECT * FROM Reserves where BookID = ? ORDER BY DatetimeReserved";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setLong(1, book.getBookId());
