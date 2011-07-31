@@ -413,7 +413,7 @@ public class AuthenticationController {
 		}
 		
 		try {
-			if (UserDAO.isEmailExisting(sUpEmailAddress)) {
+			if (UserDAO.isEmailExisting(sUpEmailAddress, sUpUserName)) {
 				signUp.setLblErrorMessage("E-mail address is already in use.");
 				signUp.setFieldBorderColor(SignUpDialog.EMAIL_ADDRESS_FLAG);
 				return false;

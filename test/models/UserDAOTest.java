@@ -218,13 +218,13 @@ public class UserDAOTest {
 	}
 	
 	@Test
-	public void testIsEmailExisting() throws Exception {
-		assertTrue(UserDAO.isEmailExisting("rdgomez@gmail.com"));
+	public void testIsEmailExistingExceptOwn() throws Exception {
+		assertTrue(UserDAO.isEmailExisting("rdgomez@gmail.com", "rdgomez1"));
 	}
 	
 	
 	@Test
-	public void testIsEmailNotExisting() throws Exception {
-		assertFalse(UserDAO.isEmailExisting("raygomez@gmail.com"));
+	public void testIsEmailNotExistingExceptOwn() throws Exception {
+		assertFalse(UserDAO.isEmailExisting("raygomez@gmail.com", "rdgomez1"));
 	}
 }

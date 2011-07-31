@@ -151,6 +151,11 @@ public class UserInfoPanel extends JPanel {
 				email.hasError(true);
 				break;
 			
+			case Constants.EMAIL_EXIST_ERROR:
+				lblError.makeError("Email already in use");
+				email.hasError(true);
+				break;
+			
 			case Constants.ADDRESS_FORMAT_ERROR:
 				lblError.makeError("Invalid Input");
 				address.hasError(true);
