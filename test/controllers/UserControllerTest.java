@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
 import org.uispec4j.CheckBox;
+import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.TabGroup;
 import org.uispec4j.Table;
@@ -60,7 +61,7 @@ public class UserControllerTest extends UISpecTestCase {
 		assertNotNull(userControlOrdinary);
 	}
 
-	@Ignore
+
 	@Test
 	public void testInitialUserTab() {
 		assertNotNull(tabGroup);
@@ -93,20 +94,30 @@ public class UserControllerTest extends UISpecTestCase {
 		temp = userInfoPanel.getInputTextBox("username").getText();
 		assertEquals("jvillar", temp);
 
-		tabGroup.selectTab("Pending Applications");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
+		
 	}
 	
-	@Ignore
+	
 	@Test
 	public void testInitialPendingTab() {
-		tabGroup.selectTab("Pending Applications");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
+				
 		assertNotNull(tabGroup.getSelectedTab().getTable());
 		assertReflectionEquals(userSearchPanel.getTable("tablePending"),
 				tabGroup.getSelectedTab().getTable());
 
 		assertFalse(userSearchPanel.getButton("Accept").isEnabled());
 		assertFalse(userSearchPanel.getButton("Deny").isEnabled());
-		assertFalse(userSearchPanel.getCheckBox().isEnabled());
+		assertTrue(userSearchPanel.getCheckBox().isEnabled());
 
 		assertTrue(userSearchPanel.getButton("Search").isEnabled());
 		assertTrue(userSearchPanel.getTextBox().isEnabled());
@@ -118,9 +129,7 @@ public class UserControllerTest extends UISpecTestCase {
 				{ "rdgomez", "Ray Gomez", false },
 				{ "kserrano", "Karlo Serrano", false } }));
 		assertThat(pendingTable.isEditable(new boolean[][] {
-				{ false, false, true }, { false, false, true } }));
-
-		tabGroup.selectTab("User Accounts");
+				{ false, false, true }, { false, false, true } }));	
 
 	}
 
@@ -132,10 +141,14 @@ public class UserControllerTest extends UISpecTestCase {
 				userControl.getUserInfoPanel());
 	}
 
-	@Ignore
 	@Test
 	public void testSelectAllPendingThroughSelectAll() {
-		tabGroup.selectTab("Pending Applications");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
+		
 		assertThat(tabGroup.selectedTabEquals("Pending Applications"));
 		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
 		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
@@ -145,11 +158,14 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(pendingTable.columnEquals(2, new Object[] { true, true }));
 	}
 	
-	@Ignore
 	@Test
 	@ExpectedDataSet({ "../models/expected/acceptAllPendingUser.xml" })
 	public void testAcceptAllPendingThroughSelectAll() {
-		tabGroup.selectTab("Pending Applications");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
 		assertThat(tabGroup.selectedTabEquals("Pending Applications"));
 		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
 		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
@@ -162,11 +178,14 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(pendingTable.rowCountEquals(0));
 	}
 
-	@Ignore
 	@Test
 	@ExpectedDataSet({ "../models/expected/acceptAllPendingUser.xml" })
 	public void testAcceptAllPendingThroughCheckBox() {
-		tabGroup.selectTab("Pending Applications");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
 		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
 		pendingTable.click(0, 2);
@@ -177,12 +196,16 @@ public class UserControllerTest extends UISpecTestCase {
 
 		assertThat(pendingTable.rowCountEquals(0));
 	}
-
-	@Ignore
+	
 	@Test
 	@ExpectedDataSet({ "../models/expected/denyAllPendingUser.xml" })
 	public void testDenyAllPendingThroughCheckBox() {
-		tabGroup.selectTab("Pending Applications");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
+		
 		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
 		pendingTable.click(0, 2);
@@ -193,12 +216,15 @@ public class UserControllerTest extends UISpecTestCase {
 
 		assertThat(pendingTable.rowCountEquals(0));
 	}
-
-	@Ignore
+	
 	@Test
 	@ExpectedDataSet({ "../models/expected/denyAllPendingUser.xml" })
 	public void testDenyAllPendingThroughSelectAll() {
-		tabGroup.selectTab("Pending Applications");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
 		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
 		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
 		selectAll.click();
@@ -209,20 +235,79 @@ public class UserControllerTest extends UISpecTestCase {
 		Table pendingTable = tabGroup.getSelectedTab().getTable();
 		assertThat(pendingTable.rowCountEquals(0));
 	}
+	
+	@Test
+	public void testSelectAllPendingThroughCheckbox() {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
+		Table pendingTable = tabGroup.getSelectedTab().getTable();
+		pendingTable.click(0, 2);
+		pendingTable.click(1, 2);
+
+		assertThat(pendingTable.columnEquals(2, new Object[] { true, true }));
+
+		assertThat(tabGroup.getSelectedTab().getCheckBox().isSelected());
+	}
+	
+	@Test
+	public void testSelectAllThenUnselectAllPending() {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
+		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
+		selectAll.click();
+		
+		Table pendingTable = tabGroup.getSelectedTab().getTable();
+		assertThat(pendingTable.columnEquals(2, new Object[] { true, true }));
+		assertThat(tabGroup.getSelectedTab().getCheckBox().isSelected());
+		
+		selectAll.click();
+		pendingTable = tabGroup.getSelectedTab().getTable();
+		assertThat(pendingTable.columnEquals(2, new Object[] { false, false }));
+		assertFalse(tabGroup.getSelectedTab().getCheckBox().isSelected());
+	}
 
 	@Test
-	public void testUpdateUserSuccessful() {
-		Button saveChangesButton = userInfoPanel.getButton("Save Changes");
+	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserEnd.xml" })
+	public void testAcceptOnePendingEnd() {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());		
+		Table pendingTable = tabGroup.getSelectedTab().getTable();
+		pendingTable.click(1, 2);
 
-		WindowInterceptor.init(saveChangesButton.triggerClick())
-				.process(new WindowHandler() {
-					public Trigger process(Window dialog) {
-						assertThat(dialog
-								.containsLabel("Record successfully updated"));
-						return dialog.getButton("OK").triggerClick();
-					}
-				}).run();
+		Button acceptButton = tabGroup.getSelectedTab().getButton("Accept");
+		acceptButton.click();
 
+		assertThat(pendingTable.rowCountEquals(1));
+	}
+	
+	@Test
+	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserStart.xml" })
+	public void testAcceptOnePendingStart() {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
+		Table pendingTable = tabGroup.getSelectedTab().getTable();
+		pendingTable.click(0, 2);
+
+		Button acceptButton = tabGroup.getSelectedTab().getButton("Accept");
+		acceptButton.click();
+
+		assertThat(pendingTable.rowCountEquals(1));
 	}
 
 	@ExpectedDataSet({ "../models/expected/changePassword.xml" })
@@ -306,64 +391,6 @@ public class UserControllerTest extends UISpecTestCase {
 
 		}).run();
 	}
-
-	@Ignore
-	@Test
-	public void testSelectAllPendingThroughCheckbox() {
-		tabGroup.selectTab("Pending Applications");
-		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
-		Table pendingTable = tabGroup.getSelectedTab().getTable();
-		pendingTable.click(0, 2);
-		pendingTable.click(1, 2);
-
-		assertThat(pendingTable.columnEquals(2, new Object[] { true, true }));
-
-		assertThat(tabGroup.getSelectedTab().getCheckBox().isSelected());
-	}
-
-	@Ignore
-	@Test
-	public void testSelectAllThenUnselectAllPending() {
-		tabGroup.selectTab("Pending Applications");
-		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
-		CheckBox selectAll = tabGroup.getSelectedTab().getCheckBox();
-		selectAll.click();
-		selectAll.click();
-
-		Table pendingTable = tabGroup.getSelectedTab().getTable();
-		assertThat(pendingTable.columnEquals(2, new Object[] { false, false }));
-	}
-
-	@Ignore
-	@Test
-	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserEnd.xml" })
-	public void testAcceptOnePendingEnd() {
-		tabGroup.selectTab("Pending Applications");
-		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());		
-		Table pendingTable = tabGroup.getSelectedTab().getTable();
-		pendingTable.click(1, 2);
-
-		Button acceptButton = tabGroup.getSelectedTab().getButton("Accept");
-		acceptButton.click();
-
-		assertThat(pendingTable.rowCountEquals(1));
-	}
-
-	@Ignore
-	@Test
-	@ExpectedDataSet({ "../models/expected/acceptOnePendingUserStart.xml" })
-	public void testAcceptOnePendingStart() {
-		tabGroup.selectTab("Pending Applications");
-		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
-		Table pendingTable = tabGroup.getSelectedTab().getTable();
-		pendingTable.click(0, 2);
-
-		Button acceptButton = tabGroup.getSelectedTab().getButton("Accept");
-		acceptButton.click();
-
-		assertThat(pendingTable.rowCountEquals(1));
-	}
-	
 	
 	@Test
 	public void testChangePasswordNotMatch() {
@@ -416,20 +443,36 @@ public class UserControllerTest extends UISpecTestCase {
 	}
 	
 	@Test
+	public void testUpdateUserSuccessful() {
+		Button saveChangesButton = userInfoPanel.getButton("Save Changes");
+
+		WindowInterceptor.init(saveChangesButton.triggerClick())
+				.process(new WindowHandler() {
+					public Trigger process(Window dialog) {
+						assertThat(dialog
+								.containsLabel("Record successfully updated"));
+						return dialog.getButton("OK").triggerClick();
+					}
+				}).run();
+
+	}
+	
+	@Test
 	public void testUpdateUserFailed() {
 		Button saveChangesButton = userInfoPanel.getButton("Save Changes");
 		assertThat(userInfoPanel.getTextBox("firstName").isEditable());
 		assertThat(userInfoPanel.getTextBox("lastName").isEditable());
 		assertThat(userInfoPanel.getTextBox("contactNumber").isEditable());
 		assertThat(userInfoPanel.getTextBox("emailAdd").isEditable());
+		assertThat(userInfoPanel.getInputTextBox("address").isEditable());		
+		
 		userInfoPanel.getTextBox("firstName").setText("");
 		userInfoPanel.getTextBox("lastName").setText("");
 		userInfoPanel.getTextBox("contactNumber").setText("1");
 		userInfoPanel.getTextBox("emailAdd").setText("");
+	 	userInfoPanel.getInputTextBox("address").setText("");
 		saveChangesButton.click();
 		assertEquals("Invalid Input", userInfoPanel.getTextBox("lblError").getText());
 		
 	}
 }
-
-

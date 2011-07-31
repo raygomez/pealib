@@ -83,6 +83,7 @@ public class UserInfoPanel extends JPanel {
 		address.setMargin(new Insets(5,5,5,5));
 		address.setLineWrap(true);
 		address.setWrapStyleWord(true);		
+		address.setName("address");		
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(address);
@@ -209,7 +210,7 @@ public class UserInfoPanel extends JPanel {
 		this.contactNumber.setText(user.getContactNo());
 		this.email.setText(user.getEmail());
 	}
-
+/*
 	public void setFields(String accountType, String idNumber, String username,
 			String firstName, String lastName, String address,
 			String contactNumber, String email) {
@@ -222,7 +223,7 @@ public class UserInfoPanel extends JPanel {
 		this.contactNumber.setText(contactNumber);
 		this.email.setText(email);
 	}
-
+*/
 	public void clearFields() {
 		this.accountType.setText("");
 		this.idNumber.setText("");
