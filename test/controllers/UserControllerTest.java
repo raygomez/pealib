@@ -310,21 +310,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertThat(pendingTable.rowCountEquals(1));
 	}
 
-	@Test
-	public void testUpdateUserSuccessful() {
-		Button saveChangesButton = userInfoPanel.getButton("Save Changes");
-
-		WindowInterceptor.init(saveChangesButton.triggerClick())
-				.process(new WindowHandler() {
-					public Trigger process(Window dialog) {
-						assertThat(dialog
-								.containsLabel("Record successfully updated"));
-						return dialog.getButton("OK").triggerClick();
-					}
-				}).run();
-
-	}
-
 	@ExpectedDataSet({ "../models/expected/changePassword.xml" })
 	@Test
 	public void testChangePasswordLibrarian() {
@@ -458,18 +443,34 @@ public class UserControllerTest extends UISpecTestCase {
 	}
 	
 	@Test
+	public void testUpdateUserSuccessful() {
+		Button saveChangesButton = userInfoPanel.getButton("Save Changes");
+
+		WindowInterceptor.init(saveChangesButton.triggerClick())
+				.process(new WindowHandler() {
+					public Trigger process(Window dialog) {
+						assertThat(dialog
+								.containsLabel("Record successfully updated"));
+						return dialog.getButton("OK").triggerClick();
+					}
+				}).run();
+
+	}
+	
+	@Test
 	public void testUpdateUserFailed() {
 		Button saveChangesButton = userInfoPanel.getButton("Save Changes");
 		assertThat(userInfoPanel.getTextBox("firstName").isEditable());
 		assertThat(userInfoPanel.getTextBox("lastName").isEditable());
 		assertThat(userInfoPanel.getTextBox("contactNumber").isEditable());
 		assertThat(userInfoPanel.getTextBox("emailAdd").isEditable());
+		assertThat(userInfoPanel.getInputTextBox("address").isEditable());		
 		
 		userInfoPanel.getTextBox("firstName").setText("");
 		userInfoPanel.getTextBox("lastName").setText("");
 		userInfoPanel.getTextBox("contactNumber").setText("1");
 		userInfoPanel.getTextBox("emailAdd").setText("");
-	 //	userInfoPanel.getTextBox("address").setText("");
+	 	userInfoPanel.getInputTextBox("address").setText("");
 		saveChangesButton.click();
 		assertEquals("Invalid Input", userInfoPanel.getTextBox("lblError").getText());
 		
