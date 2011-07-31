@@ -33,6 +33,7 @@ import utilities.ErrorLabel;
 		 */
 		public ChangePasswordDialog() {
 			setModal(true);
+			setResizable(false);
 			createGUI();
 		}
 
@@ -53,6 +54,7 @@ import utilities.ErrorLabel;
 			JLabel lblNewLabel_1 = new JLabel("New Password:");
 			getContentPanel().add(lblNewLabel_1, "cell 0 1,alignx trailing");
 			setNewPasswordField(new JPasswordField());
+			getNewPasswordField().setToolTipText("*Must be 6 - 20 characters long.");
 			getNewPasswordField().setName("newpassword");
 			getContentPanel().add(getNewPasswordField(), "cell 1 1,growx");
 
