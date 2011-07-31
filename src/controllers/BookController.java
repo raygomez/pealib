@@ -645,6 +645,11 @@ public class BookController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			bookSearch.getTextFieldSearch().setText("");
+			try {
+				searchBooks();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
