@@ -135,15 +135,15 @@ public class ELibController {
 				} else if (tab == RESERVE) {
 					tabpane.setCellEditor(tab, new CancelReservationButtonEditor());
 				}
-				
-				return null;
+			
+				return null;				
 			}
 		};
 		
 		Callable<Void> toDoAfter = new Callable<Void>() {
 
 			@Override
-			public Void call() throws Exception {
+			public Void call() throws Exception {				
 				tabpane.getRequestTable().setVisible(true);
 				return null;
 			}
@@ -237,13 +237,20 @@ public class ELibController {
 				for (BorrowTransaction i : bookData) {
 					DateTime dueDate = new DateTime(i.getDateBorrowed()
 							.getTime()).plusDays(14);
+					String due="";			
+					
+					if(dueDate.isBeforeNow()){
+						due = "<html><font color='red'>"+dueDate.toString("y-MM-dd")+"</font></html>";
+					}
+					else due = dueDate.toString("y-MM-dd");
+					
 					ArrayList<Object> rowData = new ArrayList<Object>(
 							columns.length);
 					rowData.add(i.getBook().getIsbn());
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
 					rowData.add(i.getDateBorrowed().toString());
-					rowData.add(dueDate.toString("y-MM-dd"));
+					rowData.add(due);
 					tableData.add(rowData);
 				}
 			}
