@@ -37,7 +37,7 @@ public class ELibControllerTest extends UISpecTestCase {
 
 	@Test
 	public void testInitialState() {
-		TabGroup tabGroup = panel.getTabGroup();
+		final TabGroup tabGroup = panel.getTabGroup();
 		Table request = tabGroup.getSelectedTab().getTable();
 		assertTrue(request.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Requested",
@@ -46,7 +46,15 @@ public class ELibControllerTest extends UISpecTestCase {
 		assertThat(request.isEditable(new boolean[][] { { false, false, false,
 				false, true } }));
 
-		tabGroup.selectTab("Reservations");
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Reservations");
+			}
+		}).processTransientWindow().run();
+		
 		Table reservation = tabGroup.getSelectedTab().getTable();
 		assertTrue(reservation.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Reserved",
@@ -56,7 +64,15 @@ public class ELibControllerTest extends UISpecTestCase {
 				{ false, false, false, false, false, true },
 				{ false, false, false, false, false, true } }));
 
-		tabGroup.selectTab("On Loan");
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("On Loan");
+			}
+		}).processTransientWindow().run();
+
 		Table onLoan = tabGroup.getSelectedTab().getTable();
 		assertTrue(onLoan.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Borrowed",
@@ -74,7 +90,16 @@ public class ELibControllerTest extends UISpecTestCase {
 				{ false, false, false, false, false },
 				{ false, false, false, false, false } }));
 
-		tabGroup.selectTab("History");
+		
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("History");
+			}
+		}).processTransientWindow().run();
+		
 		Table history = tabGroup.getSelectedTab().getTable();
 		assertTrue(history.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Borrowed",
@@ -122,44 +147,84 @@ public class ELibControllerTest extends UISpecTestCase {
 	@Test
 	@DataSet({ "../models/emptyBorrows.xml", "../models/emptyReserves.xml" })
 	public void testEmptyState() {
-		TabGroup tabGroup = panel.getTabGroup();
+		final TabGroup tabGroup = panel.getTabGroup();
 		Table request = tabGroup.getSelectedTab().getTable();
 		assertTrue(request.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Requested",
 						"Cancel" }));
 		assertEquals(0, request.getRowCount());
 
-		tabGroup.selectTab("Reservations");
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Reservations");
+			}
+		}).processTransientWindow().run();
+
 		Table reservation = tabGroup.getSelectedTab().getTable();
 		assertTrue(reservation.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Reserved",
 						"Queue Number", "Cancel" }));
 		assertEquals(0, reservation.getRowCount());
 
-		tabGroup.selectTab("On Loan");
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("On Loan");
+			}
+		}).processTransientWindow().run();
+		
+		
 		Table onLoan = tabGroup.getSelectedTab().getTable();
 		assertTrue(onLoan.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Borrowed",
 						"Due Date" }));
 		assertEquals(0, onLoan.getRowCount());
 
-		tabGroup.selectTab("History");
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("History");
+			}
+		}).processTransientWindow().run();
+
 		Table history = tabGroup.getSelectedTab().getTable();
 		assertTrue(history.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Borrowed",
 						"Date Returned" }));
 		assertEquals(0, history.getRowCount());
 
-		tabGroup.selectTab("Requests");
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Requests");
+			}
+		}).processTransientWindow().run();
 
 	}
 	
 	@Test
 	@ExpectedDataSet({ "../models/expected/cancelReserves.xml" })
 	public void testCancelReservation() {
-		TabGroup tabGroup = panel.getTabGroup();
+		final TabGroup tabGroup = panel.getTabGroup();
 
-		tabGroup.selectTab("Reservations");
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				tabGroup.selectTab("Reservations");
+			}
+		}).processTransientWindow().run();
+		
 		final Table reservation = tabGroup.getSelectedTab().getTable();
 		assertTrue(reservation.getHeader().contentEquals(
 				new String[] { "ISBN", "Title", "Author", "Date Reserved",

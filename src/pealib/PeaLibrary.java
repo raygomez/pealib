@@ -130,17 +130,18 @@ public class PeaLibrary {
 
 		try {
 			transactionControl = new TransactionController();
+			
+			librarianSidebarPanel = new LibrarianSidebarPanel();
+			initializeSidebarPanel(librarianSidebarPanel);
+	
+			frame.setSidebarPanel(librarianSidebarPanel);
+			frame.setContentPanel(transactionControl.getTabbedPane());
+			frame.validate();
+			frame.repaint();
+			
 		} catch (Exception e) {
 			CrashHandler.handle(e);
 		}
-
-		librarianSidebarPanel = new LibrarianSidebarPanel();
-		initializeSidebarPanel(librarianSidebarPanel);
-
-		frame.setSidebarPanel(librarianSidebarPanel);
-		frame.setContentPanel(transactionControl.getTabbedPane());
-		frame.validate();
-		frame.repaint();
 	}
 
 	private void initializeUser() {
@@ -244,15 +245,16 @@ public class PeaLibrary {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			if (getCurrentUser().getType().equals("Librarian")) {
-				frame.setContentPanel(transactionControl.getTabbedPane());
-			} else if (getCurrentUser().getType().equals("User")) {
-				try {
-					frame.setContentPanel(elibControl.getTabPane());
-					elibControl.update();
-				} catch (Exception e) {
-					CrashHandler.handle(e);
+			try {
+				if (getCurrentUser().getType().equals("Librarian")) {
+					frame.setContentPanel(transactionControl.getTabbedPane());
+				} else if (getCurrentUser().getType().equals("User")) {
+					
+						frame.setContentPanel(elibControl.getTabPane());
+						elibControl.update();	
 				}
+			} catch (Exception e) {
+				CrashHandler.handle(e);
 			}
 		}
 	};

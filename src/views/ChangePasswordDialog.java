@@ -9,21 +9,22 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
+
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
 import utilities.Constants;
 import utilities.ErrorLabel;
+import utilities.MyPasswordField;
 
 	@SuppressWarnings("serial")
 	public class ChangePasswordDialog extends JDialog {
 
 		private final JPanel contentPanel = new JPanel();
-		private JPasswordField oldPasswordField;
-		private JPasswordField newPasswordField;
-		private JPasswordField repeatPasswordField;
+		private MyPasswordField oldPasswordField;
+		private MyPasswordField newPasswordField;
+		private MyPasswordField repeatPasswordField;
 		private JButton changePasswordButton;
 		private JLabel errorLabel;
 		private JLabel oldPasswordLabel;
@@ -38,6 +39,7 @@ import utilities.ErrorLabel;
 
 		public void createGUI() {
 
+			setResizable(false);
 			getContentPane().setLayout(new BorderLayout());
 			getContentPanel().setBorder(new EmptyBorder(5, 5, 5, 5));
 			getContentPane().add(getContentPanel(), BorderLayout.CENTER);
@@ -46,26 +48,26 @@ import utilities.ErrorLabel;
 
 			setOldPasswordLabel(new JLabel("Old Password:"));
 			getContentPanel().add(getOldPasswordLabel(), "cell 0 0,alignx trailing");
-			setOldPasswordField(new JPasswordField());
+			setOldPasswordField(new MyPasswordField(20));
 			getOldPasswordField().setName("oldpassword");
 			getContentPanel().add(getOldPasswordField(), "cell 1 0,growx");
 
 			JLabel lblNewLabel_1 = new JLabel("New Password:");
 			getContentPanel().add(lblNewLabel_1, "cell 0 1,alignx trailing");
-			setNewPasswordField(new JPasswordField());
+			setNewPasswordField(new MyPasswordField(20));
 			getNewPasswordField().setName("newpassword");
 			getContentPanel().add(getNewPasswordField(), "cell 1 1,growx");
 
 			JLabel lblNewLabel_2 = new JLabel("Repeat Password:");
 			lblNewLabel_2.setHorizontalAlignment(SwingConstants.LEFT);
 			getContentPanel().add(lblNewLabel_2, "cell 0 2,alignx trailing");
-			setRepeatPasswordField(new JPasswordField());
+			setRepeatPasswordField(new MyPasswordField(20));
 			getRepeatPasswordField().setName("repeatpassword");
 			getContentPanel().add(getRepeatPasswordField(), "cell 1 2,growx");
 
 			setErrorLabel(new ErrorLabel(" "));
 			errorLabel.setName("errorLabel");
-			getContentPanel().add(getErrorLabel(), "cell 0 3 2 1");
+			getContentPanel().add(getErrorLabel(), "cell 0 3 2 1, shrink");
 
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -86,27 +88,27 @@ import utilities.ErrorLabel;
 			pack();
 		}
 
-		public JPasswordField getOldPasswordField() {
+		public MyPasswordField getOldPasswordField() {
 			return oldPasswordField;
 		}
 
-		public void setOldPasswordField(JPasswordField oldPasswordField) {
+		public void setOldPasswordField(MyPasswordField oldPasswordField) {
 			this.oldPasswordField = oldPasswordField;
 		}
 
-		public JPasswordField getNewPasswordField() {
+		public MyPasswordField getNewPasswordField() {
 			return newPasswordField;
 		}
 
-		public void setNewPasswordField(JPasswordField newPasswordField) {
+		public void setNewPasswordField(MyPasswordField newPasswordField) {
 			this.newPasswordField = newPasswordField;
 		}
 
-		public JPasswordField getRepeatPasswordField() {
+		public MyPasswordField getRepeatPasswordField() {
 			return repeatPasswordField;
 		}
 
-		public void setRepeatPasswordField(JPasswordField repeatPasswordField) {
+		public void setRepeatPasswordField(MyPasswordField repeatPasswordField) {
 			this.repeatPasswordField = repeatPasswordField;
 		}
 
@@ -187,5 +189,6 @@ import utilities.ErrorLabel;
 					errorLabel.setText("New passwords do not match");
 					break;
 			}
+			
 		}
 	}
