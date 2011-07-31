@@ -556,6 +556,7 @@ public class UserController {
 				}
 	
 				if (user != null) {
+					userInfoPanel.resetErrorMessages();
 					userInfoPanel.toggleButton(true);
 					userInfoPanel.setFields(user);
 					userInfoPanel.setFirstNameEnabled(true);
