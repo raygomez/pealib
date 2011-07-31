@@ -548,10 +548,18 @@ public class BookController {
 			//TODO check in order to avoid exception index outofbounds
 			if(tableRow < bookList.size()){
 				currTableRowSelection = tableRow;
+				
+				try {
+					bookList = BookDAO.searchBook(bookSearch.getTextFieldSearch().getText());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				Book displayBook = bookList.get(tableRow);
 				currISBN = displayBook.getIsbn();
 				//TODO 
 				bookInfo.resetErrors();
+				System.out.println(displayBook.getIsbn());
 				bookInfo.setBookInfoData(displayBook);
 			}
 			
