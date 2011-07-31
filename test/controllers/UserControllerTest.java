@@ -403,6 +403,22 @@ public class UserControllerTest extends UISpecTestCase {
 
 		}).run();
 	}
+	
+	@Test
+	public void testUpdateUserFailed() {
+		Button saveChangesButton = userInfoPanel.getButton("Save Changes");
+		assertThat(userInfoPanel.getTextBox("firstName").isEditable());
+		assertThat(userInfoPanel.getTextBox("lastName").isEditable());
+		assertThat(userInfoPanel.getTextBox("contactNumber").isEditable());
+		assertThat(userInfoPanel.getTextBox("emailAdd").isEditable());
+		userInfoPanel.getTextBox("firstName").setText("");
+		userInfoPanel.getTextBox("lastName").setText("");
+		userInfoPanel.getTextBox("contactNumber").setText("1");
+		userInfoPanel.getTextBox("emailAdd").setText("");
+		saveChangesButton.click();
+		assertEquals("Invalid Input", userInfoPanel.getTextBox("lblError").getText());
+		
+	}
 }
 
 

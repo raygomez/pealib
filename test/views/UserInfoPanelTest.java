@@ -83,15 +83,10 @@ public class UserInfoPanelTest extends UISpecTestCase {
 			assertThat(textField.isEnabled());
 		}
 
-		String[] errorLabels = { "firstNameError", "lastNameError",
-				"contactNumberError", "emailError" };
-
-		for (String s : errorLabels) {
-			label = panel.getTextBox(s);
-			assertNotNull(label);
-			assertEquals("", label.getText());
-			assertThat(label.isVisible());
-		}
+		label = panel.getTextBox("lblError");
+		assertNotNull(label);
+		assertEquals(" ", label.getText());
+		assertThat(label.isVisible());
 	}
 
 	@Test
@@ -104,23 +99,13 @@ public class UserInfoPanelTest extends UISpecTestCase {
 
 		userInfoPanel.displayErrors(errors);
 
-		String[] errorMessages = { Constants.EMAIL_FORMAT_ERROR_MESSAGE,
-				Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE };
-
-		for (String s : errorMessages) {
-			label = panel.getTextBox(s);
-			assertNotNull(label);
-			assertThat(label.isVisible());
-		}
-
-		label = panel.getTextBox("firstNameError");
+		label = panel.getTextBox("lblError");
 		assertNotNull(label);
-		assertEquals(Constants.NAME_FORMAT_ERROR_MESSAGE, label.getText());
 		assertThat(label.isVisible());
 
-		label = panel.getTextBox("lastNameError");
+		label = panel.getTextBox("lblError");
 		assertNotNull(label);
-		assertEquals(Constants.NAME_FORMAT_ERROR_MESSAGE, label.getText());
+		assertEquals("Invalid Input", label.getText());
 		assertThat(label.isVisible());
 	}
 
@@ -134,17 +119,11 @@ public class UserInfoPanelTest extends UISpecTestCase {
 
 		userInfoPanel.displayErrors(errors);
 		userInfoPanel.resetErrorMessages();
-
-		String[] errorLabels = { "firstNameError", "lastNameError",
-				"contactNumberError", "emailError" };
-
-		for (String s : errorLabels) {
-			label = panel.getTextBox(s);
-			assertNotNull(label);
-			assertEquals("", label.getText());
-			assertThat(label.isVisible());
-		}
-
+		
+		label = panel.getTextBox("lblError");
+		assertNotNull(label);
+		assertEquals(" ", label.getText());
+		assertThat(label.isVisible());
 	}
 
 	@Test

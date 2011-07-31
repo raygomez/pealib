@@ -30,62 +30,53 @@ public class UserInfoPanel extends JPanel {
 	private MyTextArea address;
 	private MyTextField contactNumber;
 	private MyTextField email;
-
-	private ErrorLabel firstNameError;
-	private ErrorLabel lastNameError;
-	private ErrorLabel contactNumberError;
-	private ErrorLabel emailError;
-	private ErrorLabel addressError;
+	private ErrorLabel lblError;
 
 	public UserInfoPanel() {
 
-		setLayout(new MigLayout("", "[]15[]", "[]10[]"));
+		setLayout(new MigLayout("", "[]15[][]", "[][]10[][][][][][][][][]"));
 
 		tempLabel = new JLabel("Account Type");
 		accountType = new MyTextField(20);
 		accountType.setEnabled(false);
 		accountType.setName("accountType");
+		
+		lblError = new ErrorLabel(" ");
+		lblError.setName("lblError");
+		add(lblError, "cell 0 0 3 1,alignx center,aligny center");
 
-		add(tempLabel);
-		add(accountType, "wrap");
+		add(tempLabel, "cell 0 1");
+		add(accountType, "cell 1 1 2 1,growx");
 
 		tempLabel = new JLabel("User ID");
 		idNumber = new MyTextField(20);
 		idNumber.setEnabled(false);
 		idNumber.setName("idNumber");
 
-		add(tempLabel);
-		add(idNumber, "wrap");
+		add(tempLabel, "cell 0 2");
+		add(idNumber, "cell 1 2 2 1,growx");
 
 		tempLabel = new JLabel("Username");
 		username = new MyTextField(20);
 		username.setEnabled(false);
 		username.setName("username");
 
-		add(tempLabel);
-		add(username, "wrap");
+		add(tempLabel, "cell 0 3");
+		add(username, "cell 1 3 2 1,growx");
 
 		tempLabel = new JLabel("First Name");
 		firstName = new MyTextField(20);
 		firstName.setName("firstName");
 
-		firstNameError = new ErrorLabel();
-		firstNameError.setName("firstNameError");
-
-		add(tempLabel);
-		add(firstName);
-		add(firstNameError, "wrap");
+		add(tempLabel, "cell 0 4");
+		add(firstName, "cell 1 4 2 1,growx");
 
 		tempLabel = new JLabel("Last Name");
 		lastName = new MyTextField(20);
 		lastName.setName("lastName");
 
-		lastNameError = new ErrorLabel();
-		lastNameError.setName("lastNameError");
-
-		add(tempLabel);
-		add(lastName);
-		add(lastNameError, "wrap");
+		add(tempLabel, "cell 0 5");
+		add(lastName, "cell 1 5 2 1,growx");
 
 		tempLabel = new JLabel("Address");
 		address = new MyTextArea("",20, 20);
@@ -96,43 +87,31 @@ public class UserInfoPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(address);
 		
-		addressError = new ErrorLabel();
-		addressError.setName("addressError");
-		
-		add(tempLabel);
-		add(scrollPane);
-		add(addressError, "wrap");
+		add(tempLabel, "cell 0 6");
+		add(scrollPane, "cell 1 6 2 1,growx");
 
 		tempLabel = new JLabel("Contact Number");
 		contactNumber = new MyTextField(20);
 		contactNumber.setName("contactNumber");
 
-		contactNumberError = new ErrorLabel();
-		contactNumberError.setName("contactNumberError");
-
-		add(tempLabel);
-		add(contactNumber);
-		add(contactNumberError, "wrap");
+		add(tempLabel, "cell 0 7");
+		add(contactNumber, "cell 1 7 2 1,growx");
 
 		tempLabel = new JLabel("Email");
 		email = new MyTextField(20);
-		email.setName("email");
-
-		emailError = new ErrorLabel();
-		emailError.setName("emailError");
+		email.setName("emailAdd");
 				
 
-		add(tempLabel);
-		add(email);
-		add(emailError, "wrap");
+		add(tempLabel, "cell 0 8");
+		add(email, "cell 1 8 2 1,growx");
 
 		saveButton = new SaveButton("Save Changes", new ImageIcon(
 				"resources/images/save32x32.png"));
-		add(saveButton);
+		add(saveButton, "cell 1 9 2 1,growx");
 		
 		changePasswordButton = new JButton("Change Password", new ImageIcon(
 		"resources/images/changepassword32x32.png"));
-		add(changePasswordButton, "wrap");
+		add(changePasswordButton, "cell 0 9");
 
 		
 		resetErrorMessages();
@@ -152,27 +131,27 @@ public class UserInfoPanel extends JPanel {
 			switch (i) {
 
 			case Constants.FIRST_NAME_FORMAT_ERROR:
-				firstNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
+				lblError.makeError("Invalid Input");
 				firstName.hasError(true);
 				break;
 
 			case Constants.LAST_NAME_FORMAT_ERROR:
-				lastNameError.setText(Constants.NAME_FORMAT_ERROR_MESSAGE);
+				lblError.makeError("Invalid Input");
 				lastName.hasError(true);
 				break;
 
 			case Constants.CONTACT_NUMBER_FORMAT_ERROR:
-				contactNumberError.setText(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE);
+				lblError.makeError("Invalid Input");
 				contactNumber.hasError(true);
 				break;
 
 			case Constants.EMAIL_FORMAT_ERROR:
-				emailError.setText(Constants.EMAIL_FORMAT_ERROR_MESSAGE);
+				lblError.makeError("Invalid Input");
 				email.hasError(true);
 				break;
 			
 			case Constants.ADDRESS_FORMAT_ERROR:
-				addressError.setText(Constants.ADDRESS_ERROR_MESSAGE);
+				lblError.makeError("Invalid Input");
 				address.hasError(true);
 				break;
 			}
@@ -180,21 +159,12 @@ public class UserInfoPanel extends JPanel {
 	}
 
 	public void resetErrorMessages() {
-
-		firstNameError.setText("");
 		firstName.hasError(false);
-		
-		lastNameError.setText("");
 		lastName.hasError(false);
-		
-		contactNumberError.setText("");
 		contactNumber.hasError(false);
-		
-		emailError.setText("");
 		email.hasError(false);
-		
-		addressError.setText("");
 		address.hasError(false);
+		lblError.clear();
 	}
 
 	public String getAccountType() {

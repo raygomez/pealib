@@ -20,7 +20,7 @@ public class ErrorLabel extends JLabel {
 	}
 	
 	public void clear(){
-		setText("");
+		setText(" ");
 	}
 	
 	public void makeSuccess(String text){
