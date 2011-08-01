@@ -433,8 +433,11 @@ public class BookController {
 				bookInfo.getSpinCopyVal().hasError(true);
 				validate = false;
 			} else{
-				if (TransactionDAO.isBookReservedByOtherUsers(bookInfo.getCurrBook())) {
-					TransactionDAO.passToNextUser(bookInfo.getCurrBook());
+				if (validate){
+					if (TransactionDAO.isBookReservedByOtherUsers(
+							bookInfo.getCurrBook())) {
+						TransactionDAO.passToNextUser(bookInfo.getCurrBook());
+					}
 				}
 				bookInfo.getSpinCopyVal().hasError(false);
 			}
