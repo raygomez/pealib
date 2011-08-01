@@ -207,7 +207,7 @@ public class BookInfoPanel extends JPanel {
 		currentBook.setCopies(Integer.parseInt(copiesValSpinner.getModel()
 				.getValue().toString()));
 		currentBook.setEdition(editionTextField.getText());
-		if(yearPublishTextField.getText().length() > 0){
+		if(yearPublishTextField.getText().trim().length() > 0){
 			currentBook.setYearPublish(Integer.parseInt(yearPublishTextField
 					.getText()));
 		}else{
