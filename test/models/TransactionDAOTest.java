@@ -189,7 +189,7 @@ public class TransactionDAOTest {
 
 	@Test
 	public void testGetQueueInReservationFirst() throws Exception {
-		User user = UserDAO.getUserById(1);
+		User user = UserDAO.getUserById(2);
 		Book book = BookDAO.getBookById(2);
 		assertEquals(1, TransactionDAO.getQueueInReservation(book, user));
 
@@ -225,14 +225,14 @@ public class TransactionDAOTest {
 	public void testGetDaysOverdue() throws Exception {
 		User user = UserDAO.getUserById(3);
 		Book book = BookDAO.getBookById(2);
-		assertEquals(30, TransactionDAO.getDaysOverdue(book, user));
+		assertEquals(33, TransactionDAO.getDaysOverdue(book, user));
 	}
 
 	@Test
 	public void testGetDaysOverdueBorrowTransaction() throws Exception {
 		BorrowTransaction transaction = TransactionDAO
 				.getBorrowTransactionById(3);
-		assertEquals(30, TransactionDAO.getDaysOverdue(transaction));
+		assertEquals(33, TransactionDAO.getDaysOverdue(transaction));
 	}
 
 	@Test
