@@ -9,6 +9,7 @@ import junit.framework.AssertionFailedError;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
 import org.uispec4j.*;
 import org.uispec4j.interception.*;
 import org.unitils.UnitilsJUnit4TestClassRunner;
@@ -69,6 +70,23 @@ public class TaskTest extends UISpecTestCase{
 	@Test
 	public void testDone2() {
 		new Task<Integer, Object>(toDo).done();
+	}
+	
+	@Test(expected=Error.class)
+	public void testDone3() {
+		PowerMock.mockStatic(System.class);
+		PowerMock.mockStatic(JOptionPane.class);
+		
+		final Callable<Void> toDoAfter = new Callable<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				throw new Exception();
+			}
+			
+		};
+		
+		new Task<Integer, Object>(toDo, toDoAfter).done();		
 	}
 
 	@Test

@@ -8,10 +8,15 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.ToggleButton;
+import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
+import org.uispec4j.interception.WindowHandler;
+import org.uispec4j.interception.WindowInterceptor;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
+
+import pealib.PeaLibrary;
 
 import utilities.Constants;
 
@@ -32,7 +37,32 @@ public class PeaLibraryUserTest extends UISpecTestCase {
 		
 	}
 
-	@Ignore
+	@Test
+	public void testAuthenticate(){
+		
+		final PeaLibrary peaLib = new PeaLibrary(Constants.TEST_CONFIG);
+		
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				peaLib.authenticate();
+			}
+		}).process(new WindowHandler(){
+
+			@Override
+			public Trigger process(Window login) throws Exception {
+				login.getInputTextBox("username").setText("jvillar");
+				login.getPasswordField("password").setPassword("123456");
+				
+				return login.getButton("Log In").triggerClick();
+			}
+			
+		}).run();
+		
+	}
+	
 	@Test
 	public void testSidebar() {
 		ToggleButton searchBooksButton = window.getToggleButton("Search Books");
