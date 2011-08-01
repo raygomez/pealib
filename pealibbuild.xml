@@ -94,10 +94,11 @@
 		<copy file="lib\email\mailapi.jar" todir="${dist.dir}\lib" />
 		<copy file="lib\email\mailapi.jar" todir="${dist.dir}\lib" />
 		<copy file="lib\email\smtp.jar" todir="${dist.dir}\lib" />
+		<copy file="lib\commons\commons-lang-2.3.jar" todir="${dist.dir}\lib" />
 		<jar destfile="${dist.dir}\PeaLibrary.jar" basedir="${bin.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="pealib.PeaLibrary" />
-				<attribute name="Class-Path" value="lib\miglayout15-swing.jar lib\mysql-connector-java-5.1.16-bin.jar lib\joda-time-1.6.2.jar lib\dsn.jar lib\imap.jar lib\mailapi.jar lib\pop3.jar lib\smtp.jar" />
+				<attribute name="Class-Path" value="lib\miglayout15-swing.jar lib\mysql-connector-java-5.1.16-bin.jar lib\joda-time-1.6.2.jar lib\dsn.jar lib\imap.jar lib\mailapi.jar lib\pop3.jar lib\smtp.jar lib\commons-lang-2.3.jar" />
 			</manifest>
 		</jar>
 	</target>
