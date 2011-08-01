@@ -560,7 +560,7 @@ public class UserController {
 				int tab = userSearch.getSelectedTab();
 	
 				User user = null;
-				System.out.println("ROW: "+row);
+				//System.out.println("ROW: "+row);
 				// This is a simple check to see if row is negative.
 				if (row < 0)
 					return;
