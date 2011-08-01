@@ -97,8 +97,8 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblUserName, "cell 1 4,alignx left,aligny center");
 
 		userNameTextField = new MyTextField();
-		userNameTextField.setToolTipText("*Must be 4 - 20 characters long, " +
-				"composed of alphanumeric characters, underscore or period.");
+		userNameTextField.setToolTipText("<html>*Must be 4 - 20 characters long," +
+				"<br>composed of alphanumeric characters,<br>underscore or period.");
 		userNameTextField.setName("userNameTextField");
 		lblUserName.setLabelFor(userNameTextField);
 		contentPanel.add(userNameTextField, "cell 2 4,growx,aligny center");
@@ -130,8 +130,8 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblEmailAddress, "cell 1 8,alignx left,aligny center");
 
 		emailAddressTextField = new MyTextField();
-		emailAddressTextField.setToolTipText("*Maximum of 30 characters " +
-				"(ie. john.smith@example.com)");
+		emailAddressTextField.setToolTipText("<html>*Maximum of 30 characters." +
+				"<br>(ie. john.smith@example.com)");
 		emailAddressTextField.setName("emailAddressTextField");
 		lblEmailAddress.setLabelFor(emailAddressTextField);
 		contentPanel.add(emailAddressTextField, "cell 2 8,growx,aligny center");
