@@ -1,36 +1,39 @@
 package controllers;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import models.UserDAO;
-import models.User;
-import net.miginfocom.swing.MigLayout;
-import utilities.Connector;
-import utilities.Constants;
-import utilities.CrashHandler;
-import utilities.Emailer;
-import utilities.Task;
-import views.ChangePasswordDialog;
-import views.LoadingDialog;
-import views.UserInfoPanel;
-import views.UserSearchPanel;
-import javax.swing.*;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
+import models.User;
+import models.UserDAO;
+import net.miginfocom.swing.MigLayout;
 import pealib.PeaLibrary;
+import utilities.Constants;
+import utilities.CrashHandler;
+import utilities.Emailer;
+import utilities.Task;
+import views.ChangePasswordDialog;
+import views.UserInfoPanel;
+import views.UserSearchPanel;
 
 public class UserController {
 
 	private final static int USER = 0;
-	private final static int PENDING = 1;
+	//private final static int PENDING = 1;
 
 	private UserSearchPanel userSearch;
 	private UserInfoPanel userInfoPanel;
@@ -45,7 +48,7 @@ public class UserController {
 
 	/*
 	  ..TODO For visual testing purposes only
-	*/
+	
 	public static void main(String[] args) throws Exception {
 
 		Connector.init(Constants.TEST_CONFIG);
@@ -68,7 +71,7 @@ public class UserController {
 
 	}
 	
- 
+ */
 	/**
 	 * Constructor
 	 */
@@ -91,8 +94,8 @@ public class UserController {
 				new AcceptListener(), new DenyListener());
 		
 		userInfoPanel = new UserInfoPanel();
-		userInfoPanel.addSaveListener(getSave());
-		userInfoPanel.addChangePasswordListener(getShowChangePassword());
+		userInfoPanel.addSaveListener(save);
+		userInfoPanel.addChangePasswordListener(showChangePassword);
 
 		generateLayoutPanel();
 	}
@@ -113,14 +116,6 @@ public class UserController {
 	public UserSearchPanel getUserSearch() { return userSearch; }
 	
 	public UserInfoPanel getUserInfoPanel() { return userInfoPanel;};
-
-	public ActionListener getShowChangePassword() {
-		return showChangePassword;
-	}
-
-	public ActionListener getSave() {
-		return save;
-	}
 
 	/**
 	 * Listener: Select All checkbox
@@ -568,7 +563,7 @@ public class UserController {
 				int tab = userSearch.getSelectedTab();
 	
 				User user = null;
-				System.out.println("ROW: "+row);
+				//System.out.println("ROW: "+row);
 				// This is a simple check to see if row is negative.
 				if (row < 0)
 					return;
