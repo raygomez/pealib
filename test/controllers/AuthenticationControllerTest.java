@@ -231,6 +231,22 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	}
 	
 	@Test
+	public void testGetLabelErrorLogin() throws InterruptedException{
+		TextBox username = window.getInputTextBox("username");
+		PasswordField password = window.getPasswordField("password");
+		TextBox labelError = window.getTextBox("labelError");
+		username.setText("jvillar");
+		password.setPassword("1234567");
+		Button login = window.getButton("Log In");
+		login.click();
+
+		Thread.sleep(1000);
+		
+
+		assertEquals(AuthenticationController.getLogin().getLabelError().getText(), labelError.getText());
+	}
+	
+	@Test
 	public void testLoginAutoValidationMinChar() throws Exception {
 		TextBox username = window.getInputTextBox("username");
 		assertEquals("", username.getText());
@@ -447,6 +463,8 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
 				username.getAwtComponent().getBorder());
 		assertEquals("", labelError.getText());
+		
+		assertEquals(username.getText(), auth.getUser().getUserName());
 	}
 	
 	@Test
@@ -461,6 +479,8 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 						Key.ENTER);
 				String error = dialog.getTextBox("errorMessageLabel").getText();
 				assertTrue(error.equals("Cannot leave mandatory fields empty."));
+				assertEquals(AuthenticationController.getSignUp().getLblErrorMessage().getText(), error);
+				
 				return dialog.getButton("Cancel").triggerClick();
 			}
 		}).run();
@@ -506,8 +526,8 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		}).run();			
 	}
 	
-	@Ignore
-	//TODO This test was failing when I tested it... so temporarily ignored.
+	//@Ignore
+	//TODO Ignore if it fails
 	@Test
 	public void testSignUpErrorWhileCheckingUsername() throws Exception {
 		WindowInterceptor.init(new Trigger() {
