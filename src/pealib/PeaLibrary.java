@@ -14,7 +14,6 @@ import utilities.Task;
 import views.LibrarianSidebarPanel;
 import views.LoadingDialog;
 import views.MainFrame;
-import views.UserInfoPanel;
 import views.UserSidebarPanel;
 import controllers.AuthenticationController;
 import controllers.BookController;
@@ -34,7 +33,6 @@ public class PeaLibrary {
 
 	private UserSidebarPanel userSidebarPanel;
 	private LibrarianSidebarPanel librarianSidebarPanel;
-	private UserInfoPanel currentUserInfoPanel;
 
 	private User currentUser;
 
@@ -112,15 +110,14 @@ public class PeaLibrary {
 				getCurrentUser().getFirstName() + " "
 						+ getCurrentUser().getLastName());
 
-		currentUserInfoPanel = new UserInfoPanel();
-		currentUserInfoPanel.addSaveListener(updateCurrentUser);
-		
 		try {
 			bookControl = new BookController(getCurrentUser());
 			userControl = new UserController(getCurrentUser());
 		} catch (Exception e) {
 			CrashHandler.handle(e);
 		}
+
+		userControl.getUserInfoPanel().addSaveListener(updateCurrentUser);
 
 		if (getCurrentUser().getType().equals("Librarian")) {
 			initializeLibrarian();
@@ -224,13 +221,14 @@ public class PeaLibrary {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			currentUserInfoPanel.setFields(currentUser);
-			currentUserInfoPanel.resetErrorMessages();
-			currentUserInfoPanel.setFirstNameEnabled(false);
-			currentUserInfoPanel.setLastNameEnabled(false);
-			currentUserInfoPanel.toggleButton(true);
+			userControl.getUserInfoPanel().setFields(currentUser);
+			userControl.getUserInfoPanel().resetErrorMessages();
+			userControl.getUserInfoPanel().setEnableFields(true);
+			userControl.getUserInfoPanel().setFirstNameEnabled(false);
+			userControl.getUserInfoPanel().setLastNameEnabled(false);
+			userControl.getUserInfoPanel().toggleButton(true);
 
-			frame.setContentPanel(currentUserInfoPanel);
+			frame.setContentPanel(userControl.getUserInfoPanel());
 		}
 	};
 
@@ -276,7 +274,7 @@ public class PeaLibrary {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PeaLibrary app = new PeaLibrary();
+					PeaLibrary app = new PeaLibrary(Constants.TEST_CONFIG);
 					app.authenticate();
 					
 				} catch (Exception e) {

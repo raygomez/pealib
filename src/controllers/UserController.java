@@ -91,8 +91,8 @@ public class UserController {
 				new AcceptListener(), new DenyListener());
 		
 		userInfoPanel = new UserInfoPanel();
-		userInfoPanel.addSaveListener(save);
-		userInfoPanel.addChangePasswordListener(showChangePassword);
+		userInfoPanel.addSaveListener(getSave());
+		userInfoPanel.addChangePasswordListener(getShowChangePassword());
 
 		generateLayoutPanel();
 	}
@@ -105,6 +105,7 @@ public class UserController {
 
 	public JPanel getLayoutPanel() {
 		generateLayoutPanel();
+		searchUsers();
 		return layoutPanel;
 	}
 	
@@ -112,6 +113,14 @@ public class UserController {
 	public UserSearchPanel getUserSearch() { return userSearch; }
 	
 	public UserInfoPanel getUserInfoPanel() { return userInfoPanel;};
+
+	public ActionListener getShowChangePassword() {
+		return showChangePassword;
+	}
+
+	public ActionListener getSave() {
+		return save;
+	}
 
 	/**
 	 * Listener: Select All checkbox
@@ -475,8 +484,10 @@ public class UserController {
 		layoutPanel.add(userSearch, "grow");
 		layoutPanel.add(userInfoPanel, "grow");
 
-		if(!searchedUsers.isEmpty())
-			userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
+		if(!searchedUsers.isEmpty()){
+			//userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
+			setInitSelectUser();
+		}
 	}
 
 //	public JPanel getUserPanel() {
