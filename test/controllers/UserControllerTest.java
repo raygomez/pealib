@@ -5,7 +5,6 @@ import models.User;
 import models.UserDAO;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
@@ -14,6 +13,7 @@ import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.TabGroup;
 import org.uispec4j.Table;
+import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
@@ -61,7 +61,6 @@ public class UserControllerTest extends UISpecTestCase {
 		assertNotNull(userControlOrdinary);
 	}
 
-	@Ignore
 	@Test
 	public void testInitialUserTab() {
 		assertNotNull(tabGroup);
@@ -132,6 +131,30 @@ public class UserControllerTest extends UISpecTestCase {
 				{ false, false, true }, { false, false, true } }));	
 
 	}
+	
+	@Test
+	public void testSwitchTabs(){
+		tabGroup.selectTab("User Accounts");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("Pending Applications");
+			}
+		}).processTransientWindow().run();
+		assertThat(tabGroup.selectedTabEquals("Pending Applications"));
+		assertNotNull(tabGroup.getSelectedTab().getTable());
+		assertReflectionEquals(userSearchPanel.getTable("tablePending"), tabGroup
+				.getSelectedTab().getTable());
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				tabGroup.selectTab("User Accounts");
+			}
+		}).processTransientWindow().run();
+		assertThat(tabGroup.selectedTabEquals("User Accounts"));
+		assertNotNull(tabGroup.getSelectedTab().getTable());
+		assertReflectionEquals(userSearchPanel.getTable("tableUsers"), tabGroup
+				.getSelectedTab().getTable());
+	}
 
 	@Test
 	public void testShowUserProfile() {
@@ -139,6 +162,53 @@ public class UserControllerTest extends UISpecTestCase {
 		tabGroup.getSelectedTab().getTable().click(0, 0);
 		assertSame(userInfoPanel.getAwtComponent(),
 				userControl.getUserInfoPanel());
+	}
+	
+	@Test
+	public void testSearchUserAutoNoUser() {
+		tabGroup.selectTab("User Accounts");
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
+		
+		final TextBox search = userSearchPanel.getInputTextBox();
+	
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				search.pressKey(Key.Y).releaseKey(Key.Y);
+			}
+		}).processTransientWindow().run();	
+		assertThat(tabGroup.getSelectedTab().getTable().rowCountEquals(0));
+	}
+	
+	@Test
+	public void testSearchUserEnter() {
+		tabGroup.selectTab("User Accounts");
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
+		
+		final TextBox search = userSearchPanel.getInputTextBox();
+	
+		search.setText("ndizon");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				search.pressKey(Key.ENTER).releaseKey(Key.ENTER);
+			}
+		}).processTransientWindow().run();	
+		assertThat(tabGroup.getSelectedTab().getTable().rowCountEquals(1));
+	}
+	
+	@Test
+	public void testSearchUserButton() {
+		tabGroup.selectTab("User Accounts");
+		assertFalse(tabGroup.getSelectedTab().getTable().isEmpty());
+		final Button button = userSearchPanel.getButton("Search");
+		TextBox search = userSearchPanel.getInputTextBox();
+	
+		search.setText("ndizon");
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				button.click();
+			}
+		}).processTransientWindow().run();	
+		assertThat(tabGroup.getSelectedTab().getTable().rowCountEquals(1));
 	}
 
 	@Test
@@ -309,7 +379,7 @@ public class UserControllerTest extends UISpecTestCase {
 
 		assertThat(pendingTable.rowCountEquals(1));
 	}
-
+	
 	@ExpectedDataSet({ "../models/expected/changePassword.xml" })
 	@Test
 	public void testChangePasswordLibrarian() {
