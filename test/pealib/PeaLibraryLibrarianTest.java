@@ -7,8 +7,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.ToggleButton;
+import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
 
@@ -23,28 +25,40 @@ public class PeaLibraryLibrarianTest extends UISpecTestCase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		PeaLibrary peaLibrary = new PeaLibrary(Constants.TEST_CONFIG);
+		final PeaLibrary peaLibrary = new PeaLibrary(Constants.TEST_CONFIG);
 		User user = UserDAO.getUserById(2);
 		peaLibrary.setCurrentUser(user);
-		peaLibrary.initialize();
-		window = new Window(peaLibrary.getMainFrame());
+		
+		
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				peaLibrary.initialize();
+			}
+		}).processTransientWindow().run();
+		
+		window = new Window(PeaLibrary.getMainFrame());
 
 	}
 
 	@Test
 	public void testSidebar() {
-		ToggleButton searchBooksButton = window.getToggleButton("Search Books");
-		searchBooksButton.click();
+		 ToggleButton searchBooksButton =
+		 window.getToggleButton("Search Books");
+		 searchBooksButton.click();
 
-		ToggleButton searchUsersButton = window.getToggleButton("Search Users");
-		searchUsersButton.click();
-
-		ToggleButton editProfileButton = window.getToggleButton("Edit Profile");
-		editProfileButton.click();
-
-		ToggleButton bookTransactionsButton = window
-				.getToggleButton("Book Transactions");
-		bookTransactionsButton.click();
+		 ToggleButton searchUsersButton =
+		 window.getToggleButton("Search Users");
+		 searchUsersButton.click();
+		
+		 ToggleButton editProfileButton =
+		 window.getToggleButton("Edit Profile");
+		 editProfileButton.click();
+		
+		 ToggleButton bookTransactionsButton = window
+		 .getToggleButton("Book Transactions");
+		 bookTransactionsButton.click();
 
 	}
 }
