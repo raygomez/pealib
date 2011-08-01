@@ -435,7 +435,7 @@ public class UserControllerTest extends UISpecTestCase {
 				dialog.getPasswordField("newpassword").setPassword("1234");
 				dialog.getPasswordField("repeatpassword").setPassword("1234");
 				dialog.getButton("Change Password").click();
-				assertTrue(dialog.containsLabel("Invalid password. Passwords should be 6-20 characters long."));
+				assertTrue(dialog.containsLabel("Invalid password."));
 				return dialog.getButton("Cancel").triggerClick();
 			}
 
