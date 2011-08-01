@@ -83,32 +83,63 @@ public class UserInfoPanelTest extends UISpecTestCase {
 			assertThat(textField.isEnabled());
 		}
 
-		label = panel.getTextBox("lblError");
-		assertNotNull(label);
-		assertEquals(" ", label.getText());
-		assertThat(label.isVisible());
+		String[] errorLabels = { "firstNameErrorLabel", "lastNameErrorLabel", "contactNumberErrorLabel",
+				"addressErrorLabel", "emailErrorLabel"};
+		for (String s : errorLabels){
+			label = panel.getTextBox(s);
+			assertNotNull(label);
+			assertEquals(" ", label.getText());
+			assertThat(label.isVisible());
+		}
 	}
 
 	@Test
 	public void testDisplayErrors() {
-		TextBox label;
+		TextBox label = null;
 
 		int[] errors = { Constants.FIRST_NAME_FORMAT_ERROR,
 				Constants.LAST_NAME_FORMAT_ERROR, Constants.EMAIL_FORMAT_ERROR,
-				Constants.CONTACT_NUMBER_FORMAT_ERROR };
+				Constants.CONTACT_NUMBER_FORMAT_ERROR, Constants.ADDRESS_FORMAT_ERROR};
 
 		userInfoPanel.displayErrors(errors);
-
-		label = panel.getTextBox("lblError");
+		
+		label = panel.getTextBox("firstNameErrorLabel");
+		assertEquals("Invalid Input", label.getText());
 		assertNotNull(label);
 		assertThat(label.isVisible());
-
-		label = panel.getTextBox("lblError");
-		assertNotNull(label);
+		
+		label = panel.getTextBox("lastNameErrorLabel");
 		assertEquals("Invalid Input", label.getText());
+		assertNotNull(label);
+		assertThat(label.isVisible());
+		
+		label = panel.getTextBox("emailErrorLabel");
+		assertEquals(Constants.EMAIL_FORMAT_ERROR_MESSAGE, label.getText());
+		assertNotNull(label);
+		assertThat(label.isVisible());
+		
+		label = panel.getTextBox("contactNumberErrorLabel");
+		assertEquals(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE, label.getText());
+		assertNotNull(label);
+		assertThat(label.isVisible());
+		
+		label = panel.getTextBox("addressErrorLabel");
+		assertEquals("Invalid Input", label.getText());
+		assertNotNull(label);
 		assertThat(label.isVisible());
 	}
-
+	
+	@Test
+	public void testDisplayErrorEmailExist() {
+		TextBox label = null;
+		int error[] = {Constants.EMAIL_EXIST_ERROR};
+		userInfoPanel.displayErrors(error);
+		label = panel.getTextBox("emailErrorLabel");
+		assertEquals(Constants.EMAIL_EXIST_ERROR_MESSAGE, label.getText());
+		assertNotNull(label);
+		assertThat(label.isVisible());
+	}
+		
 	@Test
 	public void testResetErrorMessages() {
 		TextBox label;
@@ -120,10 +151,14 @@ public class UserInfoPanelTest extends UISpecTestCase {
 		userInfoPanel.displayErrors(errors);
 		userInfoPanel.resetErrorMessages();
 		
-		label = panel.getTextBox("lblError");
-		assertNotNull(label);
-		assertEquals(" ", label.getText());
-		assertThat(label.isVisible());
+		String[] errorLabels = { "firstNameErrorLabel", "lastNameErrorLabel", "contactNumberErrorLabel",
+				"addressErrorLabel", "emailErrorLabel"};
+		for (String s : errorLabels){
+			label = panel.getTextBox(s);
+			assertNotNull(label);
+			assertEquals(" ", label.getText());
+			assertThat(label.isVisible());
+		}
 	}
 
 	@Test

@@ -155,12 +155,6 @@ public class Emailer {
 
 	}
 
-	/**
-	 * @return the on_
-	 */
-	public static boolean isOn() {
-		return on_;
-	}
 
 	/**
 	 * @param on

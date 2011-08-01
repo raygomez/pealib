@@ -10,7 +10,6 @@ import org.uispec4j.ToggleButton;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
-import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
@@ -26,54 +25,40 @@ public class PeaLibraryLibrarianTest extends UISpecTestCase {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		PeaLibrary peaLibrary = new PeaLibrary(Constants.TEST_CONFIG);
+		final PeaLibrary peaLibrary = new PeaLibrary(Constants.TEST_CONFIG);
 		User user = UserDAO.getUserById(2);
 		peaLibrary.setCurrentUser(user);
-		peaLibrary.initialize();
-		window = new Window(peaLibrary.getMainFrame());
-
-	}
-
-	@Test
-	public void testAuthenticate(){
 		
-		final PeaLibrary peaLib = new PeaLibrary(Constants.TEST_CONFIG);
 		
 		WindowInterceptor.init(new Trigger() {
 			
 			@Override
 			public void run() throws Exception {
-				// TODO Auto-generated method stub
-				peaLib.authenticate();
+				peaLibrary.initialize();
 			}
-		}).process(new WindowHandler(){
-
-			@Override
-			public Trigger process(Window login) throws Exception {
-				login.getInputTextBox("username").setText("apantaleon");
-				login.getPasswordField("password").setPassword("123456");
-				
-				return login.getButton("Log In").triggerClick();
-			}
-			
-		}).run();
+		}).processTransientWindow().run();
 		
+		window = new Window(PeaLibrary.getMainFrame());
+
 	}
-	
+
 	@Test
 	public void testSidebar() {
-		ToggleButton searchBooksButton = window.getToggleButton("Search Books");
-		searchBooksButton.click();
+		 ToggleButton searchBooksButton =
+		 window.getToggleButton("Search Books");
+		 searchBooksButton.click();
 
-		ToggleButton searchUsersButton = window.getToggleButton("Search Users");
-		searchUsersButton.click();
-
-		ToggleButton editProfileButton = window.getToggleButton("Edit Profile");
-		editProfileButton.click();
-
-		ToggleButton bookTransactionsButton = window
-				.getToggleButton("Book Transactions");
-		bookTransactionsButton.click();
+		 ToggleButton searchUsersButton =
+		 window.getToggleButton("Search Users");
+		 searchUsersButton.click();
+		
+		 ToggleButton editProfileButton =
+		 window.getToggleButton("Edit Profile");
+		 editProfileButton.click();
+		
+		 ToggleButton bookTransactionsButton = window
+		 .getToggleButton("Book Transactions");
+		 bookTransactionsButton.click();
 
 	}
 }

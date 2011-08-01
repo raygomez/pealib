@@ -21,20 +21,17 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import pealib.PeaLibrary;
-
 import models.Book;
 import models.BorrowTransaction;
 import models.TransactionDAO;
-import views.InOutTabbedPane;
-import views.IncomingPanel;
-import views.LoadingDialog;
-import views.OutgoingPanel;
+import pealib.PeaLibrary;
 import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Task;
-//# remove these
 //import utilities.Connector;
+import views.InOutTabbedPane;
+import views.IncomingPanel;
+import views.OutgoingPanel;
 
 public class TransactionController {
 	private boolean isIncoming = true; // isOutgoing = false
@@ -43,11 +40,9 @@ public class TransactionController {
 	private ArrayList<BorrowTransaction> searchResults;
 	private ArrayList<BorrowTransaction> selectedBookTransactions;
 	private int[] selectedRows;
-
 	private InOutTabbedPane tabbedPane;
 	private IncomingPanel inPanel;
 	private OutgoingPanel outPanel;
-	
 	private int passCounter;
 
 //	public static void main(String[] args) throws Exception {
@@ -99,7 +94,6 @@ public class TransactionController {
 	}
 
 	public InOutTabbedPane getTabbedPane() throws Exception {
-		//searchBookTransaction();
 		return tabbedPane;
 	}
 
@@ -144,9 +138,7 @@ public class TransactionController {
 	}
 
 	private void grantBorrowRequest() throws Exception {
-		
 		Callable<Void> toDo = new Callable<Void>(){
-
 			@Override
 			public Void call() throws Exception {
 				for (int i = 0; i < selectedRows.length; i++) {
@@ -154,9 +146,7 @@ public class TransactionController {
 				}
 				return null;
 			}
-			
 		};
-		
 		LoadingControl.init(new Task<Void, Object>(toDo), PeaLibrary.getMainFrame()).executeLoading();
 			
 		JOptionPane.showMessageDialog(tabbedPane, "Successfully lent "
@@ -166,15 +156,10 @@ public class TransactionController {
 	}
 
 	private void denyBorrowRequest() throws Exception {
-		
-		
 		Callable<Void> toDo = new Callable<Void>(){
-
 			@Override
 			public Void call() throws Exception {
-				
 				passCounter = 0;
-				
 				for (int i = 0; i < selectedRows.length; i++) {
 					TransactionDAO.denyBookRequest(selectedBookTransactions.get(i));
 
@@ -187,21 +172,9 @@ public class TransactionController {
 				}
 				return null;
 			}
-			
 		};
-		
 		LoadingControl.init(new Task<Void, Object>(toDo), PeaLibrary.getMainFrame()).executeLoading();
 		
-		for (int i = 0; i < selectedRows.length; i++) {
-			TransactionDAO.denyBookRequest(selectedBookTransactions.get(i));
-
-			/* check if the book to be denied is reserved by other users */
-			Book deniedBook = selectedBookTransactions.get(i).getBook();
-			if (TransactionDAO.isBookReservedByOtherUsers(deniedBook)) {
-				TransactionDAO.passToNextUser(deniedBook);
-				passCounter++;
-			}
-		}
 		if (passCounter == 0) {
 			JOptionPane.showMessageDialog(tabbedPane, "Refused to lend "
 					+ selectedRows.length + " book(s).",
@@ -250,9 +223,9 @@ public class TransactionController {
 		} else {
 			JOptionPane.showMessageDialog(tabbedPane,
 					"<html>Successfully returned " + selectedRows.length
-							+ " book(s).<br>" + passCounter
-							+ " book(s) have pending reservations.<br>"
-							+ "See Outgoing tab for details.",
+					+ " book(s).<br>" + passCounter
+					+ " book(s) have pending reservations.<br>"
+					+ "See Outgoing tab for details.",
 					"Borrowed Book Returned", JOptionPane.INFORMATION_MESSAGE);
 		}
 		setButtonsStatus(false);
@@ -324,10 +297,8 @@ public class TransactionController {
 				"Date Requested" };
 
 		Callable<Void> toDo = new Callable<Void>() {
-
 			@Override
 			public Void call() throws Exception {
-				
 				String keyword;
 				if (isIncoming) {
 					inPanel.getSearchPanel().getTblResults().setVisible(false);
@@ -340,11 +311,9 @@ public class TransactionController {
 					tableHeader = outgoingTableHeader;
 					searchResults = TransactionDAO.searchOutgoingBook(keyword);
 				}
-				
 				return null;
 			}
 		};
-		
 		LoadingControl.init(new Task<Void, Object>(toDo), PeaLibrary.getMainFrame()).executeLoading();
 
 		if (searchResults.size() != 0) {
@@ -387,10 +356,10 @@ public class TransactionController {
 								.getUserName()
 								+ " ("
 								+ searchResults.get(row).getUser()
-										.getFirstName()
+								.getFirstName()
 								+ " "
 								+ searchResults.get(row).getUser()
-										.getLastName() + ")";
+								.getLastName() + ")";
 						objData = user;
 						break;
 					case 4:
