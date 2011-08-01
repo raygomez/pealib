@@ -61,7 +61,7 @@ public class UserControllerTest extends UISpecTestCase {
 		assertNotNull(userControlOrdinary);
 	}
 
-
+	@Ignore
 	@Test
 	public void testInitialUserTab() {
 		assertNotNull(tabGroup);
