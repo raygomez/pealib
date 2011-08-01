@@ -75,7 +75,7 @@
 	<!--<target name="all" depends='build,instrument,tests,coverage-report,summary-coverage-report,alternate-coverage-report,junitreport,docs,jar' />-->
 	<target name="emma-all" depends='init,build,inst-emma,test-emma,report-emma' />
 	<target name="cobertura-all" depends='init,build,instrument,tests,coverage-report,summary-coverage-report,alternate-coverage-report' />
-	<target name="all" depends='zip,emma-all,junitreport,docs' />
+	<target name="all" depends='zip,emma-all,junitreport' />
 
 	<target name="jar" depends='build'>
 		<delete dir="${dist.dir}" />
