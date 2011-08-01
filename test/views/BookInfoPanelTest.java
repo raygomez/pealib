@@ -1,6 +1,8 @@
 package views;
 
 import models.Book;
+import static org.unitils.reflectionassert.ReflectionAssert.*;
+
 import models.BookDAO;
 import models.User;
 import models.UserDAO;
@@ -27,6 +29,8 @@ public class BookInfoPanelTest extends UISpecTestCase {
 	Book book;
 	User user;
 	User librarian;
+	BookInfoPanel bookInfoPanelUser;
+	BookInfoPanel bookInfoPanelLibrarian;
 
 	@Before
 	public void setUp() throws Exception {
@@ -37,8 +41,10 @@ public class BookInfoPanelTest extends UISpecTestCase {
 		assertEquals("User", user.getType());
 		librarian = UserDAO.getUserById(2);
 		assertEquals("Librarian", librarian.getType());
-		panelUser = new Panel(new BookInfoPanel(book, user));
-		panelLibrarian = new Panel(new BookInfoPanel(book, librarian));
+		bookInfoPanelUser = new BookInfoPanel(book, user);
+		panelUser = new Panel(bookInfoPanelUser);
+		bookInfoPanelLibrarian = new BookInfoPanel(book, librarian);
+		panelLibrarian = new Panel(bookInfoPanelLibrarian);
 	}
 
 	@Test
@@ -144,4 +150,53 @@ public class BookInfoPanelTest extends UISpecTestCase {
 		assertThat(panelLibrarian.getSpinner().isVisible());
 
 	}
+
+	@Test
+	public void testGetCurrentBook() throws Exception {
+		Book expected_book = BookDAO.getBookById(1);
+		Book actual_book = bookInfoPanelUser.getCurrBook();
+		assertReflectionEquals(expected_book, actual_book);
+	}
+
+	@Test
+	public void testSetCurrentBookUser() throws Exception {
+		Book book = BookDAO.getBookById(2);
+		bookInfoPanelUser.setBookInfoData(book);
+		assertThat(panelUser.getTextBox("titleTextField").textContains(
+				book.getTitle()));
+		assertThat(panelUser.getTextBox("authorTextField").textContains(
+				book.getAuthor()));
+		assertThat(panelUser.getTextBox("publisherTextField").textContains(
+				book.getPublisher()));
+		assertThat(panelUser.getTextBox("isbnTextField").textContains(
+				book.getIsbn()));
+		assertThat(panelUser.getTextBox("descriptionTextArea").textContains(
+				book.getDescription()));
+		assertThat(panelUser.getTextBox("editionTextField").textContains(
+				book.getEdition()));
+		assertThat(panelUser.getTextBox("yearPublishTextField").textContains(
+				"" + book.getYearPublish()));
+	}
+	
+	@Test
+	public void testSetCurrentBookLibrarian() throws Exception {
+		Book book = BookDAO.getBookById(2);
+		bookInfoPanelLibrarian.setBookInfoData(book);
+		assertThat(panelLibrarian.getTextBox("titleTextField").textContains(
+				book.getTitle()));
+		assertThat(panelLibrarian.getTextBox("authorTextField").textContains(
+				book.getAuthor()));
+		assertThat(panelLibrarian.getTextBox("publisherTextField").textContains(
+				book.getPublisher()));
+		assertThat(panelLibrarian.getTextBox("isbnTextField").textContains(
+				book.getIsbn()));
+		assertThat(panelLibrarian.getTextBox("descriptionTextArea").textContains(
+				book.getDescription()));
+		assertThat(panelLibrarian.getTextBox("editionTextField").textContains(
+				book.getEdition()));
+		assertThat(panelLibrarian.getSpinner().valueEquals(book.getCopies()));
+		assertThat(panelLibrarian.getTextBox("yearPublishTextField").textContains(
+				"" + book.getYearPublish()));
+	}
+
 }
