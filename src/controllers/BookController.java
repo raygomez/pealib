@@ -550,7 +550,11 @@ public class BookController {
 				currTableRowSelection = tableRow;
 				
 				try {
-					bookList = BookDAO.searchBook(bookSearch.getTextFieldSearch().getText());
+					if(currentUser.getType().equals("Librarian")){
+						bookList = BookDAO.searchBook(bookSearch.getTextFieldSearch().getText());
+					}else{
+						bookList = BookDAO.searchBookForUser(bookSearch.getTextFieldSearch().getText());
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
