@@ -13,7 +13,7 @@ import org.unitils.UnitilsJUnit4TestClassRunner;
 public class ConnectorTest {
 
 	@Test
-	public void testGetConnection() throws Exception {
+	public void testGetConnectionWithConfig() throws Exception {
 		Connector.init(Constants.TEST_CONFIG);
 		Connection actual = Connector.getConnection();
 		Connection expected = null;
@@ -23,6 +23,22 @@ public class ConnectorTest {
 
 		assertEquals(actual.getCatalog(), expected.getCatalog());
 		assertEquals(actual.getClass(), expected.getClass());
+		
+		Connector.close();
 	}
 
+	@Test
+	public void testGetConnection() throws Exception {
+		Connector.init();
+		Connection actual = Connector.getConnection();
+		Connection expected = null;
+
+		expected = DriverManager.getConnection("jdbc:mysql://10.127.160.190/pealib",
+				"root", "1234");
+
+		assertEquals(actual.getCatalog(), expected.getCatalog());
+		assertEquals(actual.getClass(), expected.getClass());
+		
+		Connector.close();
+	}
 }
