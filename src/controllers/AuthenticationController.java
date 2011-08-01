@@ -55,7 +55,8 @@ public class AuthenticationController {
 		setLogin(new LogInDialog());
 		getLogin().setActionListeners(new SignUpListener(),
 				new SubmitListener(), new SubmitKeyAdapter(),
-				new ForgotPasswordListener());
+				forgotPasswordListener);
+				//new ForgotPasswordListener());
 		getLogin().setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 	}
@@ -454,7 +455,9 @@ public class AuthenticationController {
 		return signUp;
 	}
 	
-	class ForgotPasswordListener extends MouseAdapter{
+//	class ForgotPasswordListener extends MouseAdapter{
+	MouseAdapter forgotPasswordListener = new MouseAdapter(){
+	
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			String userOrEmail = (String)JOptionPane.showInputDialog(
@@ -474,7 +477,7 @@ public class AuthenticationController {
 							UserDAO.changePassword(user.getUserId(),
 									user.getPassword());
 							JOptionPane.showMessageDialog(getLogin(),
-								"Check your email for your new password.",
+								"Kindly check your email for your new password.",
 								"Forgot Password",
 								JOptionPane.INFORMATION_MESSAGE);
 						}else{
@@ -500,5 +503,5 @@ public class AuthenticationController {
 					JOptionPane.ERROR_MESSAGE);
 			}
 		}
-	}
+	};
 }
