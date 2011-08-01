@@ -406,17 +406,6 @@ public class BookController {
 			} else
 				bookInfo.getTxtFldDescription().hasError(false);
 
-			int spinCopy = Integer.parseInt(bookInfo.getSpinCopyVal()
-					.getModel().getValue().toString());
-			int availableCopy = TransactionDAO.getAvailableCopies(bookInfo
-					.getCurrBook());
-			int validCopy = bookInfo.getCurrBook().getCopies()
-					- availableCopy;
-			if (spinCopy < validCopy) {
-				bookInfo.getSpinCopyVal().hasError(true);
-				validate = false;
-			} else
-				bookInfo.getSpinCopyVal().hasError(false);
 
 			if (bookInfo.getTxtFldEdition().getText().length() > 30) {
 				validate = false;
@@ -433,6 +422,21 @@ public class BookController {
 					validate = false;
 				} else
 					bookInfo.getTxtFldISBN().hasError(false);
+			}
+			int spinCopy = Integer.parseInt(bookInfo.getSpinCopyVal()
+					.getModel().getValue().toString());
+			int availableCopy = TransactionDAO.getAvailableCopies(bookInfo
+					.getCurrBook());
+			int validCopy = bookInfo.getCurrBook().getCopies()
+					- availableCopy;
+			if (spinCopy < validCopy) {
+				bookInfo.getSpinCopyVal().hasError(true);
+				validate = false;
+			} else{
+				if (TransactionDAO.isBookReservedByOtherUsers(bookInfo.getCurrBook())) {
+					TransactionDAO.passToNextUser(bookInfo.getCurrBook());
+				}
+				bookInfo.getSpinCopyVal().hasError(false);
 			}
 			
 			return validate;
