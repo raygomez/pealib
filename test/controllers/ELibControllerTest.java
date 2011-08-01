@@ -80,11 +80,11 @@ public class ELibControllerTest extends UISpecTestCase {
 		assertEquals(3, onLoan.getRowCount());
 		assertThat(onLoan.contentEquals(new Object[][] {
 				{ "1234567890121", "Harry Poter 2", "Niel", "2011-06-15",
-						"2011-06-29" },
+						"<html><font color='red'>2011-06-29</font></html>" },
 				{ "1234567890123", "title1", "author1", "2011-06-15",
-						"2011-06-29" },
+						"<html><font color='red'>2011-06-29</font></html>" },
 				{ "1234567890124", "title2", "author1", "2011-06-15",
-						"2011-06-29" } }));
+						"<html><font color='red'>2011-06-29</font></html>" } }));
 		assertThat(onLoan.isEditable(new boolean[][] {
 				{ false, false, false, false, false },
 				{ false, false, false, false, false },

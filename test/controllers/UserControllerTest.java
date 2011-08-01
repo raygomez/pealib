@@ -417,6 +417,7 @@ public class UserControllerTest extends UISpecTestCase {
 		}).run();
 	}
 	
+	@Ignore
 	@Test
 	public void testChangePasswordInvalidFormat() {
 		final Button changePasswordButton = userInfoPanelOrdinary
