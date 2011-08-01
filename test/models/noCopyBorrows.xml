@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<borrows BookID="2" UserID="2" DateRequested="2011-06-15"
+		DateBorrowed="[null]" DateReturned="[null]" BorrowID='1' />
+	<borrows BookID="2" UserID="3" DateRequested="2011-06-15"
+		DateBorrowed="2011-06-15" DateReturned="[null]" BorrowID='2' />
+	<borrows BookID="3" UserID="5" DateRequested="2011-06-15"
+		DateBorrowed="2011-06-15" DateReturned="2011-06-15" BorrowID='3' />
+	<borrows BookID="2" UserID="1" DateRequested="2011-06-15"
+		DateBorrowed="2011-06-15" DateReturned="[null]" BorrowID='4' />
+	<borrows BookID="4" UserID="1" DateRequested="2011-06-15"
+		DateBorrowed="2011-06-15" DateReturned="[null]" BorrowID='5' />
+	<borrows BookID="5" UserID="1" DateRequested="2011-06-15"
+		DateBorrowed="2011-06-15" DateReturned="[null]" BorrowID='6' />
+	<borrows BookID="4" UserID="1" DateRequested="2011-06-15"
+		DateBorrowed="2011-06-15" DateReturned="2011-06-15" BorrowID='7' />
+	<borrows BookID="2" UserID="2" DateRequested="2011-06-15"
+		DateBorrowed="2011-06-15" DateReturned="2011-06-15" BorrowID='8' />
+	<borrows BookID="5" UserID="4" DateRequested="2011-06-15"
+		DateBorrowed="[null]" DateReturned="[null]" BorrowID='9' />
+	<borrows BookID="6" UserID="4" DateRequested="2011-06-15"
+		DateBorrowed="[null]" DateReturned="[null]" BorrowID='10' />
+	<borrows BookID="2" UserID="6" DateRequested="2011-06-15"
+		DateBorrowed="2011-06-15" DateReturned="[null]" BorrowID='11' />
+
+</dataset>

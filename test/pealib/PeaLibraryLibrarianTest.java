@@ -1,0 +1,64 @@
+package pealib;
+
+import models.User;
+import models.UserDAO;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.uispec4j.ToggleButton;
+import org.uispec4j.Trigger;
+import org.uispec4j.UISpecTestCase;
+import org.uispec4j.Window;
+import org.uispec4j.interception.WindowInterceptor;
+import org.unitils.UnitilsJUnit4TestClassRunner;
+import org.unitils.dbunit.annotation.DataSet;
+
+import utilities.Constants;
+
+@DataSet({ "../models/user.xml", "../models/book.xml",
+		"../models/reserves.xml", "../models/borrows.xml" })
+@RunWith(UnitilsJUnit4TestClassRunner.class)
+public class PeaLibraryLibrarianTest extends UISpecTestCase {
+
+	static Window window;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		final PeaLibrary peaLibrary = new PeaLibrary(Constants.TEST_CONFIG);
+		User user = UserDAO.getUserById(2);
+		peaLibrary.setCurrentUser(user);
+		
+		
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				peaLibrary.initialize();
+			}
+		}).processTransientWindow().run();
+		
+		window = new Window(PeaLibrary.getMainFrame());
+
+	}
+
+	@Test
+	public void testSidebar() {
+		 ToggleButton searchBooksButton =
+		 window.getToggleButton("Search Books");
+		 searchBooksButton.click();
+
+		 ToggleButton searchUsersButton =
+		 window.getToggleButton("Search Users");
+		 searchUsersButton.click();
+		
+		 ToggleButton editProfileButton =
+		 window.getToggleButton("Edit Profile");
+		 editProfileButton.click();
+		
+		 ToggleButton bookTransactionsButton = window
+		 .getToggleButton("Book Transactions");
+		 bookTransactionsButton.click();
+
+	}
+}
