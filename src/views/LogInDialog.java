@@ -66,7 +66,7 @@ public class LogInDialog extends JDialog {
 		contentPanel.add(lblForgotPassword, "cell 0 4 3 1,alignx right,aligny center");
 	}
 	
-	protected JLabel getLabelError() {
+	public JLabel getLabelError() {
 		return labelError;
 	}
 
