@@ -500,6 +500,7 @@ public class UserController {
 			String email, String address, String contactNo, String userName) {
 
 		boolean pass = true;
+		boolean flag = true;
 		ArrayList<Integer> tempErrors = new ArrayList<Integer>();
 
 		if (!firstName.matches(Constants.NAME_FORMAT)) {
@@ -512,16 +513,6 @@ public class UserController {
 			pass = false;
 		}
 
-		if (!email.matches(Constants.EMAIL_FORMAT)) {
-			tempErrors.add(Constants.EMAIL_FORMAT_ERROR);
-			pass = false;
-		}
-		
-		if (!isEmailUnique(email, userName)) {
-			tempErrors.add(Constants.EMAIL_EXIST_ERROR);
-			pass = false;
-		}
-
 		if (!address.matches(Constants.ADDRESS_FORMAT)) {
 			tempErrors.add(Constants.ADDRESS_FORMAT_ERROR);
 			pass = false;
@@ -529,6 +520,17 @@ public class UserController {
  
 		if (!contactNo.matches(Constants.CONTACT_NUMBER_FORMAT)) {
 			tempErrors.add(Constants.CONTACT_NUMBER_FORMAT_ERROR);
+			pass = false;
+		}
+		
+		if (!email.matches(Constants.EMAIL_FORMAT)) {
+			tempErrors.add(Constants.EMAIL_FORMAT_ERROR);
+			pass = false;
+			flag = false;
+		}
+		
+		if (!isEmailUnique(email, userName) && flag) {
+			tempErrors.add(Constants.EMAIL_EXIST_ERROR);
 			pass = false;
 		}
 
