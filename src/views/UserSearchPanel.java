@@ -125,7 +125,7 @@ public class UserSearchPanel extends JPanel {
 		table.getColumn("Name").setCellRenderer(trender);
 		
 		if(tab==PENDING){
-			table.getColumn("Accept").setPreferredWidth(5);
+			table.getColumn("").setPreferredWidth(5);
 		}
 		
 		table.getTableHeader().setReorderingAllowed(false);	

@@ -357,7 +357,7 @@ public class UserController {
 		 * Filling up table data for Pending
 		 */
 		private void pending() {
-			columns = new String[] { "Username", "Name", "Accept" };
+			columns = new String[] { "Username", "Name", "" };
 
 			try {
 				searchedPending = UserDAO.searchAllPending(searchStr);

@@ -1,6 +1,8 @@
 package controllers;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.concurrent.Callable;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
@@ -20,11 +23,13 @@ import models.BorrowTransaction;
 import models.ReserveTransaction;
 import models.TransactionDAO;
 import models.User;
+import models.UserDAO;
 
 import org.joda.time.DateTime;
 
 import pealib.PeaLibrary;
 
+import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Task;
@@ -41,23 +46,25 @@ public class ELibController {
 	private ELibTabbedPanel tabpane;
 	private ArrayList<BorrowTransaction> bookData;
 	private ArrayList<ReserveTransaction> bookDataReserve;
+	private int tab;
+	private ELibTableModel model;
 
-	// public static void main(String[] args) throws Exception {
-	// Connector.init(Constants.TEST_CONFIG);
-	//
-	// JFrame frame = new JFrame();
-	// frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	//
-	// Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	// frame.setBounds(0, 0, screenSize.width, screenSize.height);
-	//
-	// User user = UserDAO.getUserById(1);
-	// frame.setContentPane(new ELibController(user).getTabpane());
-	//
-	// frame.setUndecorated(true);
-	// frame.setVisible(true);
-	// frame.setResizable(false);
-	// }
+	public static void main(String[] args) throws Exception {
+		Connector.init(Constants.TEST_CONFIG);
+
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setBounds(0, 0, screenSize.width, screenSize.height);
+
+		User user = UserDAO.getUserById(1);
+		frame.setContentPane(new ELibController(user).getTabPane());
+
+		frame.setUndecorated(true);
+		frame.setVisible(true);
+		frame.setResizable(false);
+	}
 
 	public ELibController(User user) throws Exception {
 		setUser(user);
@@ -119,14 +126,23 @@ public class ELibController {
 	public void update() throws Exception {
 		
 		tabpane.getRequestTable().setVisible(false);
-		
 		Callable<Void> toDo = new Callable<Void>() {
 
 			@Override
 			public Void call() throws Exception {
 
-				int tab = tabpane.getSelectedTab();
-				ELibTableModel model = new ELibTableModel(tab);
+				tab = tabpane.getSelectedTab();
+				model = new ELibTableModel(tab);
+				
+				return null;				
+			}
+		};
+		
+		Callable<Void> toDoAfter = new Callable<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				
 				tabpane.setTableModel(tab, model);
 
 				tabpane.setCellRenderer(tab, new CancelButtonRenderer());
@@ -135,15 +151,7 @@ public class ELibController {
 				} else if (tab == RESERVE) {
 					tabpane.setCellEditor(tab, new CancelReservationButtonEditor());
 				}
-			
-				return null;				
-			}
-		};
-		
-		Callable<Void> toDoAfter = new Callable<Void>() {
-
-			@Override
-			public Void call() throws Exception {				
+				
 				tabpane.getRequestTable().setVisible(true);
 				return null;
 			}
