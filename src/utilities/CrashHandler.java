@@ -9,6 +9,6 @@ public class CrashHandler {
 				+ "We have to terminate this application.", "Connecton Error",
 				JOptionPane.ERROR_MESSAGE);
 		e.printStackTrace();
-		System.exit(-1);		
+		System.exit(-1);
 	}
 }

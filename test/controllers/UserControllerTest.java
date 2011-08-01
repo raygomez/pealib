@@ -435,7 +435,7 @@ public class UserControllerTest extends UISpecTestCase {
 				dialog.getPasswordField("newpassword").setPassword("1234");
 				dialog.getPasswordField("repeatpassword").setPassword("1234");
 				dialog.getButton("Change Password").click();
-				assertTrue(dialog.containsLabel("Invalid password. Passwords should be 6-20 characters long."));
+				assertTrue(dialog.containsLabel("Invalid password."));
 				return dialog.getButton("Cancel").triggerClick();
 			}
 
@@ -472,7 +472,20 @@ public class UserControllerTest extends UISpecTestCase {
 		userInfoPanel.getTextBox("emailAdd").setText("");
 	 	userInfoPanel.getInputTextBox("address").setText("");
 		saveChangesButton.click();
-		assertEquals("Invalid Input", userInfoPanel.getTextBox("lblError").getText());
 		
+		assertEquals("Invalid Input", userInfoPanel.getTextBox("firstNameErrorLabel").getText());
+		assertEquals("Invalid Input", userInfoPanel.getTextBox("lastNameErrorLabel").getText());
+		assertEquals("Invalid Input", userInfoPanel.getTextBox("addressErrorLabel").getText());
+		assertEquals(Constants.EMAIL_FORMAT_ERROR_MESSAGE, userInfoPanel.getTextBox("emailErrorLabel").getText());
+		assertEquals(Constants.CONTACT_NUMBER_FORMAT_ERROR_MESSAGE, userInfoPanel.getTextBox("contactNumberErrorLabel").getText());
+	}
+	
+	@Test
+	public void testUpdateUserEmailExisting(){
+		Button saveChangesButton = userInfoPanel.getButton("Save Changes");
+		assertThat(userInfoPanel.getTextBox("emailAdd").isEditable());
+		userInfoPanel.getTextBox("emailAdd").setText("rdgomez@gmail.com");
+		saveChangesButton.click();
+		assertEquals(Constants.EMAIL_EXIST_ERROR_MESSAGE, userInfoPanel.getTextBox("emailErrorLabel").getText());
 	}
 }

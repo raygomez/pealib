@@ -3,8 +3,10 @@ package controllers;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -751,6 +753,203 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				return dialog.getButton("Cancel").triggerClick();
 			}
 		}).run();
+	}
+	
+	@Test
+	public void testForgotPasswordEmpty(){
+		TextBox forgot = window.getTextBox("Forgot password?");
+		assertEquals("Forgot password?", forgot.getText());
+		
+		//auth.forgotPasswordListener.mouseClicked(null);
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				auth.forgotPasswordListener.mouseClicked(null);
+			}
+		})
+		.process(new WindowHandler() {	
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Please enter your username or email";
+				assertTrue(actual.equals(expected));
+				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {				
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Please specify your username or email.";
+				assertTrue(actual.equals(expected));				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();		
+	}
+	
+	@Test
+	public void testForgotPasswordInvalidUser(){
+		TextBox forgot = window.getTextBox("Forgot password?");
+		assertEquals("Forgot password?", forgot.getText());
+		
+		//auth.forgotPasswordListener.mouseClicked(null);
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				auth.forgotPasswordListener.mouseClicked(null);
+			}
+		})
+		.process(new WindowHandler() {	
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Please enter your username or email";
+				assertTrue(actual.equals(expected));
+				
+				dialog.getInputTextBox().setText("inv ?!alid");
+				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {				
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Username or email is invalid.";
+				assertTrue(actual.equals(expected));				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();	
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				auth.forgotPasswordListener.mouseClicked(null);
+			}
+		})
+		.process(new WindowHandler() {	
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Please enter your username or email";
+				assertTrue(actual.equals(expected));
+				
+				dialog.getInputTextBox().setText("invalid");
+				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {				
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Username or email is invalid.";
+				assertTrue(actual.equals(expected));				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();	
+	}
+	
+	@Test
+	public void testForgotPasswordInvalidEmail(){
+		TextBox forgot = window.getTextBox("Forgot password?");
+		assertEquals("Forgot password?", forgot.getText());
+		
+		//auth.forgotPasswordListener.mouseClicked(null);
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				auth.forgotPasswordListener.mouseClicked(null);
+			}
+		})
+		.process(new WindowHandler() {	
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Please enter your username or email";
+				assertTrue(actual.equals(expected));
+				
+				dialog.getInputTextBox().setText("inval_!idEmail@;?;");
+				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {				
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Username or email is invalid.";
+				assertTrue(actual.equals(expected));				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();		
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				auth.forgotPasswordListener.mouseClicked(null);
+			}
+		})
+		.process(new WindowHandler() {	
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Please enter your username or email";
+				assertTrue(actual.equals(expected));
+				
+				dialog.getInputTextBox().setText("invalid@email.com");
+				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {				
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Username or email is invalid.";
+				assertTrue(actual.equals(expected));				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();		
+	}
+	
+	@Test
+	public void testForgotPasswordSuccess(){
+		TextBox forgot = window.getTextBox("Forgot password?");
+		assertEquals("Forgot password?", forgot.getText());
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				auth.forgotPasswordListener.mouseClicked(null);
+			}
+		})
+		.process(new WindowHandler() {	
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Please enter your username or email";
+				assertTrue(actual.equals(expected));
+				
+				dialog.getInputTextBox().setText("jomel.villar@gmail.com");
+				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {				
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Kindly check your email for your new password.";
+				assertTrue(actual.equals(expected));				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();		
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				auth.forgotPasswordListener.mouseClicked(null);
+			}
+		})
+		.process(new WindowHandler() {	
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Please enter your username or email";
+				assertTrue(actual.equals(expected));
+				
+				dialog.getInputTextBox().setText("ndizon");
+				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {				
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Kindly check your email for your new password.";
+				assertTrue(actual.equals(expected));				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();	
+			
 	}
 
 }
