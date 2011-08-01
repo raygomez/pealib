@@ -559,7 +559,7 @@ public class BookController {
 				currISBN = displayBook.getIsbn();
 				//TODO 
 				bookInfo.resetErrors();
-				System.out.println(displayBook.getIsbn());
+			//	System.out.println(displayBook.getIsbn());
 				bookInfo.setBookInfoData(displayBook);
 			}
 			
@@ -569,7 +569,6 @@ public class BookController {
 			} catch (Exception ex) {
 
 			}
-
 		}
 
 	}
