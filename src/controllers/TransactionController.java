@@ -322,99 +322,109 @@ public class TransactionController {
 				return null;
 			}
 		};
-		LoadingControl.init(new Task<Void, Object>(toDo), PeaLibrary.getMainFrame()).executeLoading();
-
-		if (searchResults.size() != 0) {
-			bookResultsModel = new AbstractTableModel() {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public int getColumnCount() {
-					return tableHeader.length;
-				}
-
-				public String getColumnName(int column) {
-					return tableHeader[column];
-				}
-
-				@Override
-				public int getRowCount() {
-					return searchResults.size();
-				}
-
-				public boolean isCellEditable(int row, int column) {
-					return false;
-				}
-
-				@Override
-				public Object getValueAt(int row, int column) {
-					Object objData = null;
-					switch (column) {
-					case 0:
-						objData = searchResults.get(row).getBook().getIsbn();
-						break;
-					case 1:
-						objData = searchResults.get(row).getBook().getTitle();
-						break;
-					case 2:
-						objData = searchResults.get(row).getBook().getAuthor();
-						break;
-					case 3:
-						String user = searchResults.get(row).getUser()
-								.getUserName()
-								+ " ("
-								+ searchResults.get(row).getUser()
-								.getFirstName()
-								+ " "
-								+ searchResults.get(row).getUser()
-								.getLastName() + ")";
-						objData = user;
-						break;
-					case 4:
-						if (isIncoming) {
-							objData = searchResults.get(row).getDateBorrowed();
-						} else {
-							objData = searchResults.get(row).getDateRequested();
-						}
-						break;
-					}
-					return objData;
-				}
-			};
-		} else {
-			String[][] emptyTable = {};
-			bookResultsModel = new DefaultTableModel(emptyTable, tableHeader) {
-				private static final long serialVersionUID = 1L;
-			};
-		}
-		int[] columnSizes = { 20, 200, 70, 30, 20 };
-		if (isIncoming) {
-			inPanel.getSearchPanel().getTblResults().setModel(bookResultsModel);
-			inPanel.getSearchPanel()
-					.getLblTotal()
-					.setText("Total Matches: " + bookResultsModel.getRowCount());
-			for (int i = 0; i < columnSizes.length; i++) {
-				inPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(i).setPreferredWidth(columnSizes[i]);
-			}
-			inPanel.getSearchPanel().setColumnRender();
-			inPanel.getSearchPanel().repaint();
-		} else {
-			outPanel.getSearchPanel().getTblResults()
-					.setModel(bookResultsModel);
-			outPanel.getSearchPanel()
-					.getLblTotal()
-					.setText("Total Matches: " + bookResultsModel.getRowCount());
-			for (int i = 0; i < columnSizes.length; i++) {
-				outPanel.getSearchPanel().getTblResults().getColumnModel()
-						.getColumn(i).setPreferredWidth(columnSizes[i]);
-			}
-			outPanel.getSearchPanel().setColumnRender();
-			outPanel.getSearchPanel().repaint();
-		}
 		
-		inPanel.getSearchPanel().getTblResults().setVisible(true);
-		outPanel.getSearchPanel().getTblResults().setVisible(true);
+		Callable<Void> toDoAfter = new Callable<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+
+				if (searchResults.size() != 0) {
+					bookResultsModel = new AbstractTableModel() {
+						private static final long serialVersionUID = 1L;
+
+						@Override
+						public int getColumnCount() {
+							return tableHeader.length;
+						}
+
+						public String getColumnName(int column) {
+							return tableHeader[column];
+						}
+
+						@Override
+						public int getRowCount() {
+							return searchResults.size();
+						}
+
+						public boolean isCellEditable(int row, int column) {
+							return false;
+						}
+
+						@Override
+						public Object getValueAt(int row, int column) {
+							Object objData = null;
+							switch (column) {
+							case 0:
+								objData = searchResults.get(row).getBook().getIsbn();
+								break;
+							case 1:
+								objData = searchResults.get(row).getBook().getTitle();
+								break;
+							case 2:
+								objData = searchResults.get(row).getBook().getAuthor();
+								break;
+							case 3:
+								String user = searchResults.get(row).getUser()
+										.getUserName()
+										+ " ("
+										+ searchResults.get(row).getUser()
+										.getFirstName()
+										+ " "
+										+ searchResults.get(row).getUser()
+										.getLastName() + ")";
+								objData = user;
+								break;
+							case 4:
+								if (isIncoming) {
+									objData = searchResults.get(row).getDateBorrowed();
+								} else {
+									objData = searchResults.get(row).getDateRequested();
+								}
+								break;
+							}
+							return objData;
+						}
+					};
+				} else {
+					String[][] emptyTable = {};
+					bookResultsModel = new DefaultTableModel(emptyTable, tableHeader) {
+						private static final long serialVersionUID = 1L;
+					};
+				}
+				int[] columnSizes = { 20, 200, 70, 30, 20 };
+				if (isIncoming) {
+					inPanel.getSearchPanel().getTblResults().setModel(bookResultsModel);
+					inPanel.getSearchPanel()
+							.getLblTotal()
+							.setText("Total Matches: " + bookResultsModel.getRowCount());
+					for (int i = 0; i < columnSizes.length; i++) {
+						inPanel.getSearchPanel().getTblResults().getColumnModel()
+								.getColumn(i).setPreferredWidth(columnSizes[i]);
+					}
+					inPanel.getSearchPanel().setColumnRender();
+					inPanel.getSearchPanel().repaint();
+				} else {
+					outPanel.getSearchPanel().getTblResults()
+							.setModel(bookResultsModel);
+					outPanel.getSearchPanel()
+							.getLblTotal()
+							.setText("Total Matches: " + bookResultsModel.getRowCount());
+					for (int i = 0; i < columnSizes.length; i++) {
+						outPanel.getSearchPanel().getTblResults().getColumnModel()
+								.getColumn(i).setPreferredWidth(columnSizes[i]);
+					}
+					outPanel.getSearchPanel().setColumnRender();
+					outPanel.getSearchPanel().repaint();
+				}
+				
+				inPanel.getSearchPanel().getTblResults().setVisible(true);
+				outPanel.getSearchPanel().getTblResults().setVisible(true);
+				
+				return null;
+			}
+		};
+		
+		LoadingControl.init(new Task<Void, Object>(toDo, toDoAfter), PeaLibrary.getMainFrame()).executeLoading();
 	}
 
 	private void setSelectedItem() throws Exception {

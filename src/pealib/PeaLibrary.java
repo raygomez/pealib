@@ -7,7 +7,6 @@ import java.util.concurrent.Callable;
 
 import models.User;
 import utilities.Connector;
-import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Emailer;
 import utilities.Task;
