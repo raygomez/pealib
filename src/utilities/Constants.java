@@ -14,11 +14,11 @@ public class Constants {
 	public static final int ADDRESS_FORMAT_ERROR = 9;
 	public static final int EMAIL_EXIST_ERROR = 10;
 
-	public static final String USERNAME_FORMAT = "[A-Za-z0-9_\\.]{4,20}";
+	public static final String USERNAME_FORMAT = "[A-Za-z][A-Za-z0-9_\\.]{3,19}";
 	public static final String PASSWORD_FORMAT = "[^\\s]{6,20}";
-	public static final String NAME_FORMAT = "[A-Za-z\\s-]{2,30}";
+	public static final String NAME_FORMAT = "[A-Za-z][A-Za-z\\s-]{1,30}";
 	public static final String CONTACT_NUMBER_FORMAT = "(\\d{7,11})?";
-	public static final String EMAIL_FORMAT = "([a-z]+[a-z0-9_\\.]+@[\\w-]{2,}(\\.[a-z]{2,3})+)";
+	public static final String EMAIL_FORMAT = "([a-z]+[a-z0-9_\\.-]+@[\\w-\\.]{2,}(\\.[a-z]{2,3})+)";
 	public static final String ADDRESS_FORMAT = ".{2,100}";
 
 	public static final String ISBN_FORMAT_1 = "[0-9]{13}";
