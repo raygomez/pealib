@@ -45,6 +45,8 @@ public class UserController {
 	private ArrayList<User> searchedUsers;
 	private ArrayList<User> searchedPending;
 	private ArrayList<Integer> checkList;
+	
+	private AbstractTableModel model;
 
 	/*
 	  ..TODO For visual testing purposes only
@@ -232,29 +234,21 @@ public class UserController {
 	 */
 	private void searchUsers() {
 		
+		final int tab = userSearch.getSelectedTab();
+		
+		if(tab == USER) userSearch.getUsersTable().setVisible(false);
+		else userSearch.getPendingTable().setVisible(false);
+				
 		Callable<Void> toDo = new Callable<Void>() {
 
 			@Override
 			public Void call() throws Exception {
-				int tab = userSearch.getSelectedTab();
 				
-				if(tab == USER) userSearch.getUsersTable().setVisible(false);
-				else userSearch.getPendingTable().setVisible(false);
-						
 				searchText = userSearch.getFieldSearch().getText();
-
+				
 				try {
-					UserSearchTableModel model = new UserSearchTableModel(tab, searchText);
-					userSearch.setTableModel(tab, model);	
 					
-					if (tab == USER ) {
-						userSearch.getUsersTable().setVisible(true);
-						setInitSelectUser();
-					} else{
-						userSearch.getPendingTable().setVisible(true);
-						setInitSelectPending();
-						configurePendingUI();
-					}
+					model = new UserSearchTableModel(tab, searchText);
 
 				} catch (Exception e) {  CrashHandler.handle(e); }
 				
@@ -262,7 +256,25 @@ public class UserController {
 			}
 		};
 		
-		Task<Void, Object> task = new Task<Void, Object>(toDo);
+		Callable<Void> toDoAfter = new Callable<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				userSearch.setTableModel(tab, model);	
+				
+				if (tab == USER ) {
+					userSearch.getUsersTable().setVisible(true);
+					setInitSelectUser();
+				} else{
+					userSearch.getPendingTable().setVisible(true);
+					setInitSelectPending();
+					configurePendingUI();
+				}
+				return null;
+			}
+		};
+		
+		Task<Void, Object> task = new Task<Void, Object>(toDo, toDoAfter);
 		
 		LoadingControl.init(task, PeaLibrary.getMainFrame()).executeLoading();
 		
