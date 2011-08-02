@@ -16,7 +16,7 @@ import org.unitils.dbunit.annotation.DataSet;
 import utilities.Constants;
 
 @DataSet({ "../models/user.xml", "../models/book.xml",
-	"../models/reserves.xml", "../models/borrows.xml" })
+		"../models/reserves.xml", "../models/borrows.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class PeaLibraryTest extends UISpecTestCase {
 
@@ -47,20 +47,24 @@ public class PeaLibraryTest extends UISpecTestCase {
 					}
 				};
 			}
-		}).processTransientWindow().processTransientWindow().process(new WindowHandler() {
-
-			@Override
-			public Trigger process(final Window window) throws Exception {
-				
-				return new Trigger() {
+		}).processTransientWindow().processTransientWindow()
+				.process(new WindowHandler() {
 
 					@Override
-					public void run() throws Exception {
-						window.dispose();
+					public Trigger process(final Window window)
+							throws Exception {
+
+						return new Trigger() {
+
+							@Override
+							public void run() throws Exception {
+								window.dispose();
+
+							}
+						};
+
 					}
-				};
-			}
-		}).run();
+				}).run();
 
 	}
 
