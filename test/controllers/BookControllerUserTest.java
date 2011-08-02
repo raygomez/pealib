@@ -4,15 +4,12 @@ import models.User;
 import models.UserDAO;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
-import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
-import org.uispec4j.interception.WindowInterceptor;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.dbunit.annotation.DataSet;
 
