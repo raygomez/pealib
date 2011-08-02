@@ -28,6 +28,9 @@ import org.unitils.dbunit.annotation.ExpectedDataSet;
 import utilities.Connector;
 import utilities.Constants;
 
+/*
+ * WindowInterceptors are needed for the loading screens
+ */
 @DataSet({ "../models/user.xml" })
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 public class AuthenticationControllerTest extends UISpecTestCase {
@@ -91,16 +94,20 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		TextBox labelError = window.getTextBox("labelError");
 		Button login = window.getButton("Log In");
 		login.click();
+		
+		TextBox username = window.getInputTextBox("username");
+		PasswordField password = window.getPasswordField("password");
 
-		// assertReflectionEquals(
-		// BorderFactory.createMatteBorder(1, 1, 2, 1,
-		// Color.getHSBColor((float) 0.0, (float) 0.6, (float) 1)),
-		// username.getAwtComponent().getBorder());
-		// assertReflectionEquals(
-		// BorderFactory.createMatteBorder(1, 1, 2, 1,
-		// Color.getHSBColor((float) 0.0, (float) 0.6, (float) 1)),
-		// password.getAwtComponent().getBorder());
+		 assertReflectionEquals(
+		 BorderFactory.createMatteBorder(1, 1, 2, 1,
+		 Color.getHSBColor((float) 0.0, (float) 0.6, (float) 1)),
+		 username.getAwtComponent().getBorder());
+		 assertReflectionEquals(
+		 BorderFactory.createMatteBorder(1, 1, 2, 1,
+		 Color.getHSBColor((float) 0.0, (float) 0.6, (float) 1)),
+		 password.getAwtComponent().getBorder());
 		assertEquals("Incomplete fields", labelError.getText());
+
 	}
 
 	@Test
@@ -184,6 +191,31 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 
 		assertEquals("Invalid input", labelError.getText());
 	}
+	
+	@Test
+	public void testWrongUsername() throws InterruptedException {
+		TextBox username = window.getInputTextBox("username");
+		PasswordField password = window.getPasswordField("password");
+		TextBox labelError = window.getTextBox("labelError");
+		username.setText("nlazado");
+		password.setPassword("123456");
+		final Button login = window.getButton("Log In");
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				login.click();
+			}
+		}).processTransientWindow().run();
+
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
+				username.getAwtComponent().getBorder());
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
+				username.getAwtComponent().getBorder());
+
+		assertEquals("Username/Password Mismatch", labelError.getText());
+	}
 
 	@Test
 	public void testWrongPassword() throws InterruptedException {
@@ -192,10 +224,13 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		TextBox labelError = window.getTextBox("labelError");
 		username.setText("jvillar");
 		password.setPassword("1234567");
-		Button login = window.getButton("Log In");
-		login.click();
-
-		Thread.sleep(1000);
+		final Button login = window.getButton("Log In");
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				login.click();
+			}
+		}).processTransientWindow().run();
 
 		assertReflectionEquals(
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
@@ -214,10 +249,13 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		TextBox labelError = window.getTextBox("labelError");
 		username.setText("rdgomez");
 		password.setPassword("123456");
-		Button login = window.getButton("Log In");
-		login.click();
-
-		Thread.sleep(1000);
+		final Button login = window.getButton("Log In");
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				login.click();
+			}
+		}).processTransientWindow().run();
 
 		assertReflectionEquals(
 				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
@@ -237,12 +275,14 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		TextBox labelError = window.getTextBox("labelError");
 		username.setText("jvillar");
 		password.setPassword("1234567");
-		Button login = window.getButton("Log In");
-		login.click();
-
-		Thread.sleep(1000);
+		final Button login = window.getButton("Log In");
 		
-
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				login.click();
+			}
+		}).processTransientWindow().run();
+		
 		assertEquals(AuthenticationController.getLogin().getLabelError().getText(), labelError.getText());
 	}
 	
@@ -514,20 +554,40 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				assertTrue(error.equals("User name is already in use."));
 				return dialog.getButton("Cancel").triggerClick();
 			}
-//		}).process(new WindowHandler() {
-//			public Trigger process(Window dialog) {
-//				String actual = dialog.getTextBox("OptionPane.label").getText();
-//				String expected = "<html>An error was encountered while"
-//						+ " creating your account.<br>"
-//						+ "Please try again later.";
-//				assertTrue(actual.equals(expected));
-//				return dialog.getButton("OK").triggerClick();
-//			}
 		}).run();			
 	}
 	
-	//@Ignore
-	//TODO Ignore if it fails
+	@Test
+	public void testSignUpExistingPendingUsername() throws Exception {
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				window.getButton("Sign Up").click();
+			}
+		}).process(new WindowHandler("New User Account Application") {
+			public Trigger process(Window dialog) {
+				dialog.getInputTextBox("firstNameTextField").setText("1");
+				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getPasswordField("passwordTextField").setPassword(
+						"12345");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("12345");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"####@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"123456");
+				dialog.getInputTextBox("addressTextField").setText("USA");
+
+				dialog.getInputTextBox("userNameTextField").setText("kserrano");
+				dialog.getInputTextBox("userNameTextField").releaseKey(
+						Key.ENTER);
+				String error = dialog.getTextBox("errorMessageLabel").getText();
+				assertTrue(error.equals("User name is already in use."));
+				return dialog.getButton("Cancel").triggerClick();
+			}
+		}).run();
+	}
+	
+	//This test purposely makes connection crash.
 	@Test
 	public void testSignUpErrorWhileCheckingUsername() throws Exception {
 		WindowInterceptor.init(new Trigger() {
@@ -918,6 +978,36 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	}
 	
 	@Test
+	public void testForgotPasswordPendingUser(){
+		TextBox forgot = window.getTextBox("Forgot password?");
+		assertEquals("Forgot password?", forgot.getText());
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				auth.forgotPasswordListener.mouseClicked(null);
+			}
+		})
+		.process(new WindowHandler() {	
+			public Trigger process(Window dialog) {
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Please enter your username or email";
+				assertTrue(actual.equals(expected));
+				
+				dialog.getInputTextBox().setText("rdgomez");
+				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).process(new WindowHandler() {
+			public Trigger process(Window dialog) {				
+				String actual = dialog.getTextBox("OptionPane.label").getText();
+				String expected = "Username or email is invalid.";
+				assertTrue(actual.equals(expected));				
+				return dialog.getButton("OK").triggerClick();
+			}
+		}).run();			
+	}
+	
+	@Test
 	public void testForgotPasswordSuccess(){
 		TextBox forgot = window.getTextBox("Forgot password?");
 		assertEquals("Forgot password?", forgot.getText());
@@ -957,7 +1047,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				String expected = "Please enter your username or email";
 				assertTrue(actual.equals(expected));
 				
-				dialog.getInputTextBox().setText("ndizon");
+				dialog.getInputTextBox().setText("jvillar");
 				
 				return dialog.getButton("OK").triggerClick();
 			}
@@ -969,7 +1059,30 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 				return dialog.getButton("OK").triggerClick();
 			}
 		}).run();	
-			
-	}
+		
+		//after forgot, tries login
+		TextBox username = window.getInputTextBox("username");
+		final PasswordField password = window.getPasswordField("password");
+		TextBox labelError = window.getTextBox("labelError");
+		
+		//earlier test, this was success login. since
+		//password was reset just before this code, logging in again should fail.
+		username.setText("jvillar");
+		password.setPassword("123456");
+		
+		WindowInterceptor.init(new Trigger() {
+			public void run() {
+				password.pressKey(Key.ENTER).releaseKey(Key.ENTER);
+			}
+		}).processTransientWindow().run();
 
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
+				username.getAwtComponent().getBorder());
+		assertReflectionEquals(
+				BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray),
+				username.getAwtComponent().getBorder());
+
+		assertEquals("Username/Password Mismatch", labelError.getText());
+	}
 }
