@@ -531,16 +531,16 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 			}
 		}).process(new WindowHandler("New User Account Application") {
 			public Trigger process(Window dialog) {
-				dialog.getInputTextBox("firstNameTextField").setText("1");
-				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getInputTextBox("firstNameTextField").setText("test");
+				dialog.getInputTextBox("lastNameTextField").setText("test");
 				dialog.getPasswordField("passwordTextField").setPassword(
-						"12345");
-				dialog.getPasswordField("confirmPasswordTextField")
-						.setPassword("12345");
-				dialog.getInputTextBox("emailAddressTextField").setText(
-						"####@gmail.com");
-				dialog.getInputTextBox("contactNumberTextField").setText(
 						"123456");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("123456");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"test@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"1234567");
 				dialog.getInputTextBox("addressTextField").setText("USA");
 
 				dialog.getInputTextBox("userNameTextField").setText(
@@ -562,16 +562,16 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 			}
 		}).process(new WindowHandler("New User Account Application") {
 			public Trigger process(Window dialog) {
-				dialog.getInputTextBox("firstNameTextField").setText("1");
-				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getInputTextBox("firstNameTextField").setText("test");
+				dialog.getInputTextBox("lastNameTextField").setText("test");
 				dialog.getPasswordField("passwordTextField").setPassword(
-						"12345");
-				dialog.getPasswordField("confirmPasswordTextField")
-						.setPassword("12345");
-				dialog.getInputTextBox("emailAddressTextField").setText(
-						"####@gmail.com");
-				dialog.getInputTextBox("contactNumberTextField").setText(
 						"123456");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("123456");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"test@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"1234567");
 				dialog.getInputTextBox("addressTextField").setText("USA");
 
 				dialog.getInputTextBox("userNameTextField").setText("kserrano");
@@ -593,16 +593,16 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 			}
 		}).process(new WindowHandler("New User Account Application") {
 			public Trigger process(Window dialog) {
-				dialog.getInputTextBox("firstNameTextField").setText("1");
-				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getInputTextBox("firstNameTextField").setText("test");
+				dialog.getInputTextBox("lastNameTextField").setText("test");
 				dialog.getPasswordField("passwordTextField").setPassword(
-						"12345");
-				dialog.getPasswordField("confirmPasswordTextField")
-						.setPassword("12345");
-				dialog.getInputTextBox("emailAddressTextField").setText(
-						"####@gmail.com");
-				dialog.getInputTextBox("contactNumberTextField").setText(
 						"123456");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("123456");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"test@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"1234567");
 				dialog.getInputTextBox("addressTextField").setText("USA");
 
 				dialog.getInputTextBox("userNameTextField").setText(
@@ -632,15 +632,15 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 			}
 		}).process(new WindowHandler("New User Account Application") {
 			public Trigger process(Window dialog) {
-				dialog.getInputTextBox("firstNameTextField").setText("1");
-				dialog.getInputTextBox("lastNameTextField").setText("2");
-				dialog.getInputTextBox("userNameTextField").setText("abcd");
+				dialog.getInputTextBox("firstNameTextField").setText("test");
+				dialog.getInputTextBox("lastNameTextField").setText("test");
+				dialog.getInputTextBox("userNameTextField").setText("test");
 				dialog.getPasswordField("passwordTextField").setPassword(
-						"12345");
-				dialog.getPasswordField("confirmPasswordTextField")
-						.setPassword("12345");
-				dialog.getInputTextBox("contactNumberTextField").setText(
 						"123456");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("123456");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"1234567");
 				dialog.getInputTextBox("addressTextField").setText("USA");
 
 				dialog.getInputTextBox("emailAddressTextField").setText(
@@ -662,19 +662,24 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 			}
 		}).process(new WindowHandler("New User Account Application") {
 			public Trigger process(Window dialog) {
-				dialog.getInputTextBox("firstNameTextField").setText("1");
-				dialog.getInputTextBox("lastNameTextField").setText("2");
-				dialog.getInputTextBox("userNameTextField").setText("abcd");
+				dialog.getInputTextBox("firstNameTextField").setText("test");
+				dialog.getInputTextBox("lastNameTextField").setText("test");
+				dialog.getInputTextBox("userNameTextField").setText("test");
 				dialog.getPasswordField("passwordTextField").setPassword(
-						"12345");
-				dialog.getPasswordField("confirmPasswordTextField")
-						.setPassword("12345");
-				dialog.getInputTextBox("contactNumberTextField").setText(
 						"123456");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("123456");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"1234567");
 				dialog.getInputTextBox("addressTextField").setText("USA");
 
 				dialog.getInputTextBox("emailAddressTextField").setText(
-						"aaaaaaaaaaaaaaaaaaaaa@gmail.com");
+						"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+						"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+						"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+						"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+						"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+						"aaaa@gmail.com");
 				dialog.getButton("Submit").click();
 
 				String error = dialog.getTextBox("errorMessageLabel").getText();
@@ -809,16 +814,16 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 			}
 		}).process(new WindowHandler("New User Account Application") {
 			public Trigger process(Window dialog) {
-				dialog.getInputTextBox("firstNameTextField").setText("1");
-				dialog.getInputTextBox("lastNameTextField").setText("2");
+				dialog.getInputTextBox("firstNameTextField").setText("test");
+				dialog.getInputTextBox("lastNameTextField").setText("test");
 				dialog.getPasswordField("passwordTextField").setPassword(
-						"12345");
-				dialog.getPasswordField("confirmPasswordTextField")
-						.setPassword("12345");
-				dialog.getInputTextBox("emailAddressTextField").setText(
-						"####@gmail.com");
-				dialog.getInputTextBox("contactNumberTextField").setText(
 						"123456");
+				dialog.getPasswordField("confirmPasswordTextField")
+						.setPassword("123456");
+				dialog.getInputTextBox("emailAddressTextField").setText(
+						"test@gmail.com");
+				dialog.getInputTextBox("contactNumberTextField").setText(
+						"1234567");
 				dialog.getInputTextBox("addressTextField").setText("USA");
 
 				dialog.getInputTextBox("userNameTextField").setText("ab");
