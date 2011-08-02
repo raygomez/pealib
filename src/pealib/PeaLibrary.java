@@ -12,7 +12,6 @@ import utilities.CrashHandler;
 import utilities.Emailer;
 import utilities.Task;
 import views.LibrarianSidebarPanel;
-import views.LoadingDialog;
 import views.MainFrame;
 import views.UserSidebarPanel;
 import controllers.AuthenticationController;
@@ -70,27 +69,7 @@ public class PeaLibrary {
 		AuthenticationController.getLogin().setVisible(true);
 		setCurrentUser(authControl.getUser());
 		
-		Callable<Void> toDo = new Callable<Void>() {
-			
-			@Override
-			public Void call() throws Exception {
-				initialize();
-				return null;
-			}
-		};
-		
-		Callable<Void> toDoAfter = new Callable<Void>() {
-			
-			@Override
-			public Void call() throws Exception {
-				frame.toFront();
-				frame.setVisible(true);
-				return null;
-			}
-		};
-		
-		Task<Void, Void> task = new Task<Void, Void>(toDo, toDoAfter);
-		LoadingControl.init(task, frame).executeLoading();
+		initialize();
 	}
 
 	public void initialize() {
@@ -110,20 +89,40 @@ public class PeaLibrary {
 				getCurrentUser().getFirstName() + " "
 						+ getCurrentUser().getLastName());
 
-		try {
-			bookControl = new BookController(getCurrentUser());
-			userControl = new UserController(getCurrentUser());
-		} catch (Exception e) {
-			CrashHandler.handle(e);
-		}
 
-		userControl.getUserInfoPanel().addSaveListener(updateCurrentUser);
+		Callable<Void> toDo = new Callable<Void>() {
+			
+			@Override
+			public Void call() throws Exception {
+				try {
+					bookControl = new BookController(getCurrentUser());
+					userControl = new UserController(getCurrentUser());
+				} catch (Exception e) {
+					CrashHandler.handle(e);
+				}
+				return null;
+			}
+		};
+		
+		Callable<Void> toDoAfter = new Callable<Void>() {
+			
+			@Override
+			public Void call() throws Exception {
+				userControl.getUserInfoPanel().addSaveListener(updateCurrentUser);
 
-		if (getCurrentUser().getType().equals("Librarian")) {
-			initializeLibrarian();
-		} else if (getCurrentUser().getType().equals("User")) {
-			initializeUser();
-		}
+				if (getCurrentUser().getType().equals("Librarian")) {
+					initializeLibrarian();
+				} else if (getCurrentUser().getType().equals("User")) {
+					initializeUser();
+				}
+				return null;
+			}
+		};
+		
+		Task<Void, Void> task = new Task<Void, Void>(toDo, toDoAfter);
+		LoadingControl.init(task, frame).executeLoading();
+		
+		
 	}
 
 	private void initializeLibrarian() {
@@ -138,6 +137,8 @@ public class PeaLibrary {
 			frame.setContentPanel(transactionControl.getTabbedPane());
 			frame.validate();
 			frame.repaint();
+			frame.toFront();
+			frame.setVisible(true);
 			
 		} catch (Exception e) {
 			CrashHandler.handle(e);
@@ -164,6 +165,8 @@ public class PeaLibrary {
 		}
 		frame.validate();
 		frame.repaint();
+		frame.toFront();
+		frame.setVisible(true);
 
 	}
 
@@ -269,13 +272,19 @@ public class PeaLibrary {
 		}
 	};
 
-	public static void main(String[] args){
+	public static void main(final String[] args){
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PeaLibrary app = new PeaLibrary();
-					app.authenticate();
+					if(args.length == 0){
+						PeaLibrary app = new PeaLibrary();
+						app.authenticate();
+						
+					} else if(args.length == 1){
+						PeaLibrary app = new PeaLibrary(args[0]);
+						app.authenticate();
+					}
 					
 				} catch (Exception e) {
 					CrashHandler.handle(e);
