@@ -277,7 +277,7 @@ public class AuthenticationController {
 		} else if (!isUserNameValid()) {
 			/* action is handled by isUserNameValid() */
 		} else if (!isEmailAddressValid()) {
-			/* action is handled by isEmailValid() */
+			/* action is handled by isEmailAddressValid() */
 		} else if (!isSignUpInputValid(maskedLabel)) {
 			signUp.setLblErrorMessage("Invalid Input.");
 		} else if (!sUpConfirmPassword.equals(sUpPassword)) {
@@ -407,7 +407,7 @@ public class AuthenticationController {
 	private boolean isEmailAddressValid() {
 		boolean isValid = sUpEmailAddress
 			.matches(Constants.EMAIL_FORMAT);
-		if (!isValid || (sUpEmailAddress.length() > 30)) {
+		if (!isValid || (sUpEmailAddress.length() > 254)) {
 			signUp.setLblErrorMessage("Invalid Input.");
 			signUp.setFieldBorderColor(SignUpDialog.EMAIL_ADDRESS_FLAG);
 			return false;

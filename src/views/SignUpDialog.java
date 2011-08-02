@@ -130,7 +130,7 @@ public class SignUpDialog extends JDialog {
 		contentPanel.add(lblEmailAddress, "cell 1 8,alignx left,aligny center");
 
 		emailAddressTextField = new MyTextField();
-		emailAddressTextField.setToolTipText("<html>*Maximum of 30 characters." +
+		emailAddressTextField.setToolTipText("<html>*Maximum of 254 characters." +
 				"<br>(ie. john.smith@example.com)");
 		emailAddressTextField.setName("emailAddressTextField");
 		lblEmailAddress.setLabelFor(emailAddressTextField);
