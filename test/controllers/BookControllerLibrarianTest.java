@@ -1,5 +1,11 @@
 package controllers;
 
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
+
 import models.User;
 import models.UserDAO;
 
@@ -11,6 +17,7 @@ import org.uispec4j.Button;
 import org.uispec4j.Key;
 import org.uispec4j.Panel;
 import org.uispec4j.Table;
+import org.uispec4j.TextBox;
 import org.uispec4j.Trigger;
 import org.uispec4j.UISpecTestCase;
 import org.uispec4j.Window;
@@ -31,7 +38,9 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 	Panel librarianPanel;
 	User librarian;
 	BookController bookControllerLib;
-
+	Panel bookInfo;
+	Panel bookSearch;
+	
 	@Before
 	public void setUp() throws Exception {
 		Connector.init(Constants.TEST_CONFIG);
@@ -39,6 +48,8 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 		bookControllerLib = new BookController(librarian);
 		librarianPanel = new Panel(
 				bookControllerLib.getBookLayoutPanel());
+		bookSearch = new Panel(bookControllerLib.getBookSearch());
+		bookInfo = new Panel(bookControllerLib.getBookInfo());
 	}
 
 	@Test
@@ -49,7 +60,7 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 				.process(new WindowHandler() {
 					public Trigger process(Window dialog) {
 						dialog.getButton("Add").click();
-						dialog.getTextBox("Invalid Input");
+						assertTrue(dialog.getTextBox("Invalid Input").isVisible());
 						return dialog.getButton("Cancel").triggerClick();
 					}
 				}).run();
@@ -108,7 +119,7 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 								"901234567890123456789012345678901234567890123456" +
 								"78901234567890");
 						dialog.getButton("Add").click();
-						dialog.getTextBox("Invalid Input");
+						assertTrue(dialog.getTextBox("Invalid Input").isVisible());
 						return dialog.getButton("Cancel").triggerClick();
 					}
 				}).run();
@@ -137,7 +148,7 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 						dialog.getInputTextBox("descriptionTextArea").setText(
 								"12345678901");
 						dialog.getButton("Add").click();
-						dialog.getTextBox("ISBN: 1209120976 was added");
+						assertTrue(dialog.getTextBox("ISBN: 1209120976 was added").isVisible());
 						return dialog.getButton("Cancel").triggerClick();
 					}
 				}).run();
@@ -167,7 +178,7 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 						dialog.getInputTextBox("descriptionTextArea").setText(
 								"0007222556");
 						dialog.getButton("Add").click();
-						dialog.getTextBox("ISBN already exist");
+						assertTrue(dialog.getTextBox("ISBN already exist").isVisible());
 						return dialog.getButton("Cancel").triggerClick();
 					}
 				}).run();
@@ -175,18 +186,19 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 	}
 	
 	@Test
-	@Ignore
+	
 	@DataSet({ "../models/noCopybook.xml" })
 	public void testValidSave() throws Exception{
-		bookControllerLib = new BookController(librarian);
-		librarianPanel = new Panel(
-				bookControllerLib.getBookLayoutPanel());
-		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
-		Panel bookInfo = new Panel(bookControllerLib.getBookInfo());
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				bookSearch.getButton("Search").click();
+			}
+		}).processTransientWindow().run();
 		Table bookTable = bookSearch.getTable();
 		bookTable.click(3,0);
-		bookTable.click(3,0);
-		System.out.println(bookControllerLib.getBookSearch().getTableBookList().getModel().getValueAt(4, 1) + " MUTYA" );
 		bookInfo.getInputTextBox("titleTextField").setText(
 		"test");
 		bookInfo.getInputTextBox("publisherTextField").setText(
@@ -202,15 +214,20 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 		bookInfo.getInputTextBox("descriptionTextArea").setText(
 				"12345678901");
 		bookInfo.getButton("Save").click();
+
 	}
 
 	@Test
-	@Ignore
+	
 	public void testValid2Save() throws Exception{
-		librarianPanel = new Panel(
-				bookControllerLib.getBookLayoutPanel());
-		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
-		Panel bookInfo = new Panel(bookControllerLib.getBookInfo());
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				bookSearch.getButton("Search").click();
+			}
+		}).processTransientWindow().run();
 		Table bookTable = bookSearch.getTable();
 		bookTable.click(3,0);
 		bookTable.click(3,0);
@@ -220,14 +237,16 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 	}
 
 	@Test
-	@Ignore
+	
 	public void testInvalidSave() throws Exception{
-		librarian = UserDAO.getUserById(2);
-		bookControllerLib = new BookController(librarian);
-		librarianPanel = new Panel(
-				bookControllerLib.getBookLayoutPanel());
-		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
-		Panel bookInfo = new Panel(bookControllerLib.getBookInfo());
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				bookSearch.getButton("Search").click();
+			}
+		}).processTransientWindow().run();
 		Table bookTable = bookSearch.getTable();
 		bookTable.click(3,0);
 		bookInfo.getInputTextBox("titleTextField").setText(
@@ -279,14 +298,16 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 	}
 	
 	@Test
-	@Ignore
+	
 	public void testEmptyYrSave() throws Exception{
-		librarian = UserDAO.getUserById(2);
-		bookControllerLib = new BookController(librarian);
-		librarianPanel = new Panel(
-				bookControllerLib.getBookLayoutPanel());
-		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
-		Panel bookInfo = new Panel(bookControllerLib.getBookInfo());
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				bookSearch.getButton("Search").click();
+			}
+		}).processTransientWindow().run();
 		Table bookTable = bookSearch.getTable();
 		bookTable.click(3,0);
 		bookInfo.getInputTextBox("yearPublishTextField").setText(
@@ -297,29 +318,33 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 	}
 
 	@Test
-	@Ignore
+	
 	@DataSet({ "../models/noCopybook.xml" })
 	public void testCopy0Save() throws Exception{
-		librarian = UserDAO.getUserById(2);
-		bookControllerLib = new BookController(librarian);
-		librarianPanel = new Panel(
-				bookControllerLib.getBookLayoutPanel());
-		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
-		Panel bookInfo = new Panel(bookControllerLib.getBookInfo());
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				bookSearch.getButton("Search").click();
+			}
+		}).processTransientWindow().run();
 		Table bookTable = bookSearch.getTable();
 		bookTable.click(6,2);
 		bookInfo.getButton("Save").click();
 	}
 
 	@Test
-	@Ignore
+	
 	public void testYesDelete() throws Exception{
-		librarian = UserDAO.getUserById(2);
-		bookControllerLib = new BookController(librarian);
-		librarianPanel = new Panel(
-				bookControllerLib.getBookLayoutPanel());
-		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
-		Panel bookInfo = new Panel(bookControllerLib.getBookInfo());
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				bookSearch.getButton("Search").click();
+			}
+		}).processTransientWindow().run();
 		Table bookTable = bookSearch.getTable();
 		bookTable.click(6,0);
 		Button deleteBook = librarianPanel.getButton("Delete");
@@ -333,14 +358,16 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 	}
 	
 	@Test
-	@Ignore
+	
 	public void testNoDelete() throws Exception{
-		librarian = UserDAO.getUserById(2);
-		bookControllerLib = new BookController(librarian);
-		librarianPanel = new Panel(
-				bookControllerLib.getBookLayoutPanel());
-		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
-		Panel bookInfo = new Panel(bookControllerLib.getBookInfo());
+		WindowInterceptor.init(new Trigger() {
+			
+			@Override
+			public void run() throws Exception {
+				// TODO Auto-generated method stub
+				bookSearch.getButton("Search").click();
+			}
+		}).processTransientWindow().run();
 		Table bookTable = bookSearch.getTable();
 		bookTable.click(6,0);
 		Button deleteBook = librarianPanel.getButton("Delete");
@@ -356,9 +383,6 @@ public class BookControllerLibrarianTest  extends UISpecTestCase {
 	@Test
 	@DataSet({ "../models/noCopybook.xml" })
 	public void testNoCopyBookTable() throws Exception {
-		librarianPanel = new Panel(
-				new BookController(librarian).getBookLayoutPanel());
-		Panel bookSearch = new Panel(bookControllerLib.getBookSearch());
 		bookSearch.getButton("Search").click();
 		bookSearch.getButton("Clear").click();
 		bookSearch.getInputTextBox("textSearch").setText("zzzzzzzzzzzzzz");
