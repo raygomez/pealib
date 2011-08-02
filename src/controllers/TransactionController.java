@@ -1,8 +1,8 @@
 package controllers;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+//import java.awt.Dimension;
+//import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -12,7 +12,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import javax.swing.JFrame;
+//import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
@@ -28,7 +28,7 @@ import pealib.PeaLibrary;
 import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Task;
-import utilities.Connector;
+//import utilities.Connector;
 import views.InOutTabbedPane;
 import views.IncomingPanel;
 import views.OutgoingPanel;
@@ -45,22 +45,22 @@ public class TransactionController {
 	private OutgoingPanel outPanel;
 	private int passCounter;
 
-	public static void main(String[] args) throws Exception {
-		Connector.init(Constants.TEST_CONFIG);
-
-		TransactionController librarianTransactions = new TransactionController();
-
-		JFrame testFrame = new JFrame();
-		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		testFrame.setVisible(true);
-		testFrame.setResizable(false);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		testFrame.setBounds(0, 0, screenSize.width * 3 / 4,
-				screenSize.height * 3 / 4);
-		testFrame.setContentPane(librarianTransactions.getTabbedPane());
-
-		new TransactionController();
-	}
+//	public static void main(String[] args) throws Exception {
+//		Connector.init(Constants.TEST_CONFIG);
+//
+//		TransactionController librarianTransactions = new TransactionController();
+//
+//		JFrame testFrame = new JFrame();
+//		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//		testFrame.setVisible(true);
+//		testFrame.setResizable(false);
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//		testFrame.setBounds(0, 0, screenSize.width * 3 / 4,
+//				screenSize.height * 3 / 4);
+//		testFrame.setContentPane(librarianTransactions.getTabbedPane());
+//
+//		new TransactionController();
+//	}
 
 	/*
 	 * LIBRARIAN Book Transactions
