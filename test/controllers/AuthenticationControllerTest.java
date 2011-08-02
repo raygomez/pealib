@@ -3,13 +3,10 @@ package controllers;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uispec4j.Button;
@@ -840,8 +837,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 		TextBox forgot = window.getTextBox("Forgot password?");
 		assertEquals("Forgot password?", forgot.getText());
 		
-		//auth.forgotPasswordListener.mouseClicked(null);
-		
 		WindowInterceptor.init(new Trigger() {
 			public void run() {
 				auth.forgotPasswordListener.mouseClicked(null);
@@ -869,8 +864,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	public void testForgotPasswordInvalidUser(){
 		TextBox forgot = window.getTextBox("Forgot password?");
 		assertEquals("Forgot password?", forgot.getText());
-		
-		//auth.forgotPasswordListener.mouseClicked(null);
 		
 		WindowInterceptor.init(new Trigger() {
 			public void run() {
@@ -925,8 +918,6 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 	public void testForgotPasswordInvalidEmail(){
 		TextBox forgot = window.getTextBox("Forgot password?");
 		assertEquals("Forgot password?", forgot.getText());
-		
-		//auth.forgotPasswordListener.mouseClicked(null);
 		
 		WindowInterceptor.init(new Trigger() {
 			public void run() {
