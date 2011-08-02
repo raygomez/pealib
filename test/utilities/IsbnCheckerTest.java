@@ -38,7 +38,22 @@ public class IsbnCheckerTest {
 	}
 	
 	@Test
-	public void testIsIsbnValid() {
+	public void testIsIsbnValidBlank() {
 		assertFalse(IsbnChecker.isIsbnValid(""));
+	}
+	
+	@Test
+	public void testIsIsbnValidLess10() {
+		assertFalse(IsbnChecker.isIsbnValid("12345"));
+	}
+	
+	@Test
+	public void testIsIsbnValidBetween10and13() {
+		assertFalse(IsbnChecker.isIsbnValid("12345678901"));
+	}
+	
+	@Test
+	public void testIsIsbnValidGreater13() {
+		assertFalse(IsbnChecker.isIsbnValid("1234567890123456789"));
 	}
 }
