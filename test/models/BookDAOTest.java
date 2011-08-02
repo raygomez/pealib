@@ -1,7 +1,6 @@
 package models;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
@@ -120,4 +119,42 @@ public class BookDAOTest {
 		ArrayList<Book> bookList = BookDAO.searchBook("HarryPublisher1");
 		assertEquals(2,bookList.get(0).getBookId());
 	}
+	
+	@Test
+	public void testSearchForUserAll() throws Exception{
+		ArrayList<Book> bookList = BookDAO.searchBook("");
+		for(int i = 0; i < bookList.size(); i++){
+			assertNotSame(0, bookList.get(i).getCopies());
+		}
+	}
+	
+	@Test
+	public void testSearchBookForUserISBN() throws Exception{
+		ArrayList<Book> bookList = BookDAO.searchBookForUser("1234567890120");
+		for(int i = 0; i < bookList.size(); i++){
+			assertNotSame(0, bookList.get(i).getCopies());
+		}
+	}
+	
+	@Test
+	public void testSearchBookForUserTitle() throws Exception{
+		ArrayList<Book> bookList = BookDAO.searchBookForUser("Harry");
+		for(int i = 0; i < bookList.size(); i++){
+			assertNotSame(0, bookList.get(i).getCopies());
+		}
+	}
+	
+	@Test
+	public void testSearchBookForUserAuthor() throws Exception{
+		ArrayList<Book> bookList = BookDAO.searchBookForUser("Ewan ko1");
+		assertNotSame(0, bookList.get(0).getCopies());
+	}
+
+	@Test
+	public void testSearchForUserPublisher() throws Exception{
+		ArrayList<Book> bookList = BookDAO.searchBookForUser("HarryPublisher1");
+		assertNotSame(0, bookList.get(0).getCopies());
+	}
+	
+	
 }
