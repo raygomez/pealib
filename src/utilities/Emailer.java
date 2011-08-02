@@ -93,12 +93,12 @@ public class Emailer {
 					+ "Do not reply to this email.";
 			String emailSubjectTxt = "[Pealib] Application to Pealibrary Granted";
 			String emailFromAddress = "pealibrary@gmail.com";
+			
 			try {
 				new Emailer().sendSSLMessage(sendTo, emailSubjectTxt,
 						emailMsgTxt, emailFromAddress);
 			} catch (MessagingException e) {
 				isSuccess = false;
-				e.printStackTrace();
 			}
 		}
 
@@ -122,7 +122,6 @@ public class Emailer {
 						emailMsgTxt, emailFromAddress);
 			} catch (MessagingException e) {
 				isSuccess = false;
-				e.printStackTrace();
 			}
 		}
 		return isSuccess;
@@ -146,7 +145,6 @@ public class Emailer {
 						emailFromAddress);
 			} catch (MessagingException e) {
 				isSuccess =  false;
-				e.printStackTrace();
 				
 			}
 		}
