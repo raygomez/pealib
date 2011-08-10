@@ -142,7 +142,7 @@ public class BookInfoPanel extends JPanel {
 			
 		lblCopies = new JLabel("Copies:");
 			
-		copiesValSpinner.setModel(new SpinnerNumberModel(0, 0, 2147483647, 1));
+		copiesValSpinner.setModel(new SpinnerNumberModel(0, 0, 1000, 1));
 		copiesValSpinner.getModel().setValue(currentBook.getCopies());
 					
 
@@ -199,14 +199,14 @@ public class BookInfoPanel extends JPanel {
 	}
 
 	public Book getCurrBook() {
-		currentBook.setTitle(titleTextField.getText());
-		currentBook.setAuthor(authorTextField.getText());
-		currentBook.setPublisher(publisherTextField.getText());
+		currentBook.setTitle(titleTextField.getText().trim());
+		currentBook.setAuthor(authorTextField.getText().trim());
+		currentBook.setPublisher(publisherTextField.getText().trim());
 		currentBook.setIsbn(isbnTextField.getText());
-		currentBook.setDescription(descriptionTextArea.getText());
+		currentBook.setDescription(descriptionTextArea.getText().trim());
 		currentBook.setCopies(Integer.parseInt(copiesValSpinner.getModel()
 				.getValue().toString()));
-		currentBook.setEdition(editionTextField.getText());
+		currentBook.setEdition(editionTextField.getText().trim());
 		if(yearPublishTextField.getText().trim().length() > 0){
 			currentBook.setYearPublish(Integer.parseInt(yearPublishTextField
 					.getText()));
@@ -241,7 +241,8 @@ public class BookInfoPanel extends JPanel {
 		publisherTextField.hasError(false);
 		isbnTextField.hasError(false);
 		descriptionTextArea.hasError(false);
-		editionTextField.hasError(false);		
+		editionTextField.hasError(false);	
+		copiesValSpinner.hasError(false);
 	}
 
 	public ErrorLabel getLblErrorMsg() {

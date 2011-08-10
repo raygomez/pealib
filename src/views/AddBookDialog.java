@@ -112,7 +112,7 @@ public class AddBookDialog extends JDialog {
 		JLabel lblCopies = new JLabel("Copies:");
 		contentPanel.add(lblCopies, "cell 0 7,alignx left");
 
-		copyValSpinner.setModel(new SpinnerNumberModel(1, 0, 2147483647, 1));
+		copyValSpinner.setModel(new SpinnerNumberModel(1, 0, 1000, 1));
 		contentPanel.add(copyValSpinner, "cell 1 7,alignx left");
 
 		JPanel buttonPane = new JPanel();
