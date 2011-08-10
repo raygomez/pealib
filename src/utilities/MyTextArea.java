@@ -15,6 +15,11 @@ public class MyTextArea extends JTextArea {
 	public MyTextArea() {
 		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
 	}
+	
+	public MyTextArea(int length){
+		this.setDocument(new TextLimit(length));
+		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
+	}
 
 	public MyTextArea(String arg, int col, int row) {
 		super(arg, row, col);

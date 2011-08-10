@@ -21,18 +21,15 @@ import utilities.MyTextField;
 
 public class AddBookDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	private MyTextField titleTextField = new MyTextField();
-	private MyTextField authorTextField = new MyTextField();
-	private MyTextField yearPublishTextField = new MyTextField();
+	private MyTextField titleTextField = new MyTextField(100);
+	private MyTextField authorTextField = new MyTextField(100);
+	private MyTextField yearPublishTextField = new MyTextField(4);
 	private MyTextField publisherTextField = new MyTextField();
-	private MyTextField isbnTextField = new MyTextField();
-	private MyTextField editionTextField = new MyTextField();
-	private MyTextArea descriptionTextArea = new MyTextArea();
+	private MyTextField isbnTextField = new MyTextField(13);
+	private MyTextField editionTextField = new MyTextField(30);
+	private MyTextArea descriptionTextArea = new MyTextArea(1000);
 	private ErrorLabel errorMessageLabel = new ErrorLabel();
 	private JButton addButton;
 	private JButton cancelButton;
@@ -57,7 +54,6 @@ public class AddBookDialog extends JDialog {
 
 		titleTextField.setName("titleTextField");
 		contentPanel.add(titleTextField, "cell 1 0,growx");
-		titleTextField.setColumns(10);
 		
 		lblEdition = new JLabel("Edition:");
 		contentPanel.add(lblEdition, "cell 0 1,alignx left");
@@ -180,14 +176,14 @@ public class AddBookDialog extends JDialog {
 
 	public Book getBookInfo() {
 		Book newBook = new Book();
-		newBook.setAuthor(authorTextField.getText());
+		newBook.setAuthor(authorTextField.getText().trim());
 		newBook.setCopies(Integer.parseInt(copyValSpinner.getModel().getValue()
 				.toString()));
-		newBook.setDescription(descriptionTextArea.getText());
+		newBook.setDescription(descriptionTextArea.getText().trim());
 		newBook.setIsbn(isbnTextField.getText());
-		newBook.setPublisher(publisherTextField.getText());
-		newBook.setTitle(titleTextField.getText());
-		newBook.setEdition(editionTextField.getText());
+		newBook.setPublisher(publisherTextField.getText().trim());
+		newBook.setTitle(titleTextField.getText().trim());
+		newBook.setEdition(editionTextField.getText().trim());
 		if(yearPublishTextField.getText().length() > 0){
 			newBook.setYearPublish(Integer.parseInt(yearPublishTextField.getText()));
 		}
