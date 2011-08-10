@@ -13,12 +13,13 @@ public class MyTextField extends JTextField {
 
 	
 	public MyTextField(){
-		super(20);
+		super();
 		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
 	}
 	
 	public MyTextField(int length){
-		super(length);
+		super();
+		this.setDocument(new TextLimit(length));
 		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
 	}
 	
