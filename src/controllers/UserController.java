@@ -260,12 +260,14 @@ public class UserController {
 
 			@Override
 			public Void call() throws Exception {
-				userSearch.setTableModel(tab, model);	
+				userSearch.setTableModel(tab, model);					
 				
 				if (tab == USER ) {
 					userSearch.getUsersTable().setVisible(true);
 					setInitSelectUser();
 				} else{
+					checkList.clear();
+					userSearch.getCbAll().setSelected(false);
 					userSearch.getPendingTable().setVisible(true);
 					setInitSelectPending();
 					configurePendingUI();
@@ -296,9 +298,7 @@ public class UserController {
 				
 			} else {
 				setInitSelectPending();
-				configurePendingUI();
-				userSearch.getCbAll().setSelected(false);
-				checkList.clear();								
+				configurePendingUI();							
 			}
 		}
 	}
@@ -438,6 +438,7 @@ public class UserController {
 				if (checkList.contains(row)) {
 					checkList.remove((Object) row);
 				}
+				
 			} else {
 				if (!checkList.contains(row)) {
 					checkList.add(row);
@@ -452,6 +453,7 @@ public class UserController {
 			}
 			else
 				userSearch.togglePendingButtons(false);
+			
 			fireTableCellUpdated(row, col);
 		}
 
