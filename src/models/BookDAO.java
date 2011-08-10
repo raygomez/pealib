@@ -119,11 +119,12 @@ public class BookDAO {
 	public static ArrayList<Book> searchBook(String search) throws Exception {
 		ArrayList<Book> bookCollection = new ArrayList<Book>();
 
-		String sql = "SELECT * FROM Books WHERE CONCAT(ISBN, Title, "
-				+ "Author, Publisher) LIKE ?";
+		String sql = "SELECT * FROM Books WHERE ISBN LIKE ? OR Title LIKE ? OR Author LIKE ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, "%" + search + "%");
+		ps.setString(2, "%" + search + "%");
+		ps.setString(3, "%" + search + "%");
 
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
@@ -151,10 +152,12 @@ public class BookDAO {
 		ArrayList<Book> bookCollection = new ArrayList<Book>();
 
 		String sql = "SELECT * FROM Books WHERE Copies > 0 and "
-				+ "CONCAT(ISBN, Title, Author, Publisher) LIKE ?";
+				+ "ISBN LIKE ? OR Title LIKE ? OR Author LIKE ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, "%" + search + "%");
+		ps.setString(2, "%" + search + "%");
+		ps.setString(3, "%" + search + "%");
 
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
