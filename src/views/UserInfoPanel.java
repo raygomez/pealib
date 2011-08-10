@@ -42,7 +42,8 @@ public class UserInfoPanel extends JPanel {
 
 		tempLabel = new JLabel("Account Type");
 		accountType = new MyTextField(20);
-		accountType.setEnabled(false);
+		//accountType.setEnabled(false);
+		accountType.setEditable(false);
 		accountType.setName("accountType");
 
 		add(tempLabel, "cell 0 0");
@@ -50,7 +51,8 @@ public class UserInfoPanel extends JPanel {
 
 		tempLabel = new JLabel("User ID");
 		idNumber = new MyTextField(20);
-		idNumber.setEnabled(false);
+		//idNumber.setEnabled(false);
+		idNumber.setEditable(false);
 		idNumber.setName("idNumber");
 
 		add(tempLabel, "cell 0 1");
@@ -58,7 +60,8 @@ public class UserInfoPanel extends JPanel {
 
 		tempLabel = new JLabel("Username");
 		username = new MyTextField(20);
-		username.setEnabled(false);
+		//username.setEnabled(false);
+		username.setEditable(false);
 		username.setName("username");
 
 		add(tempLabel, "cell 0 2");
@@ -265,19 +268,19 @@ public class UserInfoPanel extends JPanel {
 	}
 	
 	public void setEnableFields(boolean set){
-		this.firstName.setEnabled(set);
-		this.lastName.setEnabled(set);
-		this.address.setEnabled(set);
-		this.contactNumber.setEnabled(set);
-		this.email.setEnabled(set);
+		this.firstName.setEditable(set);
+		this.lastName.setEditable(set);
+		this.address.setEditable(set);
+		this.contactNumber.setEditable(set);
+		this.email.setEditable(set);
 	}
 
 	public void setFirstNameEnabled(boolean enabled) {
-		firstName.setEnabled(enabled);
+		firstName.setEditable(enabled);
 	}
 
 	public void setLastNameEnabled(boolean enabled) {
-		lastName.setEnabled(enabled);
+		lastName.setEditable(enabled);
 	}
 
 	public void toggleButton(boolean value) {
