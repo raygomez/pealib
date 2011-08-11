@@ -22,7 +22,7 @@ public class BookDAO {
 			ps = Connector.getConnection().prepareStatement(sql);
 			ps.setString(1, isbn);
 		} else {
-			
+
 			sql = "SELECT COUNT(*) From Books WHERE Isbn13 = ? and Isbn10 = ?";
 			ps = Connector.getConnection().prepareStatement(sql);
 
@@ -72,22 +72,23 @@ public class BookDAO {
 	public static int editBook(Book book) throws Exception {
 		int intStat = 0;
 
-		String sql = "UPDATE Books SET ISBN = ?, Title = ?, "
-				+ "Author = ?, Edition = ?, Publisher = ?, "
+		String sql = "UPDATE Books SET ISBN10 = ?, ISBN13 = ?, "
+				+ "Title = ?, Author = ?, Edition = ?, Publisher = ?, "
 				+ "Description = ?, YearPublish = ?, Copies = ? "
 				+ "WHERE ID = ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 
 		ps.setString(1, book.getIsbn10());
-		ps.setString(2, book.getTitle());
-		ps.setString(3, book.getAuthor());
-		ps.setString(4, book.getEdition());
-		ps.setString(5, book.getPublisher());
-		ps.setString(6, book.getDescription());
-		ps.setInt(7, book.getYearPublish());
-		ps.setInt(8, book.getCopies());
-		ps.setInt(9, book.getBookId());
+		ps.setString(2, book.getIsbn13());
+		ps.setString(3, book.getTitle());
+		ps.setString(4, book.getAuthor());
+		ps.setString(5, book.getEdition());
+		ps.setString(6, book.getPublisher());
+		ps.setString(7, book.getDescription());
+		ps.setInt(8, book.getYearPublish());
+		ps.setInt(9, book.getCopies());
+		ps.setInt(10, book.getBookId());
 
 		intStat = ps.executeUpdate();
 
@@ -121,7 +122,8 @@ public class BookDAO {
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
 			int bookID = rs.getInt("ID");
-			String isbn = rs.getString("ISBN");
+			String isbn10 = rs.getString("ISBN10");
+			String isbn13 = rs.getString("ISBN13");
 			String title = rs.getString("Title");
 			String edition = rs.getString("Edition");
 			String author = rs.getString("Author");
@@ -129,8 +131,8 @@ public class BookDAO {
 			String description = rs.getString("Description");
 			int yearPublish = rs.getInt("YearPublish");
 			int copies = rs.getInt("Copies");
-			book = new Book(bookID, isbn, title, edition, author, publisher,
-					yearPublish, description, copies);
+			book = new Book(bookID, isbn10, isbn13, title, edition, author,
+					publisher, yearPublish, description, copies);
 
 		}
 		Connector.close();
@@ -141,17 +143,20 @@ public class BookDAO {
 	public static ArrayList<Book> searchBook(String search) throws Exception {
 		ArrayList<Book> bookCollection = new ArrayList<Book>();
 
-		String sql = "SELECT * FROM Books WHERE ISBN LIKE ? OR Title LIKE ? OR Author LIKE ?";
+		String sql = "SELECT * FROM Books WHERE ISBN10 LIKE ? OR "
+				+ "ISBN13 LIKE ? OR Title LIKE ? OR Author LIKE ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, "%" + search + "%");
 		ps.setString(2, "%" + search + "%");
 		ps.setString(3, "%" + search + "%");
+		ps.setString(4, "%" + search + "%");
 
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			int bookID = rs.getInt("ID");
-			String isbn = rs.getString("ISBN");
+			String isbn10 = rs.getString("ISBN10");
+			String isbn13 = rs.getString("ISBN13");
 			String title = rs.getString("Title");
 			String edition = rs.getString("Edition");
 			String author = rs.getString("Author");
@@ -159,8 +164,8 @@ public class BookDAO {
 			String description = rs.getString("Description");
 			int yearPublish = rs.getInt("YearPublish");
 			int copies = Integer.parseInt(rs.getString("Copies"));
-			Book addBook = new Book(bookID, isbn, title, edition, author,
-					publisher, yearPublish, description, copies);
+			Book addBook = new Book(bookID, isbn10, isbn13, title, edition,
+					author, publisher, yearPublish, description, copies);
 			bookCollection.add(addBook);
 		}
 
@@ -174,17 +179,20 @@ public class BookDAO {
 		ArrayList<Book> bookCollection = new ArrayList<Book>();
 
 		String sql = "SELECT * FROM Books WHERE Copies > 0 and "
-				+ "ISBN LIKE ? OR Title LIKE ? OR Author LIKE ?";
+				+ "ISBN10 LIKE ? OR ISBN13 LIKE ? OR Title LIKE ? OR "
+				+ "Author LIKE ?";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, "%" + search + "%");
 		ps.setString(2, "%" + search + "%");
 		ps.setString(3, "%" + search + "%");
+		ps.setString(4, "%" + search + "%");
 
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			int bookID = rs.getInt("ID");
-			String isbn = rs.getString("ISBN");
+			String isbn10 = rs.getString("ISBN10");
+			String isbn13 = rs.getString("ISBN13");
 			String title = rs.getString("Title");
 			String edition = rs.getString("Edition");
 			String author = rs.getString("Author");
@@ -192,8 +200,8 @@ public class BookDAO {
 			String description = rs.getString("Description");
 			int yearPublish = rs.getInt("YearPublish");
 			int copies = Integer.parseInt(rs.getString("Copies"));
-			Book addBook = new Book(bookID, isbn, title, edition, author,
-					publisher, yearPublish, description, copies);
+			Book addBook = new Book(bookID, isbn10, isbn13, title, edition,
+					author, publisher, yearPublish, description, copies);
 			bookCollection.add(addBook);
 		}
 

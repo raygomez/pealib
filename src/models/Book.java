@@ -16,11 +16,12 @@ public class Book {
 		
 	}
 	
-	public Book(int bookId, String isbn, String title, String edition, String author,
+	public Book(int bookId, String isbn10, String isbn13, String title, String edition, String author,
 			String publisher, int yearPublish, String description, int copies) {
 		super();
 		this.bookId = bookId;
-		this.isbn10 = isbn;
+		this.isbn10 = isbn10;
+		this.isbn13 = isbn13;
 		this.title = title;
 		this.edition = edition;
 		this.author = author;
