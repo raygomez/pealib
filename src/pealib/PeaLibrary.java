@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.concurrent.Callable;
 
 import models.User;
+import models.UserDAO;
 import utilities.Connector;
 import utilities.CrashHandler;
 import utilities.Emailer;
@@ -222,15 +223,19 @@ public class PeaLibrary {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			try {
+				User userProfile = UserDAO.getUserById(currentUser.getUserId());
+				userControl.getUserInfoPanel().setFields(userProfile);
+				userControl.getUserInfoPanel().resetErrorMessages();
+				userControl.getUserInfoPanel().setEnableFields(true);
+				userControl.getUserInfoPanel().setFirstNameEnabled(false);
+				userControl.getUserInfoPanel().setLastNameEnabled(false);
+				userControl.getUserInfoPanel().toggleButton(true);
 
-			userControl.getUserInfoPanel().setFields(currentUser);
-			userControl.getUserInfoPanel().resetErrorMessages();
-			userControl.getUserInfoPanel().setEnableFields(true);
-			userControl.getUserInfoPanel().setFirstNameEnabled(false);
-			userControl.getUserInfoPanel().setLastNameEnabled(false);
-			userControl.getUserInfoPanel().toggleButton(true);
-
-			frame.setContentPanel(userControl.getUserInfoPanel());
+				frame.setContentPanel(userControl.getUserInfoPanel());
+			} catch (Exception e) {
+				CrashHandler.handle(e);
+			}
 		}
 	};
 
