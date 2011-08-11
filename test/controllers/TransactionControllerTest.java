@@ -18,6 +18,7 @@ import org.unitils.dbunit.annotation.ExpectedDataSet;
 
 import utilities.Connector;
 import utilities.Constants;
+import utilities.Strings;
 
 @DataSet({ "../models/user.xml", "../models/book.xml",
 		"../models/reserves.xml", "../models/borrows.xml" })
@@ -48,21 +49,19 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertNotNull(searchButton);
 		assertTrue(searchButton.isEnabled());
 		
-		String expectedTotal = "Total Matches: 5";
+		String expectedTotal = Strings.TOTAL_MATCHES + "5";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
 		Table incoming = tabGroup.getSelectedTab().getTable();
-		assertTrue(incoming.getHeader().contentEquals(
-				new String[] { "ISBN", "Title", "Author", "Username",
-						"Date Borrowed" }));
+		assertTrue(incoming.getHeader().contentEquals(Strings.INCOMING_TABLE_HEADER));
 		assertEquals(5, incoming.getRowCount());
 		assertThat(incoming.contentEquals( new Object[][] {
-			{ "1234567890121", "Harry Poter 2", "Niel",	"nlazada (Niel Lazada)", "2011-06-15" },
-			{ "1234567890121", "Harry Poter 2", "Niel",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-			{ "1234567890123", "title1", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-			{ "1234567890124", "title2", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-			{ "1234567890121", "Harry Poter 2", "Niel",	"kserrano (Karlo Serrano)", "2011-06-15" }
+			{ "1234567890121", "Harry Poter 2", "Niel",	"nlazada (Niel Lazada)", "2011-06-15", "2011-06-29" },
+			{ "1234567890121", "Harry Poter 2", "Niel",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+			{ "1234567890123", "title1", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+			{ "1234567890124", "title2", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+			{ "1234567890121", "Harry Poter 2", "Niel",	"kserrano (Karlo Serrano)", "2011-06-15", "2011-06-29" }
 		} ));
 		
 		Button returnButton = tabGroup.getSelectedTab().getButton("Return");
@@ -107,14 +106,12 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertNotNull(searchButton);
 		assertTrue(searchButton.isEnabled());
 		
-		String expectedTotal = "Total Matches: 4";
+		String expectedTotal = Strings.TOTAL_MATCHES + "4";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
 		Table outgoing = tabGroup.getSelectedTab().getTable();
-		assertTrue(outgoing.getHeader().contentEquals(
-				new String[] { "ISBN", "Title", "Author", "Username",
-						"Date Requested" }));
+		assertTrue(outgoing.getHeader().contentEquals(Strings.OUTGOING_TABLE_HEADER));
 		assertEquals(4, outgoing.getRowCount());
 		assertThat(outgoing.contentEquals( new Object[][] {
 			{ "1234567890121", "Harry Poter 2", "Niel",	"apantaleon (Annuary Pantaleon)", "2011-06-15" },
@@ -158,21 +155,19 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertNotNull(searchButton);
 		assertTrue(searchButton.isEnabled());
 		
-		String expectedTotal = "Total Matches: 5";
+		String expectedTotal = Strings.TOTAL_MATCHES + "5";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
 		Table incoming = tabGroup.getSelectedTab().getTable();
-		assertTrue(incoming.getHeader().contentEquals(
-				new String[] { "ISBN", "Title", "Author", "Username",
-						"Date Borrowed" }));
+		assertTrue(incoming.getHeader().contentEquals(Strings.INCOMING_TABLE_HEADER));
 		assertEquals(5, incoming.getRowCount());
 		assertThat(incoming.contentEquals( new Object[][] {
-				{ "1234567890121", "Harry Poter 2", "Niel",	"nlazada (Niel Lazada)", "2011-06-15" },
-				{ "1234567890121", "Harry Poter 2", "Niel",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-				{ "1234567890123", "title1", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-				{ "1234567890124", "title2", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-				{ "1234567890121", "Harry Poter 2", "Niel",	"kserrano (Karlo Serrano)", "2011-06-15" }
+			{ "1234567890121", "Harry Poter 2", "Niel",	"nlazada (Niel Lazada)", "2011-06-15", "2011-06-29" },
+			{ "1234567890121", "Harry Poter 2", "Niel",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+			{ "1234567890123", "title1", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+			{ "1234567890124", "title2", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+			{ "1234567890121", "Harry Poter 2", "Niel",	"kserrano (Karlo Serrano)", "2011-06-15", "2011-06-29" }
 		} ));
 		
 		Button returnButton = tabGroup.getSelectedTab().getButton("Return");
@@ -199,7 +194,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String expectedTotal = "Total Matches: 0";
+		String expectedTotal = Strings.TOTAL_MATCHES + "0";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -217,16 +212,16 @@ public class TransactionControllerTest extends UISpecTestCase {
 	public void testOverdue() {
 		tabGroup.selectTab("Incoming");
 		
-		String expectedTotal = "Total Matches: 3";
+		String expectedTotal = Strings.TOTAL_MATCHES + "3";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 
 		Table incomingItems = tabGroup.getSelectedTab().getTable();
 		assertEquals(3, incomingItems.getRowCount());
 		assertThat(incomingItems.contentEquals( new Object[][] {
-				{ "1234567890125", "title3Pantaleon", "author2", "ndizon (Niel Dizon)",	"2011-07-18" },
-				{ "1234567890121", "Harry Poter 2", "Niel",	"apantaleon (Annuary Pantaleon)", "2011-07-30" },
-				{ "1234567890124", "title2", "author1", "ndizon (Niel Dizon)", "2011-08-02" }
+				{ "1234567890125", "title3Pantaleon", "author2", "ndizon (Niel Dizon)",	"2011-07-18", "2011-08-01" },
+				{ "1234567890121", "Harry Poter 2", "Niel",	"apantaleon (Annuary Pantaleon)", "2011-07-30", "2011-08-13" },
+				{ "1234567890124", "title2", "author1", "ndizon (Niel Dizon)", "2011-08-02", "2011-08-16" }
 		} ));
 
 		String expectedHiddenOverdue = "";
@@ -236,7 +231,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		incomingItems.click(1, 0);
 		Button returnButton = tabGroup.getSelectedTab().getButton("Return");
 		assertTrue(returnButton.isEnabled());
-		String expectedNotOverdue = "Days Overdue: 0";
+		String expectedNotOverdue = Strings.DAYS_OVERDUE + "0";
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
 		assertTrue(expectedNotOverdue.equals(returnLabel.getText()));
 		assertTrue(returnLabel.foregroundEquals("Black"));
@@ -250,7 +245,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		incomingItems.click(0, 0);
 		assertTrue(returnButton.isEnabled());
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
-		String expectedOverdue = "Days Overdue: 1";
+		String expectedOverdue = Strings.DAYS_OVERDUE + "10";
 		System.out.println(returnLabel.getText());
 		assertTrue(expectedOverdue.equals(returnLabel.getText()));
 		assertTrue(returnLabel.foregroundEquals("Red"));
@@ -266,7 +261,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String expectedTotal = "Total Matches: 4";
+		String expectedTotal = Strings.TOTAL_MATCHES + "4";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -285,10 +280,10 @@ public class TransactionControllerTest extends UISpecTestCase {
 			public void run() throws Exception {
 				grantButton.click();
 			}
-		}).processTransientWindow().process(new WindowHandler("Borrow Request Granted") {
+		}).processTransientWindow().process(new WindowHandler(Strings.GRANT_BOOK_TITLE) {
 			public Trigger process(Window dialog) {
 				String actualMessage = dialog.getTextBox("OptionPane.label").getText();
-				String expectedMessage = "Successfully lent 1 book(s).";
+				String expectedMessage = Strings.GRANT_BOOK_MESSAGE + "1" + Strings.BOOK_S;
 				assertTrue(expectedMessage.equals(actualMessage));
 				return dialog.getButton("OK").triggerClick();
 			}
@@ -315,7 +310,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String expectedTotal = "Total Matches: 4";
+		String expectedTotal = Strings.TOTAL_MATCHES + "4";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -334,10 +329,10 @@ public class TransactionControllerTest extends UISpecTestCase {
 			public void run() throws Exception {
 				denyButton.click();
 			}
-		}).processTransientWindow().process(new WindowHandler("Borrow Request Denied") {
+		}).processTransientWindow().process(new WindowHandler(Strings.DENY_BOOK_TITLE) {
 			public Trigger process(Window dialog) {
 				String actualMessage = dialog.getTextBox("OptionPane.label").getText();
-				String expectedMessage = "Refused to lend 1 book(s).";
+				String expectedMessage = Strings.DENY_BOOK_MESSAGE + "1" + Strings.BOOK_S;
 				assertTrue(expectedMessage.equals(actualMessage));
 				return dialog.getButton("OK").triggerClick();
 			}
@@ -364,7 +359,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String expectedTotal = "Total Matches: 4";
+		String expectedTotal = Strings.TOTAL_MATCHES + "4";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -383,13 +378,13 @@ public class TransactionControllerTest extends UISpecTestCase {
 			public void run() throws Exception {
 				denyButton.click();
 			}
-		}).processTransientWindow().process(new WindowHandler("Borrow Request Denied") {
+		}).processTransientWindow().process(new WindowHandler(Strings.DENY_BOOK_TITLE) {
 			public Trigger process(Window dialog) {
 				String actualMessage = dialog.getTextBox("OptionPane.label").getText();
-				String expectedMessage = "<html>Refused to lend "
-				+ "1 book(s).<br>"
-				+ "1 book(s) have pending reservations.<br>"
-				+ "See Outgoing tab for details.";
+				String expectedMessage = Strings.DENY_BOOK_MESSAGE + "1"
+				+ Strings.BOOK_S + "1" + Strings.PENDING_RESERVATIONS;
+				System.out.println("actual: " + actualMessage);
+				System.out.println("expected: " + expectedMessage);
 				assertTrue(expectedMessage.equals(actualMessage));
 				return dialog.getButton("OK").triggerClick();
 			}
@@ -398,7 +393,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		assertThat(outgoingItems.contentEquals( new Object[][] {
-				{ "1234567890125", "title3Pantaleon", "author2", "jvillar (Jomel Pantaleon)",	"2011-08-02" },
+				{ "1234567890125", "title3Pantaleon", "author2", "jvillar (Jomel Pantaleon)",	"2011-08-11" },
 				/* this should have been appended as the last entry. however test db allows null and is non-incrementing */
 				
 				{ "1234567890121", "Harry Poter 2", "Niel",	"apantaleon (Annuary Pantaleon)", "2011-06-15" },
@@ -415,7 +410,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 	public void testReturn() {
 		tabGroup.selectTab("Incoming");
 		
-		String expectedTotal = "Total Matches: 5";
+		String expectedTotal = Strings.TOTAL_MATCHES + "5";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -430,8 +425,9 @@ public class TransactionControllerTest extends UISpecTestCase {
 		final Button returnButton = tabGroup.getSelectedTab().getButton("Return");
 		assertTrue(returnButton.isEnabled());
 		
-		String expectedOverdue = "Days Overdue: 34";
+		String expectedOverdue = Strings.DAYS_OVERDUE + "43";
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
+		System.out.println("Days overdue: " + returnLabel.getText());
 		assertTrue(expectedOverdue.equals(returnLabel.getText()));
 		assertTrue(returnLabel.foregroundEquals("Red"));
 		
@@ -440,20 +436,20 @@ public class TransactionControllerTest extends UISpecTestCase {
 			public void run() throws Exception {
 				returnButton.click();
 			}
-		}).processTransientWindow().process(new WindowHandler("Borrowed Book Returned") {
+		}).processTransientWindow().process(new WindowHandler(Strings.RETURN_BOOK_TITLE) {
 			public Trigger process(Window dialog) {
 				String actualMessage = dialog.getTextBox("OptionPane.label").getText();
-				String expectedMessage = "Successfully returned 1 book(s).";
+				String expectedMessage = Strings.RETURN_BOOK_MESSAGE + "1" + Strings.BOOK_S;
 				assertTrue(expectedMessage.equals(actualMessage));
 				return dialog.getButton("OK").triggerClick();
 			}
 		}).run();
 		
 		assertThat(incomingItems.contentEquals( new Object[][] {
-				{ "1234567890121", "Harry Poter 2", "Niel",	"nlazada (Niel Lazada)", "2011-06-15" },
-				{ "1234567890121", "Harry Poter 2", "Niel",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-				{ "1234567890124", "title2", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-				{ "1234567890121", "Harry Poter 2", "Niel",	"kserrano (Karlo Serrano)", "2011-06-15" }
+				{ "1234567890121", "Harry Poter 2", "Niel",	"nlazada (Niel Lazada)", "2011-06-15", "2011-06-29" },
+				{ "1234567890121", "Harry Poter 2", "Niel",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+				{ "1234567890124", "title2", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+				{ "1234567890121", "Harry Poter 2", "Niel",	"kserrano (Karlo Serrano)", "2011-06-15", "2011-06-29" }
 		} ));
 		
 		String newExpectedOverdue = "";
@@ -469,7 +465,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 	public void testReturnWithReservation() {
 		tabGroup.selectTab("Incoming");
 		
-		String expectedTotal = "Total Matches: 5";
+		String expectedTotal = Strings.TOTAL_MATCHES + "5";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -484,8 +480,9 @@ public class TransactionControllerTest extends UISpecTestCase {
 		final Button returnButton = tabGroup.getSelectedTab().getButton("Return");
 		assertTrue(returnButton.isEnabled());
 		
-		String expectedOverdue = "Days Overdue: 34";
+		String expectedOverdue = Strings.DAYS_OVERDUE + "43";
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
+		System.out.println("Days overdue: " + returnLabel.getText());
 		assertTrue(expectedOverdue.equals(returnLabel.getText()));
 		assertTrue(returnLabel.foregroundEquals("Red"));
 		
@@ -494,22 +491,23 @@ public class TransactionControllerTest extends UISpecTestCase {
 			public void run() throws Exception {
 				returnButton.click();
 			}
-		}).processTransientWindow().process(new WindowHandler("Borrowed Book Returned") {
+		}).processTransientWindow().process(new WindowHandler(Strings.RETURN_BOOK_TITLE) {
 			public Trigger process(Window dialog) {
 				String actualMessage = dialog.getTextBox("OptionPane.label").getText();
-				String expectedMessage = "<html>Successfully returned 1 book(s).<br>"
-				+ "1 book(s) have pending reservations.<br>"
-				+ "See Outgoing tab for details.";
+				String expectedMessage = Strings.RETURN_BOOK_MESSAGE + "1" + Strings.BOOK_S
+				+ "1" + Strings.PENDING_RESERVATIONS;
+				System.out.println("actual: " + actualMessage);
+				System.out.println("expected: " + expectedMessage);
 				assertTrue(expectedMessage.equals(actualMessage));
 				return dialog.getButton("OK").triggerClick();
 			}
 		}).run();
 		
 		assertThat(incomingItems.contentEquals( new Object[][] {
-				{ "1234567890121", "Harry Poter 2", "Niel",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-				{ "1234567890123", "title1", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-				{ "1234567890124", "title2", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15" },
-				{ "1234567890121", "Harry Poter 2", "Niel",	"kserrano (Karlo Serrano)", "2011-06-15" }
+				{ "1234567890121", "Harry Poter 2", "Niel",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+				{ "1234567890123", "title1", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+				{ "1234567890124", "title2", "author1",	"jvillar (Jomel Pantaleon)", "2011-06-15", "2011-06-29" },
+				{ "1234567890121", "Harry Poter 2", "Niel",	"kserrano (Karlo Serrano)", "2011-06-15", "2011-06-29" }
 		} ));
 		
 		String newExpectedOverdue = "";
@@ -524,14 +522,14 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String outgoingExpectedTotal = "Total Matches: 5";
+		String outgoingExpectedTotal = Strings.TOTAL_MATCHES + "5";
 		TextBox outgoingMatchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(outgoingExpectedTotal.equals(outgoingMatchesLabel.getText()));
 		
 		Table outgoingItems = tabGroup.getSelectedTab().getTable();
 		assertEquals(5, outgoingItems.getRowCount());
 		assertThat(outgoingItems.contentEquals( new Object[][] {
-			{ "1234567890121", "Harry Poter 2", "Niel",	"ndizon (Niel Dizon)", "2011-08-02" },
+			{ "1234567890121", "Harry Poter 2", "Niel",	"ndizon (Niel Dizon)", "2011-08-11" },
 			{ "1234567890121", "Harry Poter 2", "Niel",	"apantaleon (Annuary Pantaleon)", "2011-06-15" },
 			{ "1234567890124", "title2", "author1", "ndizon (Niel Dizon)", "2011-06-15" },
 			{ "1234567890125", "title3Pantaleon", "author2", "ndizon (Niel Dizon)",	"2011-06-15" },
