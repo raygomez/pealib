@@ -7,7 +7,7 @@ public class IsbnUtil {
 		int sum = 0;
 
 		if (!isbn.matches(Constants.ISBN_FORMAT_1)
-				|| !isbn.matches(Constants.ISBN_FORMAT_2)) {
+				&& !isbn.matches(Constants.ISBN_FORMAT_2)) {
 			return false;
 		}
 

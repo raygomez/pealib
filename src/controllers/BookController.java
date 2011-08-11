@@ -402,12 +402,12 @@ public class BookController {
 
 			//TODO ISBN CALCULATE VALIDATION
 			if (!IsbnUtil
-					.isIsbnValid(bookInfo.getTxtFldISBN().getText())) {
-				bookInfo.getTxtFldISBN().hasError(true);
+					.isIsbnValid(bookInfo.getTxtFldISBN10().getText())) {
+				bookInfo.getTxtFldISBN10().hasError(true);
 				validate = false;
 				flag = 1;
 			} else
-				bookInfo.getTxtFldISBN().hasError(false);
+				bookInfo.getTxtFldISBN10().hasError(false);
 
 			if (bookInfo.getTxtFldDescription().getText().length() > 1000) {
 				bookInfo.getTxtFldDescription().hasError(true);
@@ -423,14 +423,14 @@ public class BookController {
 				bookInfo.getTxtFldEdition().hasError(false);
 
 			//TODO existing ISBN
-			if (!currISBN.equals(bookInfo.getTxtFldISBN().getText())
+			if (!currISBN.equals(bookInfo.getTxtFldISBN10().getText())
 					&& flag == 0) {
-				if (BookDAO.isIsbnExisting(bookInfo.getTxtFldISBN()
+				if (BookDAO.isIsbnExisting(bookInfo.getTxtFldISBN10()
 						.getText())) {
-					bookInfo.getTxtFldISBN().hasError(true);
+					bookInfo.getTxtFldISBN10().hasError(true);
 					validate = false;
 				} else
-					bookInfo.getTxtFldISBN().hasError(false);
+					bookInfo.getTxtFldISBN10().hasError(false);
 			}
 			if (spinCopy < validCopy) {
 				bookInfo.getSpinCopyVal().hasError(true);

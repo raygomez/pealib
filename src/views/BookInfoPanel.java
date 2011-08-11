@@ -18,6 +18,7 @@ import models.Book;
 import models.User;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.SwingConstants;
+import javax.swing.JTextField;
 
 public class BookInfoPanel extends JPanel {
 
@@ -29,7 +30,8 @@ public class BookInfoPanel extends JPanel {
 	private MyTextField authorTextField = new MyTextField(100);
 	private MyTextField yearPublishTextField = new MyTextField(4);
 	private MyTextField publisherTextField = new MyTextField(100);
-	private MyTextField isbnTextField = new MyTextField(13);
+	private MyTextField isbnTextField10 = new MyTextField(10);
+	private MyTextField isbnTextField13 = new MyTextField(13);
 	private MyTextField editionTextField = new MyTextField(30);
 	private MyTextArea descriptionTextArea = new MyTextArea("", 20, 20, 1000);
 	private MyJSpinner copiesValSpinner = new MyJSpinner();
@@ -48,6 +50,7 @@ public class BookInfoPanel extends JPanel {
 	 */
 
 	public BookInfoPanel(Book book, User user) {
+		isbnTextField13.setColumns(10);
 		this.currentUser = user;
 		this.currentBook = book;
 		displayBookInfo();
@@ -55,7 +58,7 @@ public class BookInfoPanel extends JPanel {
 
 	private void displayBookInfo() {
 
-		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][][][]", "[40][][][][][][][grow][48.00][34.00][][13.00][]"));
+		setLayout(new MigLayout("", "[14.00][38.00][13.00][143.00,grow][][][]", "[40][][][][][][][][grow][48.00][34.00][][13.00][]"));
         errorMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         add(errorMessageLabel, "cell 0 0, span 6 1,alignx center,aligny center");
@@ -110,17 +113,26 @@ public class BookInfoPanel extends JPanel {
 		add(publisherTextField, "cell 3 5 2 1,growx");
 		publisherTextField.setColumns(10);
 
-		JLabel lblIsbn = new JLabel("ISBN:");
-		add(lblIsbn, "cell 1 6");
+		JLabel lblIsbn10 = new JLabel("ISBN10:");
+		add(lblIsbn10, "cell 1 6");
 
-		isbnTextField.setText(currentBook.getIsbn10());
-		isbnTextField.setName("isbnTextField");
-		isbnTextField.setEditable(false);
-		add(isbnTextField, "cell 3 6 2 1,growx");
-		isbnTextField.setColumns(10);
+		isbnTextField10.setText(currentBook.getIsbn10());
+		isbnTextField10.setName("isbnTextField10");
+		isbnTextField10.setEditable(false);
+		add(isbnTextField10, "cell 3 6 2 1,growx");
+		isbnTextField10.setColumns(10);
+		
+		JLabel lblIsbn13 = new JLabel("ISBN13:");
+		add(lblIsbn13, "cell 1 7");
+		
+		isbnTextField13.setText(currentBook.getIsbn13());
+		isbnTextField13.setName("isbnTextField13");
+		isbnTextField13.setEditable(false);		
+		add(isbnTextField13, "cell 3 7 2 1,growx");
+		isbnTextField10.setColumns(13);
 
 		JLabel lblDescription = new JLabel("Description:");
-		add(lblDescription, "cell 1 7");
+		add(lblDescription, "cell 1 8");
                 
 		descriptionTextArea.setText(currentBook.getDescription());
         descriptionTextArea.setName("descriptionTextArea");
@@ -130,7 +142,7 @@ public class BookInfoPanel extends JPanel {
         descriptionTextArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(descriptionTextArea);		
         scrollPane.setViewportView(descriptionTextArea);
-        add(descriptionTextArea, "cell 3 7 2 3,grow");
+        add(descriptionTextArea, "cell 3 8 2 3,grow");
 
 		saveButton = new JButton("Save", new ImageIcon("resources/images/save32x32.png"));
 		deleteButton = new JButton("Delete", new ImageIcon("resources/images/delete.png"));
@@ -138,7 +150,7 @@ public class BookInfoPanel extends JPanel {
 		reserveButton = new JButton("Reserve", new ImageIcon("resources/images/reserve.png"));
 			
 		JScrollPane scrollDes = new JScrollPane(descriptionTextArea);
-		add(scrollDes, "cell 3 7 2 3,grow");
+		add(scrollDes, "cell 3 8 2 3,grow");
 			
 		lblCopies = new JLabel("Copies:");
 			
@@ -147,21 +159,22 @@ public class BookInfoPanel extends JPanel {
 					
 
 		if (currentUser.getType().equals("Librarian")) {
-			add(saveButton, "cell 3 11,alignx right");
-			add(deleteButton, "cell 4 11");
+			add(saveButton, "cell 3 12,alignx right");
+			add(deleteButton, "cell 4 12");
 			authorTextField.setEditable(true);
 			descriptionTextArea.setEditable(true);
-			isbnTextField.setEditable(true);
+			isbnTextField10.setEditable(true);
+			isbnTextField13.setEditable(true);
 			publisherTextField.setEditable(true);
 			titleTextField.setEditable(true);
 			yearPublishTextField.setEditable(true);
 			editionTextField.setEditable(true);
-			add(copiesValSpinner, "cell 3 10,alignx left,aligny center");
-			add(lblCopies, "cell 1 10,alignx left,aligny center");
+			add(copiesValSpinner, "cell 3 13,alignx left,aligny center");
+			add(lblCopies, "cell 1 13,alignx left,aligny center");
 		}
 		if (currentUser.getType().equals("User")) {
-			add(borrowButton, "cell 3 10,alignx right");
-			add(reserveButton, "cell 4 10");
+			add(borrowButton, "cell 3 13,alignx right");
+			add(reserveButton, "cell 4 13");
 		}
 
 	}
@@ -202,7 +215,8 @@ public class BookInfoPanel extends JPanel {
 		currentBook.setTitle(titleTextField.getText().trim());
 		currentBook.setAuthor(authorTextField.getText().trim());
 		currentBook.setPublisher(publisherTextField.getText().trim());
-		currentBook.setIsbn10(isbnTextField.getText());
+		currentBook.setIsbn10(isbnTextField10.getText());
+		currentBook.setIsbn13(isbnTextField13.getText());
 		currentBook.setDescription(descriptionTextArea.getText().trim());
 		currentBook.setCopies(Integer.parseInt(copiesValSpinner.getModel()
 				.getValue().toString()));
@@ -221,7 +235,8 @@ public class BookInfoPanel extends JPanel {
 		titleTextField.setText(book.getTitle());
 		authorTextField.setText(book.getAuthor());
 		publisherTextField.setText(book.getPublisher());
-		isbnTextField.setText(book.getIsbn10());
+		isbnTextField10.setText(book.getIsbn10());
+		isbnTextField13.setText(book.getIsbn13());
 		descriptionTextArea.setText(book.getDescription());
 		copiesValSpinner.getModel().setValue(book.getCopies());
 		editionTextField.setText(book.getEdition());
@@ -239,7 +254,7 @@ public class BookInfoPanel extends JPanel {
 		authorTextField.hasError(false);
 		yearPublishTextField.hasError(false);
 		publisherTextField.hasError(false);
-		isbnTextField.hasError(false);
+		isbnTextField10.hasError(false);
 		descriptionTextArea.hasError(false);
 		editionTextField.hasError(false);	
 		copiesValSpinner.hasError(false);
@@ -265,8 +280,12 @@ public class BookInfoPanel extends JPanel {
 		return publisherTextField;
 	}
 
-	public MyTextField getTxtFldISBN() {
-		return isbnTextField;
+	public MyTextField getTxtFldISBN10() {
+		return isbnTextField10;
+	}
+	
+	public MyTextField getTxtFldISBN13() {
+		return isbnTextField13;
 	}
 
 	public MyTextArea getTxtFldDescription() {
