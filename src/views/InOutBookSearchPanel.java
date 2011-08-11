@@ -59,10 +59,11 @@ public class InOutBookSearchPanel extends JPanel {
 
 	/* Event Listeners */
 	public void setEventListeners(ActionListener submit, KeyListener enter,
-			MouseListener select) {
+			MouseListener select, KeyListener shift) {
 		submitButton.addActionListener(submit);
 		searchTextField.addKeyListener(enter);
 		resultsTable.addMouseListener(select);
+		resultsTable.addKeyListener(shift);
 	}
 
 	/* Getters */
@@ -79,14 +80,12 @@ public class InOutBookSearchPanel extends JPanel {
 	}
 	
 	/* Setter */
-	public void setColumnRender(){
+	public void setColumnRender(int columnSize){
 		DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
 		trender.setHorizontalAlignment(SwingConstants.CENTER);
-					
-		resultsTable.getColumn(resultsTable.getColumnName(0)).setCellRenderer(trender);
-		resultsTable.getColumn(resultsTable.getColumnName(1)).setCellRenderer(trender);
-		resultsTable.getColumn(resultsTable.getColumnName(2)).setCellRenderer(trender);		
-		resultsTable.getColumn(resultsTable.getColumnName(3)).setCellRenderer(trender);
-		resultsTable.getColumn(resultsTable.getColumnName(4)).setCellRenderer(trender);
+
+		for (int i = 0; i < columnSize; i++) {
+			resultsTable.getColumn(resultsTable.getColumnName(i)).setCellRenderer(trender);
+		}
 	}
 }

@@ -2,7 +2,8 @@
 <dataset>
 	<books 
 		   ID="1" 
-		   ISBN="1234567890120"
+		   ISBN10="1234567890"
+		   ISBN13="1234567890120"
 		   Title="Harry Poter 1"
 		   Author="Ewan ko"
 		   Edition="1st"
@@ -12,7 +13,8 @@
 		   Copies="1" />
 	<books 
 		   ID="2" 
-		   ISBN="1234567890121"
+		   ISBN10="1234567891"
+		   ISBN13="1234567890121"
 		   Title="Harry Poter 2"
 		   Author="Niel"
 		   Edition="1st"
@@ -22,7 +24,8 @@
 		   Copies="4" />
 	<books 
 		   ID="3" 
-		   ISBN="1234567890122"
+		   ISBN10="1234567892"
+		   ISBN13="1234567890122"
 		   Title="Harry Poter 3"
 		   Author="Ewan ko1"
 		   Edition="1st"
@@ -32,7 +35,8 @@
 		   Copies="1" />
 	<books 
 		   ID="4" 
-		   ISBN="1234567890123"
+		   ISBN10="1234567893"
+		   ISBN13="1234567890123"
 		   Title="title1"
 		   Author="author1"
 		   Edition="edition1"
@@ -42,7 +46,8 @@
 		   Copies="3" />
 	<books 
 		   ID="5" 
-		   ISBN="1234567890124"
+		   ISBN10="1234567894"
+		   ISBN13="1234567890124"
 		   Title="title2"
 		   Author="author1"
 		   Edition="edition2"
@@ -52,7 +57,8 @@
 		   Copies="4" />
 	<books 
 		   ID="6" 
-		   ISBN="1234567890125"
+		   ISBN10="1234567895"
+		   ISBN13="1234567890125"
 		   Title="title3Pantaleon"
 		   Author="author2"
 		   Edition="edition3"
@@ -62,7 +68,8 @@
 		   Copies="1" />
 	<books 
 		   ID="7" 
-		   ISBN="1234567890126"
+		   ISBN10="1234567896"
+		   ISBN13="1234567890126"
 		   Title="title3Pantaleon"
 		   Author="author2"
 		   Edition="edition3"

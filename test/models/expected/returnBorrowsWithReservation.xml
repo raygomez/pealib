@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-	<borrows BookID="2" UserID="4" DateRequested="2011-08-02"
+	<borrows BookID="2" UserID="4" DateRequested="2011-08-11"
 		DateBorrowed="[null]" DateReturned="[null]" BorrowID='0' />
 	<!-- this would be BorrowID='14' in actual db -->
 
@@ -9,7 +9,7 @@
 	<borrows BookID="2" UserID="2" DateRequested="2011-06-15"
 		DateBorrowed="[null]" DateReturned="[null]" BorrowID='2' />
 	<borrows BookID="2" UserID="3" DateRequested="2011-06-15"
-		DateBorrowed="2011-06-15" DateReturned="2011-08-02" BorrowID='3' />
+		DateBorrowed="2011-06-15" DateReturned="2011-08-11" BorrowID='3' />
 	<borrows BookID="3" UserID="5" DateRequested="2011-06-15"
 		DateBorrowed="2011-06-15" DateReturned="2011-06-15" BorrowID='4' />
 	<borrows BookID="2" UserID="1" DateRequested="2011-06-15"
