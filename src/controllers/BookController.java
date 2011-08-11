@@ -617,7 +617,7 @@ public class BookController {
 			int availableCopies = 0;
 			for (int i = 0; i < bookList.size(); i++) {
 				rowData = new ArrayList<String>();
-				rowData.add(bookList.get(i).getIsbn10());
+				rowData.add(bookList.get(i).getIsbn10()+" / "+bookList.get(i).getIsbn13());
 				rowData.add(bookList.get(i).getTitle() + ", "
 						+ bookList.get(i).getAuthor());
 
