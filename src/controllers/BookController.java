@@ -13,28 +13,25 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
-import pealib.PeaLibrary;
-
-import net.miginfocom.swing.MigLayout;
-import utilities.Connector;
-import utilities.Constants;
-import utilities.IsbnChecker;
-import utilities.Task;
-import views.AddBookDialog;
-import views.BookInfoPanel;
-import views.BookSearchPanel;
 import models.Book;
 import models.BookDAO;
 import models.TransactionDAO;
 import models.User;
 import models.UserDAO;
+import net.miginfocom.swing.MigLayout;
+import pealib.PeaLibrary;
+import utilities.Connector;
+import utilities.Constants;
+import utilities.IsbnUtil;
+import utilities.Task;
+import views.AddBookDialog;
+import views.BookInfoPanel;
+import views.BookSearchPanel;
 
 public class BookController {
 
@@ -111,7 +108,7 @@ public class BookController {
 		bookSearch.setColumnRender(bookSearch.getTableBookList());
 		
 		if (bookList.size() > 0) {
-			currISBN = bookList.get(0).getIsbn();
+			currISBN = bookList.get(0).getIsbn10();
 			bookInfo.setBookInfoData(bookList.get(0));
 			
 			if (bookList.get(0).getCopies() == 0) {
@@ -168,7 +165,7 @@ public class BookController {
 							0, 0);
 					bookInfo.getBtnDelete().setEnabled(true);
 					bookInfo.getBtnSave().setEnabled(true);
-					currISBN = bookList.get(0).getIsbn();
+					currISBN = bookList.get(0).getIsbn10();
 					bookInfo.setBookInfoData(bookList.get(0));
 					int availableCopy = TransactionDAO
 							.getAvailableCopies(bookList.get(0));
@@ -217,7 +214,7 @@ public class BookController {
 				if (validate) {
 					try {
 						if (!BookDAO.isIsbnExisting(addBook.getBookInfo()
-								.getIsbn())) {
+								.getIsbn10())) {
 							BookDAO.addBook(addBook.getBookInfo());
 							addBook.getLblErrorMsg().makeSuccess(
 									"ISBN: "
@@ -285,7 +282,7 @@ public class BookController {
 			} else
 				addBook.getTxtFldYearPublish().hasError(false);
 
-			if (!IsbnChecker.isIsbnValid(addBook.getTxtFldIsbn().getText())) {
+			if (!IsbnUtil.isIsbnValid(addBook.getTxtFldIsbn().getText())) {
 				addBook.getTxtFldIsbn().hasError(true);
 				validate = false;
 			} else
@@ -404,7 +401,7 @@ public class BookController {
 				bookInfo.getTxtFldPublisher().hasError(false);
 
 			//TODO ISBN CALCULATE VALIDATION
-			if (!IsbnChecker
+			if (!IsbnUtil
 					.isIsbnValid(bookInfo.getTxtFldISBN().getText())) {
 				bookInfo.getTxtFldISBN().hasError(true);
 				validate = false;
@@ -456,8 +453,19 @@ public class BookController {
 				int optConfirm = JOptionPane.showConfirmDialog(bookInfo,
 						"Do you really want to delete this book?", "Confirm",
 						JOptionPane.YES_NO_OPTION);
+				
 				if (optConfirm == 0) {
-					BookDAO.deleteBook(bookInfo.getCurrBook());
+
+					if (bookInfo.getCurrBook().getCopies() == 
+						TransactionDAO.getAvailableCopies(bookInfo.getCurrBook())){
+						BookDAO.deleteBook(bookInfo.getCurrBook());
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Someone might have borrowed the book!\n"
+								+ "before the delete transaction have been completed.", "",
+								JOptionPane.ERROR_MESSAGE);
+					}
+					
 					bookList = BookDAO.searchBook(currSearchString);
 					bookInfo.setBookInfoData(bookList.get(currRow));
 					bookSearch.getTableBookList().setModel(
@@ -469,6 +477,7 @@ public class BookController {
 								currRow, currRow);
 					bookInfo.getBtnDelete().setEnabled(false);
 
+					
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -484,12 +493,20 @@ public class BookController {
 			int currRow = currTableRowSelection;
 			try {
 				reset();
-				int request = TransactionDAO.requestBook(bookList.get(currRow),
-						currentUser);
-				if (request == 1) {
-					JOptionPane
-							.showMessageDialog(bookLayoutPanel,
-									"The book has been successfully added to your Requests List!");
+				if (TransactionDAO.getAvailableCopies(bookInfo.getCurrBook()) > 0){
+					int request = TransactionDAO.requestBook(bookList.get(currRow),
+							currentUser);
+					if (request == 1) {
+						JOptionPane
+								.showMessageDialog(bookLayoutPanel,
+										"The book has been successfully added to your Requests List!");
+					}
+				}
+				else {
+					bookInfo.getBtnReserve().setEnabled(true);
+					JOptionPane.showMessageDialog(null, "Someone might have borrowed the book!\n"
+							+ "before this transaction have been completed.", "",
+							JOptionPane.ERROR_MESSAGE);
 				}
 				bookList = BookDAO.searchBookForUser(currSearchString);			
 				bookSearch.getTableBookList().setModel(
@@ -567,7 +584,7 @@ public class BookController {
 					e1.printStackTrace();
 				}
 				Book displayBook = bookList.get(tableRow);
-				currISBN = displayBook.getIsbn();
+				currISBN = displayBook.getIsbn10();
 				//TODO 
 				bookInfo.resetErrors();
 			//	System.out.println(displayBook.getIsbn());
@@ -600,7 +617,7 @@ public class BookController {
 			int availableCopies = 0;
 			for (int i = 0; i < bookList.size(); i++) {
 				rowData = new ArrayList<String>();
-				rowData.add(bookList.get(i).getIsbn());
+				rowData.add(bookList.get(i).getIsbn10()+" / "+bookList.get(i).getIsbn13());
 				rowData.add(bookList.get(i).getTitle() + ", "
 						+ bookList.get(i).getAuthor());
 

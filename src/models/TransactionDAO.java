@@ -404,24 +404,8 @@ public class TransactionDAO {
 
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			User user = new User();
-			user.setUserId(rs.getInt("Users.ID"));
-			user.setFirstName(rs.getString("Users.FirstName"));
-			user.setLastName(rs.getString("Users.LastName"));
-			user.setType(rs.getString("Users.Type"));
-			user.setUserName(rs.getString("Users.UserName"));
-			user.setAddress(rs.getString("Users.Address"));
-			user.setContactNo(rs.getString("Users.ContactNo"));
-			user.setEmail(rs.getString("Users.Email"));
-
-			Book book = new Book(rs.getInt("Books.ID"),
-					rs.getString("Books.ISBN"), rs.getString("Books.Title"),
-					rs.getString("Books.Edition"),
-					rs.getString("Books.Author"),
-					rs.getString("Books.Publisher"),
-					rs.getInt("Books.YearPublish"),
-					rs.getString("Books.Description"),
-					rs.getInt("Books.Copies"));
+			User user = new User(rs);
+			Book book = new Book(rs);
 
 			BorrowTransaction borrowed = new BorrowTransaction(
 					rs.getInt("Borrows.BorrowID"), user, book,
@@ -451,24 +435,8 @@ public class TransactionDAO {
 
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			User user = new User();
-			user.setUserId(rs.getInt("Users.ID"));
-			user.setFirstName(rs.getString("Users.FirstName"));
-			user.setLastName(rs.getString("Users.LastName"));
-			user.setType(rs.getString("Users.Type"));
-			user.setUserName(rs.getString("Users.UserName"));
-			user.setAddress(rs.getString("Users.Address"));
-			user.setContactNo(rs.getString("Users.ContactNo"));
-			user.setEmail(rs.getString("Users.Email"));
-
-			Book book = new Book(rs.getInt("Books.ID"),
-					rs.getString("Books.ISBN"), rs.getString("Books.Title"),
-					rs.getString("Books.Edition"),
-					rs.getString("Books.Author"),
-					rs.getString("Books.Publisher"),
-					rs.getInt("Books.YearPublish"),
-					rs.getString("Books.Description"),
-					rs.getInt("Books.Copies"));
+			User user = new User(rs);
+			Book book = new Book(rs);
 
 			BorrowTransaction borrowed = new BorrowTransaction(
 					rs.getInt("Borrows.BorrowID"), user, book,

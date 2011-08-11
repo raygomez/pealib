@@ -180,7 +180,7 @@ public class AddBookDialog extends JDialog {
 		newBook.setCopies(Integer.parseInt(copyValSpinner.getModel().getValue()
 				.toString()));
 		newBook.setDescription(descriptionTextArea.getText().trim());
-		newBook.setIsbn(isbnTextField.getText());
+		newBook.setIsbn10(isbnTextField.getText());
 		newBook.setPublisher(publisherTextField.getText().trim());
 		newBook.setTitle(titleTextField.getText().trim());
 		newBook.setEdition(editionTextField.getText().trim());

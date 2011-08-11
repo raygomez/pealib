@@ -81,7 +81,7 @@ public class BookInfoPanelTest extends UISpecTestCase {
 				panelUser.getInputTextBox("yearPublishTextField").getText());
 		assertEquals(book.getPublisher(),
 				panelUser.getInputTextBox("publisherTextField").getText());
-		assertEquals(book.getIsbn(), panelUser.getInputTextBox("isbnTextField")
+		assertEquals(book.getIsbn10(), panelUser.getInputTextBox("isbnTextField")
 				.getText());
 		assertEquals(book.getDescription(),
 				panelUser.getInputTextBox("descriptionTextArea").getText());
@@ -131,7 +131,7 @@ public class BookInfoPanelTest extends UISpecTestCase {
 				.getInputTextBox("yearPublishTextField").getText());
 		assertEquals(book.getPublisher(),
 				panelLibrarian.getInputTextBox("publisherTextField").getText());
-		assertEquals(book.getIsbn(), panelUser.getInputTextBox("isbnTextField")
+		assertEquals(book.getIsbn10(), panelUser.getInputTextBox("isbnTextField")
 				.getText());
 		assertEquals(book.getDescription(),
 				panelLibrarian.getInputTextBox("descriptionTextArea").getText());
@@ -169,7 +169,7 @@ public class BookInfoPanelTest extends UISpecTestCase {
 		assertThat(panelUser.getTextBox("publisherTextField").textContains(
 				book.getPublisher()));
 		assertThat(panelUser.getTextBox("isbnTextField").textContains(
-				book.getIsbn()));
+				book.getIsbn10()));
 		assertThat(panelUser.getTextBox("descriptionTextArea").textContains(
 				book.getDescription()));
 		assertThat(panelUser.getTextBox("editionTextField").textContains(
@@ -189,7 +189,7 @@ public class BookInfoPanelTest extends UISpecTestCase {
 		assertThat(panelLibrarian.getTextBox("publisherTextField").textContains(
 				book.getPublisher()));
 		assertThat(panelLibrarian.getTextBox("isbnTextField").textContains(
-				book.getIsbn()));
+				book.getIsbn10()));
 		assertThat(panelLibrarian.getTextBox("descriptionTextArea").textContains(
 				book.getDescription()));
 		assertThat(panelLibrarian.getTextBox("editionTextField").textContains(

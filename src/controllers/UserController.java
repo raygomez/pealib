@@ -1,7 +1,5 @@
 package controllers;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -10,7 +8,6 @@ import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import javax.swing.DefaultListSelectionModel;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -25,7 +22,6 @@ import models.User;
 import models.UserDAO;
 import net.miginfocom.swing.MigLayout;
 import pealib.PeaLibrary;
-import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Emailer;
@@ -164,8 +160,14 @@ public class UserController {
 	 */	
 	private void processPend(boolean process) {		
 		String info = "";
+		int numberOfSuccessful = 0;
+		
+			boolean isSuccessful = false;
+			
+	
 		int[] selected = userSearch.getPendingTable().getSelectedRows();
 
+		
 		for(int index : selected){
 			User userContainer = searchedPending.get(index);
 			
@@ -174,40 +176,26 @@ public class UserController {
 			try {
 				if (process) {
 					UserDAO.updateUser(userContainer);
-					Emailer.sendAcceptedEmail(userContainer);
+					isSuccessful = Emailer.sendAcceptedEmail(userContainer);
 				} else {
 					UserDAO.denyPendingUser(userContainer);
-					Emailer.sendRejectEmail(userContainer);
+					isSuccessful = Emailer.sendRejectEmail(userContainer);
 				}
 			} catch (Exception e1) {
 				CrashHandler.handle(e1);
 			}		
+			
+			if(isSuccessful)
+				numberOfSuccessful++;
+			
 		}
-//		for (int i = 0; i < searchedPending.size(); i++) {
-//			if (checkList.contains(i)) {
-//				User temp = searchedPending.get(i);
-//				temp.setType("User");
-//
-//				try {
-//					if (process) {
-//						UserDAO.updateUser(temp);
-//						info = "Successfully accepted ("
-//								+ checkList.size() + ") application/s.";
-//						Emailer.sendAcceptedEmail(temp);
-//					} else {
-//						UserDAO.denyPendingUser(temp);
-//						info = "Successfully denied (" + checkList.size()
-//								+ ") application/s.";
-//						Emailer.sendRejectEmail(temp);
-//					}
-//				} catch (Exception e1) {
-//					CrashHandler.handle(e1);
-//				}
-//			}
-//		}
-
+		
+		
+		
 		info = (process? "Successfully added " +userSearch.getPendingTable().getSelectedRowCount()+" users." 
 						: "Denied " +userSearch.getPendingTable().getSelectedRowCount()+" users.");
+		
+		info += "\nYou were able to send " + numberOfSuccessful + "notifications to the users.";
 		JOptionPane.showMessageDialog(userSearch, info);
 		userSearch.getCbAll().setSelected(false);
 		checkList.clear();	
