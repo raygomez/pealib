@@ -199,7 +199,7 @@ public class ELibController {
 				for (BorrowTransaction i : bookData) {
 					ArrayList<Object> rowData = new ArrayList<Object>(
 							columns.length);
-					rowData.add(i.getBook().getIsbn());
+					rowData.add(i.getBook().getIsbn10());
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
 					rowData.add(i.getDateRequested().toString());
@@ -222,7 +222,7 @@ public class ELibController {
 					DateTime reservedDate = new DateTime(i.getDateReserved()
 							.getTime());
 
-					rowData.add(i.getBook().getIsbn());
+					rowData.add(i.getBook().getIsbn10());
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
 					rowData.add(reservedDate.toString("y-MM-dd h:mm a"));
@@ -254,7 +254,7 @@ public class ELibController {
 					
 					ArrayList<Object> rowData = new ArrayList<Object>(
 							columns.length);
-					rowData.add(i.getBook().getIsbn());
+					rowData.add(i.getBook().getIsbn10());
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
 					rowData.add(i.getDateBorrowed().toString());
@@ -274,7 +274,7 @@ public class ELibController {
 				for (BorrowTransaction i : bookData) {
 					ArrayList<Object> rowData = new ArrayList<Object>(
 							columns.length);
-					rowData.add(i.getBook().getIsbn());
+					rowData.add(i.getBook().getIsbn10());
 					rowData.add(i.getBook().getTitle());
 					rowData.add(i.getBook().getAuthor());
 					rowData.add(i.getDateBorrowed().toString());

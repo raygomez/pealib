@@ -111,7 +111,7 @@ public class BookController {
 		bookSearch.setColumnRender(bookSearch.getTableBookList());
 		
 		if (bookList.size() > 0) {
-			currISBN = bookList.get(0).getIsbn();
+			currISBN = bookList.get(0).getIsbn10();
 			bookInfo.setBookInfoData(bookList.get(0));
 			
 			if (bookList.get(0).getCopies() == 0) {
@@ -168,7 +168,7 @@ public class BookController {
 							0, 0);
 					bookInfo.getBtnDelete().setEnabled(true);
 					bookInfo.getBtnSave().setEnabled(true);
-					currISBN = bookList.get(0).getIsbn();
+					currISBN = bookList.get(0).getIsbn10();
 					bookInfo.setBookInfoData(bookList.get(0));
 					int availableCopy = TransactionDAO
 							.getAvailableCopies(bookList.get(0));
@@ -217,7 +217,7 @@ public class BookController {
 				if (validate) {
 					try {
 						if (!BookDAO.isIsbnExisting(addBook.getBookInfo()
-								.getIsbn())) {
+								.getIsbn10())) {
 							BookDAO.addBook(addBook.getBookInfo());
 							addBook.getLblErrorMsg().makeSuccess(
 									"ISBN: "
@@ -567,7 +567,7 @@ public class BookController {
 					e1.printStackTrace();
 				}
 				Book displayBook = bookList.get(tableRow);
-				currISBN = displayBook.getIsbn();
+				currISBN = displayBook.getIsbn10();
 				//TODO 
 				bookInfo.resetErrors();
 			//	System.out.println(displayBook.getIsbn());
@@ -600,7 +600,7 @@ public class BookController {
 			int availableCopies = 0;
 			for (int i = 0; i < bookList.size(); i++) {
 				rowData = new ArrayList<String>();
-				rowData.add(bookList.get(i).getIsbn());
+				rowData.add(bookList.get(i).getIsbn10());
 				rowData.add(bookList.get(i).getTitle() + ", "
 						+ bookList.get(i).getAuthor());
 

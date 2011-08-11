@@ -31,7 +31,7 @@ public class BookDAO {
 				+ "Copies) VALUES (?,?,?,?,?,?,?,?)";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
-		ps.setString(1, book.getIsbn());
+		ps.setString(1, book.getIsbn10());
 		ps.setString(2, book.getTitle());
 		ps.setString(3, book.getAuthor());
 		ps.setString(4, book.getEdition());
@@ -57,7 +57,7 @@ public class BookDAO {
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 
-		ps.setString(1, book.getIsbn());
+		ps.setString(1, book.getIsbn10());
 		ps.setString(2, book.getTitle());
 		ps.setString(3, book.getAuthor());
 		ps.setString(4, book.getEdition());
