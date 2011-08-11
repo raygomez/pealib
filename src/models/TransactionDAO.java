@@ -415,7 +415,9 @@ public class TransactionDAO {
 			user.setEmail(rs.getString("Users.Email"));
 
 			Book book = new Book(rs.getInt("Books.ID"),
-					rs.getString("Books.ISBN"), rs.getString("Books.Title"),
+					rs.getString("Books.ISBN10"),
+					rs.getString("Books.ISBN13"),
+					rs.getString("Books.Title"),
 					rs.getString("Books.Edition"),
 					rs.getString("Books.Author"),
 					rs.getString("Books.Publisher"),
@@ -462,7 +464,9 @@ public class TransactionDAO {
 			user.setEmail(rs.getString("Users.Email"));
 
 			Book book = new Book(rs.getInt("Books.ID"),
-					rs.getString("Books.ISBN"), rs.getString("Books.Title"),
+					rs.getString("Books.ISBN10"),
+					rs.getString("Books.ISBN13"),
+					rs.getString("Books.Title"),
 					rs.getString("Books.Edition"),
 					rs.getString("Books.Author"),
 					rs.getString("Books.Publisher"),
