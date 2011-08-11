@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<borrows BookID="6" UserID="4" DateRequested="2011-06-15"
+		DateBorrowed="2011-07-18" DateReturned="[null]" BorrowID='1' />
+	<borrows BookID="2" UserID="2" DateRequested="2011-06-15"
+		DateBorrowed="2011-07-30" DateReturned="[null]" BorrowID='2' />
+	<borrows BookID="5" UserID="4" DateRequested="2011-06-15"
+		DateBorrowed="2011-08-02" DateReturned="[null]" BorrowID='3' />
+</dataset>
