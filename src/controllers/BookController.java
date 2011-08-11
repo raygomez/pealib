@@ -25,7 +25,7 @@ import pealib.PeaLibrary;
 import net.miginfocom.swing.MigLayout;
 import utilities.Connector;
 import utilities.Constants;
-import utilities.IsbnChecker;
+import utilities.IsbnUtil;
 import utilities.Task;
 import views.AddBookDialog;
 import views.BookInfoPanel;
@@ -285,7 +285,7 @@ public class BookController {
 			} else
 				addBook.getTxtFldYearPublish().hasError(false);
 
-			if (!IsbnChecker.isIsbnValid(addBook.getTxtFldIsbn().getText())) {
+			if (!IsbnUtil.isIsbnValid(addBook.getTxtFldIsbn().getText())) {
 				addBook.getTxtFldIsbn().hasError(true);
 				validate = false;
 			} else
@@ -404,7 +404,7 @@ public class BookController {
 				bookInfo.getTxtFldPublisher().hasError(false);
 
 			//TODO ISBN CALCULATE VALIDATION
-			if (!IsbnChecker
+			if (!IsbnUtil
 					.isIsbnValid(bookInfo.getTxtFldISBN().getText())) {
 				bookInfo.getTxtFldISBN().hasError(true);
 				validate = false;
