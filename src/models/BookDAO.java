@@ -5,16 +5,37 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import utilities.Connector;
+import utilities.IsbnUtil;
 
 public class BookDAO {
 
-	public static boolean isIsbnExisting(String Isbn) throws Exception {
+	public static boolean isIsbnExisting(String isbn) throws Exception {
 		boolean validate = false;
 
-		String sql = "SELECT ISBN From Books WHERE Isbn LIKE ?";
+		String otherISBN = IsbnUtil.convert(isbn);
+		String sql = "";
+		PreparedStatement ps = null;
 
-		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
-		ps.setString(1, Isbn);
+		if (otherISBN == null) {
+			// otherISBN is ISBN10 and is not existing
+			sql = "SELECT COUNT(*) From Books WHERE Isbn13 = ?";
+			ps = Connector.getConnection().prepareStatement(sql);
+			ps.setString(1, isbn);
+		} else {
+			
+			sql = "SELECT COUNT(*) From Books WHERE Isbn13 = ? and Isbn10 = ?";
+			ps = Connector.getConnection().prepareStatement(sql);
+
+			if (isbn.length() == 13) {
+				ps.setString(1, isbn);
+				ps.setString(2, otherISBN);
+			} else {
+				// argument is ISBN10
+				ps.setString(1, otherISBN);
+				ps.setString(2, isbn);
+			}
+		}
+
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
 			validate = true;
@@ -26,19 +47,20 @@ public class BookDAO {
 	public static int addBook(Book book) throws Exception {
 		int intStat = 0;
 
-		String sql = "INSERT INTO Books (ISBN, Title, Author, "
+		String sql = "INSERT INTO Books (ISBN10, ISBN13, Title, Author, "
 				+ "Edition, Publisher, Description, YearPublish, "
 				+ "Copies) VALUES (?,?,?,?,?,?,?,?)";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, book.getIsbn10());
-		ps.setString(2, book.getTitle());
-		ps.setString(3, book.getAuthor());
-		ps.setString(4, book.getEdition());
-		ps.setString(5, book.getPublisher());
-		ps.setString(6, book.getDescription());
-		ps.setInt(7, book.getYearPublish());
-		ps.setInt(8, book.getCopies());
+		ps.setString(2, book.getIsbn13());
+		ps.setString(3, book.getTitle());
+		ps.setString(4, book.getAuthor());
+		ps.setString(5, book.getEdition());
+		ps.setString(6, book.getPublisher());
+		ps.setString(7, book.getDescription());
+		ps.setInt(8, book.getYearPublish());
+		ps.setInt(9, book.getCopies());
 
 		intStat = ps.executeUpdate();
 
