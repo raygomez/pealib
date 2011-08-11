@@ -52,20 +52,33 @@ public class IsbnUtil {
 	}
 
 	private static String convert10to13(String isbn10) {
-		String isbn13 = "";
+
+		String isbn13 = "978" + isbn10.substring(0, 9);
+
+		int checksum = 0;
+
+		for (int i = 0; i < 12; i += 2) {
+			checksum += (isbn13.charAt(i) - '0');
+		}
+		for (int i = 1; i < 12; i += 2) {
+			checksum += (isbn13.charAt(i) - '0') * 3;
+		}
+
+		checksum = (10 - (checksum % 10)) % 10;
+		isbn13 += checksum;
 
 		return isbn13;
 	}
 
 	private static String convert13to10(String isbn13) {
-		
-		if(!isbn13.substring(0, 3).equals("978")) 
+
+		if (!isbn13.substring(0, 3).equals("978"))
 			return null;
-		
+
 		String isbn10 = isbn13.substring(3, 12);
 		int checksum = 0;
 		int weight = 1;
-		
+
 		for (int i = 0; i < isbn10.length(); i++) {
 			checksum += (isbn10.charAt(i) - '0') * weight;
 			weight++;
