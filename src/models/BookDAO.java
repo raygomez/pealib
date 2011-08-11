@@ -121,20 +121,9 @@ public class BookDAO {
 
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
-			int bookID = rs.getInt("ID");
-			String isbn10 = rs.getString("ISBN10");
-			String isbn13 = rs.getString("ISBN13");
-			String title = rs.getString("Title");
-			String edition = rs.getString("Edition");
-			String author = rs.getString("Author");
-			String publisher = rs.getString("Publisher");
-			String description = rs.getString("Description");
-			int yearPublish = rs.getInt("YearPublish");
-			int copies = rs.getInt("Copies");
-			book = new Book(bookID, isbn10, isbn13, title, edition, author,
-					publisher, yearPublish, description, copies);
-
+			book = new Book(rs);
 		}
+		
 		Connector.close();
 
 		return book;
@@ -154,18 +143,7 @@ public class BookDAO {
 
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			int bookID = rs.getInt("ID");
-			String isbn10 = rs.getString("ISBN10");
-			String isbn13 = rs.getString("ISBN13");
-			String title = rs.getString("Title");
-			String edition = rs.getString("Edition");
-			String author = rs.getString("Author");
-			String publisher = rs.getString("Publisher");
-			String description = rs.getString("Description");
-			int yearPublish = rs.getInt("YearPublish");
-			int copies = Integer.parseInt(rs.getString("Copies"));
-			Book addBook = new Book(bookID, isbn10, isbn13, title, edition,
-					author, publisher, yearPublish, description, copies);
+			Book addBook = new Book(rs);
 			bookCollection.add(addBook);
 		}
 
@@ -190,18 +168,7 @@ public class BookDAO {
 
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			int bookID = rs.getInt("ID");
-			String isbn10 = rs.getString("ISBN10");
-			String isbn13 = rs.getString("ISBN13");
-			String title = rs.getString("Title");
-			String edition = rs.getString("Edition");
-			String author = rs.getString("Author");
-			String publisher = rs.getString("Publisher");
-			String description = rs.getString("Description");
-			int yearPublish = rs.getInt("YearPublish");
-			int copies = Integer.parseInt(rs.getString("Copies"));
-			Book addBook = new Book(bookID, isbn10, isbn13, title, edition,
-					author, publisher, yearPublish, description, copies);
+			Book addBook = new Book(rs);
 			bookCollection.add(addBook);
 		}
 

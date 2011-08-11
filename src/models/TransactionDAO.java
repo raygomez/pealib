@@ -414,16 +414,7 @@ public class TransactionDAO {
 			user.setContactNo(rs.getString("Users.ContactNo"));
 			user.setEmail(rs.getString("Users.Email"));
 
-			Book book = new Book(rs.getInt("Books.ID"),
-					rs.getString("Books.ISBN10"),
-					rs.getString("Books.ISBN13"),
-					rs.getString("Books.Title"),
-					rs.getString("Books.Edition"),
-					rs.getString("Books.Author"),
-					rs.getString("Books.Publisher"),
-					rs.getInt("Books.YearPublish"),
-					rs.getString("Books.Description"),
-					rs.getInt("Books.Copies"));
+			Book book = new Book(rs);
 
 			BorrowTransaction borrowed = new BorrowTransaction(
 					rs.getInt("Borrows.BorrowID"), user, book,
@@ -463,16 +454,7 @@ public class TransactionDAO {
 			user.setContactNo(rs.getString("Users.ContactNo"));
 			user.setEmail(rs.getString("Users.Email"));
 
-			Book book = new Book(rs.getInt("Books.ID"),
-					rs.getString("Books.ISBN10"),
-					rs.getString("Books.ISBN13"),
-					rs.getString("Books.Title"),
-					rs.getString("Books.Edition"),
-					rs.getString("Books.Author"),
-					rs.getString("Books.Publisher"),
-					rs.getInt("Books.YearPublish"),
-					rs.getString("Books.Description"),
-					rs.getInt("Books.Copies"));
+			Book book = new Book(rs);
 
 			BorrowTransaction borrowed = new BorrowTransaction(
 					rs.getInt("Borrows.BorrowID"), user, book,
