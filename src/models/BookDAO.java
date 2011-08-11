@@ -37,7 +37,8 @@ public class BookDAO {
 		}
 
 		ResultSet rs = ps.executeQuery();
-		if (rs.next()) {
+		rs.first();
+		if(rs.getInt(1) > 0){
 			validate = true;
 		}
 		Connector.close();
