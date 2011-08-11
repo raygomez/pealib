@@ -494,7 +494,10 @@ public class AuthenticationController {
 							JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(getLogin(),
+							"There is something wrong with your connection.", 
+							"Forget Password",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			} else if(userOrEmail != null){
 				JOptionPane.showMessageDialog(getLogin(),
