@@ -159,8 +159,8 @@ public class BookInfoPanel extends JPanel {
 					
 
 		if (currentUser.getType().equals("Librarian")) {
-			add(saveButton, "cell 3 12,alignx right");
-			add(deleteButton, "cell 4 12");
+			add(saveButton, "cell 3 13,alignx right");
+			add(deleteButton, "cell 4 13");
 			authorTextField.setEditable(true);
 			descriptionTextArea.setEditable(true);
 			isbnTextField10.setEditable(true);
@@ -169,8 +169,8 @@ public class BookInfoPanel extends JPanel {
 			titleTextField.setEditable(true);
 			yearPublishTextField.setEditable(true);
 			editionTextField.setEditable(true);
-			add(copiesValSpinner, "cell 3 13,alignx left,aligny center");
-			add(lblCopies, "cell 1 13,alignx left,aligny center");
+			add(copiesValSpinner, "cell 3 12,alignx left,aligny center");
+			add(lblCopies, "cell 1 12,alignx left,aligny center");
 		}
 		if (currentUser.getType().equals("User")) {
 			add(borrowButton, "cell 3 13,alignx right");
