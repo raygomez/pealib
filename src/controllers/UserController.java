@@ -163,7 +163,11 @@ public class UserController {
 	 */	
 	private void processPend(boolean process) {		
 		String info = "";
+		int numberOfSuccessful = 0;
+		
 		for (int i = 0; i < searchedPending.size(); i++) {
+			boolean isSuccessful = false;
+			
 			if (checkList.contains(i)) {
 				User temp = searchedPending.get(i);
 				temp.setType("User");
@@ -173,19 +177,25 @@ public class UserController {
 						UserDAO.updateUser(temp);
 						info = "Successfully accepted ("
 								+ checkList.size() + ") application/s.";
-						Emailer.sendAcceptedEmail(temp);
+						isSuccessful = Emailer.sendAcceptedEmail(temp);
 					} else {
 						UserDAO.denyPendingUser(temp);
 						info = "Successfully denied (" + checkList.size()
 								+ ") application/s.";
-						Emailer.sendRejectEmail(temp);
+						isSuccessful = Emailer.sendRejectEmail(temp);
 					}
 				} catch (Exception e1) {
 					CrashHandler.handle(e1);
 				}
 			}
+			
+			if(isSuccessful)
+				numberOfSuccessful++;
+			
 		}
-
+		
+		info = "\nYou were able to send " + numberOfSuccessful + "notifications to the users.";
+		
 		JOptionPane.showMessageDialog(userSearch, info);
 		userSearch.getCbAll().setSelected(false);
 		checkList.clear();	
