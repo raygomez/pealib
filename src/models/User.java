@@ -1,5 +1,8 @@
 package models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class User {
 	private int userId;
 	private String userName;
@@ -17,7 +20,6 @@ public class User {
 	
 	public User(int userId, String userName, String password, String firstName,
 			String lastName, String email, String address, String contactNo, String type) {
-		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.password = password;
@@ -27,6 +29,17 @@ public class User {
 		this.address = address;
 		this.contactNo = contactNo;
 		this.type = type;
+	}
+	
+	public User(ResultSet rs) throws SQLException {
+		userId = rs.getInt("Users.ID");
+		firstName = rs.getString("Users.FirstName");
+		lastName = rs.getString("Users.LastName");
+		type = rs.getString("Users.Type");
+		userName = rs.getString("Users.UserName");
+		address = rs.getString("Users.Address");
+		contactNo = rs.getString("Users.ContactNo");
+		email = rs.getString("Users.Email");		
 	}
 	
 	public User(int userId, String userName, String firstName,

@@ -18,15 +18,7 @@ public class UserDAO {
 		ResultSet rs = ps.executeQuery();
 
 		if (rs.next()) {
-			user = new User();
-			user.setUserId(rs.getInt("ID"));
-			user.setFirstName(rs.getString("FirstName"));
-			user.setLastName(rs.getString("LastName"));
-			user.setType(rs.getString("Type"));
-			user.setUserName(rs.getString("UserName"));
-			user.setAddress(rs.getString("Address"));
-			user.setContactNo(rs.getString("ContactNo"));
-			user.setEmail(rs.getString("Email"));
+			user = new User(rs);
 		}
 
 		Connector.close();
@@ -48,15 +40,7 @@ public class UserDAO {
 		ResultSet rs = ps.executeQuery();
 
 		if (rs.next()) {
-			user = new User();
-			user.setUserId(rs.getInt("ID"));
-			user.setFirstName(rs.getString("FirstName"));
-			user.setLastName(rs.getString("LastName"));
-			user.setType(rs.getString("Type"));
-			user.setUserName(rs.getString("UserName"));
-			user.setAddress(rs.getString("Address"));
-			user.setContactNo(rs.getString("ContactNo"));
-			user.setEmail(rs.getString("Email"));
+			user = new User(rs);
 		}
 
 		Connector.close();
@@ -111,15 +95,7 @@ public class UserDAO {
 		ResultSet rs = ps.executeQuery();
 
 		if (rs.next()) {
-			user = new User();
-			user.setUserId(rs.getInt("ID"));
-			user.setFirstName(rs.getString("FirstName"));
-			user.setLastName(rs.getString("LastName"));
-			user.setType(rs.getString("Type"));
-			user.setUserName(rs.getString("UserName"));
-			user.setAddress(rs.getString("Address"));
-			user.setContactNo(rs.getString("ContactNo"));
-			user.setEmail(rs.getString("Email"));
+			user = new User(rs);
 		}
 		Connector.close();
 
@@ -139,15 +115,7 @@ public class UserDAO {
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
-			User user = new User();
-			user.setUserId(rs.getInt("ID"));
-			user.setFirstName(rs.getString("FirstName"));
-			user.setLastName(rs.getString("LastName"));
-			user.setType(rs.getString("Type"));
-			user.setUserName(rs.getString("UserName"));
-			user.setAddress(rs.getString("Address"));
-			user.setContactNo(rs.getString("ContactNo"));
-			user.setEmail(rs.getString("Email"));
+			User user = new User(rs);
 			users.add(user);
 		}
 		Connector.close();
@@ -188,15 +156,7 @@ public class UserDAO {
 		ResultSet rs = ps.executeQuery();
 
 		while (rs.next()) {
-			User user = new User();
-			user.setUserId(rs.getInt("ID"));
-			user.setFirstName(rs.getString("FirstName"));
-			user.setLastName(rs.getString("LastName"));
-			user.setType(rs.getString("Type"));
-			user.setUserName(rs.getString("UserName"));
-			user.setAddress(rs.getString("Address"));
-			user.setContactNo(rs.getString("ContactNo"));
-			user.setEmail(rs.getString("Email"));
+			User user = new User(rs);
 			users.add(user);
 		}
 		Connector.close();
