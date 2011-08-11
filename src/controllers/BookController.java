@@ -326,11 +326,23 @@ public class BookController {
 		public void actionPerformed(ActionEvent e) {
 			int currRow = currTableRowSelection;
 			try {
-				boolean validate = validateEditBook();
+				int spinCopy = Integer.parseInt(bookInfo.getSpinCopyVal()
+						.getModel().getValue().toString());
 				int availableCopy = TransactionDAO.getAvailableCopies(bookInfo
 						.getCurrBook());
+				int validCopy = bookInfo.getCurrBook().getCopies()
+						- availableCopy;
+				boolean validate = validateEditBook(spinCopy, validCopy);
 				
 				if (validate) {
+
+					for (int i = validCopy + 1; i <= spinCopy; i++){
+						if (TransactionDAO.isBookReservedByOtherUsers(
+								bookInfo.getCurrBook())) {
+							TransactionDAO.passToNextUser(bookInfo.getCurrBook());
+						}
+					}
+
 					BookDAO.editBook(bookInfo.getCurrBook());
 					bookList = BookDAO.searchBook(currSearchString);
 					bookSearch.getTableBookList().setModel(
@@ -358,7 +370,7 @@ public class BookController {
 			}
 		}
 		
-		private boolean validateEditBook() throws Exception{
+		private boolean validateEditBook(int spinCopy, int validCopy) throws Exception{
 			boolean validate = true;
 			int flag = 0;
 			if (bookInfo.getTxtFldTitle().getText().trim().isEmpty()
@@ -423,22 +435,10 @@ public class BookController {
 				} else
 					bookInfo.getTxtFldISBN().hasError(false);
 			}
-			int spinCopy = Integer.parseInt(bookInfo.getSpinCopyVal()
-					.getModel().getValue().toString());
-			int availableCopy = TransactionDAO.getAvailableCopies(bookInfo
-					.getCurrBook());
-			int validCopy = bookInfo.getCurrBook().getCopies()
-					- availableCopy;
 			if (spinCopy < validCopy) {
 				bookInfo.getSpinCopyVal().hasError(true);
 				validate = false;
 			} else{
-				if (validate){
-					if (TransactionDAO.isBookReservedByOtherUsers(
-							bookInfo.getCurrBook())) {
-						TransactionDAO.passToNextUser(bookInfo.getCurrBook());
-					}
-				}
 				bookInfo.getSpinCopyVal().hasError(false);
 			}
 			
