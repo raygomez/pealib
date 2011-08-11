@@ -2,6 +2,10 @@ package utilities;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Properties;
 
 public class Connector {
@@ -39,5 +43,33 @@ public class Connector {
 
 	public static void close() throws Exception {
 		con_.close();
+	}
+
+	public static Date getCurrentDate() throws Exception {
+		String sql = "SELECT CURRENT_DATE()";
+		Date currentDate = null;
+
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			currentDate = rs.getDate(1);
+		}
+
+		close();
+		return currentDate;
+	}
+
+	public static Timestamp getTimestamp() throws Exception {
+		String sql = "SELECT NOW()";
+		Timestamp timestamp = null;
+
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			timestamp = rs.getTimestamp(1);
+		}
+
+		close();
+		return timestamp;
 	}
 }
