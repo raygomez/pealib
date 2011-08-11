@@ -394,7 +394,7 @@ public class TransactionDAO {
 				+ "INNER JOIN Borrows ON Books.ID=Borrows.BookID "
 				+ "JOIN Users ON Borrows.UserID=Users.ID WHERE "
 				+ "(DateBorrowed is NULL AND DateReturned is NULL) AND "
-				+ "(CONCAT(Books.ISBN, Books.Title, Books.Author, "
+				+ "(CONCAT(Books.ISBN10, Books.ISBN13, Books.Title, Books.Author, "
 				+ "Users.UserName, Users.FirstName, Users.LastName) "
 				+ "LIKE ?) ORDER BY Borrows.BorrowID";
 
@@ -425,7 +425,7 @@ public class TransactionDAO {
 				+ "Books.ID=Borrows.BookID JOIN Users ON "
 				+ "Borrows.UserID=Users.ID WHERE (DateBorrowed is not "
 				+ "NULL AND DateReturned is NULL) AND "
-				+ "(CONCAT(Books.ISBN, Books.Title, Books.Author, "
+				+ "(CONCAT(Books.ISBN10, Books.ISBN13, Books.Title, Books.Author, "
 				+ "Users.UserName, Users.FirstName, Users.LastName) "
 				+ "LIKE ?) ORDER BY Borrows.DateBorrowed, Borrows.BorrowID";
 
