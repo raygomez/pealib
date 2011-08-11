@@ -293,15 +293,15 @@ public class AuthenticationController {
 	}
 
 	private void getSignUpData() {
-		sUpFirstName = signUp.getTxtfldFirstName().getText();
-		sUpLastName = signUp.getTxtfldLastName().getText();
+		sUpFirstName = signUp.getTxtfldFirstName().getText().trim();
+		sUpLastName = signUp.getTxtfldLastName().getText().trim();
 		getUserName();
 		sUpPassword = new String(signUp.getTxtfldPassword().getPassword());
 		sUpConfirmPassword = new String(signUp.getTxtfldConfirmPassword()
 			.getPassword());
 		sUpEmailAddress = signUp.getTxtfldEmailAddress().getText();
 		sUpContactNumber = signUp.getTxtfldContactNumber().getText();
-		sUpAddress = signUp.getTxtfldAddress().getText();
+		sUpAddress = signUp.getTxtfldAddress().getText().trim();
 	}
 
 	private void getUserName() {
