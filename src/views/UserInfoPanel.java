@@ -86,21 +86,22 @@ public class UserInfoPanel extends JPanel {
 		add(lastName, "cell 1 5 2 1,growx");
 
 		tempLabel = new JLabel("Address");
-		address = new MyTextArea(100);
+		address = new MyTextArea("",20, 20, 100);
 		address.setMargin(new Insets(5,5,5,5));
 		address.setLineWrap(true);
 		address.setWrapStyleWord(true);		
-		address.setName("address");		
+		address.setName("address");
+		add(address, "cell 1 7 2 1,growx");
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(address);
+		add(scrollPane, "cell 1 7 2 1,growx");
 		
 		lastNameErrorLabel = new ErrorLabel(" ");
 		lastNameErrorLabel.setName("lastNameErrorLabel");
 		add(lastNameErrorLabel, "cell 0 6 3 1,alignx center,aligny center");
 		
 		add(tempLabel, "cell 0 7");
-		add(scrollPane, "cell 1 7 2 1,growx");
 
 		tempLabel = new JLabel("Contact Number");
 		contactNumber = new MyTextField(11);

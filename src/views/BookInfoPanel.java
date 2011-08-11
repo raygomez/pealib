@@ -122,7 +122,7 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblDescription = new JLabel("Description:");
 		add(lblDescription, "cell 1 7");
 
-        descriptionTextArea = new MyTextArea(currentBook.getDescription(), 20, 20);                
+        descriptionTextArea = new MyTextArea(currentBook.getDescription(), 20, 20, 1000);                
         descriptionTextArea.setName("descriptionTextArea");
         descriptionTextArea.setEditable(false);
 
