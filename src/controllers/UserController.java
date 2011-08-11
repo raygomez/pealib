@@ -1,5 +1,7 @@
 package controllers;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -10,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -24,6 +27,7 @@ import models.User;
 import models.UserDAO;
 import net.miginfocom.swing.MigLayout;
 import pealib.PeaLibrary;
+import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Emailer;
@@ -52,10 +56,10 @@ public class UserController {
 
 	/*
 	  ..TODO For visual testing purposes only
-	
+	*/
 	public static void main(String[] args) throws Exception {
 
-		Connector.init(Constants.TEST_CONFIG);
+		Connector.init(Constants.APP_CONFIG);
 		// new Connector();
 
 		User user = new User(1011, "jjlim", "1234567", "Janine June", "Lim",
@@ -67,14 +71,13 @@ public class UserController {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setUndecorated(true);
-		frame.setVisible(true);
 		frame.setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setBounds(0, 0, screenSize.width, screenSize.height);
 		frame.setContentPane(userController.getLayoutPanel());
-
+		frame.setVisible(true);
 	}
-	*/
+	
  
 	/**
 	 * Constructor
@@ -164,17 +167,16 @@ public class UserController {
 		String info = "";
 		int numberOfSuccessful = 0;
 		
+
+		
+		int[] selected = userSearch.getPendingTable().getSelectedRows();
+
+		for(int index : selected){
+			User userContainer = searchedPending.get(index);			
+			userContainer.setType("User");
 			boolean isSuccessful = false;
 			
 	
-		int[] selected = userSearch.getPendingTable().getSelectedRows();
-
-		
-		for(int index : selected){
-			User userContainer = searchedPending.get(index);
-			
-			userContainer.setType("User");
-			
 			try {
 				if (process) {
 					UserDAO.updateUser(userContainer);
@@ -192,8 +194,7 @@ public class UserController {
 			
 		}
 		
-		
-		
+
 		info = (process? "Successfully added " +userSearch.getPendingTable().getSelectedRowCount()+" users." 
 						: "Denied " +userSearch.getPendingTable().getSelectedRowCount()+" users.");
 		
@@ -602,6 +603,14 @@ public class UserController {
 			
 				} else {
 					user = searchedPending.get(row);
+					
+					if(userSearch.getPendingTable().getSelectedRowCount() == userSearch.getPendingTable().getRowCount()){
+						userSearch.getCbAll().setSelected(true);
+					}
+					else{
+						userSearch.getCbAll().setSelected(false);
+					}
+						
 				}
 	
 				if (user != null) {
