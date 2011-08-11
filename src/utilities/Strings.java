@@ -29,4 +29,27 @@ public class Strings {
 
 	public static final String TOTAL_MATCHES = "Total Matches: ";
 	public static final String DAYS_OVERDUE = "Days Overdue: ";
+	
+	/* User Search Strings */
+	
+	//for JOptionPane
+	public static final String ACCEPT_USERS_MESSAGE_START = "Successfully accepted ";
+	public static final String DENY_USERS_MESSAGE_START = "Denied ";
+	public static final String USERS_MESSAGE_END = " users.";
+	public static final String EMAIL_SEND_COUNT_MESSAGE_START = "\nYou were able to send ";
+	public static final String EMAIL_SEND_COUNT_MESSAGE_END = " email notifications to the users.";
+	
+	//for table columns
+	public static final String[] USERS_TABLE_COLUMNS = new String[] { "Username", "Name" };
+	
+	//for saving/editing profile
+	public static final String SAVE_MESSAGE = "Record successfully updated!";
+	
+	//for reset password
+	public static final String PASSWORD_RESET_MESSAGE = "The new password was successfully mailed to the user.";
+	public static final String INTERNET_CONNECTION_FAIL_MESSAGE = "Internet Connection Error:\n" +
+															"Please check if you have a internet connection.";
+	public static final String RESET_PASSWORD_TITLE = "Reset Password";
+	public static final String PASSWORD_CHANGE_MESSAGE = "Your password was successfully changed!";
+	
 }

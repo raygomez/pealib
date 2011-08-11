@@ -23,6 +23,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import models.User;
 import models.UserDAO;
 import net.miginfocom.swing.MigLayout;
@@ -31,6 +33,7 @@ import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Emailer;
+import utilities.Strings;
 import utilities.Task;
 import views.ChangePasswordDialog;
 import views.UserInfoPanel;
@@ -38,13 +41,13 @@ import views.UserSearchPanel;
 
 public class UserController {
 
-	private final static int USER = 0;
-	//private final static int PENDING = 1;
+	
 
 	private UserSearchPanel userSearch;
 	private UserInfoPanel userInfoPanel;
 	private ChangePasswordDialog changePasswordDialog;
 	private User currentUser;
+	private User selectedUser;
 	private JPanel layoutPanel;
 
 	private String searchText = "";
@@ -59,7 +62,7 @@ public class UserController {
 	*/
 	public static void main(String[] args) throws Exception {
 
-		Connector.init(Constants.APP_CONFIG);
+		Connector.init(Constants.TEST_CONFIG);
 		// new Connector();
 
 		User user = new User(1011, "jjlim", "1234567", "Janine June", "Lim",
@@ -91,11 +94,11 @@ public class UserController {
 		
 		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]","[grow]"));
 		userSearch = new UserSearchPanel();
-		userSearch.setModelUsers(new UserSearchTableModel(USER, ""));
+		userSearch.setModelUsers(new UserSearchTableModel(Constants.USER_TAB, ""));
  
 		userSearch.usersPanel();
 		userSearch.pendingAppPanel();
-		userSearch.addListeners(new SearchListener(),
+		userSearch.addListeners(new SearchListener(), new ClearListener(),
 				new SearchKeyListener(), new TabChangeListener(),
 				new UserSelectionListener(), new CheckBoxListener(),
 				new AcceptListener(), new DenyListener());
@@ -195,10 +198,17 @@ public class UserController {
 		}
 		
 
-		info = (process? "Successfully added " +userSearch.getPendingTable().getSelectedRowCount()+" users." 
-						: "Denied " +userSearch.getPendingTable().getSelectedRowCount()+" users.");
+		info = (process? Strings.ACCEPT_USERS_MESSAGE_START 
+				                + userSearch.getPendingTable().getSelectedRowCount()				                 
+						: Strings.DENY_USERS_MESSAGE_START 
+						        + userSearch.getPendingTable().getSelectedRowCount()
+				);
 		
-		info += "\nYou were able to send " + numberOfSuccessful + "notifications to the users.";
+		info += Strings.USERS_MESSAGE_END 
+		               + Strings.EMAIL_SEND_COUNT_MESSAGE_START  
+		               + numberOfSuccessful 
+		               + Strings.EMAIL_SEND_COUNT_MESSAGE_END;
+		
 		JOptionPane.showMessageDialog(userSearch, info);
 		userSearch.getCbAll().setSelected(false);
 		checkList.clear();	
@@ -249,7 +259,7 @@ public class UserController {
 		
 		final int tab = userSearch.getSelectedTab();
 		
-		if(tab == USER) userSearch.getUsersTable().setVisible(false);
+		if(tab == Constants.USER_TAB) userSearch.getUsersTable().setVisible(false);
 		else userSearch.getPendingTable().setVisible(false);
 				
 		Callable<Void> toDo = new Callable<Void>() {
@@ -259,8 +269,7 @@ public class UserController {
 				
 				searchText = userSearch.getFieldSearch().getText();
 				
-				try {
-					
+				try {					
 					model = new UserSearchTableModel(tab, searchText);
 
 				} catch (Exception e) {  CrashHandler.handle(e); }
@@ -275,7 +284,7 @@ public class UserController {
 			public Void call() throws Exception {
 				userSearch.setTableModel(tab, model);					
 				
-				if (tab == USER ) {
+				if (tab == Constants.USER_TAB ) {
 					userSearch.getUsersTable().setVisible(true);
 					setInitSelectUser();
 				} else{
@@ -302,7 +311,6 @@ public class UserController {
 		public void stateChanged(ChangeEvent e) {
 			JTabbedPane temp = (JTabbedPane) e.getSource();
 			int index = temp.getSelectedIndex();
-			//TODO
 			searchUsers();
 			
 			if (index == 0) {
@@ -316,10 +324,20 @@ public class UserController {
 		}
 	}
 	/**
-	 * Method: Listener for Search Button 
+	 * Listener: for Search Button 
 	 */
 	class SearchListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			searchUsers();
+		}
+	}
+	/**
+	 * Listener: Deny button
+	 */
+	class ClearListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			userSearch.getFieldSearch().setText("");
 			searchUsers();
 		}
 	}
@@ -373,8 +391,9 @@ public class UserController {
 			this.searchStr = str;
 
 			tableData = new ArrayList<ArrayList<Object>>();
-
-			if (mode == USER) {
+			columns = Strings.USERS_TABLE_COLUMNS;
+			
+			if (mode == Constants.USER_TAB) {
 				userAcct();
 			} else {
 				pending();
@@ -385,7 +404,6 @@ public class UserController {
 		 * Filling up table data for Pending
 		 */
 		private void pending() {
-			columns = new String[] { "Username", "Name" };
 
 			try {
 				searchedPending = UserDAO.searchAllPending(searchStr);
@@ -408,7 +426,6 @@ public class UserController {
 		 * Filling up table data for Users
 		 */
 		private void userAcct() throws Exception {
-			columns = new String[] { "Username", "Name" };
 
 			searchedUsers  = UserDAO.searchActiveUsers(searchStr);
 
@@ -547,7 +564,7 @@ public class UserController {
 				if (row < 0)
 					return;
 	
-				if (tab == USER) {				
+				if (tab == Constants.USER_TAB) {				
 					user = searchedUsers.get(row);
 			
 				} else {
@@ -563,9 +580,10 @@ public class UserController {
 				}
 	
 				if (user != null) {
+					selectedUser = user;
 					userInfoPanel.resetErrorMessages();
 					userInfoPanel.toggleButton(true);
-					userInfoPanel.setFields(user);
+					userInfoPanel.setFields(selectedUser);
 					userInfoPanel.setFirstNameEnabled(true);
 					userInfoPanel.setLastNameEnabled(true);
 				}
@@ -596,9 +614,9 @@ public class UserController {
 						email, address, contactNo, type);
 
 				try {
-					UserDAO.updateUser(user);
+					UserDAO.updateUser(user);					
 					JOptionPane.showMessageDialog(layoutPanel,
-							"Record successfully updated!");
+							Strings.SAVE_MESSAGE);
 					if (currentUser.getUserId() == userId) {
 						currentUser = user;
 					} else {
@@ -615,19 +633,50 @@ public class UserController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
-			changePasswordDialog = new ChangePasswordDialog();
-
+			
 			if (currentUser.getType().equals("Librarian")
 					&& !userInfoPanel.getIdNumber().isEmpty()
 					&& currentUser.getUserId() != Integer
 							.parseInt(userInfoPanel.getIdNumber())) {
-				changePasswordDialog.removeOldPassword();
+					resetPassword();
 			}
-			changePasswordDialog.addChangePasswordListener(changePassword);
-			changePasswordDialog.setVisible(true);
+			else{
+
+				changePasswordDialog = new ChangePasswordDialog();
+				
+				changePasswordDialog.addChangePasswordListener(changePassword);
+				changePasswordDialog.setVisible(true);
+			}
 		}
 	};
+	
+	private void resetPassword(){
+		if(selectedUser !=null){
+			selectedUser.setPassword(RandomStringUtils.randomAlphanumeric(8));
+		
+			try {
+				boolean boolConnect = Emailer.sendForgetPasswordEmail(selectedUser);
+				System.out.println(boolConnect);
+				if(boolConnect){
+					
+						UserDAO.changePassword(selectedUser.getUserId(),selectedUser.getPassword());
+		
+					JOptionPane.showMessageDialog(layoutPanel,
+						Strings.PASSWORD_RESET_MESSAGE,
+						Strings.RESET_PASSWORD_TITLE,
+						JOptionPane.INFORMATION_MESSAGE);
+				}else{
+					JOptionPane.showMessageDialog(layoutPanel,
+						Strings.INTERNET_CONNECTION_FAIL_MESSAGE,
+						Strings.RESET_PASSWORD_TITLE,
+						JOptionPane.ERROR_MESSAGE);
+				}
+			
+			} catch (Exception e) {
+				CrashHandler.handle(e);
+			}
+		} 
+	}
 
 	private ActionListener changePassword = new ActionListener() {
 		boolean correctPassword;
@@ -675,7 +724,7 @@ public class UserController {
 					UserDAO.changePassword(userID, newPassword1);
 					changePasswordDialog.dispose();
 					JOptionPane.showMessageDialog(layoutPanel,
-							"Password successfully changed!");
+							Strings.PASSWORD_CHANGE_MESSAGE );
 				} catch (Exception e) {
 					CrashHandler.handle(e);
 				}
