@@ -44,8 +44,6 @@ public class UserSearchPanel extends JPanel {
 	public JTable getPendingTable() { return pendingTable; }
 		
 	public JCheckBox getCbAll() { return allCheckBox; }
-	
-	//public void setModelPending(TableModel modelPending) { this.modelPending = modelPending; }
 
 	public void setModelUsers(TableModel modelUsers) { this.modelUsers = modelUsers; }
 	
@@ -120,12 +118,11 @@ public class UserSearchPanel extends JPanel {
 		trender.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		table.setRowHeight(28);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getColumn("Username").setCellRenderer(trender);
 		table.getColumn("Name").setCellRenderer(trender);
 		
-		if(tab==PENDING){
-			table.getColumn("").setPreferredWidth(5);
+		if(tab==USER){
+			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		}
 		
 		table.getTableHeader().setReorderingAllowed(false);	
@@ -139,7 +136,7 @@ public class UserSearchPanel extends JPanel {
 	
 	/*
 	 * Methods
-	 */
+	 */ 
 	
 	public void togglePendingButtons(boolean toggle){
 		acceptButton.setEnabled(toggle);

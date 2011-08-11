@@ -72,8 +72,8 @@ public class UserController {
 		frame.setContentPane(userController.getLayoutPanel());
 
 	}
-	
- */
+	*/
+ 
 	/**
 	 * Constructor
 	 */
@@ -125,17 +125,14 @@ public class UserController {
 	class CheckBoxListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			UserSearchTableModel model = null;
-			
-			try {
-				model = new UserSearchTableModel(1, searchText);
-			} catch (Exception e1) { CrashHandler.handle(e1); }
 
-			if (userSearch.getCbAll().isSelected())
-				model.toggleAllCheckBox(true);
-			else
-				model.toggleAllCheckBox(false);
-
+			if (userSearch.getCbAll().isSelected()){
+				int lastRow = userSearch.getPendingTable().getModel().getRowCount();			   
+				userSearch.getPendingTable().getSelectionModel().setSelectionInterval(0, lastRow-1);
+			}
+			else {				
+				setInitSelectPending();
+			}
 			userSearch.setTableModel(1, model);
 		}
 	}
@@ -165,37 +162,40 @@ public class UserController {
 		String info = "";
 		int numberOfSuccessful = 0;
 		
-		for (int i = 0; i < searchedPending.size(); i++) {
 			boolean isSuccessful = false;
 			
-			if (checkList.contains(i)) {
-				User temp = searchedPending.get(i);
-				temp.setType("User");
+	
+		int[] selected = userSearch.getPendingTable().getSelectedRows();
 
-				try {
-					if (process) {
-						UserDAO.updateUser(temp);
-						info = "Successfully accepted ("
-								+ checkList.size() + ") application/s.";
-						isSuccessful = Emailer.sendAcceptedEmail(temp);
-					} else {
-						UserDAO.denyPendingUser(temp);
-						info = "Successfully denied (" + checkList.size()
-								+ ") application/s.";
-						isSuccessful = Emailer.sendRejectEmail(temp);
-					}
-				} catch (Exception e1) {
-					CrashHandler.handle(e1);
+		
+		for(int index : selected){
+			User userContainer = searchedPending.get(index);
+			
+			userContainer.setType("User");
+			
+			try {
+				if (process) {
+					UserDAO.updateUser(userContainer);
+					isSuccessful = Emailer.sendAcceptedEmail(userContainer);
+				} else {
+					UserDAO.denyPendingUser(userContainer);
+					isSuccessful = Emailer.sendRejectEmail(userContainer);
 				}
-			}
+			} catch (Exception e1) {
+				CrashHandler.handle(e1);
+			}		
 			
 			if(isSuccessful)
 				numberOfSuccessful++;
 			
 		}
 		
-		info = "\nYou were able to send " + numberOfSuccessful + "notifications to the users.";
 		
+		
+		info = (process? "Successfully added " +userSearch.getPendingTable().getSelectedRowCount()+" users." 
+						: "Denied " +userSearch.getPendingTable().getSelectedRowCount()+" users.");
+		
+		info += "\nYou were able to send " + numberOfSuccessful + "notifications to the users.";
 		JOptionPane.showMessageDialog(userSearch, info);
 		userSearch.getCbAll().setSelected(false);
 		checkList.clear();	
@@ -209,7 +209,7 @@ public class UserController {
 	private void configurePendingUI(){
 		if (!searchedPending.isEmpty()) {
 			userSearch.getCbAll().setEnabled(true);
-			userSearch.togglePendingButtons(false);					
+			userSearch.togglePendingButtons(true);					
 		} else {
 			userSearch.toggleAllPendingComp(false);
 			userInfoPanel.toggleButton(false);
@@ -224,7 +224,7 @@ public class UserController {
 	private void setInitSelectUser() {
 		if (!searchedUsers.isEmpty()) {
 			userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
-			userSearch.getUsersTable().addRowSelectionInterval(0, 0);
+			//userSearch.getUsersTable().addRowSelectionInterval(0, 0);
 		}
 	}
 	/**
@@ -235,7 +235,7 @@ public class UserController {
 	public void setInitSelectPending() {
 		if (!searchedPending.isEmpty()) {
 			userSearch.getPendingTable().getSelectionModel().setSelectionInterval(0, 0);
-			userSearch.getPendingTable().addRowSelectionInterval(0, 0);
+			//userSearch.getPendingTable().addRowSelectionInterval(0, 0);
 		}
 	}
 
@@ -331,9 +331,8 @@ public class UserController {
 			public void actionPerformed(ActionEvent e) {
 				timer.stop();
 				searchText = userSearch.getFieldSearch().getText();
-
-				if (searchText.length() >= 0)
-					searchUsers();
+				
+				searchUsers();
 			}
 		});
 
@@ -383,7 +382,7 @@ public class UserController {
 		 * Filling up table data for Pending
 		 */
 		private void pending() {
-			columns = new String[] { "Username", "Name", "" };
+			columns = new String[] { "Username", "Name" };
 
 			try {
 				searchedPending = UserDAO.searchAllPending(searchStr);
@@ -393,7 +392,7 @@ public class UserController {
 						ArrayList<Object> rowData = new ArrayList<Object>();
 						rowData.add(i.getUserName());
 						rowData.add(i.getFirstName() + " " + i.getLastName());
-						rowData.add(new Boolean(false));
+						//rowData.add(new Boolean(false));               //removing checkbox
 						tableData.add(rowData);
 					}
 				}
@@ -430,14 +429,15 @@ public class UserController {
 		}
 		/*
 		 * Renderer for checkbox column
-		 */
+		 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Class getColumnClass(int c) {
 			return getValueAt(0, c).getClass();
 		}
+		*/
 		/*
 		 * Setting value for checkbox
-		 */
+		
 		public void setValueAt(Object value, int row, int col) {
 
 			tableData.get(row).set(col, value);
@@ -466,6 +466,7 @@ public class UserController {
 			
 			fireTableCellUpdated(row, col);
 		}
+		 */
 
 		@Override
 		public String getColumnName(int col) {
@@ -491,10 +492,10 @@ public class UserController {
 		 */
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			if (columnIndex < 2)
+//			if (columnIndex < 2)
 				return false;
-			else
-				return true;
+//			else
+//				return true;
 		}
 	} // end of table model
 
@@ -583,11 +584,11 @@ public class UserController {
 			if (! e.getValueIsAdjusting()) {
 				DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
 						.getSource();
-				int row = dlSelectionModel.getAnchorSelectionIndex();
+				int row = dlSelectionModel.getLeadSelectionIndex();
+				
 				int tab = userSearch.getSelectedTab();
 	
 				User user = null;
-				//System.out.println("ROW: "+row);
 				// This is a simple check to see if row is negative.
 				if (row < 0)
 					return;
