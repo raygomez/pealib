@@ -40,20 +40,20 @@ public class BookDAOTest {
 	
 	@Test
 	public void testIsIsbnExisting() throws Exception {
-		testBook.setIsbn("1234567890120");
-		assertEquals(true, BookDAO.isIsbnExisting(testBook.getIsbn()));
+		testBook.setIsbn10("1234567890120");
+		assertEquals(true, BookDAO.isIsbnExisting(testBook.getIsbn10()));
 	}
 
 	@Test
 	public void testIsIsbnNotExisting() throws Exception {
-		testBook.setIsbn("0123456789012");
-		assertEquals(false, BookDAO.isIsbnExisting(testBook.getIsbn()));
+		testBook.setIsbn10("0123456789012");
+		assertEquals(false, BookDAO.isIsbnExisting(testBook.getIsbn10()));
 	}
 
 	@Test
 	@ExpectedDataSet({ "expected/saveBook.xml" })
 	public void testAddBook() throws Exception {
-		testBook.setIsbn("1234567890127");
+		testBook.setIsbn10("1234567890127");
 		testBook.setTitle("Harry Poter 4");
 		testBook.setAuthor("Ewan ko");
 		testBook.setEdition("1st");
@@ -68,7 +68,7 @@ public class BookDAOTest {
 	@ExpectedDataSet({ "expected/editedBook.xml" })
 	public void testEditBook() throws Exception {
 		testBook.setBookId(3);
-		testBook.setIsbn("1234567890122");
+		testBook.setIsbn10("1234567890122");
 		testBook.setTitle("Harry Poter 31");
 		testBook.setAuthor("Ewan ko1");
 		testBook.setEdition("1st1");
