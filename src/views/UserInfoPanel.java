@@ -86,7 +86,7 @@ public class UserInfoPanel extends JPanel {
 		add(lastName, "cell 1 5 2 1,growx");
 
 		tempLabel = new JLabel("Address");
-		address = new MyTextArea("",20, 20);
+		address = new MyTextArea(100);
 		address.setMargin(new Insets(5,5,5,5));
 		address.setLineWrap(true);
 		address.setWrapStyleWord(true);		
@@ -103,7 +103,7 @@ public class UserInfoPanel extends JPanel {
 		add(scrollPane, "cell 1 7 2 1,growx");
 
 		tempLabel = new JLabel("Contact Number");
-		contactNumber = new MyTextField(20);
+		contactNumber = new MyTextField(11);
 		contactNumber.setName("contactNumber");
 		
 		addressErrorLabel = new ErrorLabel(" ");
@@ -114,7 +114,7 @@ public class UserInfoPanel extends JPanel {
 		add(contactNumber, "cell 1 9 2 1,growx");
 
 		tempLabel = new JLabel("Email");
-		email = new MyTextField(20);
+		email = new MyTextField(254);
 		email.setName("emailAdd");
 		
 		contactNumberErrorLabel = new ErrorLabel(" ");

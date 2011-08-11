@@ -19,7 +19,8 @@ public class MyPasswordField extends JPasswordField {
 	}
 	
 	public MyPasswordField(int length){
-		super(length);
+		super();
+		this.setDocument(new TextLimit(length));
 		this.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.gray));
 	}
 	

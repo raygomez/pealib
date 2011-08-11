@@ -76,7 +76,7 @@ public class SignUpDialog extends JDialog {
 		JLabel lblFirstName = new JLabel("First Name:");
 		contentPanel.add(lblFirstName, "cell 1 1,alignx left,aligny center");
 
-		firstNameTextField = new MyTextField();
+		firstNameTextField = new MyTextField(30);
 		firstNameTextField.setToolTipText("*Maximum of 30 characters.");
 		firstNameTextField.setName("firstNameTextField");
 		lblFirstName.setLabelFor(firstNameTextField);
@@ -86,7 +86,7 @@ public class SignUpDialog extends JDialog {
 		JLabel lblLastName = new JLabel("Last Name:");
 		contentPanel.add(lblLastName, "cell 1 2,alignx left,aligny center");
 
-		lastNameTextField = new MyTextField();
+		lastNameTextField = new MyTextField(30);
 		lastNameTextField.setToolTipText("*Maximum of 30 characters.");
 		lastNameTextField.setName("lastNameTextField");
 		lblLastName.setLabelFor(lastNameTextField);
@@ -96,7 +96,7 @@ public class SignUpDialog extends JDialog {
 		JLabel lblUserName = new JLabel("User Name:");
 		contentPanel.add(lblUserName, "cell 1 4,alignx left,aligny center");
 
-		userNameTextField = new MyTextField();
+		userNameTextField = new MyTextField(20);
 		userNameTextField.setToolTipText("<html>*Must be 4 - 20 characters long," +
 				"<br>composed of alphanumeric characters,<br>underscore or period.");
 		userNameTextField.setName("userNameTextField");
@@ -107,7 +107,7 @@ public class SignUpDialog extends JDialog {
 		JLabel lblPassword = new JLabel("Password:");
 		contentPanel.add(lblPassword, "cell 1 5,alignx left,aligny center");
 
-		passwordTextField = new MyPasswordField();
+		passwordTextField = new MyPasswordField(20);
 		passwordTextField.setToolTipText("*Must be 6 - 20 characters long.");
 		passwordTextField.setName("passwordTextField");
 		lblPassword.setLabelFor(passwordTextField);
@@ -118,7 +118,7 @@ public class SignUpDialog extends JDialog {
 		JLabel lblConfirmPassword = new JLabel("Confirm Password:");
 		contentPanel.add(lblConfirmPassword, "cell 1 6,alignx left,aligny center");
 
-		confirmPasswordTextField = new MyPasswordField();
+		confirmPasswordTextField = new MyPasswordField(20);
 		confirmPasswordTextField.setToolTipText("*Must be 6 - 20 characters long.");
 		confirmPasswordTextField.setName("confirmPasswordTextField");
 		lblConfirmPassword.setLabelFor(confirmPasswordTextField);
@@ -129,7 +129,7 @@ public class SignUpDialog extends JDialog {
 		JLabel lblEmailAddress = new JLabel("E-mail Address:");
 		contentPanel.add(lblEmailAddress, "cell 1 8,alignx left,aligny center");
 
-		emailAddressTextField = new MyTextField();
+		emailAddressTextField = new MyTextField(254);
 		emailAddressTextField.setToolTipText("<html>*Maximum of 254 characters." +
 				"<br>(ie. john.smith@example.com)");
 		emailAddressTextField.setName("emailAddressTextField");
@@ -140,7 +140,7 @@ public class SignUpDialog extends JDialog {
 		JLabel lblContactNumber = new JLabel("Contact Number:");
 		contentPanel.add(lblContactNumber, "cell 1 9,alignx left,aligny center");
 
-		contactNumberTextField = new MyTextField();
+		contactNumberTextField = new MyTextField(11);
 		contactNumberTextField.setToolTipText("*Must be 7 - 11 digits long.");
 		contactNumberTextField.setName("contactNumberTextField");
 		contentPanel.add(contactNumberTextField, "cell 2 9,growx,aligny center");
@@ -149,7 +149,7 @@ public class SignUpDialog extends JDialog {
 		JLabel lblAddress = new JLabel("Address:");
 		contentPanel.add(lblAddress, "cell 1 10,alignx left,aligny center");
 
-		addressTextField = new MyTextField();
+		addressTextField = new MyTextField(100);
 		addressTextField.setToolTipText("*Maximum of 100 characters.");
 		addressTextField.setName("addressTextField");
 		lblAddress.setLabelFor(addressTextField);
