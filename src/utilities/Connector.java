@@ -23,7 +23,7 @@ public class Connector {
 		userId_ = properties.getProperty("app.username");
 		password_ = properties.getProperty("app.password");
 	}
-
+	
 	public static void init() {
 		Properties properties = new PropertyLoader(Constants.APP_CONFIG)
 				.getProperties();
@@ -59,6 +59,26 @@ public class Connector {
 		return currentDate;
 	}
 
+	public static boolean testConnection(Properties databaseProperties){
+		
+		hostname_ = databaseProperties.getProperty("app.hostname");
+		db_ = databaseProperties.getProperty("app.db");
+		userId_ = databaseProperties.getProperty("app.username");
+		password_ = databaseProperties.getProperty("app.password");
+		
+		String sql = "show tables";
+		
+		try{
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.executeQuery();
+			close();
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public static Timestamp getTimestamp() throws Exception {
 		String sql = "SELECT NOW()";
 		Timestamp timestamp = null;

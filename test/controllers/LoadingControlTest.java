@@ -1,12 +1,9 @@
 package controllers;
 
-import static org.junit.Assert.*;
-
 import java.util.concurrent.Callable;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +15,8 @@ import utilities.Task;
 
 public class LoadingControlTest extends UISpecTestCase {
 
-	Task task1;
-	Task task2;
+	Task<?,?> task1;
+	Task<?,?> task2;
 	
 	@Before
 	public void setUp() throws Exception {
