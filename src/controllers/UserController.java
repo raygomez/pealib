@@ -6,6 +6,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JOptionPane;
@@ -543,7 +545,9 @@ public class UserController {
 			pass = false;
 		}
 
-		if (!address.matches(Constants.ADDRESS_FORMAT)) {
+		Matcher matcher = Pattern.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL).matcher(address);
+		
+		if (!matcher.matches()) {
 			tempErrors.add(Constants.ADDRESS_FORMAT_ERROR);
 			pass = false;
 		}

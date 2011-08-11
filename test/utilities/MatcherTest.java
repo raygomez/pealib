@@ -3,6 +3,7 @@ package utilities;
 
 import static org.junit.Assert.*;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.*;
@@ -134,6 +135,24 @@ public class MatcherTest {
 	}
 	
 	@Test
+	public void testNameMatcher8(){
+		String name = "Shaquille O'Neal";
+		assertTrue(name.matches(Constants.NAME_FORMAT));
+	}
+	
+	@Test
+	public void testNameMatcher9(){
+		String name = "Ray--Vincent";
+		assertFalse(name.matches(Constants.NAME_FORMAT));
+	}
+	
+	@Test
+	public void testNameMatcher10(){
+		String name = "Ray''Vincent";
+		assertFalse(name.matches(Constants.NAME_FORMAT));
+	}
+	
+	@Test
 	public void testContactNumberMatcher(){
 		String number = "9384195";
 		assertTrue(number.matches(Constants.CONTACT_NUMBER_FORMAT));
@@ -210,4 +229,45 @@ public class MatcherTest {
 		String email = "username@..com";
 		assertFalse(email.matches(Constants.EMAIL_FORMAT));
 	}
+	
+	@Test
+	public void testAddress(){
+		String address = "ad";
+		
+		Matcher matcher = Pattern.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL).matcher(address);
+		assertTrue(matcher.matches());
+	}
+	
+	@Test
+	public void testAddress2(){
+		String address = "Address   Address   Address   Address   Address   Address   Address   Address   Address   Address   ";
+		
+		Matcher matcher = Pattern.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL).matcher(address);
+		assertTrue(matcher.matches());
+	}
+	
+	@Test
+	public void testAddress3(){
+		String address = "Address1 \r\n Address2";
+		
+		Matcher matcher = Pattern.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL).matcher(address);
+		assertTrue(matcher.matches());
+	}
+	
+	@Test
+	public void testAddress4(){
+		String address = "a";
+		
+		Matcher matcher = Pattern.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL).matcher(address);
+		assertFalse(matcher.matches());
+	}
+	
+	@Test
+	public void testAddress5(){
+		String address = "Address   Address   Address   Address   Address   Address   Address   Address   Address   Address   a";
+		
+		Matcher matcher = Pattern.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL).matcher(address);
+		assertFalse(matcher.matches());
+	}
+	
 }
