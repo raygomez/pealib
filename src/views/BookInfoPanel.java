@@ -31,7 +31,7 @@ public class BookInfoPanel extends JPanel {
 	private MyTextField publisherTextField = new MyTextField(100);
 	private MyTextField isbnTextField = new MyTextField(13);
 	private MyTextField editionTextField = new MyTextField(30);
-	private MyTextArea descriptionTextArea = new MyTextArea(1000);
+	private MyTextArea descriptionTextArea = new MyTextArea("", 20, 20, 1000);
 	private MyJSpinner copiesValSpinner = new MyJSpinner();
 	private JButton saveButton;
 	private JButton deleteButton;
@@ -121,8 +121,8 @@ public class BookInfoPanel extends JPanel {
 
 		JLabel lblDescription = new JLabel("Description:");
 		add(lblDescription, "cell 1 7");
-
-        descriptionTextArea = new MyTextArea(currentBook.getDescription(), 20, 20, 1000);                
+                
+		descriptionTextArea.setText(currentBook.getDescription());
         descriptionTextArea.setName("descriptionTextArea");
         descriptionTextArea.setEditable(false);
 
