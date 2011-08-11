@@ -65,7 +65,12 @@ public class IsbnUtilTest {
 	}
 	
 	@Test
-	public void testConvert(){
+	public void testConvert13to10(){
 		assertEquals("0306406152", IsbnUtil.convert("9780306406157"));
+	}
+	
+	@Test
+	public void testConvert10to13(){
+		assertEquals("9780306406157", IsbnUtil.convert("0306406152"));
 	}
 }
