@@ -25,13 +25,13 @@ public class BookInfoPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private MyTextField titleTextField = new MyTextField();
-	private MyTextField authorTextField = new MyTextField();
-	private MyTextField yearPublishTextField = new MyTextField();
-	private MyTextField publisherTextField = new MyTextField();
-	private MyTextField isbnTextField = new MyTextField();
-	private MyTextField editionTextField = new MyTextField();
-	private MyTextArea descriptionTextArea = new MyTextArea();
+	private MyTextField titleTextField = new MyTextField(100);
+	private MyTextField authorTextField = new MyTextField(100);
+	private MyTextField yearPublishTextField = new MyTextField(4);
+	private MyTextField publisherTextField = new MyTextField(100);
+	private MyTextField isbnTextField = new MyTextField(13);
+	private MyTextField editionTextField = new MyTextField(30);
+	private MyTextArea descriptionTextArea = new MyTextArea(1000);
 	private MyJSpinner copiesValSpinner = new MyJSpinner();
 	private JButton saveButton;
 	private JButton deleteButton;

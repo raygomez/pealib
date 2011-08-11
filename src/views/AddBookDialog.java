@@ -26,7 +26,7 @@ public class AddBookDialog extends JDialog {
 	private MyTextField titleTextField = new MyTextField(100);
 	private MyTextField authorTextField = new MyTextField(100);
 	private MyTextField yearPublishTextField = new MyTextField(4);
-	private MyTextField publisherTextField = new MyTextField();
+	private MyTextField publisherTextField = new MyTextField(100);
 	private MyTextField isbnTextField = new MyTextField(13);
 	private MyTextField editionTextField = new MyTextField(30);
 	private MyTextArea descriptionTextArea = new MyTextArea(1000);
