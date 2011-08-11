@@ -405,14 +405,6 @@ public class UserController {
 			}
 		}
 		/*
-		 * For SelectAll Check Box in Pending: Make every checkbox true/false
-		 */		
-		public void toggleAllCheckBox(boolean value) {
-			for (int i = 0; i < getRowCount(); i++) {
-				setValueAt(new Boolean(value), i, 2);
-			}
-		}
-		/*
 		 * Filling up table data for Users
 		 */
 		private void userAcct() throws Exception {
@@ -430,46 +422,6 @@ public class UserController {
 				}
 			}
 		}
-		/*
-		 * Renderer for checkbox column
-		 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public Class getColumnClass(int c) {
-			return getValueAt(0, c).getClass();
-		}
-		*/
-		/*
-		 * Setting value for checkbox
-		
-		public void setValueAt(Object value, int row, int col) {
-
-			tableData.get(row).set(col, value);
-
-			if (!(Boolean) value) {
-				userSearch.getCbAll().setSelected(false);
-
-				if (checkList.contains(row)) {
-					checkList.remove((Object) row);
-				}
-				
-			} else {
-				if (!checkList.contains(row)) {
-					checkList.add(row);
-				}
-			}
-
-			if (!checkList.isEmpty()){
-				userSearch.togglePendingButtons(true);
-			 
-				if (checkList.size() == searchedPending.size())
-					userSearch.getCbAll().setSelected(true);
-			}
-			else
-				userSearch.togglePendingButtons(false);
-			
-			fireTableCellUpdated(row, col);
-		}
-		 */
 
 		@Override
 		public String getColumnName(int col) {
@@ -495,10 +447,7 @@ public class UserController {
 		 */
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-//			if (columnIndex < 2)
 				return false;
-//			else
-//				return true;
 		}
 	} // end of table model
 
