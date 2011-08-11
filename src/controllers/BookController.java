@@ -73,7 +73,7 @@ public class BookController {
 
 	private void initialize() throws Exception{
 		
-		bookLayoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]",
+		bookLayoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][]",
 		"[grow]"));
 		bookSearch = new BookSearchPanel(currentUser);
 				
