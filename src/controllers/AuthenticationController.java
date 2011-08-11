@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -346,7 +347,7 @@ public class AuthenticationController {
 					.matches(Constants.PASSWORD_FORMAT);
 		boolean isContactNumberValid = sUpContactNumber
 					.matches(Constants.CONTACT_NUMBER_FORMAT);
-		boolean isAddressValid = sUpAddress.matches(Constants.ADDRESS_FORMAT);
+		boolean isAddressValid = Pattern.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL).matcher(sUpAddress).matches();
 
 		if (!isFirstNameValid) {
 			maskedLabel |= SignUpDialog.FIRSTNAME_FLAG;
