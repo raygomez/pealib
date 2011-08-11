@@ -401,32 +401,6 @@ public class UserControllerTest extends UISpecTestCase {
 
 		assertThat(pendingTable.rowCountEquals(1));
 	}
-	
-	@ExpectedDataSet({ "../models/expected/changePassword.xml" })
-	@Test
-	public void testChangePasswordLibrarian() {
-		Button changePasswordButton = userInfoPanel
-				.getButton("Change Password");
-		WindowInterceptor.init(changePasswordButton.triggerClick())
-				.process(new WindowHandler() {
-					public Trigger process(Window dialog) {
-						dialog.getPasswordField("newpassword").setPassword(
-								"1234567");
-						dialog.getPasswordField("repeatpassword").setPassword(
-								"1234567");
-						return dialog.getButton("Change Password")
-								.triggerClick();
-					}
-
-				}).process(new WindowHandler() {
-					public Trigger process(Window dialog) {
-						assertThat(dialog
-								.containsLabel("Password successfully changed!"));
-						return dialog.getButton("OK").triggerClick();
-					}
-
-				}).run();
-	}
 
 	@ExpectedDataSet({ "../models/expected/changePassword.xml" })
 	@Test
@@ -451,10 +425,24 @@ public class UserControllerTest extends UISpecTestCase {
 				}).process(new WindowHandler() {
 					public Trigger process(Window dialog) {
 						assertThat(dialog
-								.containsLabel("Password successfully changed!"));
+								.containsLabel("Your password was successfully changed!"));
 						return dialog.getButton("OK").triggerClick();
 					}
 
+				}).run();
+	}
+
+	@Test
+	public void testChangePasswordLibrarian() {
+		Button changePasswordButton = userInfoPanel
+				.getButton("Change Password");
+		WindowInterceptor.init(changePasswordButton.triggerClick())
+				.process(new WindowHandler() {
+					public Trigger process(Window dialog) {
+						assertThat(dialog
+								.containsLabel("The new password was successfully mailed to the user."));
+						return dialog.getButton("OK").triggerClick();
+					}
 				}).run();
 	}
 

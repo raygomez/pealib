@@ -1,6 +1,8 @@
 package utilities;
 
 public class Constants {
+	public final static int USER_TAB = 0;	
+	public final static int PENDING_TAB = 1;
 
 	public static final int DEFAULT_ERROR = 0;
 	public static final int USERNAME_ERROR = 1;

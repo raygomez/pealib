@@ -19,15 +19,16 @@ public class UserSearchPanel extends JPanel {
 	private final static int USER = 0;
 	private final static int PENDING = 1;
 		
-	private JTabbedPane tabbedPane = new JTabbedPane();
-	private JPanel pendingPane = new JPanel();
-	private JPanel usersPane = new JPanel();
+	private JTabbedPane tabbedPane;
+	private JPanel pendingPane;
+	private JPanel usersPane;
 
-	private JTextField searchTextField = new JTextField(30);
-	private JButton searchButton = new JButton("Search", new ImageIcon("resources/images/search32x32.png"));
-	private JButton acceptButton = new JButton("Accept", new ImageIcon("resources/images/Apply.png"));
-	private JButton denyButton = new JButton("Deny", new ImageIcon("resources/images/Delete.png"));
-	private JCheckBox allCheckBox = new JCheckBox("Select All");
+	private JTextField searchTextField;
+	private JButton searchButton;
+	private JButton clearButton;
+	private JButton acceptButton;
+	private JButton denyButton;
+	private JCheckBox allCheckBox;
 
 	private JTable pendingTable, usersTable;
 	private TableModel modelUsers; //, modelPending;
@@ -51,19 +52,29 @@ public class UserSearchPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public UserSearchPanel() {
+		tabbedPane = new JTabbedPane();
+		searchTextField = new JTextField(30);
+		searchButton = new JButton("Search", new ImageIcon("resources/images/search32x32.png"));
+		clearButton = new JButton("Clear", new ImageIcon("resources/images/edit_clear.png"));
+		
 		setBorder(new EmptyBorder(5, 5, 5, 5));
-		setLayout(new MigLayout("", "[60px][300px]10px[][grow]", "[]20px[][grow]"));
+		setLayout(new MigLayout("", "[60px][300px]10px[40px][40px][grow]", "[]20px[][grow]"));
 
 		add(searchTextField, "cell 1 0");
 		add(searchButton, "cell 2 0");
-
+		add(clearButton, "cell 3 0");
+		
+		usersPane = new JPanel();
+		pendingPane = new JPanel();
+		
 		tabbedPane.addTab("User Accounts", new ImageIcon("resources/images/useraccounts.png"), usersPane);
 		tabbedPane.addTab("Pending Applications", new ImageIcon("resources/images/pending.png"), pendingPane);
 
-		add(tabbedPane, "cell 0 1, span 4 3,grow");
+		add(tabbedPane, "cell 0 1, span 4 4,grow");
 	}
 	
 	public void usersPanel() {
+		
 		usersPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		usersPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
 		usersPane.setName("usersPane");
@@ -79,23 +90,26 @@ public class UserSearchPanel extends JPanel {
 	}
 
 	public void pendingAppPanel() {
+		
 		pendingPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		pendingPane.setLayout(new MigLayout("", "[grow]10px[40px]", "[40px]5px[40px]20px[10px][grow]"));
 		pendingPane.setName("pendingPane");
 		
 		pendingTable = new JTable();
-		getPendingTable().setName("tablePending");
-		
-		toggleAllPendingComp(false);
+		getPendingTable().setName("tablePending");		
 
 		JScrollPane scrollPane = new JScrollPane(getPendingTable());
 		scrollPane.setName("scrollPane");
 		scrollPane.setSize(10, 10);
 		pendingPane.add(scrollPane, "grow,cell 0 0, span 1 4");
 		
+		acceptButton = new JButton("Accept", new ImageIcon("resources/images/Apply.png"));
+		denyButton = new JButton("Deny", new ImageIcon("resources/images/Delete.png"));
+		allCheckBox = new JCheckBox("Select All");
 		pendingPane.add(acceptButton, "cell 1 0, growx");
 		pendingPane.add(denyButton, "cell 1 1, growx");
-		pendingPane.add(allCheckBox, "cell 1 2, growx");						
+		pendingPane.add(allCheckBox, "cell 1 2, growx");		
+		toggleAllPendingComp(false);
 	}
 
 	/*
@@ -148,11 +162,12 @@ public class UserSearchPanel extends JPanel {
 		allCheckBox.setEnabled(toggle);
 	}
 
-	public void addListeners(ActionListener button, KeyListener text,
+	public void addListeners(ActionListener button, ActionListener clear, KeyListener text,
 			ChangeListener tab, ListSelectionListener table, ActionListener cbox, 
 			ActionListener accept, ActionListener deny) {
 		
 		searchButton.addActionListener(button);
+		clearButton.addActionListener(clear);
 		searchTextField.addKeyListener(text);
 		tabbedPane.addChangeListener(tab);
 		usersTable.getSelectionModel().addListSelectionListener(table);
