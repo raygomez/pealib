@@ -355,7 +355,7 @@ public class TransactionController {
 							Object objData = null;
 							switch (column) {
 							case 0:
-								objData = searchResults.get(row).getBook().getIsbn();
+								objData = searchResults.get(row).getBook().getIsbn10();
 								break;
 							case 1:
 								objData = searchResults.get(row).getBook().getTitle();

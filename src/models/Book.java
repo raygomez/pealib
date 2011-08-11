@@ -2,7 +2,8 @@ package models;
 
 public class Book {
 	private int bookId;
-	private String isbn;
+	private String isbn10;
+	private String isbn13;
 	private String title;
 	private String edition;
 	private String author;
@@ -19,7 +20,7 @@ public class Book {
 			String publisher, int yearPublish, String description, int copies) {
 		super();
 		this.bookId = bookId;
-		this.isbn = isbn;
+		this.isbn10 = isbn;
 		this.title = title;
 		this.edition = edition;
 		this.author = author;
@@ -37,12 +38,26 @@ public class Book {
 		this.bookId = bookId;
 	}
 
-	public String getIsbn() {
-		return isbn;
+	public String getIsbn10() {
+		return isbn10;
 	}
 
-	public void setIsbn(String isbn) {
-		this.isbn = isbn;
+	public void setIsbn10(String isbn) {
+		this.isbn10 = isbn;
+	}
+
+	/**
+	 * @return the isbn13
+	 */
+	public String getIsbn13() {
+		return isbn13;
+	}
+
+	/**
+	 * @param isbn13 the isbn13 to set
+	 */
+	public void setIsbn13(String isbn13) {
+		this.isbn13 = isbn13;
 	}
 
 	public String getTitle() {

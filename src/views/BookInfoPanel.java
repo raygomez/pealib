@@ -113,7 +113,7 @@ public class BookInfoPanel extends JPanel {
 		JLabel lblIsbn = new JLabel("ISBN:");
 		add(lblIsbn, "cell 1 6");
 
-		isbnTextField.setText(currentBook.getIsbn());
+		isbnTextField.setText(currentBook.getIsbn10());
 		isbnTextField.setName("isbnTextField");
 		isbnTextField.setEditable(false);
 		add(isbnTextField, "cell 3 6 2 1,growx");
@@ -202,7 +202,7 @@ public class BookInfoPanel extends JPanel {
 		currentBook.setTitle(titleTextField.getText().trim());
 		currentBook.setAuthor(authorTextField.getText().trim());
 		currentBook.setPublisher(publisherTextField.getText().trim());
-		currentBook.setIsbn(isbnTextField.getText());
+		currentBook.setIsbn10(isbnTextField.getText());
 		currentBook.setDescription(descriptionTextArea.getText().trim());
 		currentBook.setCopies(Integer.parseInt(copiesValSpinner.getModel()
 				.getValue().toString()));
@@ -221,7 +221,7 @@ public class BookInfoPanel extends JPanel {
 		titleTextField.setText(book.getTitle());
 		authorTextField.setText(book.getAuthor());
 		publisherTextField.setText(book.getPublisher());
-		isbnTextField.setText(book.getIsbn());
+		isbnTextField.setText(book.getIsbn10());
 		descriptionTextArea.setText(book.getDescription());
 		copiesValSpinner.getModel().setValue(book.getCopies());
 		editionTextField.setText(book.getEdition());
