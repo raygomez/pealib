@@ -255,6 +255,7 @@ public class BookInfoPanel extends JPanel {
 		yearPublishTextField.hasError(false);
 		publisherTextField.hasError(false);
 		isbnTextField10.hasError(false);
+		isbnTextField13.hasError(false);
 		descriptionTextArea.hasError(false);
 		editionTextField.hasError(false);	
 		copiesValSpinner.hasError(false);
