@@ -35,13 +35,19 @@ public class OutgoingPanel extends JPanel {
 		denyButton.setEnabled(false);
 	}
 
-	public JButton getGrantButton() {
-		return grantButton;
+	public void enableGrantButton(boolean enable){
+		grantButton.setEnabled(enable);
+	}
+	
+	public void enableDenyButton(boolean enable){
+		denyButton.setEnabled(enable);
+	}
+	
+	public void enableButtons(boolean enable){
+		enableGrantButton(enable);
+		enableDenyButton(enable);
 	}
 
-	public JButton getDenyButton() {
-		return denyButton;
-	}
 
 	/* Event Listeners */
 	public void setEventListener(ActionListener grant, ActionListener deny) {
