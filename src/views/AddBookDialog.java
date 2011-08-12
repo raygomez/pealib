@@ -12,6 +12,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
+
 import javax.swing.SpinnerNumberModel;
 
 import utilities.ErrorLabel;
@@ -24,7 +26,7 @@ import utilities.Strings;
 public class AddBookDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
+	private JPanel contentPanel = new JPanel();
 	private MyTextField titleTextField = new MyTextField(100);
 	private MyTextField authorTextField = new MyTextField(100);
 	private MyTextField yearPublishTextField = new MyTextField(4);
@@ -33,9 +35,9 @@ public class AddBookDialog extends JDialog {
 	private MyTextField editionTextField = new MyTextField(30);
 	private MyTextArea descriptionTextArea = new MyTextArea(1000);
 	private ErrorLabel errorMessageLabel = new ErrorLabel();
+	private MyJSpinner copyValSpinner = new MyJSpinner();
 	private JButton addButton;
 	private JButton cancelButton;
-	private MyJSpinner copyValSpinner = new MyJSpinner();
 	private JLabel editionLabel;
 
 	/**
@@ -48,23 +50,24 @@ public class AddBookDialog extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[fill][grow]", "[20.00][][20.00][20.00][20.00][20.00][20.00,grow][20.00]"));
+		contentPanel.setLayout(new MigLayout("", "[fill][grow]",
+				"[20.00][][20.00][20.00][20.00][20.00][20.00,grow][20.00]"));
 
-		JLabel titleLabel = new JLabel(Strings.TITLE_LABEL+":*");
+		JLabel titleLabel = new JLabel(Strings.TITLE_LABEL + ":*");
 		contentPanel.add(titleLabel, "cell 0 0,alignx left");
 		titleTextField.setToolTipText("*Maximum of 100 characters.");
 
 		titleTextField.setName("addTitleTextField");
 		contentPanel.add(titleTextField, "cell 1 0,growx");
-		
+
 		editionLabel = new JLabel(Strings.EDITION_LABEL);
 		contentPanel.add(editionLabel, "cell 0 1,alignx left");
-		
+
 		editionTextField.setName("editionTextField");
 		contentPanel.add(editionTextField, "cell 1 1,growx");
 		editionTextField.setColumns(10);
 
-		JLabel authorLabel = new JLabel(Strings.AUTHOR_LABEL+"*");
+		JLabel authorLabel = new JLabel(Strings.AUTHOR_LABEL + "*");
 		contentPanel.add(authorLabel, "cell 0 2,alignx left");
 		authorTextField.setToolTipText("*Maximum of 100 characters.");
 
@@ -86,11 +89,10 @@ public class AddBookDialog extends JDialog {
 		contentPanel.add(publisherTextField, "cell 1 4,growx");
 		publisherTextField.setColumns(10);
 
-		JLabel isbnLabel = new JLabel(Strings.ISBN_LABEL+":*");
+		JLabel isbnLabel = new JLabel(Strings.ISBN_LABEL + ":*");
 		contentPanel.add(isbnLabel, "cell 0 5,alignx left");
 		isbnTextField.setToolTipText("*Must be a valid ISBN");
 
-		
 		isbnTextField.setName("isbnTextField");
 		contentPanel.add(isbnTextField, "cell 1 5,growx");
 		isbnTextField.setColumns(10);
@@ -101,11 +103,10 @@ public class AddBookDialog extends JDialog {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPanel.add(scrollPane, "cell 1 6,grow");
 
-        descriptionTextArea.setName("descriptionTextArea");
-        descriptionTextArea.setLineWrap(true);
-        descriptionTextArea.setWrapStyleWord(true);
-        scrollPane.setViewportView(descriptionTextArea);
-                                        		
+		descriptionTextArea.setName("descriptionTextArea");
+		descriptionTextArea.setLineWrap(true);
+		descriptionTextArea.setWrapStyleWord(true);
+		scrollPane.setViewportView(descriptionTextArea);
 
 		JLabel copiesLabel = new JLabel(Strings.COPIES_LABEL);
 		contentPanel.add(copiesLabel, "cell 0 7,alignx left");
@@ -132,40 +133,50 @@ public class AddBookDialog extends JDialog {
 		this.setResizable(false);
 	}
 
-	public MyTextField getTxtFldTitle() {
-		return titleTextField;
+	public void addFocusListeners(FocusListener isbn10Listener,
+			FocusListener titleListener, FocusListener authorListener,
+			FocusListener yearCheckListener) {
+
+		titleTextField.addFocusListener(titleListener);
+		authorTextField.addFocusListener(authorListener);
+		yearPublishTextField.addFocusListener(yearCheckListener);
+		isbnTextField.addFocusListener(isbn10Listener);
 	}
 
-	public MyTextField getTxtFldAuthor() {
-		return authorTextField;
+	public String getTitle() {
+		return titleTextField.getText().trim();
 	}
 
-	public MyTextField getTxtFldYearPublish() {
-		return yearPublishTextField;
+	public void hasTitleError(boolean error) {
+		titleTextField.hasError(error);
 	}
 
-	public MyTextField getTxtFldPublisher() {
-		return publisherTextField;
+	public String getAuthor() {
+		return authorTextField.getText().trim();
 	}
 
-	public MyTextField getTxtFldIsbn() {
-		return isbnTextField;
+	public void hasAuthorError(boolean error) {
+		authorTextField.hasError(error);
 	}
 
-	public MyTextArea getTxtAreaDescription() {
-		return descriptionTextArea;
+	public String getYearPublished() {
+		return yearPublishTextField.getText();
 	}
 
-	public MyTextField getTxtFldEdition() {
-		return editionTextField;
+	public void hasYearPublishedError(boolean error) {
+		yearPublishTextField.hasError(error);
 	}
 
-	public ErrorLabel getLblErrorMsg() {
+	public String getIsbn() {
+		return isbnTextField.getText();
+	}
+
+	public void hasIsbnError(boolean error) {
+		isbnTextField.hasError(error);
+	}
+
+	public ErrorLabel getErrorMessageLabel() {
 		return errorMessageLabel;
-	}
-	
-	public MyJSpinner getCopyValSpinner() {
-		return copyValSpinner;
 	}
 
 	public void addBookActionListener(ActionListener add) {
@@ -174,6 +185,17 @@ public class AddBookDialog extends JDialog {
 
 	public void addCancelActionListener(ActionListener cancel) {
 		cancelButton.addActionListener(cancel);
+	}
+
+	public void clearBookFields() {
+		descriptionTextArea.setText("");
+		authorTextField.setText("");
+		editionTextField.setText("");
+		isbnTextField.setText("");
+		publisherTextField.setText("");
+		titleTextField.setText("");
+		yearPublishTextField.setText("");
+		copyValSpinner.getModel().setValue(1);
 	}
 
 	public Book getBookInfo() {
@@ -186,13 +208,14 @@ public class AddBookDialog extends JDialog {
 		newBook.setPublisher(publisherTextField.getText().trim());
 		newBook.setTitle(titleTextField.getText().trim());
 		newBook.setEdition(editionTextField.getText().trim());
-		if(yearPublishTextField.getText().length() > 0){
-			newBook.setYearPublish(Integer.parseInt(yearPublishTextField.getText()));
+		if (yearPublishTextField.getText().length() > 0) {
+			newBook.setYearPublish(Integer.parseInt(yearPublishTextField
+					.getText()));
 		}
-		if(isbnTextField.getText().length() == 10){
+		if (isbnTextField.getText().length() == 10) {
 			newBook.setIsbn10(isbnTextField.getText());
 			newBook.setIsbn13(IsbnUtil.convert(isbnTextField.getText()));
-		}else{
+		} else {
 			newBook.setIsbn13(isbnTextField.getText());
 			newBook.setIsbn10(IsbnUtil.convert(isbnTextField.getText()));
 		}

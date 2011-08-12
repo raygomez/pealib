@@ -213,13 +213,9 @@ public class BookController {
 			addBook = new AddBookDialog();
 			addBook.addBookActionListener(new AddBookListener());
 			addBook.addCancelActionListener(new CancelListener());
-			addBook.getTxtFldIsbn().addFocusListener(
-					new IsbnCheckFocusListener());
-			addBook.getTxtFldTitle().addFocusListener(
-					new TitleCheckFocusListener());
-			addBook.getTxtFldAuthor().addFocusListener(
-					new AuthorCheckFocusListener());
-			addBook.getTxtFldYearPublish().addFocusListener(
+			addBook.addFocusListeners(new IsbnCheckFocusListener(),
+					new TitleCheckFocusListener(),
+					new AuthorCheckFocusListener(),
 					new YearCheckFocusListener());
 			addBook.setVisible(true);
 		}
@@ -234,11 +230,11 @@ public class BookController {
 						if (!BookDAO.isIsbnExisting(addBook.getBookInfo()
 								.getIsbn10())) {
 							BookDAO.addBook(addBook.getBookInfo());
-							addBook.getLblErrorMsg().makeSuccess(
-									"ISBN: "
-											+ addBook.getTxtFldIsbn().getText()
-											+ " was added");
-							clearBookFields();
+							addBook.getErrorMessageLabel()
+									.makeSuccess(
+											"ISBN: " + addBook.getIsbn()
+													+ " was added");
+							addBook.clearBookFields();
 							bookList = BookDAO.searchBook(currSearchString);
 							bookSearch.getTableBookList().setModel(
 									new BookListModel(bookList));
@@ -252,79 +248,46 @@ public class BookController {
 
 							bookInfo.setBookInfoData(bookList.get(currRow));
 						} else {
-							addBook.getLblErrorMsg().makeError(
+							addBook.getErrorMessageLabel().makeError(
 									"ISBN already exist");
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				} else {
-					addBook.getLblErrorMsg().makeError("Error Found!");
+					addBook.getErrorMessageLabel().makeError("Error Found!");
 				}
 			}
-		}
-
-		private void clearBookFields() {
-			addBook.getTxtAreaDescription().setText("");
-			addBook.getTxtFldAuthor().setText("");
-			addBook.getTxtFldEdition().setText("");
-			addBook.getTxtFldIsbn().setText("");
-			addBook.getTxtFldPublisher().setText("");
-			addBook.getTxtFldTitle().setText("");
-			addBook.getTxtFldYearPublish().setText("");
-			addBook.getCopyValSpinner().getModel().setValue(1);
 		}
 
 		private boolean validateAddBook() {
 			boolean validate = true;
 
-			if (addBook.getTxtFldTitle().getText().trim().isEmpty()
-					|| addBook.getTxtFldTitle().getText().length() > 100) {
-				addBook.getTxtFldTitle().hasError(true);
+			if (addBook.getTitle().isEmpty()) {
+				addBook.hasTitleError(true);
 				validate = false;
 			} else
-				addBook.getTxtFldTitle().hasError(false);
+				addBook.hasTitleError(false);
 
-			if (addBook.getTxtFldAuthor().getText().trim().isEmpty()
-					|| addBook.getTxtFldAuthor().getText().length() > 100) {
-				addBook.getTxtFldAuthor().hasError(true);
+			if (addBook.getAuthor().isEmpty()) {
+				addBook.hasAuthorError(true);
 				validate = false;
 			} else
-				addBook.getTxtFldAuthor().hasError(false);
+				addBook.hasAuthorError(false);
 
-			if (!addBook.getTxtFldYearPublish().getText().trim().isEmpty()) {
-				if (!addBook.getTxtFldYearPublish().getText()
-						.matches(Constants.YEAR_PUBLISH_FORMAT)) {
-					addBook.getTxtFldYearPublish().hasError(true);
-					validate = false;
-				} else
-					addBook.getTxtFldYearPublish().hasError(false);
-			} else
-				addBook.getTxtFldYearPublish().hasError(false);
-
-			if (!IsbnUtil.isIsbnValid(addBook.getTxtFldIsbn().getText())) {
-				addBook.getTxtFldIsbn().hasError(true);
+			if (!addBook.getYearPublished().isEmpty()
+					&& !addBook.getYearPublished().matches(
+							Constants.YEAR_PUBLISH_FORMAT)) {
+				addBook.hasYearPublishedError(true);
 				validate = false;
 			} else
-				addBook.getTxtFldIsbn().hasError(false);
+				addBook.hasYearPublishedError(false);
 
-			if (addBook.getTxtFldPublisher().getText().length() > 100) {
-				addBook.getTxtFldPublisher().hasError(true);
+			if (!IsbnUtil.isIsbnValid(addBook.getIsbn())) {
+				addBook.hasIsbnError(true);
 				validate = false;
 			} else
-				addBook.getTxtFldPublisher().hasError(false);
-
-			if (addBook.getTxtAreaDescription().getText().length() > 1000) {
-				addBook.getTxtAreaDescription().hasError(true);
-				validate = false;
-			} else
-				addBook.getTxtAreaDescription().hasError(false);
-
-			if (addBook.getTxtFldEdition().getText().length() > 30) {
-				addBook.getTxtFldEdition().hasError(true);
-				validate = false;
-			} else
-				addBook.getTxtFldEdition().hasError(false);
+				addBook.hasIsbnError(false);
 
 			return validate;
 		}
@@ -343,8 +306,7 @@ public class BookController {
 		public void actionPerformed(ActionEvent e) {
 			int currRow = currTableRowSelection;
 			try {
-				int spinCopy = Integer.parseInt(bookInfo.getSpinCopyVal()
-						.getModel().getValue().toString());
+				int spinCopy = bookInfo.getCopy();
 				int availableCopy = TransactionDAO.getAvailableCopies(bookInfo
 						.getCurrBook());
 				int validCopy = bookInfo.getCurrBook().getCopies()
@@ -448,10 +410,10 @@ public class BookController {
 			}
 
 			if (spinCopy < validCopy) {
-				bookInfo.getSpinCopyVal().hasError(true);
+				bookInfo.hasCopyError(true);
 				validate = false;
 			} else {
-				bookInfo.getSpinCopyVal().hasError(false);
+				bookInfo.hasCopyError(false);
 			}
 
 			return validate;
@@ -804,7 +766,8 @@ public class BookController {
 
 			if (!IsbnUtil.isIsbnValid(bookIsbn)) {
 				if (stringIsbn.getName() == "isbnTextField") {
-					addBook.getLblErrorMsg().makeError("ISBN is not correct.");
+					addBook.getErrorMessageLabel().makeError(
+							"ISBN is not correct.");
 				} else {
 					bookInfo.getLblErrorMsg().makeError("ISBN is not correct.");
 				}
@@ -812,7 +775,7 @@ public class BookController {
 			} else {
 				flag = 1;
 				if (stringIsbn.getName() == "isbnTextField") {
-					addBook.getLblErrorMsg().clear();
+					addBook.getErrorMessageLabel().clear();
 				} else {
 					bookInfo.getLblErrorMsg().clear();
 				}
@@ -824,7 +787,7 @@ public class BookController {
 					if (BookDAO.isIsbnExisting(bookIsbn)
 							&& (currISBN10 == bookIsbn || currISBN13 == bookIsbn)) {
 						if (stringIsbn.getName() == "isbnTextField") {
-							addBook.getLblErrorMsg().makeError(
+							addBook.getErrorMessageLabel().makeError(
 									"ISBN already exist.");
 						} else {
 							bookInfo.getLblErrorMsg().makeError(
@@ -833,7 +796,7 @@ public class BookController {
 						stringIsbn.hasError(true);
 					} else {
 						if (stringIsbn.getName() == "isbnTextField") {
-							addBook.getLblErrorMsg().clear();
+							addBook.getErrorMessageLabel().clear();
 						} else {
 							bookInfo.getLblErrorMsg().clear();
 							if (bookIsbn.length() == 10) {
@@ -858,7 +821,7 @@ public class BookController {
 			MyTextField titleField = (MyTextField) title.getSource();
 			if (titleField.getText().length() == 0) {
 				if (titleField.getName() == "addTitleTextField") {
-					addBook.getLblErrorMsg().makeError(
+					addBook.getErrorMessageLabel().makeError(
 							"Title field cannot be empty.");
 				} else {
 					bookInfo.getLblErrorMsg().makeError(
@@ -867,7 +830,7 @@ public class BookController {
 				titleField.hasError(true);
 			} else {
 				if (titleField.getName() == "addTitleTextField") {
-					addBook.getLblErrorMsg().clear();
+					addBook.getErrorMessageLabel().clear();
 				} else {
 					bookInfo.getLblErrorMsg().clear();
 				}
@@ -882,7 +845,7 @@ public class BookController {
 			MyTextField authorField = (MyTextField) author.getSource();
 			if (authorField.getText().length() == 0) {
 				if (authorField.getName() == "addAuthorTextField") {
-					addBook.getLblErrorMsg().makeError(
+					addBook.getErrorMessageLabel().makeError(
 							"Author field cannot be empty.");
 				} else {
 					bookInfo.getLblErrorMsg().makeError(
@@ -891,7 +854,7 @@ public class BookController {
 				authorField.hasError(true);
 			} else {
 				if (authorField.getName() == "addAuthorTextField") {
-					addBook.getLblErrorMsg().clear();
+					addBook.getErrorMessageLabel().clear();
 				} else {
 					bookInfo.getLblErrorMsg().clear();
 				}
@@ -908,7 +871,7 @@ public class BookController {
 					&& !yearField.getText().matches(
 							Constants.YEAR_PUBLISH_FORMAT)) {
 				if (yearField.getName() == "addYearPublishTextField") {
-					addBook.getLblErrorMsg().makeError(
+					addBook.getErrorMessageLabel().makeError(
 							"Year field is not correct.");
 				} else {
 					bookInfo.getLblErrorMsg().makeError(
@@ -917,7 +880,7 @@ public class BookController {
 				yearField.hasError(true);
 			} else {
 				if (yearField.getName() == "addYearPublishTextField") {
-					addBook.getLblErrorMsg().clear();
+					addBook.getErrorMessageLabel().clear();
 				} else {
 					bookInfo.getLblErrorMsg().clear();
 				}
