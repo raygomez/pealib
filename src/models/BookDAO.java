@@ -47,6 +47,12 @@ public class BookDAO {
 
 	public static int addBook(Book book) throws Exception {
 		int intStat = 0;
+		
+		if (null != book.getIsbn10()){
+			book.setIsbn13(IsbnUtil.convert(book.getIsbn10()));
+		} else {
+			book.setIsbn10(IsbnUtil.convert(book.getIsbn13()));
+		}
 
 		String sql = "INSERT INTO Books (ISBN10, ISBN13, Title, Author, "
 				+ "Edition, Publisher, Description, YearPublish, "
