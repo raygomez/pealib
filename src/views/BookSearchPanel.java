@@ -80,16 +80,19 @@ public class BookSearchPanel extends JPanel {
 		textFieldSearch.addKeyListener(textfield);
 	}
 
-	public JTextField getTextFieldSearch() {
-		return textFieldSearch;
+	public String getSearchWord(){
+		return textFieldSearch.getText();
 	}
-
+	
+	public void clearSearchField(){
+		textFieldSearch.setText("");
+	}
+	
 	public JTable getTableBookList() {
 		return tableBookList;
 	}
 	
 	public void setColumnRender(JTable table){
-		//TODO
 		DefaultTableCellRenderer trender = new DefaultTableCellRenderer();
 		trender.setHorizontalAlignment(SwingConstants.CENTER);
 				
