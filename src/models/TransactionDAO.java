@@ -58,7 +58,8 @@ public class TransactionDAO {
 	public static int borrowBook(BorrowTransaction borrowedBook)
 			throws Exception {
 
-		String sql = "UPDATE Borrows SET DateBorrowed = CURRENT_DATE() WHERE BorrowID = ?";
+		String sql = "UPDATE Borrows SET DateBorrowed = CURRENT_DATE() "
+				+ "WHERE BorrowID = ?";
 
 		int intStat = 0;
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
@@ -100,7 +101,8 @@ public class TransactionDAO {
 	public static ReserveTransaction getReserveTransaction(User user, Book book)
 			throws Exception {
 
-		String sql = "SELECT DatetimeReserved FROM Reserves where UserID = ? and BookID = ? ";
+		String sql = "SELECT DatetimeReserved FROM Reserves "
+				+ "where UserID = ? and BookID = ? ";
 
 		ReserveTransaction rTransaction = null;
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
@@ -165,7 +167,8 @@ public class TransactionDAO {
 	public static boolean isReservedByUser(Book book, User user)
 			throws Exception {
 
-		String sql = "SELECT COUNT(*) FROM Reserves WHERE UserID = ? AND BookID = ?";
+		String sql = "SELECT COUNT(*) FROM Reserves "
+				+ "WHERE UserID = ? AND BookID = ?";
 
 		boolean isReserved = false;
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
@@ -353,9 +356,11 @@ public class TransactionDAO {
 		ResultSet rs = ps.executeQuery();
 		if (rs.first()) {
 			Date borrowedDate = rs.getDate(1);
+			DateMidnight today = new DateMidnight(Connector.getCurrentDate()
+					.getTime());
 			Days d = Days.daysBetween(
 					new DateMidnight(borrowedDate.getTime()).plusWeeks(2),
-					new DateMidnight());
+					today);
 			days = d.getDays();
 		}
 
