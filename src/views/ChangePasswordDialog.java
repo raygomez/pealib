@@ -46,36 +46,36 @@ import utilities.MyPasswordField;
 			getContentPanel().setLayout(new MigLayout("", "[96.00][grow]",
 					"[][][][]"));
 
-			setOldPasswordLabel(new JLabel("Old Password:"));
-			getContentPanel().add(getOldPasswordLabel(), "cell 0 0,alignx trailing");
-			setOldPasswordField(new MyPasswordField(20));
-			getOldPasswordField().setName("oldpassword");
-			getContentPanel().add(getOldPasswordField(), "cell 1 0,growx");
+			oldPasswordLabel = new JLabel("Old Password:");
+			getContentPanel().add(oldPasswordLabel, "cell 0 0,alignx trailing");
+			oldPasswordField = new MyPasswordField(20);
+			oldPasswordField.setName("oldpassword");
+			getContentPanel().add(oldPasswordField, "cell 1 0,growx");
 
 			JLabel lblNewLabel_1 = new JLabel("New Password:");
 			getContentPanel().add(lblNewLabel_1, "cell 0 1,alignx trailing");
-			setNewPasswordField(new MyPasswordField(20));
-			getNewPasswordField().setName("newpassword");
-			getContentPanel().add(getNewPasswordField(), "cell 1 1,growx");
+			newPasswordField = new MyPasswordField(20);
+			newPasswordField.setName("newpassword");
+			getContentPanel().add(newPasswordField, "cell 1 1,growx");
 
 			JLabel lblNewLabel_2 = new JLabel("Repeat Password:");
 			lblNewLabel_2.setHorizontalAlignment(SwingConstants.LEFT);
 			getContentPanel().add(lblNewLabel_2, "cell 0 2,alignx trailing");
-			setRepeatPasswordField(new MyPasswordField(20));
-			getRepeatPasswordField().setName("repeatpassword");
-			getContentPanel().add(getRepeatPasswordField(), "cell 1 2,growx");
+			repeatPasswordField = new  MyPasswordField(20);
+			repeatPasswordField.setName("repeatpassword");
+			getContentPanel().add(repeatPasswordField, "cell 1 2,growx");
 
-			setErrorLabel(new ErrorLabel(" "));
+			errorLabel = new ErrorLabel(" ");
 			errorLabel.setName("errorLabel");
-			getContentPanel().add(getErrorLabel(), "cell 0 3 2 1, shrink");
+			getContentPanel().add(errorLabel, "cell 0 3 2 1, shrink");
 
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 
-			setChangePasswordButton(new JButton("Change Password"));
-			buttonPane.add(getChangePasswordButton());
-			getRootPane().setDefaultButton(getChangePasswordButton());
+			changePasswordButton = new JButton("Change Password");
+			buttonPane.add(changePasswordButton);
+			getRootPane().setDefaultButton(changePasswordButton);
 
 			JButton cancelButton = new JButton("Cancel");
 			cancelButton.addActionListener(new ActionListener() {
@@ -88,62 +88,24 @@ import utilities.MyPasswordField;
 			pack();
 		}
 
-		public MyPasswordField getOldPasswordField() {
-			return oldPasswordField;
+		public String getOldPassword(){
+			return new String(oldPasswordField.getPassword());
 		}
 
-		public void setOldPasswordField(MyPasswordField oldPasswordField) {
-			this.oldPasswordField = oldPasswordField;
+		public boolean isOldPasswordIsEnabled(){
+			return oldPasswordField.isEnabled();
 		}
 
-		public MyPasswordField getNewPasswordField() {
-			return newPasswordField;
+		public String getNewPassword(){
+			return new String(newPasswordField.getPassword());
 		}
 
-		public void setNewPasswordField(MyPasswordField newPasswordField) {
-			this.newPasswordField = newPasswordField;
+		public String getRepeatPassword(){
+			return new String(repeatPasswordField.getPassword());
 		}
-
-		public MyPasswordField getRepeatPasswordField() {
-			return repeatPasswordField;
-		}
-
-		public void setRepeatPasswordField(MyPasswordField repeatPasswordField) {
-			this.repeatPasswordField = repeatPasswordField;
-		}
-
-		/**
-		 * @return the changePasswordButton_
-		 */
-		public JButton getChangePasswordButton() {
-			return changePasswordButton;
-		}
-
-		/**
-		 * @param changePasswordButton
-		 *            the changePasswordButton to set
-		 */
-		public void setChangePasswordButton(JButton changePasswordButton) {
-			this.changePasswordButton = changePasswordButton;
-		}
-
-		/**
-		 * @return the errorLabel
-		 */
-		public JLabel getErrorLabel() {
-			return errorLabel;
-		}
-
-		/**
-		 * @param errorLabel
-		 *            the errorLabel to set
-		 */
-		public void setErrorLabel(JLabel errorLabel) {
-			this.errorLabel = errorLabel;
-		}
-
+		
 		public void addChangePasswordListener(ActionListener actionListener) {
-			getChangePasswordButton().addActionListener(actionListener);
+			changePasswordButton.addActionListener(actionListener);
 		}
 
 		/**
@@ -153,28 +115,13 @@ import utilities.MyPasswordField;
 			return contentPanel;
 		}
 		
-		/**
-		 * @return the oldPasswordLabel
-		 */
-		public JLabel getOldPasswordLabel() {
-			return oldPasswordLabel;
-		}
-
-		/**
-		 * @param oldPasswordLabel the oldPasswordLabel to set
-		 */
-		public void setOldPasswordLabel(JLabel oldPasswordLabel) {
-			this.oldPasswordLabel = oldPasswordLabel;
-		}
-
-		public void removeOldPassword(){
-			getOldPasswordField().setVisible(false);
-			getOldPasswordLabel().setVisible(false);			
-			getOldPasswordField().setEnabled(false);
+		public void clearOldPassword(){
+			oldPasswordField.setVisible(false);
+			oldPasswordField.setVisible(false);			
+			oldPasswordField.setEnabled(false);
 		}				
 
 		public void displayError(int error) {
-			// TODO Auto-generated method stub
 			switch (error){
 				case Constants.DEFAULT_ERROR:
 					errorLabel.setText("An error has occured");
