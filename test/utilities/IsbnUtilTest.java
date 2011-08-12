@@ -28,6 +28,10 @@ public class IsbnUtilTest {
 		assertFalse(IsbnUtil.isIsbnValid("aaaaaaaaaa"));
 	}
 
+	@Test
+	public void testIsIsbnValid13DigitWithLetters() {
+		assertFalse(IsbnUtil.isIsbnValid("AAAAAAAAAAAAA"));
+	}
 	
 	@Test
 	public void testIsIsbnValid10DigitWithX() {

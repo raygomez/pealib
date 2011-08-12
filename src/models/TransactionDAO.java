@@ -377,9 +377,12 @@ public class TransactionDAO {
 		ResultSet rs = ps.executeQuery();
 		if (rs.first()) {
 			Date borrowedDate = rs.getDate(1);
+			DateMidnight today = new DateMidnight(Connector.getCurrentDate()
+					.getTime());
+
 			Days d = Days.daysBetween(
 					new DateMidnight(borrowedDate.getTime()).plusWeeks(2),
-					new DateMidnight());
+					today);
 			days = d.getDays();
 		}
 
