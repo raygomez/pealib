@@ -419,6 +419,13 @@ public class BookController {
 			} else
 				bookInfo.getTxtFldISBN10().hasError(false);
 
+			if (!IsbnUtil.isIsbnValid(bookInfo.getTxtFldISBN13().getText())) {
+				bookInfo.getTxtFldISBN13().hasError(true);
+				validate = false;
+				flag = 1;
+			} else
+				bookInfo.getTxtFldISBN10().hasError(false);
+
 			if (bookInfo.getTxtFldDescription().getText().length() > 1000) {
 				bookInfo.getTxtFldDescription().hasError(true);
 				validate = false;
@@ -431,16 +438,32 @@ public class BookController {
 			} else
 				bookInfo.getTxtFldEdition().hasError(false);
 
-			// TODO existing ISBN
+			// TODO consistent ISBN
 			if (!currISBN10.equals(bookInfo.getTxtFldISBN10().getText())
 					&& flag == 0) {
+				String otherISBN = IsbnUtil.convert(bookInfo.getTxtFldISBN10()
+						.getText());
 				if (BookDAO
-						.isIsbnExisting(bookInfo.getTxtFldISBN10().getText())) {
+						.isIsbnExisting(bookInfo.getTxtFldISBN10().getText())
+						|| otherISBN != bookInfo.getTxtFldISBN13().getText()) {
 					bookInfo.getTxtFldISBN10().hasError(true);
 					validate = false;
 				} else
 					bookInfo.getTxtFldISBN10().hasError(false);
 			}
+			if (!currISBN13.equals(bookInfo.getTxtFldISBN13().getText())
+					&& flag == 0) {
+				String otherISBN = IsbnUtil.convert(bookInfo.getTxtFldISBN13()
+						.getText());
+				if (BookDAO
+						.isIsbnExisting(bookInfo.getTxtFldISBN13().getText())
+						|| otherISBN != bookInfo.getTxtFldISBN13().getText()) {
+					bookInfo.getTxtFldISBN13().hasError(true);
+					validate = false;
+				} else
+					bookInfo.getTxtFldISBN10().hasError(false);
+			}
+
 			if (spinCopy < validCopy) {
 				bookInfo.getSpinCopyVal().hasError(true);
 				validate = false;
@@ -451,7 +474,7 @@ public class BookController {
 			return validate;
 		}
 
-	}
+}
 
 	class DeleteButtonListener implements ActionListener {
 
