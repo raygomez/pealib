@@ -516,7 +516,7 @@ public class AuthenticationControllerTest extends UISpecTestCase {
 						Key.ENTER);
 				String error = dialog.getTextBox("errorMessageLabel").getText();
 				assertTrue(error.equals("Cannot leave mandatory fields empty."));
-				assertEquals(AuthenticationController.getSignUp().getLblErrorMessage().getText(), error);
+				assertEquals(AuthenticationController.getSignUp().getErrorMessage(), error);
 				
 				return dialog.getButton("Cancel").triggerClick();
 			}

@@ -270,23 +270,23 @@ public class AuthenticationController {
 		
 		int maskedLabel = 0;
 		signUp.setFieldBorderColor(maskedLabel);
-		signUp.setLblErrorMessage("");
+		signUp.setErrorMessage("");
 		
 		getSignUpData();
 		if (!isSignUpFieldComplete(maskedLabel)) {
-			signUp.setLblErrorMessage("Cannot leave mandatory fields empty.");
+			signUp.setErrorMessage("Cannot leave mandatory fields empty.");
 		} else if (!isUserNameValid()) {
 			/* action is handled by isUserNameValid() */
 		} else if (!isEmailAddressValid()) {
 			/* action is handled by isEmailAddressValid() */
 		} else if (!isSignUpInputValid(maskedLabel)) {
-			signUp.setLblErrorMessage("Invalid Input.");
+			signUp.setErrorMessage("Invalid Input.");
 		} else if (!sUpConfirmPassword.equals(sUpPassword)) {
-			signUp.setLblErrorMessage("Mismatch in Confirm Password.");
+			signUp.setErrorMessage("Mismatch in Confirm Password.");
 			signUp.setFieldBorderColor(SignUpDialog.PASSWORD_FLAG
 				| SignUpDialog.CONFIRM_PASSWORD_FLAG);
-			signUp.getTxtfldPassword().setText("");
-			signUp.getTxtfldConfirmPassword().setText("");
+			signUp.clearPassword();
+			signUp.clearConfirmPassword();
 		} else {
 			Task<Void, Void> task = new Task<Void, Void>(toDo);
 			LoadingControl.init(task, getLogin()).executeLoading();
@@ -294,19 +294,18 @@ public class AuthenticationController {
 	}
 
 	private void getSignUpData() {
-		sUpFirstName = signUp.getTxtfldFirstName().getText().trim();
-		sUpLastName = signUp.getTxtfldLastName().getText().trim();
+		sUpFirstName = signUp.getFirstName();
+		sUpLastName = signUp.getLastName();
 		getUserName();
-		sUpPassword = new String(signUp.getTxtfldPassword().getPassword());
-		sUpConfirmPassword = new String(signUp.getTxtfldConfirmPassword()
-			.getPassword());
-		sUpEmailAddress = signUp.getTxtfldEmailAddress().getText();
-		sUpContactNumber = signUp.getTxtfldContactNumber().getText();
-		sUpAddress = signUp.getTxtfldAddress().getText().trim();
+		sUpPassword = signUp.getPassword();
+		sUpConfirmPassword = signUp.getConfirmPassword();
+		sUpEmailAddress = signUp.getEmailAddress();
+		sUpContactNumber = signUp.getContactNumber();
+		sUpAddress = signUp.getAddress();
 	}
 
 	private void getUserName() {
-		sUpUserName = signUp.getTxtfldUserName().getText();
+		sUpUserName = signUp.getUserName();
 	}
 
 	private boolean isSignUpFieldComplete(int maskedLabel) {
@@ -351,25 +350,25 @@ public class AuthenticationController {
 
 		if (!isFirstNameValid) {
 			maskedLabel |= SignUpDialog.FIRSTNAME_FLAG;
-			signUp.getTxtfldFirstName().setText("");
 		}
+		
 		if (!isLastNameValid) {
 			maskedLabel |= SignUpDialog.LASTNAME_FLAG;
-			signUp.getTxtfldLastName().setText("");
 		}
+		
 		if (!isPasswordValid) {
 			maskedLabel |= (SignUpDialog.PASSWORD_FLAG
 				| SignUpDialog.CONFIRM_PASSWORD_FLAG);
-			signUp.getTxtfldPassword().setText("");
-			signUp.getTxtfldConfirmPassword().setText("");
+			signUp.clearPassword();
+			signUp.clearConfirmPassword();
 		}
+		
 		if (!isContactNumberValid) {
 			maskedLabel |= SignUpDialog.CONTACT_NUMBER_FLAG;
-			signUp.getTxtfldContactNumber().setText("");
 		}
+		
 		if (!isAddressValid) {
 			maskedLabel |= SignUpDialog.ADDRESS_FLAG;
-			signUp.getTxtfldAddress().setText("");
 		}
 
 		if (maskedLabel != 0) {
@@ -380,19 +379,19 @@ public class AuthenticationController {
 	}
 
 	private boolean isUserNameValid() {
-		signUp.setLblErrorMessage("");
+		signUp.setErrorMessage("");
 		signUp.setFieldBorderColor(SignUpDialog.EMPTY_FLAG);
 
 		boolean isValid = sUpUserName.matches(Constants.USERNAME_FORMAT);
 		if (!isValid) {
-			signUp.setLblErrorMessage("Invalid Input.");
+			signUp.setErrorMessage("Invalid Input.");
 			signUp.setFieldBorderColor(SignUpDialog.USERNAME_FLAG);
 			return false;
 		}
 
 		try {
 			if (UserDAO.isUsernameExisting(sUpUserName)) {
-				signUp.setLblErrorMessage("User name is already in use.");
+				signUp.setErrorMessage("User name is already in use.");
 				signUp.setFieldBorderColor(SignUpDialog.USERNAME_FLAG);
 				return false;
 			}
@@ -408,14 +407,14 @@ public class AuthenticationController {
 		boolean isValid = sUpEmailAddress
 			.matches(Constants.EMAIL_FORMAT);
 		if (!isValid || (sUpEmailAddress.length() > 254)) {
-			signUp.setLblErrorMessage("Invalid Input.");
+			signUp.setErrorMessage("Invalid Input.");
 			signUp.setFieldBorderColor(SignUpDialog.EMAIL_ADDRESS_FLAG);
 			return false;
 		}
 		
 		try {
 			if (UserDAO.isEmailExisting(sUpEmailAddress, sUpUserName)) {
-				signUp.setLblErrorMessage("E-mail address is already in use.");
+				signUp.setErrorMessage("E-mail address is already in use.");
 				signUp.setFieldBorderColor(SignUpDialog.EMAIL_ADDRESS_FLAG);
 				return false;
 			}
