@@ -1,6 +1,8 @@
 package models;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class BorrowTransaction {
 
@@ -19,6 +21,15 @@ public class BorrowTransaction {
 		this.dateRequested = dateRequested;
 		this.dateBorrowed = dateBorrowed;
 		this.dateReturned = dateReturned;
+	}
+	
+	public BorrowTransaction(ResultSet rs, User user, Book book) throws SQLException {
+		this.user = user;
+		this.book = book;
+		id = rs.getInt("BorrowID");
+		dateRequested = rs.getDate("DateRequested");
+		dateBorrowed = rs.getDate("DateBorrowed");
+		dateReturned = rs.getDate("DateReturned");
 	}
 
 	public int getId() {
