@@ -67,15 +67,16 @@ public class InOutBookSearchPanel extends JPanel {
 	}
 
 	/* Getters */
-	public JTextField getTxtfldSearch() {
-		return searchTextField;
+	
+	public String getSearchWord(){
+		return searchTextField.getText();
+	}
+	
+	public void setTotal(String total){
+		totalLabel.setText(total);
 	}
 
-	public JLabel getLblTotal() {
-		return totalLabel;
-	}
-
-	public JTable getTblResults() {
+	public JTable getTableResults() {
 		return resultsTable;
 	}
 	
