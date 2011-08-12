@@ -36,8 +36,8 @@ public class UserSearchPanel extends JPanel {
 	/*
 	 * Getters - Setters
 	 */	
-	public JTextField getFieldSearch() { return searchTextField; }
-
+	public String getSearchWord() { return searchTextField.getText(); }
+	
 	public int getSelectedTab() { return tabbedPane.getSelectedIndex(); }
 	
 	public JTable getUsersTable() { return usersTable; }
@@ -48,6 +48,7 @@ public class UserSearchPanel extends JPanel {
 
 	public void setModelUsers(TableModel modelUsers) { this.modelUsers = modelUsers; }
 	
+	public void clearSearchField() { searchTextField.setText("");}
 	/**
 	 * Create the panel.
 	 */

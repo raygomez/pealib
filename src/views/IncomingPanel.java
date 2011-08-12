@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 
 import net.miginfocom.swing.MigLayout;
 
-
 public class IncomingPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private InOutBookSearchPanel searchPanel;
@@ -49,11 +48,23 @@ public class IncomingPanel extends JPanel {
 		return searchPanel;
 	}
 
-	public JLabel getLblDaysOverdue() {
-		return daysOverdueLabel;
+	public void clearLabelOfDaysOverdue(){
+		daysOverdueLabel.setText("");
+	}
+	
+	public void setNoDaysOverdue(String text) {
+		daysOverdueLabel.setText(text);
 	}
 
-	public JButton getBtnReturn() {
-		return returnButton;
+	public void setColorWhenOverdue(boolean isOverdue) {
+		if (isOverdue) {
+			daysOverdueLabel.setForeground(Color.RED);
+		} else {
+			daysOverdueLabel.setForeground(Color.BLACK);
+		}
+	}
+
+	public void setReturnButtonEnabled(boolean status) {
+		returnButton.setEnabled(status);
 	}
 }

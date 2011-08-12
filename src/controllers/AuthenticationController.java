@@ -28,8 +28,8 @@ public class AuthenticationController {
 	private static LogInDialog login;
 	private User user;
 
-	private String login_user;
-	private String login_pass;
+	private String loginUser;
+	private String loginPassword;
 
 	private static SignUpDialog signUp;
 	private String sUpFirstName;
@@ -40,24 +40,24 @@ public class AuthenticationController {
 	private String sUpEmailAddress;
 	private String sUpContactNumber;
 	private String sUpAddress;
-	
-//	public static void main(String[] args) {
-//		try {
-//			new Connector(Constants.APP_CONFIG);
-//			new AuthenticationController();
-//			AuthenticationController.getLogin().setVisible(true);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+
+	// public static void main(String[] args) {
+	// try {
+	// new Connector(Constants.APP_CONFIG);
+	// new AuthenticationController();
+	// AuthenticationController.getLogin().setVisible(true);
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	public AuthenticationController() {
 		setLogin(new LogInDialog());
 		getLogin().setActionListeners(new SignUpListener(),
 				new SubmitListener(), new SubmitKeyAdapter(),
 				forgotPasswordListener);
-				//new ForgotPasswordListener());
+		// new ForgotPasswordListener());
 		getLogin().setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 	}
@@ -119,74 +119,75 @@ public class AuthenticationController {
 			} else {
 				setUsernamePassword();
 
-				if (login_user.length() > 0)
-					validateUsername(login_user);
-				if (login_pass.length() > 0)
-					validatePassword(login_pass);
+				if (loginUser.length() > 0)
+					validateUsername(loginUser);
+				if (loginPassword.length() > 0)
+					validatePassword(loginPassword);
 			}
 		}
 	}
 
 	private boolean validateUsername(String username) {
 		boolean result = (username.matches(Constants.USERNAME_FORMAT));
-		getLogin().getFieldUsername().hasError(!result);
-
+		getLogin().hasUserNameError(!result);
 		return result;
 	}
 
 	private boolean validatePassword(String password) {
 		boolean result = (password.matches(Constants.PASSWORD_FORMAT));
-		getLogin().getFieldPassword().hasError(!result);
+		getLogin().hasPasswordError(!result);
 
 		return result;
 	}
 
 	private void setUsernamePassword() {
-		login_user = getLogin().getFieldUsername().getText();
-		login_pass = new String(getLogin().getFieldPassword().getPassword());
+		loginUser = getLogin().getUsername();
+		loginPassword = getLogin().getPassword();
 	}
 
-	private void retrieveUser() throws Exception{
-		setUser(UserDAO.getUser(login_user, login_pass));
-		
+	private void retrieveUser() throws Exception {
+		setUser(UserDAO.getUser(loginUser, loginPassword));
+
 		if (user == null) {
 			getLogin().setLabelError("Username/Password Mismatch");
-			getLogin().getFieldPassword().setText("");
+			getLogin().clearPassword();
 		} else if (user.getType().equals("Pending")) {
-			getLogin().setLabelError(
-				"<html><center>Account still being processed.<br/>"
-				+ "Ask Librarian for further inquiries.</center></html>");
+			getLogin()
+					.setLabelError(
+							"<html><center>Account still being processed.<br/>"
+									+ "Ask Librarian for further inquiries.</center></html>");
 			setUser(null);
-			getLogin().getFieldPassword().setText("");
+			getLogin().clearPassword();
 		} else {
 			getLogin().dispose();
 		}
 	}
-	
+
 	private void submit() {
 		Callable<Void> toDo = new Callable<Void>() {
-			
+
 			@Override
 			public Void call() throws Exception {
 				retrieveUser();
 				return null;
 			}
 		};
-		
+
 		Task<Void, Void> task = new Task<Void, Void>(toDo);
-		
+
 		setUsernamePassword();
-		if (login_user.equals("") || login_pass.equals("")) {
+		if (loginUser.equals("") || loginPassword.equals("")) {
 
 			getLogin().setLabelError("Incomplete fields");
-			getLogin().getFieldUsername().hasError(login_user.equals(""));
-			getLogin().getFieldPassword().hasError(login_pass.equals(""));
+			getLogin().hasUserNameError(loginUser.equals(""));
+			getLogin().hasPasswordError(loginPassword.equals(""));
 
-		} else if (!validateUsername(login_user) || !validatePassword(login_pass)) {
+		} else if (!validateUsername(loginUser)
+				|| !validatePassword(loginPassword)) {
 			getLogin().setLabelError("Invalid input");
-		}
 
-		else {
+		} else {
+
 			LoadingControl.init(task, getLogin()).executeLoading();
 		}
 	}
@@ -248,17 +249,20 @@ public class AuthenticationController {
 				"Pending");
 		try {
 			UserDAO.saveUser(newUser);
-			JOptionPane.showMessageDialog(signUp.getContentPane(),
-				"<html>Your account has been created.<br>" +
-				"Please wait for the Librarian to activate your account.",
-				"Sign-up Successful", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							signUp.getContentPane(),
+							"<html>Your account has been created.<br>"
+									+ "Please wait for the Librarian to activate your account.",
+							"Sign-up Successful",
+							JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			signUpFailed();
 			e.printStackTrace();
 		}
 		signUpCancel();
 	}
-	
+
 	private void signUpSubmit() {
 		Callable<Void> toDo = new Callable<Void>() {
 			@Override
@@ -267,26 +271,26 @@ public class AuthenticationController {
 				return null;
 			}
 		};
-		
+
 		int maskedLabel = 0;
 		signUp.setFieldBorderColor(maskedLabel);
-		signUp.setLblErrorMessage("");
-		
+		signUp.setErrorMessage("");
+
 		getSignUpData();
 		if (!isSignUpFieldComplete(maskedLabel)) {
-			signUp.setLblErrorMessage("Cannot leave mandatory fields empty.");
+			signUp.setErrorMessage("Cannot leave mandatory fields empty.");
 		} else if (!isUserNameValid()) {
 			/* action is handled by isUserNameValid() */
 		} else if (!isEmailAddressValid()) {
 			/* action is handled by isEmailAddressValid() */
 		} else if (!isSignUpInputValid(maskedLabel)) {
-			signUp.setLblErrorMessage("Invalid Input.");
+			signUp.setErrorMessage("Invalid Input.");
 		} else if (!sUpConfirmPassword.equals(sUpPassword)) {
-			signUp.setLblErrorMessage("Mismatch in Confirm Password.");
+			signUp.setErrorMessage("Mismatch in Confirm Password.");
 			signUp.setFieldBorderColor(SignUpDialog.PASSWORD_FLAG
-				| SignUpDialog.CONFIRM_PASSWORD_FLAG);
-			signUp.getTxtfldPassword().setText("");
-			signUp.getTxtfldConfirmPassword().setText("");
+					| SignUpDialog.CONFIRM_PASSWORD_FLAG);
+			signUp.clearPassword();
+			signUp.clearConfirmPassword();
 		} else {
 			Task<Void, Void> task = new Task<Void, Void>(toDo);
 			LoadingControl.init(task, getLogin()).executeLoading();
@@ -294,19 +298,18 @@ public class AuthenticationController {
 	}
 
 	private void getSignUpData() {
-		sUpFirstName = signUp.getTxtfldFirstName().getText().trim();
-		sUpLastName = signUp.getTxtfldLastName().getText().trim();
+		sUpFirstName = signUp.getFirstName();
+		sUpLastName = signUp.getLastName();
 		getUserName();
-		sUpPassword = new String(signUp.getTxtfldPassword().getPassword());
-		sUpConfirmPassword = new String(signUp.getTxtfldConfirmPassword()
-			.getPassword());
-		sUpEmailAddress = signUp.getTxtfldEmailAddress().getText();
-		sUpContactNumber = signUp.getTxtfldContactNumber().getText();
-		sUpAddress = signUp.getTxtfldAddress().getText().trim();
+		sUpPassword = signUp.getPassword();
+		sUpConfirmPassword = signUp.getConfirmPassword();
+		sUpEmailAddress = signUp.getEmailAddress();
+		sUpContactNumber = signUp.getContactNumber();
+		sUpAddress = signUp.getAddress();
 	}
 
 	private void getUserName() {
-		sUpUserName = signUp.getTxtfldUserName().getText();
+		sUpUserName = signUp.getUserName();
 	}
 
 	private boolean isSignUpFieldComplete(int maskedLabel) {
@@ -344,32 +347,33 @@ public class AuthenticationController {
 		boolean isFirstNameValid = sUpFirstName.matches(Constants.NAME_FORMAT);
 		boolean isLastNameValid = sUpLastName.matches(Constants.NAME_FORMAT);
 		boolean isPasswordValid = sUpPassword
-					.matches(Constants.PASSWORD_FORMAT);
+				.matches(Constants.PASSWORD_FORMAT);
 		boolean isContactNumberValid = sUpContactNumber
-					.matches(Constants.CONTACT_NUMBER_FORMAT);
-		boolean isAddressValid = Pattern.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL).matcher(sUpAddress).matches();
+				.matches(Constants.CONTACT_NUMBER_FORMAT);
+		boolean isAddressValid = Pattern
+				.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL)
+				.matcher(sUpAddress).matches();
 
 		if (!isFirstNameValid) {
 			maskedLabel |= SignUpDialog.FIRSTNAME_FLAG;
-			signUp.getTxtfldFirstName().setText("");
 		}
+
 		if (!isLastNameValid) {
 			maskedLabel |= SignUpDialog.LASTNAME_FLAG;
-			signUp.getTxtfldLastName().setText("");
 		}
+
 		if (!isPasswordValid) {
-			maskedLabel |= (SignUpDialog.PASSWORD_FLAG
-				| SignUpDialog.CONFIRM_PASSWORD_FLAG);
-			signUp.getTxtfldPassword().setText("");
-			signUp.getTxtfldConfirmPassword().setText("");
+			maskedLabel |= (SignUpDialog.PASSWORD_FLAG | SignUpDialog.CONFIRM_PASSWORD_FLAG);
+			signUp.clearPassword();
+			signUp.clearConfirmPassword();
 		}
+
 		if (!isContactNumberValid) {
 			maskedLabel |= SignUpDialog.CONTACT_NUMBER_FLAG;
-			signUp.getTxtfldContactNumber().setText("");
 		}
+
 		if (!isAddressValid) {
 			maskedLabel |= SignUpDialog.ADDRESS_FLAG;
-			signUp.getTxtfldAddress().setText("");
 		}
 
 		if (maskedLabel != 0) {
@@ -380,50 +384,47 @@ public class AuthenticationController {
 	}
 
 	private boolean isUserNameValid() {
-		signUp.setLblErrorMessage("");
+		signUp.setErrorMessage("");
 		signUp.setFieldBorderColor(SignUpDialog.EMPTY_FLAG);
 
 		boolean isValid = sUpUserName.matches(Constants.USERNAME_FORMAT);
 		if (!isValid) {
-			signUp.setLblErrorMessage("Invalid Input.");
+			signUp.setErrorMessage("Invalid Input.");
 			signUp.setFieldBorderColor(SignUpDialog.USERNAME_FLAG);
 			return false;
 		}
 
 		try {
 			if (UserDAO.isUsernameExisting(sUpUserName)) {
-				signUp.setLblErrorMessage("User name is already in use.");
+				signUp.setErrorMessage("User name is already in use.");
 				signUp.setFieldBorderColor(SignUpDialog.USERNAME_FLAG);
 				return false;
 			}
 		} catch (Exception e) {
 			signUpFailed();
 			signUpCancel();
-			e.printStackTrace();
 		}
 
 		return true;
 	}
-	
+
 	private boolean isEmailAddressValid() {
-		boolean isValid = sUpEmailAddress
-			.matches(Constants.EMAIL_FORMAT);
+		boolean isValid = sUpEmailAddress.matches(Constants.EMAIL_FORMAT);
 		if (!isValid || (sUpEmailAddress.length() > 254)) {
-			signUp.setLblErrorMessage("Invalid Input.");
+			signUp.setErrorMessage("Invalid Input.");
 			signUp.setFieldBorderColor(SignUpDialog.EMAIL_ADDRESS_FLAG);
 			return false;
 		}
-		
+
 		try {
 			if (UserDAO.isEmailExisting(sUpEmailAddress, sUpUserName)) {
-				signUp.setLblErrorMessage("E-mail address is already in use.");
+				signUp.setErrorMessage("E-mail address is already in use.");
 				signUp.setFieldBorderColor(SignUpDialog.EMAIL_ADDRESS_FLAG);
 				return false;
 			}
 		} catch (Exception e) {
 			signUpFailed();
 			signUpCancel();
-			e.printStackTrace();
 		}
 
 		return true;
@@ -440,12 +441,12 @@ public class AuthenticationController {
 		sUpAddress = "";
 		signUp.dispose();
 	}
-	
+
 	private void signUpFailed() {
 		JOptionPane.showMessageDialog(signUp.getContentPane(),
-			"<html>An error was encountered while creating your account.<br>" +
-			"Please try again later.",
-			"Sign-up Failed", JOptionPane.ERROR_MESSAGE);
+				"<html>An error was encountered while creating your account.<br>"
+						+ "Please try again later.", "Sign-up Failed",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void setSignUp(SignUpDialog signUp) {
@@ -455,56 +456,56 @@ public class AuthenticationController {
 	public static SignUpDialog getSignUp() {
 		return signUp;
 	}
-	
-//	class ForgotPasswordListener extends MouseAdapter{
-	MouseAdapter forgotPasswordListener = new MouseAdapter(){
-	
+
+	// class ForgotPasswordListener extends MouseAdapter{
+	MouseAdapter forgotPasswordListener = new MouseAdapter() {
+
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			String userOrEmail = (String)JOptionPane.showInputDialog(
-					getLogin(),
-                    "Please enter your username or email",
-                    "Forgot Password",
-                    JOptionPane.PLAIN_MESSAGE);
-			if(userOrEmail != null && userOrEmail.length() > 0){
+			String userOrEmail = (String) JOptionPane.showInputDialog(
+					getLogin(), "Please enter your username or email",
+					"Forgot Password", JOptionPane.PLAIN_MESSAGE);
+			if (userOrEmail != null && userOrEmail.length() > 0) {
 				try {
 					User user = UserDAO.getUserByEmailOrUsername(userOrEmail);
-					if(user != null){
+					if (user != null) {
 						user.setPassword(RandomStringUtils
-							.randomAlphanumeric(8));
-						boolean boolConnect = Emailer.sendForgetPasswordEmail(user);
+								.randomAlphanumeric(8));
+						boolean boolConnect = Emailer
+								.sendForgetPasswordEmail(user);
 						System.out.println(boolConnect);
-						if(boolConnect){
+						if (boolConnect) {
 							UserDAO.changePassword(user.getUserId(),
 									user.getPassword());
-							JOptionPane.showMessageDialog(getLogin(),
-								"Kindly check your email for your new password.",
-								"Forgot Password",
-								JOptionPane.INFORMATION_MESSAGE);
-						}else{
-							JOptionPane.showMessageDialog(getLogin(),
-								"Internet Connection Error:\n" +
-								"Please check if you have a internet connection.",
-								"Forgot Password",
-								JOptionPane.ERROR_MESSAGE);
+							JOptionPane
+									.showMessageDialog(
+											getLogin(),
+											"Kindly check your email for your new password.",
+											"Forgot Password",
+											JOptionPane.INFORMATION_MESSAGE);
+						} else {
+							JOptionPane
+									.showMessageDialog(
+											getLogin(),
+											"Internet Connection Error:\n"
+													+ "Please check if you have a internet connection.",
+											"Forgot Password",
+											JOptionPane.ERROR_MESSAGE);
 						}
 					} else {
 						JOptionPane.showMessageDialog(getLogin(),
-							"Username or email is invalid.", 
-							"Forget Password",
-							JOptionPane.ERROR_MESSAGE);
+								"Username or email is invalid.",
+								"Forget Password", JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(getLogin(),
-							"There is something wrong with your connection.", 
-							"Forget Password",
-							JOptionPane.ERROR_MESSAGE);
+							"There is something wrong with your connection.",
+							"Forget Password", JOptionPane.ERROR_MESSAGE);
 				}
-			} else if(userOrEmail != null){
+			} else if (userOrEmail != null) {
 				JOptionPane.showMessageDialog(getLogin(),
-					"Please specify your username or email.",
-					"Forget Password",
-					JOptionPane.ERROR_MESSAGE);
+						"Please specify your username or email.",
+						"Forget Password", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	};

@@ -6,12 +6,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import utilities.MyButton;
-
 import net.miginfocom.swing.MigLayout;
+import utilities.MyButton;
 
 public class UserSidebarPanel extends JPanel {
 
@@ -68,14 +66,14 @@ public class UserSidebarPanel extends JPanel {
 		logoutButton.addActionListener(logout);
 	}
 
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-
-		frame.setLayout(new MigLayout("", "[][grow]", "[grow]"));
-		frame.add(new UserSidebarPanel(), "aligny top");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setMinimumSize(new Dimension(1024, 768));
-
-		frame.setVisible(true);
-	}
+//	public static void main(String[] args) {
+//		JFrame frame = new JFrame();
+//
+//		frame.setLayout(new MigLayout("", "[][grow]", "[grow]"));
+//		frame.add(new UserSidebarPanel(), "aligny top");
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setMinimumSize(new Dimension(1024, 768));
+//
+//		frame.setVisible(true);
+//	}
 }

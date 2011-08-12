@@ -21,8 +21,6 @@ public class LogInDialog extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	private JLabel labelUsername = new JLabel("Username");
-	private JLabel labelPassword = new JLabel("Password");
 	
 	private MyTextField fieldUsername = new MyTextField();
 	private MyPasswordField fieldPassword = new MyPasswordField();
@@ -30,7 +28,7 @@ public class LogInDialog extends JDialog {
 	
 	private JButton buttonSignUp = new JButton("Sign Up",new ImageIcon("resources/images/signin.png"));
 	private JButton buttonLogIn = new JButton("Log In",new ImageIcon("resources/images/login32x32.png"));
-	private final JLabel lblForgotPassword = new JLabel("Forgot password?");
+	private JLabel forgotPasswordLabel = new JLabel("Forgot password?");
 
 	/**
 	 * Create the dialog.
@@ -47,11 +45,13 @@ public class LogInDialog extends JDialog {
 		labelError.setName("labelError");
 		contentPanel.add(labelError,"cell 0 0 2 0, alignx center");
 		
+		JLabel labelUsername = new JLabel("Username");
 		fieldUsername.setName("username");
 		labelUsername.setName("lblUsername");
 	    contentPanel.add(labelUsername, "cell 0 1, alignx center");
 	    contentPanel.add(fieldUsername, "cell 1 1, growx");
 	    
+	    JLabel labelPassword = new JLabel("Password");
 	    fieldPassword.setName("password");
 	    labelPassword.setName("lblPassword");
 	    contentPanel.add(labelPassword, "cell 0 2, alignx center");
@@ -59,11 +59,11 @@ public class LogInDialog extends JDialog {
 	    
 	    contentPanel.add(buttonLogIn, "cell 1 3, alignx center");
 		contentPanel.add(buttonSignUp, "cell 1 3, alignx center");
-		lblForgotPassword.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		lblForgotPassword.setForeground(Color.BLUE);
-		lblForgotPassword.setHorizontalAlignment(SwingConstants.CENTER);
+		forgotPasswordLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		forgotPasswordLabel.setForeground(Color.BLUE);
+		forgotPasswordLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		contentPanel.add(lblForgotPassword, "cell 0 4 3 1,alignx right,aligny center");
+		contentPanel.add(forgotPasswordLabel, "cell 0 4 3 1,alignx right,aligny center");
 	}
 	
 	public JLabel getLabelError() {
@@ -76,12 +76,24 @@ public class LogInDialog extends JDialog {
 		repaint();
 	}
 
-	public MyTextField getFieldUsername() {
-		return fieldUsername;
+	public String getUsername(){
+		return fieldUsername.getText();
+	}
+	
+	public void hasUserNameError(boolean result){
+		fieldUsername.hasError(result);
 	}
 
-	public MyPasswordField getFieldPassword() {
-		return fieldPassword;
+	public String getPassword(){
+		return new String(fieldPassword.getPassword());
+	}
+	
+	public void hasPasswordError(boolean result){
+		fieldPassword.hasError(result);
+	}
+	
+	public void clearPassword(){
+		fieldPassword.setText("");
 	}
 	
 	public void setActionListeners(ActionListener signUp, ActionListener logIn, KeyListener enter, MouseListener click){
@@ -89,7 +101,7 @@ public class LogInDialog extends JDialog {
 		buttonLogIn.addActionListener(logIn);
 		fieldUsername.addKeyListener(enter);
 		fieldPassword.addKeyListener(enter);
-		lblForgotPassword.addMouseListener(click);
+		forgotPasswordLabel.addMouseListener(click);
 	}
 
 }

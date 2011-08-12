@@ -94,7 +94,18 @@ public class BookController {
 		bookInfo.addDeleteListener(new DeleteButtonListener());
 		bookInfo.addBorrowListener(new BorrowButtonListener());
 		bookInfo.addReserveListener(new ReserveButtonListener());
-		
+
+		bookInfo.getTxtFldTitle().addFocusListener(
+				new titleCheckFocusListener());
+		bookInfo.getTxtFldAuthor().addFocusListener(
+				new authorCheckFocusListener());
+		bookInfo.getTxtFldYrPublished().addFocusListener(
+				new yearCheckFocusListener());
+		bookInfo.getTxtFldISBN10().addFocusListener(
+				new isbnCheckFocusListener());
+		bookInfo.getTxtFldISBN13().addFocusListener(
+				new isbnCheckFocusListener());
+
 		bookLayoutPanel.add(bookSearch, "grow");
 		bookLayoutPanel.add(bookInfo, "grow");
 
@@ -124,7 +135,6 @@ public class BookController {
 
 		currTableRowSelection = 0;
 
-		// TODO added conditions in case empty table
 		if (bookList != null && !bookList.isEmpty()) {
 			bookSearch.getTableBookList().addRowSelectionInterval(
 					currTableRowSelection, currTableRowSelection);
@@ -144,7 +154,7 @@ public class BookController {
 			@Override
 			public Void call() throws Exception {
 
-				String strSearch = bookSearch.getTextFieldSearch().getText();
+				String strSearch = bookSearch.getSearchWord();
 				currSearchString = strSearch;
 				if (currentUser.getType().equals("Librarian")) {
 					bookList = BookDAO.searchBook(strSearch);
@@ -209,7 +219,14 @@ public class BookController {
 			addBook = new AddBookDialog();
 			addBook.addBookActionListener(new AddBookListener());
 			addBook.addCancelActionListener(new CancelListener());
-			addBook.getTxtFldIsbn().addFocusListener(new isbnCheckFocusListener());
+			addBook.getTxtFldIsbn().addFocusListener(
+					new isbnCheckFocusListener());
+			addBook.getTxtFldTitle().addFocusListener(
+					new titleCheckFocusListener());
+			addBook.getTxtFldAuthor().addFocusListener(
+					new authorCheckFocusListener());
+			addBook.getTxtFldYearPublish().addFocusListener(
+					new yearCheckFocusListener());
 			addBook.setVisible(true);
 		}
 
@@ -248,7 +265,7 @@ public class BookController {
 						e.printStackTrace();
 					}
 				} else {
-					addBook.getLblErrorMsg().makeError("Invalid Input");
+					addBook.getLblErrorMsg().makeError("Error Found!");
 				}
 			}
 		}
@@ -411,9 +428,15 @@ public class BookController {
 			} else
 				bookInfo.getTxtFldPublisher().hasError(false);
 
-			// TODO ISBN CALCULATE VALIDATION
 			if (!IsbnUtil.isIsbnValid(bookInfo.getTxtFldISBN10().getText())) {
 				bookInfo.getTxtFldISBN10().hasError(true);
+				validate = false;
+				flag = 1;
+			} else
+				bookInfo.getTxtFldISBN10().hasError(false);
+
+			if (!IsbnUtil.isIsbnValid(bookInfo.getTxtFldISBN13().getText())) {
+				bookInfo.getTxtFldISBN13().hasError(true);
 				validate = false;
 				flag = 1;
 			} else
@@ -431,16 +454,31 @@ public class BookController {
 			} else
 				bookInfo.getTxtFldEdition().hasError(false);
 
-			// TODO existing ISBN
 			if (!currISBN10.equals(bookInfo.getTxtFldISBN10().getText())
 					&& flag == 0) {
+				String otherISBN = IsbnUtil.convert(bookInfo.getTxtFldISBN10()
+						.getText());
 				if (BookDAO
-						.isIsbnExisting(bookInfo.getTxtFldISBN10().getText())) {
+						.isIsbnExisting(bookInfo.getTxtFldISBN10().getText())
+						|| otherISBN != bookInfo.getTxtFldISBN13().getText()) {
 					bookInfo.getTxtFldISBN10().hasError(true);
 					validate = false;
 				} else
 					bookInfo.getTxtFldISBN10().hasError(false);
 			}
+			if (!currISBN13.equals(bookInfo.getTxtFldISBN13().getText())
+					&& flag == 0) {
+				String otherISBN = IsbnUtil.convert(bookInfo.getTxtFldISBN13()
+						.getText());
+				if (BookDAO
+						.isIsbnExisting(bookInfo.getTxtFldISBN13().getText())
+						|| otherISBN != bookInfo.getTxtFldISBN13().getText()) {
+					bookInfo.getTxtFldISBN13().hasError(true);
+					validate = false;
+				} else
+					bookInfo.getTxtFldISBN10().hasError(false);
+			}
+
 			if (spinCopy < validCopy) {
 				bookInfo.getSpinCopyVal().hasError(true);
 				validate = false;
@@ -582,26 +620,23 @@ public class BookController {
 				return;
 			}
 
-			// TODO check in order to avoid exception index outofbounds
 			if (tableRow < bookList.size()) {
 				currTableRowSelection = tableRow;
 
 				try {
 					if (currentUser.getType().equals("Librarian")) {
 						bookList = BookDAO.searchBook(bookSearch
-								.getTextFieldSearch().getText());
+								.getSearchWord());
 					} else {
 						bookList = BookDAO.searchBookForUser(bookSearch
-								.getTextFieldSearch().getText());
+								.getSearchWord());
 					}
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				Book displayBook = bookList.get(tableRow);
 				currISBN10 = displayBook.getIsbn10();
 				currISBN13 = displayBook.getIsbn13();
-				// TODO
 				bookInfo.resetErrors();
 				// System.out.println(displayBook.getIsbn());
 				bookInfo.setBookInfoData(displayBook);
@@ -701,7 +736,7 @@ public class BookController {
 	class ClearButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			bookSearch.getTextFieldSearch().setText("");
+			bookSearch.clearSearchField();
 			try {
 				searchBooks();
 			} catch (Exception e) {
@@ -801,42 +836,47 @@ public class BookController {
 			MyTextField stringIsbn = (MyTextField) isbn.getSource();
 			String bookIsbn = stringIsbn.getText();
 			int flag = 0;
-			
+
 			if (!IsbnUtil.isIsbnValid(bookIsbn)) {
-				if(stringIsbn.getName() == "isbnTextField"){
+				if (stringIsbn.getName() == "isbnTextField") {
 					addBook.getLblErrorMsg().makeError("ISBN is not correct.");
-				}else{
+				} else {
 					bookInfo.getLblErrorMsg().makeError("ISBN is not correct.");
 				}
 				stringIsbn.hasError(true);
-			}else{
+			} else {
 				flag = 1;
-				if(stringIsbn.getName() == "isbnTextField"){
+				if (stringIsbn.getName() == "isbnTextField") {
 					addBook.getLblErrorMsg().clear();
-				}else{
+				} else {
 					bookInfo.getLblErrorMsg().clear();
 				}
 				stringIsbn.hasError(false);
 			}
-			
-			if(flag == 1){
+
+			if (flag == 1) {
 				try {
-					if(BookDAO.isIsbnExisting(bookIsbn)){
-						if(stringIsbn.getName() == "isbnTextField"){
-							addBook.getLblErrorMsg().makeError("ISBN already exist.");
-						}else{
-							bookInfo.getLblErrorMsg().makeError("ISBN already exist.");
+					if (BookDAO.isIsbnExisting(bookIsbn)
+							&& (currISBN10 == bookIsbn || currISBN13 == bookIsbn)) {
+						if (stringIsbn.getName() == "isbnTextField") {
+							addBook.getLblErrorMsg().makeError(
+									"ISBN already exist.");
+						} else {
+							bookInfo.getLblErrorMsg().makeError(
+									"ISBN already exist.");
 						}
 						stringIsbn.hasError(true);
-					}else{
-						if(stringIsbn.getName() == "isbnTextField"){
+					} else {
+						if (stringIsbn.getName() == "isbnTextField") {
 							addBook.getLblErrorMsg().clear();
-						}else{
+						} else {
 							bookInfo.getLblErrorMsg().clear();
-							if(bookIsbn.length() == 10){
-								bookInfo.getTxtFldISBN13().setText(IsbnUtil.convert(bookIsbn));
-							}else{
-								bookInfo.getTxtFldISBN10().setText(IsbnUtil.convert(bookIsbn));
+							if (bookIsbn.length() == 10) {
+								bookInfo.getTxtFldISBN13().setText(
+										IsbnUtil.convert(bookIsbn));
+							} else {
+								bookInfo.getTxtFldISBN10().setText(
+										IsbnUtil.convert(bookIsbn));
 							}
 						}
 						stringIsbn.hasError(false);
@@ -847,5 +887,79 @@ public class BookController {
 			}
 		}
 
+	}
+
+	class titleCheckFocusListener extends FocusAdapter {
+		@Override
+		public void focusLost(FocusEvent title) {
+			MyTextField titleField = (MyTextField) title.getSource();
+			if (titleField.getText().length() == 0) {
+				if (titleField.getName() == "addTitleTextField") {
+					addBook.getLblErrorMsg().makeError(
+							"Title field cannot be empty.");
+				} else {
+					bookInfo.getLblErrorMsg().makeError(
+							"Title field cannot be empty.");
+				}
+				titleField.hasError(true);
+			} else {
+				if (titleField.getName() == "addTitleTextField") {
+					addBook.getLblErrorMsg().clear();
+				} else {
+					bookInfo.getLblErrorMsg().clear();
+				}
+				titleField.hasError(false);
+			}
+		}
+	}
+
+	class authorCheckFocusListener extends FocusAdapter {
+		@Override
+		public void focusLost(FocusEvent author) {
+			MyTextField authorField = (MyTextField) author.getSource();
+			if (authorField.getText().length() == 0) {
+				if (authorField.getName() == "addAuthorTextField") {
+					addBook.getLblErrorMsg().makeError(
+							"Author field cannot be empty.");
+				} else {
+					bookInfo.getLblErrorMsg().makeError(
+							"Author field cannot be empty.");
+				}
+				authorField.hasError(true);
+			} else {
+				if (authorField.getName() == "addAuthorTextField") {
+					addBook.getLblErrorMsg().clear();
+				} else {
+					bookInfo.getLblErrorMsg().clear();
+				}
+				authorField.hasError(false);
+			}
+		}
+	}
+
+	class yearCheckFocusListener extends FocusAdapter {
+		@Override
+		public void focusLost(FocusEvent year) {
+			MyTextField yearField = (MyTextField) year.getSource();
+			if (yearField.getText().length() > 0
+					&& !yearField.getText().matches(
+							Constants.YEAR_PUBLISH_FORMAT)) {
+				if (yearField.getName() == "addYearPublishTextField") {
+					addBook.getLblErrorMsg().makeError(
+							"Year field is not correct.");
+				} else {
+					bookInfo.getLblErrorMsg().makeError(
+							"Year field is not correct.");
+				}
+				yearField.hasError(true);
+			} else {
+				if (yearField.getName() == "addYearPublishTextField") {
+					addBook.getLblErrorMsg().clear();
+				} else {
+					bookInfo.getLblErrorMsg().clear();
+				}
+				yearField.hasError(false);
+			}
+		}
 	}
 }
