@@ -23,8 +23,6 @@ public class ConfigureDBConnectionDialog extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private static ConfigureDBConnectionDialog dialog = new ConfigureDBConnectionDialog();
 	
 	private JPanel layoutPanel;
 	
@@ -52,32 +50,36 @@ public class ConfigureDBConnectionDialog extends JDialog {
 		
 		errorLabel = new ErrorLabel();
 		tempLabel = new JLabel("Database Host");
-		databaseHostField = new JTextField();
+		databaseHostField = new JTextField(20);
+		databaseHostField.setName("databaseHostField");
 		
-		layoutPanel.add(errorLabel);
+		layoutPanel.add(errorLabel, "wrap");
 		layoutPanel.add(tempLabel);
 		layoutPanel.add(databaseHostField, "wrap");
 		
 		tempLabel = new JLabel("Database Name");
-		databaseNameField = new JTextField();
+		databaseNameField = new JTextField(20);
+		databaseNameField.setName("databaseNameField");
 		
 		layoutPanel.add(tempLabel);
 		layoutPanel.add(databaseNameField, "wrap");
 		
 		tempLabel = new JLabel("Database Username");
-		databaseUsernameField = new JTextField();
+		databaseUsernameField = new JTextField(20);
+		databaseUsernameField.setName("databaseUsernameField");
 		
 		layoutPanel.add(tempLabel);
 		layoutPanel.add(databaseUsernameField, "wrap");
 		
 		tempLabel = new JLabel("Database Password");
-		databasePasswordField = new JPasswordField();
+		databasePasswordField = new JPasswordField(20);
+		databasePasswordField.setName("databasePasswordField");
 		
 		layoutPanel.add(tempLabel);
 		layoutPanel.add(databasePasswordField, "wrap");
 		
 		saveButton = new JButton("Save Configuration");
-		cancelButton = new JButton("Cance");
+		cancelButton = new JButton("Cancel");
 		testConnectionButton = new JButton("Test Connection");
 		
 		cancelButton.addActionListener(cancel);
@@ -85,6 +87,8 @@ public class ConfigureDBConnectionDialog extends JDialog {
 		layoutPanel.add(testConnectionButton);
 		layoutPanel.add(saveButton);
 		layoutPanel.add(cancelButton);
+		
+		getContentPane().add(layoutPanel);
 		
 		setLocationRelativeTo(null);
 		pack();	
@@ -116,8 +120,8 @@ public class ConfigureDBConnectionDialog extends JDialog {
 	}
 	
 	public static ConfigureDBConnectionDialog getConfigureDBConnectionDialog(){
-		dialog.clearFields();
-		return dialog;
+		DialogHolder.instance.clearFields();
+		return DialogHolder.instance;
 	}
 	
 	public void addSaveButtonListener(ActionListener save){
@@ -128,21 +132,17 @@ public class ConfigureDBConnectionDialog extends JDialog {
 		testConnectionButton.addActionListener(testConnection);
 	}
 	
-	public JButton getSaveButton() {
-		return saveButton;
-	}
-
-	public JButton getTestConnectionButton() {
-		return testConnectionButton;
-	}
-	
 	private ActionListener cancel = new ActionListener() {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			dialog.clearFields();
-			dialog.setVisible(false);
+			clearFields();
+			setVisible(false);
 		}
 	};
+	
+	private static class DialogHolder{
+		public static final ConfigureDBConnectionDialog instance = new ConfigureDBConnectionDialog();
+	}
 }

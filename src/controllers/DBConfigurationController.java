@@ -3,14 +3,13 @@ package controllers;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
 import utilities.Connector;
+import utilities.Constants;
 import utilities.CrashHandler;
 import views.ConfigureDBConnectionDialog;
 
@@ -18,6 +17,7 @@ public class DBConfigurationController {
 
 	private ConfigureDBConnectionDialog configureDialog;
 	private Properties databaseProperties;
+	private File configFile;
 	
 	public DBConfigurationController(){
 		
@@ -26,26 +26,28 @@ public class DBConfigurationController {
 		configureDialog = ConfigureDBConnectionDialog.getConfigureDBConnectionDialog();
 		configureDialog.addSaveButtonListener(saveConfiguration);
 		configureDialog.addTestConnectionButtonListener(testConnection);
+		
+		configFile = new File(Constants.APP_CONFIG);
 	}
 	
 	private void saveConfiguration(){
 		
 		setDatabaseProperties();
 		
-		File configFile = new File("app.config");
-		
 		try{
-		if(!configFile.exists()){
-			configFile.createNewFile();
-		}
-		
-		FileOutputStream out = new FileOutputStream(configFile);
-		
-		databaseProperties.store(out, null);
+			if(!configFile.exists()){
+				configFile.createNewFile();
+			}
+			
+			FileOutputStream out = new FileOutputStream(configFile);
+			
+			databaseProperties.store(out, null);
 		}catch (Exception e) {
 			// TODO: handle exception
 			CrashHandler.handle(e);
 		}
+		
+		JOptionPane.showMessageDialog(configureDialog, "Database configuration file was successfully updated", "Saving Successful", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private void setDatabaseProperties() {
@@ -60,10 +62,10 @@ public class DBConfigurationController {
 		setDatabaseProperties();
 		
 		if(Connector.testConnection(databaseProperties)){
-			JOptionPane.showMessageDialog(configureDialog, "The database settings are working");
+			JOptionPane.showMessageDialog(configureDialog, "The database settings are working", "Success", JOptionPane.INFORMATION_MESSAGE);
 		}
 		else{
-			JOptionPane.showMessageDialog(configureDialog, "Can't connect to the database with the settings");
+			JOptionPane.showMessageDialog(configureDialog, "Can't connect to the database with the settings", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -85,4 +87,11 @@ public class DBConfigurationController {
 		}
 	};
 	
+	public void showConfigurationDialog(){
+		configureDialog.setVisible(true);
+	}
+	
+	public static void main(String[] args){
+		new DBConfigurationController().showConfigurationDialog();
+	}
 }
