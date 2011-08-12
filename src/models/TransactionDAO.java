@@ -347,7 +347,7 @@ public class TransactionDAO {
 		}
 
 		Connector.close();
-		return days;
+		return ((days < 0) ? 0 : days);
 	}
 
 	public static int getDaysOverdue(BorrowTransaction transaction)
@@ -374,7 +374,7 @@ public class TransactionDAO {
 		}
 
 		Connector.close();
-		return days;
+		return ((days < 0) ? 0 : days);
 	}
 
 	public static ArrayList<BorrowTransaction> searchOutgoingBook(String search)

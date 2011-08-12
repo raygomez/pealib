@@ -245,14 +245,14 @@ public class TransactionControllerTest extends UISpecTestCase {
 		incomingItems.click(0, 0);
 		assertTrue(returnButton.isEnabled());
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
-		String expectedOverdue = Strings.DAYS_OVERDUE + "10";
+		String expectedOverdue = Strings.DAYS_OVERDUE + "11"; //# Modify this!
 		System.out.println(returnLabel.getText());
 		assertTrue(expectedOverdue.equals(returnLabel.getText()));
 		assertTrue(returnLabel.foregroundEquals("Red"));
 	}
 	
 	@Test
-	@ExpectedDataSet({ "../models/expected/grantBorrows.xml" })
+	@ExpectedDataSet({ "../models/expected/grantBorrows.xml" }) //# Modify this!
 	public void testGrant() {
 		WindowInterceptor.init(new Trigger() {
 			@Override
@@ -349,7 +349,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 	}
 	
 	@Test
-	@ExpectedDataSet({ "../models/expected/denyBorrowsWithReservation.xml",
+	@ExpectedDataSet({ "../models/expected/denyBorrowsWithReservation.xml",//# Modify this!
 		"../models/expected/reservesNextUser.xml" })
 	public void testDenyWithReservation() {
 		WindowInterceptor.init(new Trigger() {
@@ -393,7 +393,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		assertThat(outgoingItems.contentEquals( new Object[][] {
-				{ "1234567890125", "title3Pantaleon", "author2", "jvillar (Jomel Pantaleon)",	"2011-08-11" },
+				{ "1234567890125", "title3Pantaleon", "author2", "jvillar (Jomel Pantaleon)",	"2011-08-12" },//# Modify this!
 				/* this should have been appended as the last entry. however test db allows null and is non-incrementing */
 				
 				{ "1234567890121", "Harry Poter 2", "Niel",	"apantaleon (Annuary Pantaleon)", "2011-06-15" },
@@ -406,7 +406,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 	}
 	
 	@Test
-	@ExpectedDataSet({ "../models/expected/returnBorrows.xml" })
+	@ExpectedDataSet({ "../models/expected/returnBorrows.xml" })//# Modify this!
 	public void testReturn() {
 		tabGroup.selectTab("Incoming");
 		
@@ -425,7 +425,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		final Button returnButton = tabGroup.getSelectedTab().getButton("Return");
 		assertTrue(returnButton.isEnabled());
 		
-		String expectedOverdue = Strings.DAYS_OVERDUE + "43";
+		String expectedOverdue = Strings.DAYS_OVERDUE + "44";//# Modify this!
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
 		System.out.println("Days overdue: " + returnLabel.getText());
 		assertTrue(expectedOverdue.equals(returnLabel.getText()));
@@ -460,7 +460,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 	
 	@Test
 	@DataSet({ "../models/borrows.xml", "../models/transactionReserves.xml" })
-	@ExpectedDataSet({ "../models/expected/returnBorrowsWithReservation.xml",
+	@ExpectedDataSet({ "../models/expected/returnBorrowsWithReservation.xml",//# Modify this!
 		"../models/expected/transactionReservesNextUser.xml"})
 	public void testReturnWithReservation() {
 		tabGroup.selectTab("Incoming");
@@ -480,7 +480,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		final Button returnButton = tabGroup.getSelectedTab().getButton("Return");
 		assertTrue(returnButton.isEnabled());
 		
-		String expectedOverdue = Strings.DAYS_OVERDUE + "43";
+		String expectedOverdue = Strings.DAYS_OVERDUE + "44";//# Modify this!
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
 		System.out.println("Days overdue: " + returnLabel.getText());
 		assertTrue(expectedOverdue.equals(returnLabel.getText()));
@@ -529,7 +529,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		Table outgoingItems = tabGroup.getSelectedTab().getTable();
 		assertEquals(5, outgoingItems.getRowCount());
 		assertThat(outgoingItems.contentEquals( new Object[][] {
-			{ "1234567890121", "Harry Poter 2", "Niel",	"ndizon (Niel Dizon)", "2011-08-11" },
+			{ "1234567890121", "Harry Poter 2", "Niel",	"ndizon (Niel Dizon)", "2011-08-12" },//# Modify this!
 			{ "1234567890121", "Harry Poter 2", "Niel",	"apantaleon (Annuary Pantaleon)", "2011-06-15" },
 			{ "1234567890124", "title2", "author1", "ndizon (Niel Dizon)", "2011-06-15" },
 			{ "1234567890125", "title3Pantaleon", "author2", "ndizon (Niel Dizon)",	"2011-06-15" },
