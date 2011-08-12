@@ -328,9 +328,12 @@ public class BookInfoPanel extends JPanel {
 		isbn13TextField.hasError(error);
 	}
 
-
-	public MyJSpinner getSpinCopyVal() {
-		return copiesValSpinner;
+	public int getCopy(){
+		return (Integer)copiesValSpinner.getValue();
+	}
+	
+	public void hasCopyError(boolean error){
+		copiesValSpinner.hasError(error);
 	}
 
 }
