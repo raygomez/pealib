@@ -1,8 +1,6 @@
 package controllers;
 
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -10,7 +8,6 @@ import java.util.concurrent.Callable;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
@@ -23,24 +20,16 @@ import models.BorrowTransaction;
 import models.ReserveTransaction;
 import models.TransactionDAO;
 import models.User;
-import models.UserDAO;
 
 import org.joda.time.DateTime;
 
 import pealib.PeaLibrary;
-
-import utilities.Connector;
 import utilities.Constants;
 import utilities.CrashHandler;
 import utilities.Task;
 import views.ELibTabbedPanel;
 
 public class ELibController {
-
-	private static final int REQUEST = 0;
-	private static final int RESERVE = 1;
-	private static final int ON_LOAN = 2;
-	private static final int HISTORY = 3;
 
 	private User user;
 	private ELibTabbedPanel tabpane;
@@ -49,22 +38,22 @@ public class ELibController {
 	private int tab;
 	private ELibTableModel model;
 
-	public static void main(String[] args) throws Exception {
-		Connector.init(Constants.TEST_CONFIG);
-
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		frame.setBounds(0, 0, screenSize.width, screenSize.height);
-
-		User user = UserDAO.getUserById(1);
-		frame.setContentPane(new ELibController(user).getTabPane());
-
-		frame.setUndecorated(true);
-		frame.setVisible(true);
-		frame.setResizable(false);
-	}
+//	public static void main(String[] args) throws Exception {
+//		Connector.init(Constants.TEST_CONFIG);
+//
+//		JFrame frame = new JFrame();
+//		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//		frame.setBounds(0, 0, screenSize.width, screenSize.height);
+//
+//		User user = UserDAO.getUserById(1);
+//		frame.setContentPane(new ELibController(user).getTabPane());
+//
+//		frame.setUndecorated(true);
+//		frame.setVisible(true);
+//		frame.setResizable(false);
+//	}
 
 	public ELibController(User user) throws Exception {
 		setUser(user);
@@ -124,7 +113,7 @@ public class ELibController {
 	}
 
 	public void update() throws Exception {
-		
+
 		tabpane.getRequestTable().setVisible(false);
 		Callable<Void> toDo = new Callable<Void>() {
 
@@ -133,33 +122,34 @@ public class ELibController {
 
 				tab = tabpane.getSelectedTab();
 				model = new ELibTableModel(tab);
-				
-				return null;				
+
+				return null;
 			}
 		};
-		
+
 		Callable<Void> toDoAfter = new Callable<Void>() {
 
 			@Override
 			public Void call() throws Exception {
-				
+
 				tabpane.setTableModel(tab, model);
 
 				tabpane.setCellRenderer(tab, new CancelButtonRenderer());
-				if (tab == REQUEST) {
+				if (tab == ELibTabbedPanel.REQUEST) {
 					tabpane.setCellEditor(tab, new CancelRequestButtonEditor());
-				} else if (tab == RESERVE) {
-					tabpane.setCellEditor(tab, new CancelReservationButtonEditor());
+				} else if (tab == ELibTabbedPanel.RESERVE) {
+					tabpane.setCellEditor(tab,
+							new CancelReservationButtonEditor());
 				}
-				
+
 				tabpane.getRequestTable().setVisible(true);
 				return null;
 			}
 		};
-		
+
 		Task<Void, Object> task = new Task<Void, Object>(toDo, toDoAfter);
 		LoadingControl.init(task, PeaLibrary.getMainFrame()).executeLoading();
-		
+
 	}
 
 	class ELibTableModel extends AbstractTableModel {
@@ -174,16 +164,16 @@ public class ELibController {
 			tableData = new ArrayList<ArrayList<Object>>();
 
 			switch (tab) {
-			case REQUEST:
+			case ELibTabbedPanel.REQUEST:
 				requestData();
 				break;
-			case RESERVE:
+			case ELibTabbedPanel.RESERVE:
 				reserveData();
 				break;
-			case ON_LOAN:
+			case ELibTabbedPanel.ON_LOAN:
 				onloanData();
 				break;
-			case HISTORY:
+			case ELibTabbedPanel.HISTORY:
 				historyData();
 				break;
 			}
@@ -245,13 +235,15 @@ public class ELibController {
 				for (BorrowTransaction i : bookData) {
 					DateTime dueDate = new DateTime(i.getDateBorrowed()
 							.getTime()).plusDays(14);
-					String due="";			
-					
-					if(dueDate.isBeforeNow()){
-						due = "<html><font color='red'>"+dueDate.toString("y-MM-dd")+"</font></html>";
-					}
-					else due = dueDate.toString("y-MM-dd");
-					
+					String due = "";
+
+					if (dueDate.isBeforeNow()) {
+						due = "<html><font color='red'>"
+								+ dueDate.toString("y-MM-dd")
+								+ "</font></html>";
+					} else
+						due = dueDate.toString("y-MM-dd");
+
 					ArrayList<Object> rowData = new ArrayList<Object>(
 							columns.length);
 					rowData.add(i.getBook().getIsbn10());
@@ -307,9 +299,11 @@ public class ELibController {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			if (columnIndex == 4 && tabpane.getSelectedTab() == REQUEST)
+			if (columnIndex == 4
+					&& tabpane.getSelectedTab() == ELibTabbedPanel.REQUEST)
 				return true;
-			else if (columnIndex == 5 && tabpane.getSelectedTab() == RESERVE)
+			else if (columnIndex == 5
+					&& tabpane.getSelectedTab() == ELibTabbedPanel.RESERVE)
 				return true;
 
 			return false;
