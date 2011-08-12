@@ -399,7 +399,6 @@ public class AuthenticationController {
 		} catch (Exception e) {
 			signUpFailed();
 			signUpCancel();
-			e.printStackTrace();
 		}
 
 		return true;
@@ -423,7 +422,6 @@ public class AuthenticationController {
 		} catch (Exception e) {
 			signUpFailed();
 			signUpCancel();
-			e.printStackTrace();
 		}
 
 		return true;
