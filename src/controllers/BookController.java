@@ -95,6 +95,12 @@ public class BookController {
 		bookInfo.addBorrowListener(new BorrowButtonListener());
 		bookInfo.addReserveListener(new ReserveButtonListener());
 		
+		bookInfo.getTxtFldTitle().addFocusListener(new titleCheckFocusListener());
+		bookInfo.getTxtFldAuthor().addFocusListener(new authorCheckFocusListener());
+		bookInfo.getTxtFldYrPublished().addFocusListener(new yearCheckFocusListener());
+		bookInfo.getTxtFldISBN10().addFocusListener(new isbnCheckFocusListener());
+		bookInfo.getTxtFldISBN13().addFocusListener(new isbnCheckFocusListener());
+		
 		bookLayoutPanel.add(bookSearch, "grow");
 		bookLayoutPanel.add(bookInfo, "grow");
 

@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import javax.swing.SpinnerNumberModel;
 
 import utilities.ErrorLabel;
+import utilities.IsbnUtil;
 import utilities.MyJSpinner;
 import utilities.MyTextArea;
 import utilities.MyTextField;
@@ -186,6 +187,13 @@ public class AddBookDialog extends JDialog {
 		newBook.setEdition(editionTextField.getText().trim());
 		if(yearPublishTextField.getText().length() > 0){
 			newBook.setYearPublish(Integer.parseInt(yearPublishTextField.getText()));
+		}
+		if(isbnTextField.getText().length() == 10){
+			newBook.setIsbn10(isbnTextField.getText());
+			newBook.setIsbn13(IsbnUtil.convert(isbnTextField.getText()));
+		}else{
+			newBook.setIsbn13(isbnTextField.getText());
+			newBook.setIsbn10(IsbnUtil.convert(isbnTextField.getText()));
 		}
 		return newBook;
 	}
