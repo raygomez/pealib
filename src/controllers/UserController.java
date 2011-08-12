@@ -41,8 +41,6 @@ import views.UserSearchPanel;
 
 public class UserController {
 
-	
-
 	private UserSearchPanel userSearch;
 	private UserInfoPanel userInfoPanel;
 	private ChangePasswordDialog changePasswordDialog;
@@ -54,12 +52,12 @@ public class UserController {
 	private ArrayList<User> searchedUsers;
 	private ArrayList<User> searchedPending;
 	private ArrayList<Integer> checkList;
-	
+
 	private AbstractTableModel model;
 
 	/*
-	  ..TODO For visual testing purposes only
-	*/
+	 * ..TODO For visual testing purposes only
+	 */
 	public static void main(String[] args) throws Exception {
 
 		Connector.init(Constants.TEST_CONFIG);
@@ -80,29 +78,30 @@ public class UserController {
 		frame.setContentPane(userController.getLayoutPanel());
 		frame.setVisible(true);
 	}
-	
- 
+
 	/**
 	 * Constructor
 	 */
 	public UserController(User user) throws Exception {
 		this.currentUser = user;
-		
+
 		searchedUsers = new ArrayList<User>();
 		searchedPending = new ArrayList<User>();
 		checkList = new ArrayList<Integer>();
-		
-		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]","[grow]"));
+
+		layoutPanel = new JPanel(new MigLayout("wrap 2", "[grow][grow]",
+				"[grow]"));
 		userSearch = new UserSearchPanel();
-		userSearch.setModelUsers(new UserSearchTableModel(Constants.USER_TAB, ""));
- 
+		userSearch.setModelUsers(new UserSearchTableModel(Constants.USER_TAB,
+				""));
+
 		userSearch.usersPanel();
 		userSearch.pendingAppPanel();
 		userSearch.addListeners(new SearchListener(), new ClearListener(),
 				new SearchKeyListener(), new TabChangeListener(),
 				new UserSelectionListener(), new CheckBoxListener(),
 				new AcceptListener(), new DenyListener());
-		
+
 		userInfoPanel = new UserInfoPanel();
 		userInfoPanel.addSaveListener(save);
 		userInfoPanel.addChangePasswordListener(showChangePassword);
@@ -114,18 +113,23 @@ public class UserController {
 	 * Getters - Setters
 	 */
 
-	public User getCurrentUser() { return currentUser; }
+	public User getCurrentUser() {
+		return currentUser;
+	}
 
 	public JPanel getLayoutPanel() {
 		generateLayoutPanel();
 		searchUsers();
 		return layoutPanel;
 	}
-	
 
-	public UserSearchPanel getUserSearch() { return userSearch; }
-	
-	public UserInfoPanel getUserInfoPanel() { return userInfoPanel;};
+	public UserSearchPanel getUserSearch() {
+		return userSearch;
+	}
+
+	public UserInfoPanel getUserInfoPanel() {
+		return userInfoPanel;
+	};
 
 	/**
 	 * Listener: Select All checkbox
@@ -134,16 +138,18 @@ public class UserController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			if (userSearch.getCbAll().isSelected()){
-				int lastRow = userSearch.getPendingTable().getModel().getRowCount();			   
-				userSearch.getPendingTable().getSelectionModel().setSelectionInterval(0, lastRow-1);
-			}
-			else {				
+			if (userSearch.getCbAll().isSelected()) {
+				int lastRow = userSearch.getPendingTable().getModel()
+						.getRowCount();
+				userSearch.getPendingTable().getSelectionModel()
+						.setSelectionInterval(0, lastRow - 1);
+			} else {
 				setInitSelectPending();
 			}
 			userSearch.setTableModel(1, model);
 		}
 	}
+
 	/**
 	 * Listener: Accept button
 	 */
@@ -153,6 +159,7 @@ public class UserController {
 			processPend(true);
 		}
 	}
+
 	/**
 	 * Listener: Deny button
 	 */
@@ -162,24 +169,22 @@ public class UserController {
 			processPend(false);
 		}
 	}
+
 	/**
-	 * Method: Process pending applications (ie, accept or deny)
-	 * Used by Accept & Deny Listener
-	 */	
-	private void processPend(boolean process) {		
+	 * Method: Process pending applications (ie, accept or deny) Used by Accept
+	 * & Deny Listener
+	 */
+	private void processPend(boolean process) {
 		String info = "";
 		int numberOfSuccessful = 0;
-		
 
-		
 		int[] selected = userSearch.getPendingTable().getSelectedRows();
 
-		for(int index : selected){
-			User userContainer = searchedPending.get(index);			
+		for (int index : selected) {
+			User userContainer = searchedPending.get(index);
 			userContainer.setType("User");
 			boolean isSuccessful = false;
-			
-	
+
 			try {
 				if (process) {
 					UserDAO.updateUser(userContainer);
@@ -190,39 +195,37 @@ public class UserController {
 				}
 			} catch (Exception e1) {
 				CrashHandler.handle(e1);
-			}		
-			
-			if(isSuccessful)
-				numberOfSuccessful++;
-			
-		}
-		
+			}
 
-		info = (process? Strings.ACCEPT_USERS_MESSAGE_START 
-				                + userSearch.getPendingTable().getSelectedRowCount()				                 
-						: Strings.DENY_USERS_MESSAGE_START 
-						        + userSearch.getPendingTable().getSelectedRowCount()
-				);
-		
-		info += Strings.USERS_MESSAGE_END 
-		               + Strings.EMAIL_SEND_COUNT_MESSAGE_START  
-		               + numberOfSuccessful 
-		               + Strings.EMAIL_SEND_COUNT_MESSAGE_END;
-		
+			if (isSuccessful)
+				numberOfSuccessful++;
+
+		}
+
+		info = (process ? Strings.ACCEPT_USERS_MESSAGE_START
+				+ userSearch.getPendingTable().getSelectedRowCount()
+				: Strings.DENY_USERS_MESSAGE_START
+						+ userSearch.getPendingTable().getSelectedRowCount());
+
+		info += Strings.USERS_MESSAGE_END
+				+ Strings.EMAIL_SEND_COUNT_MESSAGE_START + numberOfSuccessful
+				+ Strings.EMAIL_SEND_COUNT_MESSAGE_END;
+
 		JOptionPane.showMessageDialog(userSearch, info);
 		userSearch.getCbAll().setSelected(false);
-		checkList.clear();	
+		checkList.clear();
 		searchUsers();
-		configurePendingUI();		
+		configurePendingUI();
 		userSearch.resetTabPane();
 	}
+
 	/**
 	 * Method: Enabling/Disabling buttons in Pending - Search & Info
-	 */	
-	private void configurePendingUI(){
+	 */
+	private void configurePendingUI() {
 		if (!searchedPending.isEmpty()) {
 			userSearch.getCbAll().setEnabled(true);
-			userSearch.togglePendingButtons(true);					
+			userSearch.togglePendingButtons(true);
 		} else {
 			userSearch.toggleAllPendingComp(false);
 			userInfoPanel.toggleButton(false);
@@ -230,25 +233,29 @@ public class UserController {
 			userInfoPanel.setEnableFields(false);
 		}
 	}
+
 	/**
-	 * Method: Select the first row in table under the Users Tab
-	 * note: to avoid exceptions from list selection listener
-	 */	
+	 * Method: Select the first row in table under the Users Tab note: to avoid
+	 * exceptions from list selection listener
+	 */
 	private void setInitSelectUser() {
 		if (!searchedUsers.isEmpty()) {
-			userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
-			//userSearch.getUsersTable().addRowSelectionInterval(0, 0);
+			userSearch.getUsersTable().getSelectionModel()
+					.setSelectionInterval(0, 0);
+			// userSearch.getUsersTable().addRowSelectionInterval(0, 0);
 		}
 	}
+
 	/**
-	 * Method: Select the first row in table under the Pending Tab
-	 * note: to avoid exceptions from list selection listener
-	 */	
+	 * Method: Select the first row in table under the Pending Tab note: to
+	 * avoid exceptions from list selection listener
+	 */
 
 	public void setInitSelectPending() {
 		if (!searchedPending.isEmpty()) {
-			userSearch.getPendingTable().getSelectionModel().setSelectionInterval(0, 0);
-			//userSearch.getPendingTable().addRowSelectionInterval(0, 0);
+			userSearch.getPendingTable().getSelectionModel()
+					.setSelectionInterval(0, 0);
+			// userSearch.getPendingTable().addRowSelectionInterval(0, 0);
 		}
 	}
 
@@ -256,38 +263,42 @@ public class UserController {
 	 * Method: search for users & generating a new table model
 	 */
 	private void searchUsers() {
-		
+
 		final int tab = userSearch.getSelectedTab();
-		
-		if(tab == Constants.USER_TAB) userSearch.getUsersTable().setVisible(false);
-		else userSearch.getPendingTable().setVisible(false);
-				
+
+		if (tab == Constants.USER_TAB)
+			userSearch.getUsersTable().setVisible(false);
+		else
+			userSearch.getPendingTable().setVisible(false);
+
 		Callable<Void> toDo = new Callable<Void>() {
 
 			@Override
 			public Void call() throws Exception {
-				
+
 				searchText = userSearch.getSearchWord();
-				
-				try {					
+
+				try {
 					model = new UserSearchTableModel(tab, searchText);
 
-				} catch (Exception e) {  CrashHandler.handle(e); }
-				
+				} catch (Exception e) {
+					CrashHandler.handle(e);
+				}
+
 				return null;
 			}
 		};
-		
+
 		Callable<Void> toDoAfter = new Callable<Void>() {
 
 			@Override
 			public Void call() throws Exception {
-				userSearch.setTableModel(tab, model);					
-				
-				if (tab == Constants.USER_TAB ) {
+				userSearch.setTableModel(tab, model);
+
+				if (tab == Constants.USER_TAB) {
 					userSearch.getUsersTable().setVisible(true);
 					setInitSelectUser();
-				} else{
+				} else {
 					checkList.clear();
 					userSearch.getCbAll().setSelected(false);
 					userSearch.getPendingTable().setVisible(true);
@@ -297,12 +308,13 @@ public class UserController {
 				return null;
 			}
 		};
-		
+
 		Task<Void, Object> task = new Task<Void, Object>(toDo, toDoAfter);
-		
+
 		LoadingControl.init(task, PeaLibrary.getMainFrame()).executeLoading();
-		
+
 	}
+
 	/**
 	 * Method: Listener when changing tabs - refresh table
 	 */
@@ -312,25 +324,27 @@ public class UserController {
 			JTabbedPane temp = (JTabbedPane) e.getSource();
 			int index = temp.getSelectedIndex();
 			searchUsers();
-			
+
 			if (index == 0) {
-				setInitSelectUser();	
+				setInitSelectUser();
 				userInfoPanel.setEnableFields(true);
-				
+
 			} else {
 				setInitSelectPending();
-				configurePendingUI();							
+				configurePendingUI();
 			}
 		}
 	}
+
 	/**
-	 * Listener: for Search Button 
+	 * Listener: for Search Button
 	 */
 	class SearchListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			searchUsers();
 		}
 	}
+
 	/**
 	 * Listener: Deny button
 	 */
@@ -341,6 +355,7 @@ public class UserController {
 			searchUsers();
 		}
 	}
+
 	/**
 	 * Method: Listener for auto-complete search : searches every key pressed
 	 */
@@ -380,10 +395,10 @@ public class UserController {
 		private ArrayList<ArrayList<Object>> tableData;
 		private int mode;
 		private String searchStr = "";
-		
+
 		/*
-		 * Figures out what tab is currently selected, to determine what table model
-		 * to make : users table or pending table 
+		 * Figures out what tab is currently selected, to determine what table
+		 * model to make : users table or pending table
 		 */
 		public UserSearchTableModel(int tab, String str) throws Exception {
 			this.mode = tab;
@@ -391,7 +406,7 @@ public class UserController {
 
 			tableData = new ArrayList<ArrayList<Object>>();
 			columns = Strings.USERS_TABLE_COLUMNS;
-			
+
 			if (mode == Constants.USER_TAB) {
 				userAcct();
 			} else {
@@ -412,7 +427,7 @@ public class UserController {
 						ArrayList<Object> rowData = new ArrayList<Object>();
 						rowData.add(i.getUserName());
 						rowData.add(i.getFirstName() + " " + i.getLastName());
-						//rowData.add(new Boolean(false));               //removing checkbox
+						// rowData.add(new Boolean(false)); //removing checkbox
 						tableData.add(rowData);
 					}
 				}
@@ -421,16 +436,17 @@ public class UserController {
 				CrashHandler.handle(e);
 			}
 		}
+
 		/*
 		 * Filling up table data for Users
 		 */
 		private void userAcct() throws Exception {
 
-			searchedUsers  = UserDAO.searchActiveUsers(searchStr);
+			searchedUsers = UserDAO.searchActiveUsers(searchStr);
 
 			if (!searchedUsers.isEmpty()) {
 				for (User i : searchedUsers) {
-	
+
 					ArrayList<Object> rowData = new ArrayList<Object>();
 					rowData.add(i.getUserName());
 					rowData.add(i.getFirstName() + " " + i.getLastName());
@@ -458,12 +474,13 @@ public class UserController {
 		public Object getValueAt(int row, int col) {
 			return tableData.get(row).get(col);
 		}
+
 		/*
 		 * Make only checkbox column editable
 		 */
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-				return false;
+			return false;
 		}
 	} // end of table model
 
@@ -472,26 +489,27 @@ public class UserController {
 		layoutPanel.add(userSearch, "grow");
 		layoutPanel.add(userInfoPanel, "grow");
 
-		if(!searchedUsers.isEmpty()){
-			//userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0, 0);
+		if (!searchedUsers.isEmpty()) {
+			// userSearch.getUsersTable().getSelectionModel().setSelectionInterval(0,
+			// 0);
 			setInitSelectUser();
 		}
 	}
 
-//	public JPanel getUserPanel() {
-//		return getLayoutPanel();
-//	}
-	
-	private boolean isEmailUnique(String email, String username){
-		
+	// public JPanel getUserPanel() {
+	// return getLayoutPanel();
+	// }
+
+	private boolean isEmailUnique(String email, String username) {
+
 		boolean temp = true;
-		
+
 		try {
 			temp = !UserDAO.isEmailExisting(email, username);
 		} catch (Exception e) {
 			CrashHandler.handle(e);
 		}
-						
+
 		return temp;
 	}
 
@@ -512,24 +530,25 @@ public class UserController {
 			pass = false;
 		}
 
-		Matcher matcher = Pattern.compile(Constants.ADDRESS_FORMAT, Pattern.DOTALL).matcher(address);
-		
+		Matcher matcher = Pattern.compile(Constants.ADDRESS_FORMAT,
+				Pattern.DOTALL).matcher(address);
+
 		if (!matcher.matches()) {
 			tempErrors.add(Constants.ADDRESS_FORMAT_ERROR);
 			pass = false;
 		}
- 
+
 		if (!contactNo.matches(Constants.CONTACT_NUMBER_FORMAT)) {
 			tempErrors.add(Constants.CONTACT_NUMBER_FORMAT_ERROR);
 			pass = false;
 		}
-		
+
 		if (!email.matches(Constants.EMAIL_FORMAT)) {
 			tempErrors.add(Constants.EMAIL_FORMAT_ERROR);
 			pass = false;
 			flag = false;
 		}
-		
+
 		if (!isEmailUnique(email, userName) && flag) {
 			tempErrors.add(Constants.EMAIL_EXIST_ERROR);
 			pass = false;
@@ -547,37 +566,36 @@ public class UserController {
 
 	}
 
-	//TODO UserSelectionList
 	private class UserSelectionListener implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			if (! e.getValueIsAdjusting()) {
+			if (!e.getValueIsAdjusting()) {
 				DefaultListSelectionModel dlSelectionModel = (DefaultListSelectionModel) e
 						.getSource();
 				int row = dlSelectionModel.getLeadSelectionIndex();
-				
+
 				int tab = userSearch.getSelectedTab();
-	
+
 				User user = null;
 				// This is a simple check to see if row is negative.
 				if (row < 0)
 					return;
-	
-				if (tab == Constants.USER_TAB) {				
+
+				if (tab == Constants.USER_TAB) {
 					user = searchedUsers.get(row);
-			
+
 				} else {
 					user = searchedPending.get(row);
-					
-					if(userSearch.getPendingTable().getSelectedRowCount() == userSearch.getPendingTable().getRowCount()){
+
+					if (userSearch.getPendingTable().getSelectedRowCount() == userSearch
+							.getPendingTable().getRowCount()) {
 						userSearch.getCbAll().setSelected(true);
-					}
-					else{
+					} else {
 						userSearch.getCbAll().setSelected(false);
 					}
-						
+
 				}
-	
+
 				if (user != null) {
 					selectedUser = user;
 					userInfoPanel.resetErrorMessages();
@@ -613,7 +631,7 @@ public class UserController {
 						email, address, contactNo, type);
 
 				try {
-					UserDAO.updateUser(user);					
+					UserDAO.updateUser(user);
 					JOptionPane.showMessageDialog(layoutPanel,
 							Strings.SAVE_MESSAGE);
 					if (currentUser.getUserId() == userId) {
@@ -632,49 +650,50 @@ public class UserController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+
 			if (currentUser.getType().equals("Librarian")
 					&& !userInfoPanel.getIdNumber().isEmpty()
 					&& currentUser.getUserId() != Integer
 							.parseInt(userInfoPanel.getIdNumber())) {
-					resetPassword();
-			}
-			else{
+				resetPassword();
+			} else {
 
 				changePasswordDialog = new ChangePasswordDialog();
-				
+
 				changePasswordDialog.addChangePasswordListener(changePassword);
 				changePasswordDialog.setVisible(true);
 			}
 		}
 	};
-	
-	private void resetPassword(){
-		if(selectedUser !=null){
+
+	private void resetPassword() {
+		if (selectedUser != null) {
 			selectedUser.setPassword(RandomStringUtils.randomAlphanumeric(8));
-		
+
 			try {
-				boolean boolConnect = Emailer.sendForgetPasswordEmail(selectedUser);
+				boolean boolConnect = Emailer
+						.sendForgetPasswordEmail(selectedUser);
 				System.out.println(boolConnect);
-				if(boolConnect){
-					
-						UserDAO.changePassword(selectedUser.getUserId(),selectedUser.getPassword());
-		
+				if (boolConnect) {
+
+					UserDAO.changePassword(selectedUser.getUserId(),
+							selectedUser.getPassword());
+
 					JOptionPane.showMessageDialog(layoutPanel,
-						Strings.PASSWORD_RESET_MESSAGE,
-						Strings.RESET_PASSWORD_TITLE,
-						JOptionPane.INFORMATION_MESSAGE);
-				}else{
+							Strings.PASSWORD_RESET_MESSAGE,
+							Strings.RESET_PASSWORD_TITLE,
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
 					JOptionPane.showMessageDialog(layoutPanel,
-						Strings.INTERNET_CONNECTION_FAIL_MESSAGE,
-						Strings.RESET_PASSWORD_TITLE,
-						JOptionPane.ERROR_MESSAGE);
+							Strings.INTERNET_CONNECTION_FAIL_MESSAGE,
+							Strings.RESET_PASSWORD_TITLE,
+							JOptionPane.ERROR_MESSAGE);
 				}
-			
+
 			} catch (Exception e) {
 				CrashHandler.handle(e);
 			}
-		} 
+		}
 	}
 
 	private ActionListener changePassword = new ActionListener() {
@@ -686,9 +705,8 @@ public class UserController {
 		public void actionPerformed(ActionEvent arg0) {
 
 			int userID;
-			if (changePasswordDialog.getOldPasswordField().isEnabled()) {
-				String oldPassword = new String(changePasswordDialog
-						.getOldPasswordField().getPassword());
+			if (changePasswordDialog.isOldPasswordIsEnabled()) {
+				String oldPassword = changePasswordDialog.getOldPassword();
 				userID = currentUser.getUserId();
 
 				try {
@@ -701,21 +719,20 @@ public class UserController {
 				userID = Integer.parseInt(userInfoPanel.getIdNumber());
 				correctPassword = true;
 			}
-			String newPassword1 = new String(changePasswordDialog
-					.getNewPasswordField().getPassword());
-			String newPassword2 = new String(changePasswordDialog
-					.getRepeatPasswordField().getPassword());
-			
-			isPasswordFormatSatisfied = newPassword1.matches(Constants.PASSWORD_FORMAT);
+			String newPassword1 = changePasswordDialog.getNewPassword();
+			String newPassword2 = changePasswordDialog.getRepeatPassword();
+
+			isPasswordFormatSatisfied = newPassword1
+					.matches(Constants.PASSWORD_FORMAT);
 			isMatchingPassword = newPassword1.equals(newPassword2);
 
 			if (!correctPassword)
 				changePasswordDialog
 						.displayError(Constants.INCORRECT_PASSWORD_ERROR);
-			else if (!isPasswordFormatSatisfied){
-				changePasswordDialog.displayError(Constants.PASSWORD_FORMAT_ERROR);
-			}
-			else if (!isMatchingPassword)
+			else if (!isPasswordFormatSatisfied) {
+				changePasswordDialog
+						.displayError(Constants.PASSWORD_FORMAT_ERROR);
+			} else if (!isMatchingPassword)
 				changePasswordDialog
 						.displayError(Constants.PASSWORD_NOT_MATCH_ERROR);
 			else {
@@ -723,7 +740,7 @@ public class UserController {
 					UserDAO.changePassword(userID, newPassword1);
 					changePasswordDialog.dispose();
 					JOptionPane.showMessageDialog(layoutPanel,
-							Strings.PASSWORD_CHANGE_MESSAGE );
+							Strings.PASSWORD_CHANGE_MESSAGE);
 				} catch (Exception e) {
 					CrashHandler.handle(e);
 				}
