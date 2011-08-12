@@ -64,10 +64,6 @@ public class IncomingPanel extends JPanel {
 		}
 	}
 
-	// public JLabel getLblDaysOverdue() {
-	// return daysOverdueLabel;
-	// }
-
 	public void setReturnButtonEnabled(boolean status) {
 		returnButton.setEnabled(status);
 	}
