@@ -50,7 +50,7 @@ public class BookDAO {
 
 		String sql = "INSERT INTO Books (ISBN10, ISBN13, Title, Author, "
 				+ "Edition, Publisher, Description, YearPublish, "
-				+ "Copies) VALUES (?,?,?,?,?,?,?,?)";
+				+ "Copies) VALUES (?,?,?,?,?,?,?,?,?)";
 
 		PreparedStatement ps = Connector.getConnection().prepareStatement(sql);
 		ps.setString(1, book.getIsbn10());
