@@ -536,8 +536,7 @@ public class TransactionController {
 				inPanel.getLblDaysOverdue().setText("");
 			}
 		} else {
-			outPanel.getGrantButton().setEnabled(status);
-			outPanel.getDenyButton().setEnabled(status);
+			outPanel.enableButtons(status);
 		}
 	}
 }
