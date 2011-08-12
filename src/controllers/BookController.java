@@ -13,16 +13,18 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
-import pealib.PeaLibrary;
-
+import models.Book;
+import models.BookDAO;
+import models.TransactionDAO;
+import models.User;
+import models.UserDAO;
 import net.miginfocom.swing.MigLayout;
+import pealib.PeaLibrary;
 import utilities.Connector;
 import utilities.Constants;
 import utilities.IsbnUtil;
@@ -30,11 +32,6 @@ import utilities.Task;
 import views.AddBookDialog;
 import views.BookInfoPanel;
 import views.BookSearchPanel;
-import models.Book;
-import models.BookDAO;
-import models.TransactionDAO;
-import models.User;
-import models.UserDAO;
 
 public class BookController {
 
@@ -456,7 +453,9 @@ public class BookController {
 				int optConfirm = JOptionPane.showConfirmDialog(bookInfo,
 						"Do you really want to delete this book?", "Confirm",
 						JOptionPane.YES_NO_OPTION);
+				
 				if (optConfirm == 0) {
+
 					if (bookInfo.getCurrBook().getCopies() == 
 						TransactionDAO.getAvailableCopies(bookInfo.getCurrBook())){
 						BookDAO.deleteBook(bookInfo.getCurrBook());
@@ -466,6 +465,7 @@ public class BookController {
 								+ "before the delete transaction have been completed.", "",
 								JOptionPane.ERROR_MESSAGE);
 					}
+					
 					bookList = BookDAO.searchBook(currSearchString);
 					bookInfo.setBookInfoData(bookList.get(currRow));
 					bookSearch.getTableBookList().setModel(
@@ -493,12 +493,20 @@ public class BookController {
 			int currRow = currTableRowSelection;
 			try {
 				reset();
-				int request = TransactionDAO.requestBook(bookList.get(currRow),
-						currentUser);
-				if (request == 1) {
-					JOptionPane
-							.showMessageDialog(bookLayoutPanel,
-									"The book has been successfully added to your Requests List!");
+				if (TransactionDAO.getAvailableCopies(bookInfo.getCurrBook()) > 0){
+					int request = TransactionDAO.requestBook(bookList.get(currRow),
+							currentUser);
+					if (request == 1) {
+						JOptionPane
+								.showMessageDialog(bookLayoutPanel,
+										"The book has been successfully added to your Requests List!");
+					}
+				}
+				else {
+					bookInfo.getBtnReserve().setEnabled(true);
+					JOptionPane.showMessageDialog(null, "Someone might have borrowed the book!\n"
+							+ "before this transaction have been completed.", "",
+							JOptionPane.ERROR_MESSAGE);
 				}
 				bookList = BookDAO.searchBookForUser(currSearchString);			
 				bookSearch.getTableBookList().setModel(
