@@ -43,7 +43,8 @@ public class BookController {
 	private static BookInfoPanel bookInfo;
 	private AddBookDialog addBook;
 	private int currTableRowSelection;
-	private String currISBN;
+	private String currISBN10;
+	private String currISBN13;
 	private String currSearchString;
 	private JPanel bookLayoutPanel;
 	private User currentUser;
@@ -113,7 +114,7 @@ public class BookController {
 		bookSearch.setColumnRender(bookSearch.getTableBookList());
 
 		if (bookList.size() > 0) {
-			currISBN = bookList.get(0).getIsbn10();
+			currISBN10 = bookList.get(0).getIsbn10();
 			bookInfo.setBookInfoData(bookList.get(0));
 
 			if (bookList.get(0).getCopies() == 0) {
@@ -171,7 +172,7 @@ public class BookController {
 					bookSearch.getTableBookList().addRowSelectionInterval(0, 0);
 					bookInfo.getBtnDelete().setEnabled(true);
 					bookInfo.getBtnSave().setEnabled(true);
-					currISBN = bookList.get(0).getIsbn10();
+					currISBN10 = bookList.get(0).getIsbn10();
 					bookInfo.setBookInfoData(bookList.get(0));
 					int availableCopy = TransactionDAO
 							.getAvailableCopies(bookList.get(0));
@@ -431,7 +432,7 @@ public class BookController {
 				bookInfo.getTxtFldEdition().hasError(false);
 
 			// TODO existing ISBN
-			if (!currISBN.equals(bookInfo.getTxtFldISBN10().getText())
+			if (!currISBN10.equals(bookInfo.getTxtFldISBN10().getText())
 					&& flag == 0) {
 				if (BookDAO
 						.isIsbnExisting(bookInfo.getTxtFldISBN10().getText())) {
@@ -598,7 +599,8 @@ public class BookController {
 					e1.printStackTrace();
 				}
 				Book displayBook = bookList.get(tableRow);
-				currISBN = displayBook.getIsbn10();
+				currISBN10 = displayBook.getIsbn10();
+				currISBN13 = displayBook.getIsbn13();
 				// TODO
 				bookInfo.resetErrors();
 				// System.out.println(displayBook.getIsbn());
