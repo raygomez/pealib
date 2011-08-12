@@ -3,8 +3,9 @@ package utilities;
 
 import static org.junit.Assert.*;
 
-import org.junit.*;
+import java.util.regex.Pattern;
 
+import org.junit.*;
 
 public class MatcherTest {
 
@@ -201,6 +202,12 @@ public class MatcherTest {
 	@Test
 	public void testEmailMatcher6(){
 		String email = "-@-";
+		assertFalse(email.matches(Constants.EMAIL_FORMAT));
+	}
+	
+	@Test
+	public void testEmailMatcher7(){
+		String email = "username@..com";
 		assertFalse(email.matches(Constants.EMAIL_FORMAT));
 	}
 }
