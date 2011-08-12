@@ -19,6 +19,7 @@ import utilities.IsbnUtil;
 import utilities.MyJSpinner;
 import utilities.MyTextArea;
 import utilities.MyTextField;
+import utilities.Strings;
 
 public class AddBookDialog extends JDialog {
 
@@ -49,21 +50,21 @@ public class AddBookDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new MigLayout("", "[fill][grow]", "[20.00][][20.00][20.00][20.00][20.00][20.00,grow][20.00]"));
 
-		JLabel titleLabel = new JLabel("Title:");
+		JLabel titleLabel = new JLabel(Strings.TITLE_LABEL+":*");
 		contentPanel.add(titleLabel, "cell 0 0,alignx left");
 		titleTextField.setToolTipText("*Maximum of 100 characters.");
 
 		titleTextField.setName("addTitleTextField");
 		contentPanel.add(titleTextField, "cell 1 0,growx");
 		
-		editionLabel = new JLabel("Edition:");
+		editionLabel = new JLabel(Strings.EDITION_LABEL);
 		contentPanel.add(editionLabel, "cell 0 1,alignx left");
 		
 		editionTextField.setName("editionTextField");
 		contentPanel.add(editionTextField, "cell 1 1,growx");
 		editionTextField.setColumns(10);
 
-		JLabel authorLabel = new JLabel("Author:");
+		JLabel authorLabel = new JLabel(Strings.AUTHOR_LABEL+"*");
 		contentPanel.add(authorLabel, "cell 0 2,alignx left");
 		authorTextField.setToolTipText("*Maximum of 100 characters.");
 
@@ -71,21 +72,21 @@ public class AddBookDialog extends JDialog {
 		contentPanel.add(authorTextField, "cell 1 2,growx");
 		authorTextField.setColumns(10);
 
-		JLabel yearPublishLabel = new JLabel("Year Published:");
+		JLabel yearPublishLabel = new JLabel(Strings.YEAR_LABEL);
 		contentPanel.add(yearPublishLabel, "cell 0 3,alignx left");
 
 		yearPublishTextField.setName("addYearPublishTextField");
 		contentPanel.add(yearPublishTextField, "cell 1 3,growx");
 		yearPublishTextField.setColumns(10);
 
-		JLabel publisherLabel = new JLabel("Publisher:");
+		JLabel publisherLabel = new JLabel(Strings.PUBLISHER_LABEL);
 		contentPanel.add(publisherLabel, "cell 0 4,alignx left");
 
 		publisherTextField.setName("publisherTextField");
 		contentPanel.add(publisherTextField, "cell 1 4,growx");
 		publisherTextField.setColumns(10);
 
-		JLabel isbnLabel = new JLabel("ISBN:");
+		JLabel isbnLabel = new JLabel(Strings.ISBN_LABEL+":*");
 		contentPanel.add(isbnLabel, "cell 0 5,alignx left");
 		isbnTextField.setToolTipText("*Must be a valid ISBN");
 
@@ -94,7 +95,7 @@ public class AddBookDialog extends JDialog {
 		contentPanel.add(isbnTextField, "cell 1 5,growx");
 		isbnTextField.setColumns(10);
 
-		JLabel descriptionLabel = new JLabel("Description:");
+		JLabel descriptionLabel = new JLabel(Strings.DESCRIPTION_LABEL);
 		contentPanel.add(descriptionLabel, "cell 0 6,alignx left,aligny top");
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -106,7 +107,7 @@ public class AddBookDialog extends JDialog {
         scrollPane.setViewportView(descriptionTextArea);
                                         		
 
-		JLabel copiesLabel = new JLabel("Copies:");
+		JLabel copiesLabel = new JLabel(Strings.COPIES_LABEL);
 		contentPanel.add(copiesLabel, "cell 0 7,alignx left");
 
 		copyValSpinner.setModel(new SpinnerNumberModel(1, 0, 1000, 1));
@@ -119,12 +120,12 @@ public class AddBookDialog extends JDialog {
 
 		buttonPane.add(errorMessageLabel, "cell 0 0,alignx left,aligny center");
 
-		addButton = new JButton("Add");
+		addButton = new JButton(Strings.ADD_BOOK_BUTTON);
 		addButton.setActionCommand("OK");
 		buttonPane.add(addButton, "cell 1 0,alignx left,aligny top");
 		getRootPane().setDefaultButton(addButton);
 
-		cancelButton = new JButton("Cancel");
+		cancelButton = new JButton(Strings.CANCEL_BUTTON);
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton, "cell 2 0,alignx left,aligny top");
 

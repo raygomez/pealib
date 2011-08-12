@@ -82,4 +82,6 @@ public class Strings {
 	public static final String DESCRIPTION_LABEL = "Description:";
 	public static final String COPIES_LABEL = "Copies:";
 	
+	//for buttons
+	public static final String CANCEL_BUTTON = "Cancel";
 }
