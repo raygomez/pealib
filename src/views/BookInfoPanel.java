@@ -304,14 +304,6 @@ public class BookInfoPanel extends JPanel {
 		yearPublishTextField.hasError(error);
 	}
 	
-	public String getPublisher(){
-		return publisherTextField.getText().trim();
-	}
-	
-	public void hasPublisherError(boolean error){
-		publisherTextField.hasError(error);
-	}
-
 	public String getIsbn10(){
 		return isbn10TextField.getText();
 	}
@@ -335,14 +327,7 @@ public class BookInfoPanel extends JPanel {
 	public void hasIsbn13Error(boolean error){
 		isbn13TextField.hasError(error);
 	}
-	
-	public MyTextArea getTxtFldDescription() {
-		return descriptionTextArea;
-	}
 
-	public MyTextField getTxtFldEdition() {
-		return editionTextField;
-	}
 
 	public MyJSpinner getSpinCopyVal() {
 		return copiesValSpinner;
