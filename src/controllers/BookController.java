@@ -451,7 +451,7 @@ public class BookController {
 			if (!currISBN10.equals(bookInfo.getIsbn10()) && flag == 0) {
 				String otherISBN = IsbnUtil.convert(bookInfo.getIsbn10());
 				if (BookDAO.isIsbnExisting(bookInfo.getIsbn10())
-						|| otherISBN != bookInfo.getIsbn13()) {
+						|| !otherISBN.equalsIgnoreCase(bookInfo.getIsbn10())) {
 					bookInfo.hasIsbn10Error(true);
 					validate = false;
 				} else
@@ -462,7 +462,7 @@ public class BookController {
 				String otherISBN = IsbnUtil.convert(bookInfo.getIsbn13());
 				if (BookDAO
 						.isIsbnExisting(bookInfo.getIsbn13())
-						|| otherISBN != bookInfo.getIsbn13()) {
+						|| !otherISBN.equalsIgnoreCase(bookInfo.getIsbn10())) {
 					bookInfo.hasIsbn13Error(true);
 					validate = false;
 				} else
