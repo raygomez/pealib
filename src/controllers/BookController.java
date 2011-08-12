@@ -210,6 +210,9 @@ public class BookController {
 			addBook.addBookActionListener(new AddBookListener());
 			addBook.addCancelActionListener(new CancelListener());
 			addBook.getTxtFldIsbn().addFocusListener(new isbnCheckFocusListener());
+			addBook.getTxtFldTitle().addFocusListener(new titleCheckFocusListener());
+			addBook.getTxtFldAuthor().addFocusListener(new authorCheckFocusListener());
+			addBook.getTxtFldYearPublish().addFocusListener(new yearCheckFocusListener());
 			addBook.setVisible(true);
 		}
 
@@ -248,7 +251,7 @@ public class BookController {
 						e.printStackTrace();
 					}
 				} else {
-					addBook.getLblErrorMsg().makeError("Invalid Input");
+					addBook.getLblErrorMsg().makeError("Error Found!");
 				}
 			}
 		}
@@ -474,7 +477,7 @@ public class BookController {
 			return validate;
 		}
 
-}
+	}
 
 	class DeleteButtonListener implements ActionListener {
 
@@ -844,7 +847,7 @@ public class BookController {
 			
 			if(flag == 1){
 				try {
-					if(BookDAO.isIsbnExisting(bookIsbn)){
+					if(BookDAO.isIsbnExisting(bookIsbn) && (currISBN10 == bookIsbn || currISBN13 == bookIsbn)){
 						if(stringIsbn.getName() == "isbnTextField"){
 							addBook.getLblErrorMsg().makeError("ISBN already exist.");
 						}else{
@@ -870,5 +873,71 @@ public class BookController {
 			}
 		}
 
+	}
+	
+	class titleCheckFocusListener extends FocusAdapter{
+		@Override
+		public void focusLost(FocusEvent title) {
+			MyTextField titleField = (MyTextField) title.getSource();
+			if(titleField.getText().length() == 0){
+				if(titleField.getName() == "addTitleTextField"){
+					addBook.getLblErrorMsg().makeError("Title field cannot be empty.");
+				}else{
+					bookInfo.getLblErrorMsg().makeError("Title field cannot be empty.");
+				}
+				titleField.hasError(true);
+			}else{
+				if(titleField.getName() == "addTitleTextField"){
+					addBook.getLblErrorMsg().clear();
+				}else{
+					bookInfo.getLblErrorMsg().clear();
+				}
+				titleField.hasError(false);
+			}
+		}
+	}
+	
+	class authorCheckFocusListener extends FocusAdapter{
+		@Override
+		public void focusLost(FocusEvent author) {
+			MyTextField authorField = (MyTextField) author.getSource();
+			if(authorField.getText().length() == 0){
+				if(authorField.getName() == "addAuthorTextField"){
+					addBook.getLblErrorMsg().makeError("Author field cannot be empty.");
+				}else{
+					bookInfo.getLblErrorMsg().makeError("Author field cannot be empty.");
+				}
+				authorField.hasError(true);
+			}else{
+				if(authorField.getName() == "addAuthorTextField"){
+					addBook.getLblErrorMsg().clear();
+				}else{
+					bookInfo.getLblErrorMsg().clear();
+				}
+				authorField.hasError(false);
+			}
+		}
+	}
+	
+	class yearCheckFocusListener extends FocusAdapter{
+		@Override
+		public void focusLost(FocusEvent year) {
+			MyTextField yearField = (MyTextField) year.getSource();
+			if(yearField.getText().length() > 0 && !yearField.getText().matches(Constants.YEAR_PUBLISH_FORMAT)){
+				if(yearField.getName() == "addYearPublishTextField"){
+					addBook.getLblErrorMsg().makeError("Year field is not correct.");
+				}else{
+					bookInfo.getLblErrorMsg().makeError("Year field is not correct.");
+				}
+				yearField.hasError(true);
+			}else{
+				if(yearField.getName() == "addYearPublishTextField"){
+					addBook.getLblErrorMsg().clear();
+				}else{
+					bookInfo.getLblErrorMsg().clear();
+				}
+				yearField.hasError(false);
+			}
+		}
 	}
 }
