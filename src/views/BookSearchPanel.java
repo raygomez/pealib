@@ -18,6 +18,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import utilities.Strings;
+
 public class BookSearchPanel extends JPanel {
 	/**
 	 * 
@@ -44,15 +46,15 @@ public class BookSearchPanel extends JPanel {
 		add(textFieldSearch, "cell 0 0 3 1,grow");
 		textFieldSearch.setColumns(10);
 		
-		btnAddBook = new JButton("Add Book", new ImageIcon(
+		btnAddBook = new JButton(Strings.ADD_BOOK_BUTTON, new ImageIcon(
 				"resources/images/add.png"));
 		btnAddBook.setVisible(false);
 		add(btnAddBook, "cell 0 1,alignx left,aligny center");
 		
-		btnSearch = new JButton("Search", new ImageIcon("resources/images/search32x32.png"));
+		btnSearch = new JButton(Strings.SEARCH_BUTTON, new ImageIcon("resources/images/search32x32.png"));
 		add(btnSearch, "cell 1 1,grow");
 		
-		btnClear = new JButton("Clear", new ImageIcon("resources/images/edit_clear.png"));
+		btnClear = new JButton(Strings.CLEAR_BUTTON, new ImageIcon("resources/images/edit_clear.png"));
 		add(btnClear, "cell 2 1,grow");
 		setTableBookList(new JTable());
 		getTableBookList().setName("tableList");

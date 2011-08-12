@@ -52,4 +52,34 @@ public class Strings {
 	public static final String RESET_PASSWORD_TITLE = "Reset Password";
 	public static final String PASSWORD_CHANGE_MESSAGE = "Your password was successfully changed!";
 	
+	/*Book Search*/
+	public static final String SEARCH_BUTTON = "Search";
+	public static final String CLEAR_BUTTON = "Clear";
+	public static final String ADD_BOOK_BUTTON = "Add Book";
+	public static final String[] BOOK_SEARCH_TABLE_HEADER = {"ISBN No.", "Book", "Status"}; 
+	
+	/*Book Info*/
+	public static final String SAVE_BUTTON = "Save";
+	public static final String DELETE_BUTTON = "Delete";
+	public static final String BORROW_BUTTON = "Borrow";
+	public static final String RESERVE_BUTTON = "Reserve";
+	
+	/*Add Book*/
+	//for errors
+	public static final String AUTHOR_ERROR_MSG = "Author field cannot be empty.";
+	public static final String TITLE_ERROR_MSG = "Title field cannot be empty.";
+	public static final String ISBN_ERROR_MSG = "ISBN is not correct.";
+	public static final String YEAR_ERROR_MSG = "Year field is not correct.";
+	public static final String ISBN_EXIST_ERROR_MSG = "ISBN already exist.";
+	
+	//for Labels
+	public static final String TITLE_LABEL = "Title:"; 
+	public static final String EDITION_LABEL = "Edition:";
+	public static final String AUTHOR_LABEL = "Author:";
+	public static final String YEAR_LABEL = "Year Published:";
+	public static final String PUBLISHER_LABEL = "Publisher:";
+	public static final String ISBN_LABEL = "ISBN";
+	public static final String DESCRIPTION_LABEL = "Description:";
+	public static final String COPIES_LABEL = "Copies:";
+	
 }
