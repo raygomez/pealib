@@ -457,7 +457,15 @@ public class BookController {
 						"Do you really want to delete this book?", "Confirm",
 						JOptionPane.YES_NO_OPTION);
 				if (optConfirm == 0) {
-					BookDAO.deleteBook(bookInfo.getCurrBook());
+					if (bookInfo.getCurrBook().getCopies() == 
+						TransactionDAO.getAvailableCopies(bookInfo.getCurrBook())){
+						BookDAO.deleteBook(bookInfo.getCurrBook());
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Someone might have borrowed the book!\n"
+								+ "before the delete transaction have been completed.", "",
+								JOptionPane.ERROR_MESSAGE);
+					}
 					bookList = BookDAO.searchBook(currSearchString);
 					bookInfo.setBookInfoData(bookList.get(currRow));
 					bookSearch.getTableBookList().setModel(
@@ -469,6 +477,7 @@ public class BookController {
 								currRow, currRow);
 					bookInfo.getBtnDelete().setEnabled(false);
 
+					
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
