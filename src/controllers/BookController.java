@@ -438,7 +438,7 @@ public class BookController {
 			} else
 				bookInfo.getTxtFldEdition().hasError(false);
 
-			// TODO consistent ISBN
+			// TODO existing and mismatched ISBN
 			if (!currISBN10.equals(bookInfo.getTxtFldISBN10().getText())
 					&& flag == 0) {
 				String otherISBN = IsbnUtil.convert(bookInfo.getTxtFldISBN10()
