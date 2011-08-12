@@ -267,7 +267,7 @@ public class UserController {
 			@Override
 			public Void call() throws Exception {
 				
-				searchText = userSearch.getFieldSearch().getText();
+				searchText = userSearch.getSearchWord();
 				
 				try {					
 					model = new UserSearchTableModel(tab, searchText);
@@ -337,7 +337,7 @@ public class UserController {
 	class ClearListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			userSearch.getFieldSearch().setText("");
+			userSearch.clearSearchField();
 			searchUsers();
 		}
 	}
@@ -351,8 +351,7 @@ public class UserController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				timer.stop();
-				searchText = userSearch.getFieldSearch().getText();
-				
+				searchText = userSearch.getSearchWord();
 				searchUsers();
 			}
 		});
