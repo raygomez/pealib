@@ -52,7 +52,7 @@ public class AddBookDialog extends JDialog {
 		contentPanel.add(lblTitle, "cell 0 0,alignx left");
 		titleTextField.setToolTipText("*Maximum of 100 characters.");
 
-		titleTextField.setName("titleTextField");
+		titleTextField.setName("addTitleTextField");
 		contentPanel.add(titleTextField, "cell 1 0,growx");
 		
 		lblEdition = new JLabel("Edition:");
@@ -66,14 +66,14 @@ public class AddBookDialog extends JDialog {
 		contentPanel.add(lblAuthor, "cell 0 2,alignx left");
 		authorTextField.setToolTipText("*Maximum of 100 characters.");
 
-		authorTextField.setName("authorTextField");
+		authorTextField.setName("addAuthorTextField");
 		contentPanel.add(authorTextField, "cell 1 2,growx");
 		authorTextField.setColumns(10);
 
 		JLabel lblYearPublish = new JLabel("Year Published:");
 		contentPanel.add(lblYearPublish, "cell 0 3,alignx left");
 
-		yearPublishTextField.setName("yearPublishTextField");
+		yearPublishTextField.setName("addYearPublishTextField");
 		contentPanel.add(yearPublishTextField, "cell 1 3,growx");
 		yearPublishTextField.setColumns(10);
 
