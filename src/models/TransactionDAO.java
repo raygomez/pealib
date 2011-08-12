@@ -81,16 +81,9 @@ public class TransactionDAO {
 
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
-			int BorrowID = rs.getInt("BorrowID");
 			User user = UserDAO.getUserById(rs.getInt("UserID"));
 			Book book = BookDAO.getBookById(rs.getInt("BookID"));
-			Date dateRequested = rs.getDate("DateRequested");
-			Date dateBorrowed = rs.getDate("DateBorrowed");
-			Date dateReturned = rs.getDate("DateReturned");
-
-			borTransaction = new BorrowTransaction(BorrowID, user, book,
-					dateRequested, dateBorrowed, dateReturned);
-
+			borTransaction = new BorrowTransaction(rs, user, book);
 		}
 
 		Connector.close();
@@ -216,10 +209,7 @@ public class TransactionDAO {
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			Book book = BookDAO.getBookById(rs.getInt("BookID"));
-			BorrowTransaction borrow = new BorrowTransaction(
-					rs.getInt("BorrowID"), user, book,
-					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
-					rs.getDate("DateReturned"));
+			BorrowTransaction borrow = new BorrowTransaction(rs, user, book);
 
 			borrows.add(borrow);
 		}
@@ -242,11 +232,7 @@ public class TransactionDAO {
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			Book book = BookDAO.getBookById(rs.getInt("BookID"));
-			BorrowTransaction borrow = new BorrowTransaction(
-					rs.getInt("BorrowID"), user, book,
-					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
-					rs.getDate("DateReturned"));
-
+			BorrowTransaction borrow = new BorrowTransaction(rs, user, book);
 			borrows.add(borrow);
 		}
 
@@ -268,11 +254,7 @@ public class TransactionDAO {
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			Book book = BookDAO.getBookById(rs.getInt("BookID"));
-			BorrowTransaction borrow = new BorrowTransaction(
-					rs.getInt("BorrowID"), user, book,
-					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
-					rs.getDate("DateReturned"));
-
+			BorrowTransaction borrow = new BorrowTransaction(rs, user, book);
 			borrows.add(borrow);
 		}
 
@@ -415,10 +397,7 @@ public class TransactionDAO {
 			User user = new User(rs);
 			Book book = new Book(rs);
 
-			BorrowTransaction borrowed = new BorrowTransaction(
-					rs.getInt("Borrows.BorrowID"), user, book,
-					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
-					rs.getDate("DateReturned"));
+			BorrowTransaction borrowed = new BorrowTransaction(rs, user, book);
 			bookCollection.add(borrowed);
 		}
 
@@ -445,11 +424,7 @@ public class TransactionDAO {
 		while (rs.next()) {
 			User user = new User(rs);
 			Book book = new Book(rs);
-
-			BorrowTransaction borrowed = new BorrowTransaction(
-					rs.getInt("Borrows.BorrowID"), user, book,
-					rs.getDate("DateRequested"), rs.getDate("DateBorrowed"),
-					rs.getDate("DateReturned"));
+			BorrowTransaction borrowed = new BorrowTransaction(rs ,user,book);
 			bookCollection.add(borrowed);
 		}
 
