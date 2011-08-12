@@ -18,6 +18,11 @@ import controllers.ELibController.CancelButtonRenderer;
 
 public class ELibTabbedPanel extends JPanel {
 
+	public static final int REQUEST = 0;
+	public static final int RESERVE = 1;
+	public static final int ON_LOAN = 2;
+	public static final int HISTORY = 3;
+
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabs = new JTabbedPane();
 	private JPanel historyPanel = new JPanel();
@@ -44,7 +49,7 @@ public class ELibTabbedPanel extends JPanel {
 		tabs.addTab("History", new ImageIcon("resources/images/history.png"),
 				historyPanel);
 
-		add(tabs, "");
+		add(tabs);
 		trender.setHorizontalAlignment(SwingConstants.CENTER);
 
 		addHistoryPane();
@@ -128,8 +133,8 @@ public class ELibTabbedPanel extends JPanel {
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			table.getColumn(table.getColumnName(i)).setCellRenderer(trender);
 		}
-		
-		table.getTableHeader().setReorderingAllowed(false);	
+
+		table.getTableHeader().setReorderingAllowed(false);
 		table.getTableHeader().setResizingAllowed(false);
 	}
 
@@ -246,16 +251,15 @@ public class ELibTabbedPanel extends JPanel {
 	}
 
 	public JTable getTableByTab(int tab) {
-		// TODO Auto-generated method stub
-		switch(tab){
-			case 0:
-				return requestTable;
-			case 1:
-				return reserveTable;
-			case 2:
-				return onloanTable;
-			case 3:
-				return historyTable;
+		switch (tab) {
+		case REQUEST:
+			return requestTable;
+		case RESERVE:
+			return reserveTable;
+		case ON_LOAN:
+			return onloanTable;
+		case HISTORY:
+			return historyTable;
 		}
 		return historyTable;
 	}
