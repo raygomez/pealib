@@ -484,7 +484,7 @@ public class BookController {
 					JOptionPane
 							.showMessageDialog(
 									null,
-									"Someone might have borrowed the book!\n"
+									"Someone might have borrowed the book\n"
 											+ "before this transaction have been completed.",
 									"", JOptionPane.ERROR_MESSAGE);
 				}
