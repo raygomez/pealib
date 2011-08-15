@@ -460,7 +460,7 @@ public class TransactionController {
 					inPanel.getSearchPanel().getTableResults()
 							.setModel(bookResultsModel);
 					inPanel.getSearchPanel().setTotal(
-							Strings.TOTAL_MATCHES
+							Strings.TOTAL_MATCHES_LABEL
 									+ bookResultsModel.getRowCount());
 
 					int[] incomingTabColumnSizes = { 20, 200, 70, 30, 20, 20 };
@@ -476,7 +476,7 @@ public class TransactionController {
 					outPanel.getSearchPanel().getTableResults()
 							.setModel(bookResultsModel);
 					outPanel.getSearchPanel().setTotal(
-							Strings.TOTAL_MATCHES
+							Strings.TOTAL_MATCHES_LABEL
 									+ bookResultsModel.getRowCount());
 
 					int[] outgoingTabColumnSizes = { 20, 200, 70, 30, 20 };
@@ -510,7 +510,7 @@ public class TransactionController {
 				int daysOverdue = TransactionDAO
 						.getDaysOverdue(selectedBookTransactions
 								.get(selectedRows.length - 1));
-				inPanel.setNoDaysOverdue(Strings.DAYS_OVERDUE + daysOverdue);
+				inPanel.setNoDaysOverdue(Strings.DAYS_OVERDUE_LABEL + daysOverdue);
 				inPanel.setColorWhenOverdue(daysOverdue > 0);
 			}
 		} else {
