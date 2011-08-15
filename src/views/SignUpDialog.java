@@ -1,23 +1,25 @@
 package views;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
 
 import net.miginfocom.swing.MigLayout;
 import utilities.ErrorLabel;
 import utilities.MyPasswordField;
+import utilities.MyTextArea;
 import utilities.MyTextField;
+import utilities.Strings;
 
 public class SignUpDialog extends JDialog {
 
@@ -28,10 +30,13 @@ public class SignUpDialog extends JDialog {
 	private MyTextField userNameTextField;
 	private MyPasswordField passwordTextField;
 	private MyPasswordField confirmPasswordTextField;
-	private MyTextField emailAddressTextField;
+	private MyTextArea emailAddressTextArea;
+	private JScrollPane eMailScrollPane;
+	private MyTextArea addressTextArea;
+	private JScrollPane addressScrollPane;
 	private MyTextField contactNumberTextField;
-	private MyTextField addressTextField;
 	private JLabel errorMessageLabel;
+	private JLabel mandatoryFieldsLabel;
 
 	private JButton submitButton;
 	private JButton cancelButton;
@@ -50,133 +55,137 @@ public class SignUpDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public SignUpDialog() {
-		setTitle("New User Account Application");
+		setTitle(Strings.SIGN_UP_DIALOG_TITLE);
 		setModal(true);
 		setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setBounds((screenSize.width / 3), (screenSize.height / 4), 400, 375);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("",
-				"[10:n:10][110:n:110][225:n:225]",
-				"[25:n:25][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20][20:n:20]"
-						+ "[20:n:20][20:n:20][20:n:20][20:n:20]"));
+		setBounds((screenSize.width / 3), (screenSize.height / 4), 400, 450);
+		getContentPane().setLayout(new MigLayout("", "[]", "[350:n:350][50:n:50]"));
 
-		JLabel pleaseFillinLabel = new JLabel("Please Fill-in.");
+		JPanel infoPane = new JPanel();
+		getContentPane().add(infoPane, "cell 0 0,grow");
+		infoPane.setLayout(new MigLayout("", "[10:n:10][130:n:130][220:n:220]", "[25:n:25][20:n:20][20:n:20][15:n:15][20:n:20][20:n:20][20:n:20][15:n:15][50:n:50][50:n:50][20:n:20][15:n:15]"));
+		
+		JLabel pleaseFillinLabel = new JLabel(Strings.SIGN_UP_INTRO_LABEL);
 		pleaseFillinLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		contentPanel.add(pleaseFillinLabel, "cell 0 0 2 1,growx,aligny center");
+		infoPane.add(pleaseFillinLabel, "cell 0 0 2 1,growx,aligny center");
 
 		errorMessageLabel = new ErrorLabel("");
 		errorMessageLabel.setName("errorMessageLabel");
-		contentPanel.add(errorMessageLabel,
+		infoPane.add(errorMessageLabel,
 				"cell 2 0,alignx left,aligny center");
 
-		JLabel firstNameLabel = new JLabel("First Name:");
-		contentPanel.add(firstNameLabel, "cell 1 1,alignx left,aligny center");
+		JLabel firstNameLabel = new JLabel(Strings.FIRST_NAME_LABEL);
+		infoPane.add(firstNameLabel, "cell 1 1,alignx left,aligny center");
 
 		firstNameTextField = new MyTextField(30);
-		firstNameTextField.setToolTipText("*Maximum of 30 characters.");
+		firstNameTextField.setToolTipText(Strings.NAME_TOOLTIP);
 		firstNameTextField.setName("firstNameTextField");
 		firstNameLabel.setLabelFor(firstNameTextField);
-		contentPanel.add(firstNameTextField, "cell 2 1,growx,aligny center");
+		infoPane.add(firstNameTextField, "cell 2 1,growx,aligny center");
 		firstNameTextField.setColumns(10);
 
-		JLabel lastNameLabel = new JLabel("Last Name:");
-		contentPanel.add(lastNameLabel, "cell 1 2,alignx left,aligny center");
+		JLabel lastNameLabel = new JLabel(Strings.LAST_NAME_LABEL);
+		infoPane.add(lastNameLabel, "cell 1 2,alignx left,aligny center");
 
 		lastNameTextField = new MyTextField(30);
-		lastNameTextField.setToolTipText("*Maximum of 30 characters.");
+		lastNameTextField.setToolTipText(Strings.NAME_TOOLTIP);
 		lastNameTextField.setName("lastNameTextField");
 		lastNameLabel.setLabelFor(lastNameTextField);
-		contentPanel.add(lastNameTextField, "cell 2 2,growx,aligny center");
+		infoPane.add(lastNameTextField, "cell 2 2,growx,aligny center");
 		lastNameTextField.setColumns(10);
 
-		JLabel userNameLabel = new JLabel("User Name:");
-		contentPanel.add(userNameLabel, "cell 1 4,alignx left,aligny center");
+		JLabel userNameLabel = new JLabel(Strings.USER_NAME_LABEL);
+		infoPane.add(userNameLabel, "cell 1 4,alignx left,aligny center");
 
 		userNameTextField = new MyTextField(20);
-		userNameTextField
-				.setToolTipText("<html>*Must be 4 - 20 characters long,"
-						+ "<br>composed of alphanumeric characters,<br>underscore or period.");
+		userNameTextField.setToolTipText(Strings.USER_NAME_TOOLTIP);
 		userNameTextField.setName("userNameTextField");
 		userNameLabel.setLabelFor(userNameTextField);
-		contentPanel.add(userNameTextField, "cell 2 4,growx,aligny center");
+		infoPane.add(userNameTextField, "cell 2 4,growx,aligny center");
 		userNameTextField.setColumns(10);
 
-		JLabel passwordLabel = new JLabel("Password:");
-		contentPanel.add(passwordLabel, "cell 1 5,alignx left,aligny center");
+		JLabel passwordLabel = new JLabel(Strings.PASSWORD_LABEL);
+		infoPane.add(passwordLabel, "cell 1 5,alignx left,aligny center");
 
 		passwordTextField = new MyPasswordField(20);
-		passwordTextField.setToolTipText("*Must be 6 - 20 characters long.");
+		passwordTextField.setToolTipText(Strings.PASSWORD_TOOLTIP);
 		passwordTextField.setName("passwordTextField");
 		passwordLabel.setLabelFor(passwordTextField);
-		contentPanel.add(passwordTextField, "cell 2 5,growx,aligny center");
+		infoPane.add(passwordTextField, "cell 2 5,growx,aligny center");
 		passwordTextField.setColumns(10);
 		passwordTextField.setEchoChar('*');
 
-		JLabel confirmPasswordLabel = new JLabel("Confirm Password:");
-		contentPanel.add(confirmPasswordLabel,
+		JLabel confirmPasswordLabel = new JLabel(Strings.CONFIRM_PASSWORD_LABEL);
+		infoPane.add(confirmPasswordLabel,
 				"cell 1 6,alignx left,aligny center");
 
 		confirmPasswordTextField = new MyPasswordField(20);
-		confirmPasswordTextField
-				.setToolTipText("*Must be 6 - 20 characters long.");
+		confirmPasswordTextField.setToolTipText(Strings.PASSWORD_TOOLTIP);
 		confirmPasswordTextField.setName("confirmPasswordTextField");
 		confirmPasswordLabel.setLabelFor(confirmPasswordTextField);
-		contentPanel.add(confirmPasswordTextField,
+		infoPane.add(confirmPasswordTextField,
 				"cell 2 6,growx,aligny center");
 		confirmPasswordTextField.setColumns(10);
 		confirmPasswordTextField.setEchoChar('*');
-
-		JLabel emailAddressLabel = new JLabel("E-mail Address:");
-		contentPanel.add(emailAddressLabel,
+		
+		JLabel emailAddressLabel = new JLabel(Strings.EMAIL_LABEL);
+		infoPane.add(emailAddressLabel,
 				"cell 1 8,alignx left,aligny center");
 
-		emailAddressTextField = new MyTextField(254);
-		emailAddressTextField
-				.setToolTipText("<html>*Maximum of 254 characters."
-						+ "<br>(ie. john.smith@example.com)");
-		emailAddressTextField.setName("emailAddressTextField");
-		emailAddressLabel.setLabelFor(emailAddressTextField);
-		contentPanel.add(emailAddressTextField, "cell 2 8,growx,aligny center");
-		emailAddressTextField.setColumns(10);
+		emailAddressTextArea = new MyTextArea(254);
+		emailAddressTextArea.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		emailAddressTextArea.setLineWrap(true);
+		emailAddressTextArea.setToolTipText(Strings.EMAIL_TOOLTIP);
+		emailAddressTextArea.setName("emailAddressTextField");
+		emailAddressLabel.setLabelFor(emailAddressTextArea);
+		emailAddressTextArea.setColumns(10);
+		
+		eMailScrollPane = new JScrollPane(emailAddressTextArea);
+		infoPane.add(eMailScrollPane, "cell 2 8,grow");
 
-		JLabel contactNumberLabel = new JLabel("Contact Number:");
-		contentPanel.add(contactNumberLabel,
-				"cell 1 9,alignx left,aligny center");
+
+		JLabel addressLabel = new JLabel(Strings.ADDRESS_LABEL);
+		infoPane.add(addressLabel, "cell 1 9,alignx left,aligny center");
+
+		addressTextArea = new MyTextArea(100);
+		addressTextArea.setLineWrap(true);
+		addressTextArea.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		addressTextArea.setToolTipText(Strings.ADDRESS_TOOLTIP);
+		addressTextArea.setName("addressTextField");
+		addressLabel.setLabelFor(addressTextArea);
+		addressTextArea.setColumns(10);
+	    
+		addressScrollPane = new JScrollPane(addressTextArea);
+		infoPane.add(addressScrollPane, "cell 2 9,grow");
+		
+		JLabel contactNumberLabel = new JLabel(Strings.CONTACT_NUMBER_LABEL);
+		infoPane.add(contactNumberLabel,
+				"cell 1 10,alignx left,aligny center");
 
 		contactNumberTextField = new MyTextField(11);
-		contactNumberTextField.setToolTipText("*Must be 7 - 11 digits long.");
+		contactNumberTextField.setToolTipText(Strings.CONTACT_NUMBER_TOOLTIP);
 		contactNumberTextField.setName("contactNumberTextField");
-		contentPanel
-				.add(contactNumberTextField, "cell 2 9,growx,aligny center");
+		infoPane.add(contactNumberTextField, "cell 2 10,growx,aligny center");
 		contactNumberTextField.setColumns(10);
-
-		JLabel addressLabel = new JLabel("Address:");
-		contentPanel.add(addressLabel, "cell 1 10,alignx left,aligny center");
-
-		addressTextField = new MyTextField(100);
-		addressTextField.setToolTipText("*Maximum of 100 characters.");
-		addressTextField.setName("addressTextField");
-		addressLabel.setLabelFor(addressTextField);
-		contentPanel.add(addressTextField, "cell 2 10,growx,aligny center");
-		addressTextField.setColumns(10);
+		
+		mandatoryFieldsLabel = new JLabel(Strings.SIGN_UP_MANDATORY_LABEL);
+		mandatoryFieldsLabel.setFont(new Font("Tahoma", Font.ITALIC, 10));
+		infoPane.add(mandatoryFieldsLabel, "cell 1 11,growx,aligny top");
 
 		JPanel buttonPane = new JPanel();
-		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-		buttonPane.setLayout(new MigLayout("",
-				"[80:n:80][100:n:100][10:n:10][100:n:100][80:n:80]",
-				"[45:n:45]"));
+		getContentPane().add(buttonPane, "cell 0 1, alignx center, growy");
+		buttonPane.setLayout(new MigLayout("", "[][]", "[]"));
 
 		submitButton = new JButton("Submit", new ImageIcon(
 				"resources/images/signin.png"));
 		submitButton.setActionCommand("Submit");
-		buttonPane.add(submitButton, "cell 1 0,growx,aligny top");
+		buttonPane.add(submitButton, "cell 0 0, alignx left, aligny center");
+		
 		cancelButton = new JButton("Cancel", new ImageIcon(
 				"resources/images/logout32x32.png"));
 		cancelButton.setActionCommand("Cancel");
-		buttonPane.add(cancelButton, "cell 3 0,growx,aligny top");
+		buttonPane.add(cancelButton, "cell 1 0, alignx left, aligny center");
 	}
 
 	/* Action Listeners */
@@ -189,9 +198,9 @@ public class SignUpDialog extends JDialog {
 		userNameTextField.addKeyListener(enter);
 		passwordTextField.addKeyListener(enter);
 		confirmPasswordTextField.addKeyListener(enter);
-		emailAddressTextField.addKeyListener(enter);
+		emailAddressTextArea.addKeyListener(enter);
 		contactNumberTextField.addKeyListener(enter);
-		addressTextField.addKeyListener(enter);
+		addressTextArea.addKeyListener(enter);
 		userNameTextField.addKeyListener(username);
 	}
 
@@ -207,11 +216,11 @@ public class SignUpDialog extends JDialog {
 		if ((maskedLabel & CONFIRM_PASSWORD_FLAG) == CONFIRM_PASSWORD_FLAG)
 			confirmPasswordTextField.hasError(true);
 		if ((maskedLabel & EMAIL_ADDRESS_FLAG) == EMAIL_ADDRESS_FLAG)
-			emailAddressTextField.hasError(true);
+			emailAddressTextArea.hasError(true);
 		if ((maskedLabel & CONTACT_NUMBER_FLAG) == CONTACT_NUMBER_FLAG)
 			contactNumberTextField.hasError(true);
 		if ((maskedLabel & ADDRESS_FLAG) == ADDRESS_FLAG)
-			addressTextField.hasError(true);
+			addressTextArea.hasError(true);
 
 		if (maskedLabel == EMPTY_FLAG) {
 			firstNameTextField.hasError(false);
@@ -219,9 +228,9 @@ public class SignUpDialog extends JDialog {
 			userNameTextField.hasError(false);
 			passwordTextField.hasError(false);
 			confirmPasswordTextField.hasError(false);
-			emailAddressTextField.hasError(false);
+			emailAddressTextArea.hasError(false);
 			contactNumberTextField.hasError(false);
-			addressTextField.hasError(false);
+			addressTextArea.hasError(false);
 		}
 	}
 
@@ -263,7 +272,7 @@ public class SignUpDialog extends JDialog {
 	}
 
 	public String getEmailAddress() {
-		return emailAddressTextField.getText().trim();
+		return emailAddressTextArea.getText().trim();
 	}
 
 	public String getContactNumber() {
@@ -271,7 +280,7 @@ public class SignUpDialog extends JDialog {
 	}
 
 	public String getAddress() {
-		return addressTextField.getText().trim();
+		return addressTextArea.getText().trim();
 	}
 
 	public JPanel getContentPanel() {

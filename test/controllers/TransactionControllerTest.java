@@ -49,7 +49,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertNotNull(searchButton);
 		assertTrue(searchButton.isEnabled());
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "5";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "5";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -106,7 +106,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertNotNull(searchButton);
 		assertTrue(searchButton.isEnabled());
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "4";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "4";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -155,7 +155,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		assertNotNull(searchButton);
 		assertTrue(searchButton.isEnabled());
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "5";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "5";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -194,7 +194,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "0";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "0";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -212,7 +212,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 	public void testOverdue() {
 		tabGroup.selectTab("Incoming");
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "3";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "3";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 
@@ -231,7 +231,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		incomingItems.click(1, 0);
 		Button returnButton = tabGroup.getSelectedTab().getButton("Return");
 		assertTrue(returnButton.isEnabled());
-		String expectedNotOverdue = Strings.DAYS_OVERDUE + "0";
+		String expectedNotOverdue = Strings.DAYS_OVERDUE_LABEL + "0";
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
 		assertTrue(expectedNotOverdue.equals(returnLabel.getText()));
 		assertTrue(returnLabel.foregroundEquals("Black"));
@@ -245,7 +245,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		incomingItems.click(0, 0);
 		assertTrue(returnButton.isEnabled());
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
-		String expectedOverdue = Strings.DAYS_OVERDUE + "11"; //# Modify this!
+		String expectedOverdue = Strings.DAYS_OVERDUE_LABEL + "11"; //# Modify this!
 		System.out.println(returnLabel.getText());
 		assertTrue(expectedOverdue.equals(returnLabel.getText()));
 		assertTrue(returnLabel.foregroundEquals("Red"));
@@ -261,7 +261,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "4";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "4";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -310,7 +310,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "4";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "4";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -359,7 +359,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "4";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "4";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -410,7 +410,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 	public void testReturn() {
 		tabGroup.selectTab("Incoming");
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "5";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "5";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -425,7 +425,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		final Button returnButton = tabGroup.getSelectedTab().getButton("Return");
 		assertTrue(returnButton.isEnabled());
 		
-		String expectedOverdue = Strings.DAYS_OVERDUE + "44";//# Modify this!
+		String expectedOverdue = Strings.DAYS_OVERDUE_LABEL + "44";//# Modify this!
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
 		System.out.println("Days overdue: " + returnLabel.getText());
 		assertTrue(expectedOverdue.equals(returnLabel.getText()));
@@ -465,7 +465,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 	public void testReturnWithReservation() {
 		tabGroup.selectTab("Incoming");
 		
-		String expectedTotal = Strings.TOTAL_MATCHES + "5";
+		String expectedTotal = Strings.TOTAL_MATCHES_LABEL + "5";
 		TextBox matchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(expectedTotal.equals(matchesLabel.getText()));
 		
@@ -480,7 +480,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 		final Button returnButton = tabGroup.getSelectedTab().getButton("Return");
 		assertTrue(returnButton.isEnabled());
 		
-		String expectedOverdue = Strings.DAYS_OVERDUE + "44";//# Modify this!
+		String expectedOverdue = Strings.DAYS_OVERDUE_LABEL + "44";//# Modify this!
 		returnLabel = tabGroup.getSelectedTab().getTextBox("daysOverdueLabel");
 		System.out.println("Days overdue: " + returnLabel.getText());
 		assertTrue(expectedOverdue.equals(returnLabel.getText()));
@@ -522,7 +522,7 @@ public class TransactionControllerTest extends UISpecTestCase {
 			}
 		}).processTransientWindow().run();
 		
-		String outgoingExpectedTotal = Strings.TOTAL_MATCHES + "5";
+		String outgoingExpectedTotal = Strings.TOTAL_MATCHES_LABEL + "5";
 		TextBox outgoingMatchesLabel = tabGroup.getSelectedTab().getTextBox("totalLabel");
 		assertTrue(outgoingExpectedTotal.equals(outgoingMatchesLabel.getText()));
 		
